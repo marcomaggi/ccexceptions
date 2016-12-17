@@ -1,0 +1,43 @@
+Subject: [announce] CCExceptions revision 0.1d0
+
+			      CCExceptions
+			      ============
+
+
+This package  installs a  C language  library implementing  a exceptions
+handling.
+
+  The package  makes use  of the  GNU Autotools  and it  is tested  on a
+GNU+Linux system.  It is distributed under the GNU Lesser General Public
+License version 3.0.
+
+  The latest release of this package can be downloaded from:
+
+       <https://bitbucket.org/marcomaggi/ccexceptions/downloads>
+
+development takes place at:
+
+	      <http://github.com/marcomaggi/ccexceptions/>
+
+and as backup at:
+
+	    <https://bitbucket.org/marcomaggi/ccexceptions/>
+
+the documentation is available online:
+
+	  <http://marcomaggi.github.io/docs/ccexceptions.html>
+
+
+Notes for revision 0.1d0
+------------------------
+
+* First release.
+
+
+### end of file
+# Local Variables:
+# coding: utf-8-unix
+# mode: text
+# fill-column: 72
+# paragraph-start: "*"
+# End:
