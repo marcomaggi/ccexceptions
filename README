@@ -1,3 +1,4 @@
+-*- coding: utf-8-unix -*-
 
 			      CCExceptions
 			      ============
@@ -18,8 +19,8 @@ Topics
 1. Introduction
 ---------------
 
-This package installs a C  language library implementing an interface to
-non-local exits, which is somewhat similar to exceptions handling.
+This package installs  a C99 language library  implementing an interface
+to non-local exits, which is somewhat similar to exceptions handling.
 
   The package  makes use  of the  GNU Autotools  and it  is tested  on a
 GNU+Linux system.
@@ -154,7 +155,6 @@ the GNU Project software can be found here:
 
 ### end of file
 # Local Variables:
-# coding: utf-8-unix
 # mode: text
 # fill-column: 72
 # End:
