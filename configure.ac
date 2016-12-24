@@ -2,11 +2,11 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([Ccexceptions],[0.1d0],
+AC_INIT([CCExceptions],[0.1d0],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
-AC_REVISION([0.4])
+AC_REVISION([0.1])
 AC_COPYRIGHT([Copyright (c) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
@@ -58,13 +58,11 @@ AM_PROG_AS
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-AC_HEADER_SYS_WAIT
-dnl AC_CHECK_HEADERS([assert.h stdint.h strings.h errno.h stddef.h sys/mman.h sys/resource.h unistd.h])
-AC_CHECK_HEADERS([assert.h stdint.h errno.h stddef.h])
-dnl AC_CHECK_SIZEOF(void *)
-AC_C_CONST
-AC_C_INLINE
-AC_C_RESTRICT
+AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h])
+AC_HEADER_STDBOOL
+dnl AC_C_CONST
+dnl AC_C_INLINE
+dnl AC_C_RESTRICT
 
 AC_CACHE_SAVE
 
