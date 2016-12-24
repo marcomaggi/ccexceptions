@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: basic test with exception thrown
+  Contents: basic test with exception thrown and no handlers
   Date: Fri Dec 23, 2016
 
   Abstract

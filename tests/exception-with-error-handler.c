@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: basic test with error handler
+  Contents: test with error handler
   Date: Fri Dec 23, 2016
 
   Abstract

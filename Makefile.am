@@ -49,24 +49,25 @@ check_PROGRAMS	= \
 	tests/exception-no-handlers		\
 	tests/exception-with-cleanup-handler	\
 	tests/exception-with-error-handler	\
-	tests/exception-with-handlers
+	tests/exception-with-handlers		\
+	tests/exception-with-gcc-auto-cleanup
 
 TESTS				= $(check_PROGRAMS)
 
 ccexceptions_tests_cppflags	= -I$(srcdir)/src
 ccexceptions_tests_ldadd	= libccexceptions.la
 
-tests_version_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_version_LDADD		= $(ccexceptions_tests_ldadd)
+tests_version_CPPFLAGS				= $(ccexceptions_tests_cppflags)
+tests_version_LDADD				= $(ccexceptions_tests_ldadd)
 
-tests_setjmp_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_setjmp_LDADD		= $(ccexceptions_tests_ldadd)
+tests_setjmp_CPPFLAGS				= $(ccexceptions_tests_cppflags)
+tests_setjmp_LDADD				= $(ccexceptions_tests_ldadd)
 
-tests_no_exceptions_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_no_exceptions_LDADD		= $(ccexceptions_tests_ldadd)
+tests_no_exceptions_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_no_exceptions_LDADD			= $(ccexceptions_tests_ldadd)
 
-tests_exception_no_handlers_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_exception_no_handlers_LDADD	= $(ccexceptions_tests_ldadd)
+tests_exception_no_handlers_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_exception_no_handlers_LDADD		= $(ccexceptions_tests_ldadd)
 
 tests_exception_with_cleanup_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
 tests_exception_with_cleanup_handler_LDADD	= $(ccexceptions_tests_ldadd)
@@ -74,8 +75,11 @@ tests_exception_with_cleanup_handler_LDADD	= $(ccexceptions_tests_ldadd)
 tests_exception_with_error_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
 tests_exception_with_error_handler_LDADD	= $(ccexceptions_tests_ldadd)
 
-tests_exception_with_handlers_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_exception_with_handlers_LDADD	= $(ccexceptions_tests_ldadd)
+tests_exception_with_handlers_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_exception_with_handlers_LDADD		= $(ccexceptions_tests_ldadd)
+
+tests_exception_with_gcc_auto_cleanup_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_with_gcc_auto_cleanup_LDADD	= $(ccexceptions_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done

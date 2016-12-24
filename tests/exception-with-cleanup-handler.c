@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: basic test with cleanup handler
+  Contents: test with cleanup handler
   Date: Fri Dec 23, 2016
 
   Abstract

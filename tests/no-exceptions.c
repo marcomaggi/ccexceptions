@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: basic with no exceptions
+  Contents: basic test with no exceptions
   Date: Fri Dec 23, 2016
 
   Abstract
