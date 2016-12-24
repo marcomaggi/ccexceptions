@@ -29,24 +29,24 @@
 
 
 /** --------------------------------------------------------------------
- ** Headers.
+ ** Preliminary definitions.
  ** ----------------------------------------------------------------- */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* The  macro  CCEXCEPTIONS_UNUSED  indicates  that a  function,  function
-   argument or variable may potentially be unused. Usage examples:
+/* The macro CCE_UNUSED indicates that  a function, function argument or
+   variable may potentially be unused. Usage examples:
 
-   static int unused_function (char arg) CCEXCEPTIONS_UNUSED;
-   int foo (char unused_argument CCEXCEPTIONS_UNUSED);
-   int unused_variable CCEXCEPTIONS_UNUSED;
+   static int unused_function (char arg) CCE_UNUSED;
+   int foo (char unused_argument CCE_UNUSED);
+   int unused_variable CCE_UNUSED;
 */
 #ifdef __GNUC__
-#  define CCEXCEPTIONS_UNUSED		__attribute__((unused))
+#  define CCE_UNUSED		__attribute__((unused))
 #else
-#  define CCEXCEPTIONS_UNUSED		/* empty */
+#  define CCE_UNUSED		/* empty */
 #endif
 
 #ifndef __GNUC__
@@ -58,44 +58,175 @@ extern "C" {
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
-#      define ccexceptions_decl		__attribute__((dllexport))
+#      define cce_decl		__attribute__((dllexport))
 #    else
-#      define ccexceptions_decl		__declspec(dllexport)
+#      define cce_decl		__declspec(dllexport)
 #    endif
 #  else
 #    ifdef __GNUC__
-#      define ccexceptions_decl		__attribute__((dllimport))
+#      define cce_decl		__attribute__((dllimport))
 #    else
-#      define ccexceptions_decl		__declspec(dllimport)
+#      define cce_decl		__declspec(dllimport)
 #    endif
 #  endif
-#  define ccexceptions_private_decl	extern
+#  define cce_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define ccexceptions_decl		__attribute__((visibility ("default")))
-#    define ccexceptions_private_decl	__attribute__((visibility ("hidden")))
+#    define cce_decl		__attribute__((visibility ("default")))
+#    define cce_private_decl	__attribute__((visibility ("hidden")))
 #  else
-#    define ccexceptions_decl		extern
-#    define ccexceptions_private_decl	extern
+#    define cce_decl		extern
+#    define cce_private_decl	extern
 #  endif
 #endif
+
+
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <setjmp.h>
 
 
 /** --------------------------------------------------------------------
  ** Constants.
  ** ----------------------------------------------------------------- */
 
+typedef enum {
+  /* This code  represents the return  value of the first  evaluation of
+     "sigsetjmp()". */
+  CCE_SUCCESS		= 0,
 
+  /* This  code  represents  the   return  value  of  the  "sigsetjmp()"
+     evaluation after a "cce_throw()" call. */
+  CCE_ERROR,
+
+  /* This  code  represents  the   return  value  of  the  "sigsetjmp()"
+     evaluation after a "cce_retry()" call. */
+  CCE_RETRY,
+
+  /* This  code  is  available  to  the  custom  code  to  define  other
+     represents the return value of the "sigsetjmp()" evaluation after a
+     "cce_throw()" call. */
+  CCE_FIRST_NEXT
+} cce_code_t;
 
 
 /** --------------------------------------------------------------------
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-ccexceptions_decl const char *	cce_version_string		(void);
-ccexceptions_decl int		cce_version_interface_current	(void);
-ccexceptions_decl int		cce_version_interface_revision	(void);
-ccexceptions_decl int		cce_version_interface_age	(void);
+cce_decl const char *	cce_version_string		(void);
+cce_decl int		cce_version_interface_current	(void);
+cce_decl int		cce_version_interface_revision	(void);
+cce_decl int		cce_version_interface_age	(void);
+
+
+/** --------------------------------------------------------------------
+ ** Type declarations.
+ ** ----------------------------------------------------------------- */
+
+typedef union {
+  char		t_char;
+  unsigned char	t_unsigned_char;
+  int		t_int;
+  unsigned int	t_unsigned_int;
+  long		t_long;
+  unsigned long	t_unsigned_long;
+
+  int8_t	t_int8;
+  int16_t	t_int16;
+  int32_t	t_int32;
+  int64_t	t_int64;
+  uint8_t	t_uint8;
+  uint16_t	t_uint16;
+  uint32_t	t_uint32;
+  uint64_t	t_uint64;
+
+  intptr_t	t_intptr;
+  uintptr_t	t_uintptr;
+  size_t	t_size;
+  ssize_t	t_ssize;
+
+  float		t_float;
+  double	t_double;
+
+  void *	t_void_pointer;
+} cce_value_t;
+
+
+/** --------------------------------------------------------------------
+ ** Location functions.
+ ** ----------------------------------------------------------------- */
+
+struct cce_location_tag_t;
+struct cce_handler_tag_t;
+
+typedef void cce_handler_fun_t (struct cce_location_tag_t * L, void * data);
+
+typedef struct cce_handler_tag_t {
+  bool				is_cleanup_handler;
+  cce_handler_fun_t *		handler_function;
+  struct cce_handler_tag_t *	next_handler;
+} cce_handler_tag_t;
+
+typedef cce_handler_tag_t		cce_handler_t[1];
+
+typedef struct cce_location_tag_t {
+  /* The buffer must be the first member of this struct. */
+  sigjmp_buf			buffer;
+  int				exception_code;
+  void *			condition;
+  cce_handler_tag_t *		next_handler;
+} cce_location_tag_t;
+
+typedef cce_location_tag_t		cce_location_t[1];
+
+cce_decl void cce_location_init		(cce_location_tag_t * here);
+cce_decl void cce_throw			(struct cce_location_tag_t * L, void * condition);
+cce_decl void cce_retry			(struct cce_location_tag_t * L);
+cce_decl void cce_register_cleanup_handler	(cce_location_tag_t * L, void * H);
+cce_decl void cce_register_error_handler	(cce_location_tag_t * L, void * H);
+cce_decl void cce_run_cleanup_handlers	(cce_location_tag_t * L);
+cce_decl bool cce_run_error_handlers	(cce_location_tag_t * L);
+
+/* The following macro is meant to be used like this:
+
+	cce_location_t	here;
+
+	if (cce_location(here)) {
+	  cce_run_error_handlers(here);
+	} else {
+	  ...
+	  if (error) cce_throw(here, NULL);
+          ...
+	  cce_run_cleanup_handlers(here);
+        }
+*/
+#define cce_location(HERE)	\
+  (cce_location_init(HERE), sigsetjmp((void *)(HERE),0))
+
+/* The following macros are meant to be used like this:
+
+   cce_location_t	here;
+
+   cce_enter(here);
+   {
+     ...
+   }
+   cce_leave(here);
+
+*/
+#define cce_enter(HERE)					\
+							\
+  if (cce_location((HERE))) {
+
+#define cce_leave(HERE)					\
+							\
+  cce_run_cleanup_handlers(HERE); }
 
 
 /** --------------------------------------------------------------------

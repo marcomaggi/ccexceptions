@@ -36,13 +36,20 @@ libccexceptions_la_LDFLAGS= -version-info $(ccexceptions_CURRENT):$(ccexceptions
 libccexceptions_la_SOURCES= \
 	src/ccexceptions.h		\
 	src/ccexceptions-internals.h	\
+	src/ccexceptions-locations.c	\
 	src/ccexceptions-version.c
 
 #page
 #### tests
 
 check_PROGRAMS	= \
-	tests/version
+	tests/version				\
+	tests/setjmp				\
+	tests/no-exceptions			\
+	tests/exception-no-handlers		\
+	tests/exception-with-cleanup-handler	\
+	tests/exception-with-error-handler	\
+	tests/exception-with-handlers
 
 TESTS				= $(check_PROGRAMS)
 
@@ -51,6 +58,24 @@ ccexceptions_tests_ldadd	= libccexceptions.la
 
 tests_version_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_version_LDADD		= $(ccexceptions_tests_ldadd)
+
+tests_setjmp_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_setjmp_LDADD		= $(ccexceptions_tests_ldadd)
+
+tests_no_exceptions_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_no_exceptions_LDADD		= $(ccexceptions_tests_ldadd)
+
+tests_exception_no_handlers_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_no_handlers_LDADD	= $(ccexceptions_tests_ldadd)
+
+tests_exception_with_cleanup_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_with_cleanup_handler_LDADD	= $(ccexceptions_tests_ldadd)
+
+tests_exception_with_error_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_with_error_handler_LDADD	= $(ccexceptions_tests_ldadd)
+
+tests_exception_with_handlers_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_with_handlers_LDADD	= $(ccexceptions_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
