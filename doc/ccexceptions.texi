@@ -123,7 +123,8 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * version::                     Version functions.
-* locations::                    Error handling with non-local exits.
+* api::                         Programming interface.
+* usage::                       How to use the library.
 
 Appendices
 
@@ -221,35 +222,139 @@ Return an integer representing the library interface current age.
 @end deftypefun
 
 @c page
-@node locations
-@chapter Error handling with non--local exits
+@node api
+@chapter Programming interface
 
 
 Non--local exits are a way to transfer execution from one point to another in a program; they are
-implemented by the standard C library through the @cfunc{setjmp} and @cfunc{longjmp} functions.
-CCExceptions makes use of this mechanism@footnote{Although this documentation always mentions
-@cfunc{setjmp}, the library calls @cfunc{sigsetjmp} to make sure that the signal context is not
-saved (consuming time) at each invocation; see the @code{setjmp(3)} manual page for details.} to
-implement exceptions and resources handling.
+implemented by the standard C library through the @cfunc{sigsetjmp} and @cfunc{siglongjmp}
+functions.  @value{PACKAGE} calls @cfunc{sigsetjmp} and @cfunc{siglongjmp} to make sure that the
+signal context is not saved (consuming time) at each invocation; see the @code{setjmp(3)} manual
+page for details.
 
-@menu
-* locations overview::           Overview and examples.
-* locations typedefs::           Data type definitions.
-* locations init::               Location initialisation.
-* locations resource::           Resource handling.
-* locations throw::              Throwing exceptions.
-* locations fail::               Failed handlers management.
-* locations memory::             Memory allocation for
-                                resource handlers.
-@end menu
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_location_tag_t
+Struct type representing the location context.  It contains an instance of @code{setjmp_buf} which
+is the target of the @cfunc{siglongjmp} calls.  It has the following public fields:
+
+@table @code
+@item void * condition
+An opaque pointer to a data structure representing the description of the exceptional condition.  It
+is set by @cfunc{cce_throw}.
+@end table
+@end deftp
+
+
+@deftp {One-Element Array Typedef} cce_location_t
+It is defined as follows:
+
+@example
+typedef cce_location_tag_t      cce_location_t[1];
+@end example
+
+This type is convenient to define an instance of location.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_handler_tag_t
+Struct type representing a cleanup or error handler.  Instances of this type are associated to a
+location by calling @cfunc{cce_register_cleanup_handler} or @cfunc{cce_register_error_handler}.
+Handlers are invoked by @cfunc{cce_run_cleanup_handlers} or @cfunc{cce_run_error_handlers}.
+
+Usually we wrap instances of this type into an enclosing struct definition as follows:
+
+@example
+struct resource_handler_t @{
+  cce_handler_tag_t	handler;
+  void *		resourcep;
+@};
+@end example
+
+@noindent
+in which the instance of @code{cce_handler_tag_t} is the first field.
+@end deftp
+
+
+@deftp {One-Element Array Typedef} cce_handler_t
+It is defined as follows:
+
+@example
+typedef cce_handler_tag_t      cce_handler_t[1];
+@end example
+
+This type is convenient to define an instance of handler.
+@end deftp
+
+
+@deftypefun void cce_location_init (cce_location_tag_t * @var{L})
+Initialise the location @var{L}, but do @strong{not} call @cfunc{sigsetjmp}.  We are not meant to
+call this function directly; rather we should use the macro @cfunc{cce_location}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} int cce_location (cce_location_tag_t * @var{L})
+Initialise the location @var{L}; call @cfunc{sigsetjmp} and return its return value.
+@end deftypefn
+
+
+@defmac CCE_SUCCESS
+@defmacx CCE_ERROR
+@defmacx CCE_RETRY
+Constants used by the libraries as non--local exit codes.  @samp{CCE_SUCCESS} is the return value of
+@cfunc{cce_location} at the first evaluation.  @samp{CCE_ERROR} is the return value of
+@cfunc{cce_location} when a non--local exit is performed by @cfunc{cce_raise}.  @samp{CCE_RETRY} is
+the return value of @cfunc{cce_location} when a non--local exit is performed by @cfunc{cce_retry}.
+@end defmac
+
+
+@deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{condition})
+Raise an exception associated to the destination @var{L} and with descriptor @var{condition}.  This
+function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
+@end deftypefun
+
+
+@deftypefun void cce_retry (cce_location_tag_t * @var{L})
+Raise an exception associated to the destination @var{L} with the purpose or retrying the body
+evaluation.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_RETRY}.
+@end deftypefun
+
+
+@deftypefun void cce_register_cleanup_handler (cce_location_tag_t * @var{L}, void * @var{H})
+Register the cleanup handler referenced by @var{H} in the stack of handlers associated to the
+location @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is
+a structure of type @code{cce_handler_tag_t}; such structure must be allocated on the stack of the
+function also defining the location @var{L}.
+@end deftypefun
+
+
+@deftypefun void cce_register_error_handler (cce_location_tag_t * @var{L}, void * @var{H})
+Register the error handler referenced by @var{H} in the stack of handlers associated to the location
+@var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
+structure of type @code{cce_handler_tag_t}; such structure must be allocated on the stack of the
+function also defining the location @var{L}.
+@end deftypefun
+
+
+@deftypefun void cce_run_cleanup_handlers (cce_location_tag_t * @var{L})
+Run all the cleanup handlers associated to the location @var{L}.  Each handler must take care of
+itself regarding internal error handling and asynchronous resources allocation.
+@end deftypefun
+
+
+@deftypefun void cce_run_error_handlers (cce_location_tag_t * @var{L})
+Run all the error handlers associated to the location @var{L}.  Each handler must take care of
+itself regarding internal error handling and asynchronous resources allocation.
+@end deftypefun
 
 @c page
-@node locations overview
-@section Overview and examples
+@node usage
+@chapter How to use the library
 
 
-This section is a by--examples tutorial; CCExceptions's location mechanism has
-the following purposes:
+This section is a by--examples tutorial; @value{PACKAGE}'s location mechanism has the following
+purposes:
 
 @enumerate
 @item
@@ -257,973 +362,196 @@ Implement non--local exits in a way that allows client code to be
 shorter and simpler to understand.
 
 @item
-Allow error reporting with complex custom objects.
-
-@item
-Implement automatic resource deallocation.
-
-@item
-Implement registration of failed resource destructor invocations in a
-way that allows later attempts to deal with the errors.
+Implement non--local exit handlers to perform synchronous clean--up operations.
 @end enumerate
 
 @noindent
-these features come at the cost of slowing down execution in a possibly
-sensible way.
+these features come at the cost of slowing down execution in a possibly sensible way.
 
 @menu
-* locations overview exit::      Brief introduction to non--local exits.
-* locations overview basic::     Basic usage of the location mechanism.
-* locations overview resource::  Examples of resource handlers.
-* locations overview handler::   Resource handlers allocation.
-* locations overview fail::      Resource handlers failures.
-* locations overview full::      Full example.
+* usage setjmp::                Brief introduction to non-local exits.
+
 @end menu
 
 @c page
-@node locations overview exit
-@subsection Brief introduction to non--local exits
+@node usage setjmp
+@section Brief introduction to non--local exits
 
 
-Here we recall briefly how the standard, C language, non--local exits
-mechanism works; for the full documentation refer to the C Library.
-@glibcref{Non-Local Exits, Non-Local Exits}.
+Here we recall briefly how the standard, C language, non--local exits mechanism works; for the full
+documentation refer to the C Library.  @glibcref{Non-Local Exits, Non-Local Exits}.
 
-To use @cfunc{setjmp} and @cfunc{longjmp} we write chunks of code like
-the following:
+To use @cfunc{sigsetjmp} and @cfunc{siglongjmp} we write chunks of code like the following:
 
 @example
-jmp_buf  here;
+sigjmp_buf  here;
 
-if (! setjmp(here))
+if (sigsetjmp(here, 0))
   @{
-    do_something();
-
-    if (error)
-      longjmp(here, 2);
-
-    do_something();
+    handle_the_error();
   @}
 else
-  @{    /* an error occurred */
-    handle_the_error();
+  @{
+    do_something();
+    if (error)
+      siglongjmp(here, 2);
+    do_something();
   @}
 @end example
 
 @noindent
-when @cfunc{setjmp} is invoked: It saves the current position in
-@code{here}, then it returns zero.  If @cfunc{longjmp} is not applied to
-@code{here}, nothing strange happens and the execution flow goes on as
-usual.  If @cfunc{longjmp} is applied to @code{here} as
-@code{longjmp(here, 2)}: The execution jumps back to the call to
-@cfunc{setjmp} with @code{2} as return value.
+when @cfunc{sigsetjmp} is invoked: it saves the current ``position'' in @code{here}, then it returns
+zero.  If @cfunc{siglongjmp} is not applied to @code{here}, nothing strange happens and the
+execution flow goes on as usual.  If @cfunc{siglongjmp} is applied to @code{here} as
+@code{siglongjmp(here, 2)}: the execution jumps back to the call to @cfunc{sigsetjmp} with @code{2}
+as return value.  This mechanism allows us to separate the error handling code from the main code.
 
-This mechanism allows us to separate the error handling code from the
-main code, basically as in:
-
-@example
-jmp_buf  here;
-
-if (! setjmp(here))
-  @{ /* body */ @}
-else
-  @{ /* error handler */ @}
-
-if (setjmp(here))
-  @{ /* error handler */ @}
-else
-  @{ /* body */ @}
-@end example
-
-As always, care must be taken when the body allocates asynchronous
-resources.  For each resource: The error handler must detect if the
-allocation took place and execute release code.  For example:
+As always, care must be taken when the body allocates asynchronous resources.  For each resource:
+the error handler must detect if the allocation took place and execute release code.  For example:
 
 @example
-jmp_buf           here;
+sigjmp_buf           here;
 volatile void *   p = NULL;
 
-if (! setjmp(here))
+if (sigsetjmp(here, 0))
+  @{
+    if (p)
+      free(p);
+  @}
+else
   @{
     ...
     p = malloc(4096);
     ...
   @}
-else
-  @{
-    if (p)
-      free(p);
-  @}
 @end example
 
-@c page
-@node locations overview basic
-@subsection Basic usage of the location mechanism
-
-
-The mechanism is outlined in the following example, which allocates two
-resources and registers the associated resource handlers:
+Let's see some logic example; we will assume the following preamble:
 
 @example
-mcl_location_t  here;
-void *  resource_A;
-void *  resource_B;
+#include <assert.h>
+#include <stdlib.h>
+#include <setjmp.h>
 
-if (mcl_location(here, NULL))
-  @{
-    resource_A = allocate_resource(here);
-    MCL_LOCATION_HANDLER(here, resource_A, release_resource);
-
-    resource_B = allocate_resource(here);
-    MCL_LOCATION_HANDLER(here, resource_B, release_resource);
-
-    do_something_with(here, resource_A, resource_B);
-
-    mcl_location_run_handlers(here);
-  @}
-else
-  @{  /* an error occurred */
-    react_to_error(here->condition);
-    mcl_condition_final(here->condition);
-  @}
+#define JUMP_TO_ERROR           2
+#define JUMP_TO_RETRY           3
 @end example
 
-@noindent
-an equivalent mechanism is implemented by the following:
+In the following code no jump is performed; we just call @cfunc{sigsetjmp} once and never call
+@cfunc{siglongjmp}:
 
 @example
-mcl_location_t  here;
-void *  resource_A;
-void *  resource_B;
+sigjmp_buf  L;
+int         flag = 0, code = 0;
 
-mcl_location_enter(here, NULL);
-@{
-  resource_A = allocate_resource(here);
-  MCL_LOCATION_HANDLER(here, resource_A, release_resource);
-
-  resource_B = allocate_resource(here);
-  MCL_LOCATION_HANDLER(here, resource_B, release_resource);
-
-  do_something_with(here, resource_A, resource_B);
+code = sigsetjmp(L, 0);
+if (code) @{
+  flag = 2;
+@} else @{
+  flag = 1;
 @}
-mcl_location_leave(here);
-
-if (here->condition)
-  @{  /* an error occurred */
-    react_to_error(here->condition);
-    mcl_condition_final(here->condition);
-  @}
+assert(0 == code);
+assert(1 == flag);
 @end example
 
-The code does the following:
-
-@enumerate
-@item
-It defines a location structure:
+In the following code we perform a jump and handle the logic with an @code{if} statement:
 
 @example
-mcl_location_t  here;
-@end example
+sigjmp_buf  L;
+int         code;
+int         flag = 0;
 
-@item
-It initialises the location structure and ``fixes'' the location where
-the non--local exit will jump to:
-
-@example
-if (mcl_location(here, NULL))
-@end example
-
-@noindent
-@cfunc{mcl_location} will be @ctrue{} at the first evaluation and
-@cfalse{} whenever the execution flow jumps back to the fixed point.
-
-@item
-It allocates two resources, registering release handlers to be invoked
-upon a jump to the location:
-
-@example
-resource_A = allocate_resource(here);
-MCL_LOCATION_HANDLER(here, resource_A, release_resource);
-
-resource_B = allocate_resource(here);
-MCL_LOCATION_HANDLER(here, resource_B, release_resource);
-@end example
-
-@noindent
-notice that resource handlers registration is itself an operation that
-may fail (because of not enough memory) causing a jump back to the
-location.
-
-@item
-It does something with the resources:
-
-@example
-do_something_with(here, resource_A, resource_B);
-@end example
-
-@noindent
-if the operation fails, it can jump back to the location.
-
-@item
-It runs the registered resource handlers:
-
-@example
-mcl_location_run_handlers(here);
-@end example
-@end enumerate
-
-@c page
-@node locations overview resource
-@subsection Examples of resource handlers
-
-
-When using the location mechanism to handle asynchronous resources, we
-can say the resource allocation is ``compensated'' by a release handler.
-It is advisable to use the mechanism with a single function that
-allocates a resource and automatically registers its ``compensation''.
-
-Let's keep the following usage example as reference:
-
-@example
-mcl_location_t  here;
-
-mcl_location_enter(here, NULL);
-@{
-  void * resource = allocate_compensated_resource(here);
-
-  do_something_with(here, resource);
+code = sigsetjmp(L, 0);
+if (JUMP_TO_ERROR == code) @{
+  flag = 2;
+@} else @{
+  siglongjmp(L, JUMP_TO_ERROR);
+  flag = 1;
 @}
-mcl_location_leave(here);
+assert(JUMP_TO_ERROR == code);
+assert(2 == flag);
 @end example
 
-@c ------------------------------------------------------------
-
-@subsubheading Common memory blocks
-
-For memory blocks managed with the standard @cfunc{malloc} and
-@cfunc{free} functions we can do:
+In the following code we perform a jump and handle the logic with a @code{switch} statement:
 
 @example
-static void
-release_resource (mcl_location_t L, mcl_value_t resource)
-@{
-  void *  p = resource.pointer;
-  free(p);
+sigjmp_buf  L;
+int         code;
+int         flag = 0;
+
+code = sigsetjmp(L, 0);
+switch (code) @{
+case JUMP_TO_ERROR:
+  flag = 2;
+  break;
+default:
+  siglongjmp(L, JUMP_TO_ERROR);
+  flag = 1;
+  break;
 @}
-void *
-allocate_compensated_resource (mcl_location_t L, size_t dim)
-@{
-  void *  p = malloc(dim);
+assert(JUMP_TO_ERROR == code);
+assert(2 == flag);
+@end example
 
-  if (NULL != p)
-    MCL_LOCATION_HANDLER(L, p, release_resource);
-  else
-    mcl_throw(L, mcl_condition_out_of_memory());
-  return p;
+In the following code we perform a jump and try an alternative body; we handle the logic with a
+@code{switch} statement:
+
+@example
+sigjmp_buf  L;
+int         code;
+int         flag = 0;
+
+code = sigsetjmp(L, 0);
+switch (code) @{
+case JUMP_TO_ERROR:
+  siglongjmp(L, JUMP_TO_RETRY);
+  flag = 2;
+  break;
+case JUMP_TO_RETRY:
+  // the alternative body
+  flag = 3;
+  break;
+default:
+  // the body
+  siglongjmp(L, JUMP_TO_ERROR);
+  flag = 1;
+  break;
 @}
+assert(JUMP_TO_RETRY == code);
+assert(3 == flag);
 @end example
 
-@c ------------------------------------------------------------
-
-@subsubheading Allocator managed memory blocks
-
-For memory blocks managed with the CCExceptions allocator @api{}, we can do:
+In the following code we perform a jump and retry the body several times:
 
 @example
-static void
-release_resource (mcl_location_t L, mcl_value_t resource)
-@{
-  mcl_memory_allocator_t  A = mcl_memory_allocator();
-  void *  p = resource.pointer;
+sigjmp_buf          L;
+volatile int        times = 0;
+int                 code = 0;
+int                 flag = 0;
 
-  A.alloc(L, A.data, &p, 0);
+code = sigsetjmp(L, 0);
+switch (code) @{
+case JUMP_TO_ERROR:
+  siglongjmp(L, JUMP_TO_RETRY);
+  flag = 2;
+  break;
+default:
+  if ((JUMP_TO_RETRY == code) && (times < 5)) @{
+    // retrying
+    ++times;
+    siglongjmp(L, JUMP_TO_ERROR);
+  @} else if (JUMP_TO_RETRY == code) @{
+    flag = 3;
+  @} else @{
+    // the body
+    siglongjmp(L, JUMP_TO_ERROR);
+    flag = 1;
+  @}
+  break;
 @}
-void *
-allocate_compensated_resource (mcl_location_t L, size_t dim)
-@{
-  mcl_memory_allocator_t  A = mcl_memory_allocator();
-  void *  p = NULL;
-
-  A.alloc(L, A.data, &p, dim);
-  MCL_LOCATION_HANDLER(L, p, release_resource);
-  return p;
-@}
+assert(JUMP_TO_RETRY == code);
+assert(3 == flag);
 @end example
-
-@noindent
-here the allocator itself takes care of raising the appropriate
-condition object, if an error occurs.
-
-@c ------------------------------------------------------------
-
-@subsubheading Platform's file descriptors
-
-The file descriptors system interface has a release function (the system
-@cfunc{close}) which can fail; in this case we have to code a
-compensation function that signals a possible failure.  We can do:
-
-@example
-static void
-release_resource (mcl_location_t L, mcl_value_t resource)
-@{
-  int   fd = resource.t_int;
-
-  if (0 != close(fd))
-    @{
-      mcl_condition_t  C;
-
-      C = mcl_condition(L, mcl_condition_errno_descriptor(), NULL);
-      mcl_condition_errno(C, errno, NULL);
-      mcl_throw(L, C);
-    @}
-@}
-void *
-allocate_compensated_resource (mcl_location_t L,
-                               const char * file_name,
-                               int flags, int mode)
-@{
-  int  fd;
-
-  fd = open(file_name, flags, mode);
-  if (0 <= fd)
-    @{
-      mcl_value_t  resource = @{ .t_int = fd @};
-      mcl_location_handler(L, resource, release_resource);
-    @}
-  else
-    @{
-      mcl_condition_t  C;
-
-      C = mcl_condition(L, mcl_condition_errno_descriptor(), NULL);
-      mcl_condition_errno(C, errno, NULL);
-      mcl_throw(L, C);
-    @}
-  return fd;
-@}
-@end example
-
-@c page
-@node locations overview handler
-@subsection Resource handlers allocation
-
-
-Handlers structures are of type @code{mcl_resource_handler_tag_t}; their
-memory allocation is performed by a proper CCExceptions allocator that caches
-them; the allocator is customisable and it is shared among a hierarchy
-of locations.  Let's see an example in which locations are nested (we
-omit reaction to errors and finalisation of condition objects):
-
-@smallexample
-mcl_location  outer, middle, inner;
-void  *resource_A, *resource_B, *resource_C;
-
-mcl_location_enter(outer, NULL);
-@{
-  resource_A = allocate_resource(outer);
-  MCL_RESOURCE_HANDLER(outer, resource_A, release_resource);
-
-  mcl_location_enter(middle, outer);
-  @{
-    resource_B = allocate_resource(outer);
-    MCL_RESOURCE_HANDLER(outer, resource_B, release_resource);
-
-    mcl_location_enter(inner, middle);
-    @{
-      resource_C = allocate_resource(outer);
-      MCL_RESOURCE_HANDLER(outer, resource_C, release_resource);
-
-      do_something(inner, resource_A, resource_B, resource_C);
-    @}
-    mcl_location_leave(inner);
-  @}
-  mcl_location_leave(middle);
-
-  mcl_location_enter(middle, outer);
-  @{
-    resource_B = allocate_resource(outer);
-    MCL_RESOURCE_HANDLER(outer, resource_B, release_resource);
-
-    do_some_other_thing(inner, resource_A, resource_B);
-  @}
-  mcl_location_leave(middle);
-@}
-mcl_location_leave(outer);
-@end smallexample
-
-@noindent
-the arguments of @cfunc{mcl_location_enter} are used to build the
-hierarchy of locations; the outer call has @cnull{} as second argument,
-meaning that @code{outer} is a ``root location''; @code{middle} has
-@code{outer} as parent; @code{inner} has @code{middle} as parent.
-
-When the @code{outer} location is initialised: It embeds the current
-handlers allocator.  The @code{middle} and @code{inner} locations
-inherit the allocator from @code{outer}.  It is our responsibility to
-clean the allocator's cache if there is the need to do it.
-
-The calls to @cfunc{mcl_location_leave} take care of releasing the
-resources and to put back the handler structures in the cache.
-
-@c page
-@node locations overview fail
-@subsection Resource handlers failures
-
-
-When an exception is thrown with @cfunc{mcl_throw}, the execution flow
-jumps back to the call to @cfunc{mcl_location}; here the registered
-resource handlers are extracted from the location structure and
-evaluated to release the resources.
-
-The handlers are invoked under the control of a new, nested, hidden
-location: If a handler fails throwing an exception, execution jumps back
-to the nested location.  The error descriptor is stored in handler's
-structure, and the structure added to a collection in location's status.
-Then the next handler is evaluated.
-
-In pseudo--code, running handlers stored in the @code{outer} location
-works like this:
-
-@example
-mcl_location_t  hidden;
-mcl_resource_handler_t   H;
-
-if (mcl_location(hidden, outer))
-  @{
-    H->condition = hidden->condition;
-    put_handler_in_failed_collection(hidden, H);
-  @}
-
-while (H = get_next_handler(outer))
-  @{
-    H->function(hidden, H->resource);
-    free_handler(H);
-  @}
-@end example
-
-Failed handlers collections are shared in the hierarchy of locations; so
-in the next example all the locations share the collection in
-@code{outer}:
-
-@example
-mcl_location   outer, middle, inner;
-
-mcl_location_enter(outer, NULL);
-@{
-  ...
-  mcl_location_enter(middle, outer);
-  @{
-    ...
-    mcl_location_enter(inner, middle);
-    @{
-      ...
-    @}
-    mcl_location_leave(inner);
-  @}
-  mcl_location_leave(middle);
-
-  mcl_location_enter(middle, outer);
-  @{
-    ...
-  @}
-  mcl_location_leave(middle);
-@}
-mcl_location_leave(outer);
-@end example
-
-We @strong{must} check the status of the root location structure with
-code like the following:
-
-@example
-mcl_memory_allocator_t  A = outer->handlers_allocator;
-mcl_resource_handler_t  H;
-
-while ((H = mcl_location_next_failed_handler(outer)))
-  @{
-    print_error(H->condition);
-    A.alloc(NULL, A.data, &H, 0);
-  @}
-@end example
-
-@noindent
-or blindly release all the handlers with:
-
-@example
-mcl_location_free_failed_handlers_list(outer);
-@end example
-
-@c page
-@node locations overview full
-@subsection Full example
-
-
-The following is a full example of location mechanism usage, using three
-nested locations, with everything in it; the @code{outer} location makes
-use of the default handlers allocator; the @code{middle} and
-@code{inner} locations rethrow the exceptions up to the @code{outer}
-location:
-
-@smallexample
-mcl_memory_allocator_t  A;
-mcl_resource_handler_t  H;
-mcl_location  outer, middle, inner;
-void  *resource_A, *resource_B, *resource_C;
-
-mcl_location_enter(outer, NULL);
-@{
-  resource_A = allocate_resource(outer);
-  MCL_RESOURCE_HANDLER(outer, resource_A, release_resource);
-
-  mcl_location_enter(middle, outer);
-  @{
-    resource_B = allocate_resource(outer);
-    MCL_RESOURCE_HANDLER(outer, resource_B, release_resource);
-
-    mcl_location_enter(inner, middle);
-    @{
-      resource_C = allocate_resource(outer);
-      MCL_RESOURCE_HANDLER(outer, resource_C, release_resource);
-
-      do_something(inner, resource_A, resource_B, resource_C);
-    @}
-    mcl_location_leave(inner);
-
-    if (inner->condition)
-      mcl_throw(middle, inner->condition);
-  @}
-  mcl_location_leave(middle);
-
-  if (middle->condition)
-    mcl_throw(outer, middle->condition);
-
-  mcl_location_enter(middle, outer);
-  @{
-    resource_B = allocate_resource(outer);
-    MCL_RESOURCE_HANDLER(outer, resource_B, release_resource);
-
-    do_some_other_thing(inner, resource_A, resource_B);
-  @}
-  mcl_location_leave(middle);
-
-  if (middle->condition)
-    mcl_throw(outer, middle->condition);
-@}
-mcl_location_leave(outer);
-
-if (outer->condition)
-  @{
-    react_to_error(outer->condition);
-    mcl_condition_final(outer->condition);
-  @}
-
-A = outer->handlers_allocator;
-while ((H = mcl_location_next_failed_handler(outer)))
-  @{
-    react_to_failed_handler_error(H->condition);
-    mcl_condition_final(H->condition);
-    A.alloc(NULL, A.data, &H, 0);
-  @}
-
-mcl_location_clean_default_handlers_allocator();
-@end smallexample
-
-@c page
-@node locations typedefs
-@section Data type definitions
-
-
-@deftp {Struct Typedef} mcl_location_tag_t
-@deftpx {One-Element Array Typedef} mcl_location_t
-These types are used to allocate and access the core structure of the
-location mechanism.  This structure @strong{cannot} be shared among
-threads.
-
-Usually we only need @code{mcl_location_t} to: allocate the structure on
-the stack, specify a pointer to an allocated structure, specify a
-pointer to the structure as parameter of a function.  It is defined as:
-
-@example
-typedef mcl_location_tag_t mcl_location_t[1];
-@end example
-
-Location structures can be organised in a list hierarchy, in which each
-location may share fields with its ancestors.
-
-Public fields description follows; usually we do not need to access
-them, with the exception of @code{condition} and possibly
-@code{longjmp_code}.
-
-@table @code
-@item jmp_buf buffer
-The buffer in which @cfunc{setjmp} stores the current state of the
-process.
-
-@item int longjmp_code
-The code returned by @cfunc{setjmp}.  After a call to @cfunc{longjmp}
-has been performed>: It is always non--zero.
-
-@cfunc{mcl_throw} sets it to @code{2}; we can set it to any non--zero
-value by directly using @cfunc{longjmp} on the @code{buffer} field of
-the structure.
-
-This means that jumping to the location with a direct call to
-@cfunc{longjmp} can be distinguished by a call to @cfunc{mcl_throw} by
-examining the @code{longjmp_code} field.
-
-@item mcl_memory_allocator_t handlers_allocator
-Used to allocate, release and possibly cache resource handler
-structures.
-
-@item mcl_resource_handler_t first_registered_handler
-Pointer to the first element of a @acronym{LIFO} linked list of resource
-handlers associated to this location.  If set to @cnull{}: No handlers
-have been registered.
-
-@item mcl_resource_handler_t first_failed_handler
-Pointer to the first element of a @acronym{LIFO} linked list of resource
-handlers associated to this location, which have been invoked and failed
-raising an exception.  If a handler is in this list: It is no more in
-the list referenced by @code{first_registered_handler}.
-
-If set to @cnull{}: No handlers have been registered here.  This means
-one of the following:
-
-@itemize
-@item
-No handlers have been invoked, yet.
-@item
-Handlers have been invoked but none raised an exception.
-@item
-Handlers were invoked and some of them raised an exception, but they
-were stored in an uplevel location structure.
-@end itemize
-
-@item mcl_resource_handler_t * failed_handlers_list
-Pointer to the @code{first_failed_handler} field of this
-@code{mcl_location_tag_t} structure or an ancestor structure.  It
-references the linked list into which failed handlers for this location
-will be stored for later review.
-
-@item const void * condition
-A pointer that references a custom value describing an error; it can be
-@cnull{}, meaning that no error occurred.  CCExceptions always signals errors
-setting this field to a @code{mcl_condition_t} pointer referencing a
-condition object.
-@end table
-@end deftp
-
-
-@deftp {Struct Typedef} mcl_resource_handler_tag_t
-@deftpx {Pointer Typedef} mcl_resource_handler_t
-These types are used to allocate and access resource handlers.  A
-resource handler is used to release an allocated resource.  Public
-fields descriptions follow.
-
-@table @code
-@item mcl_resource_handler_fun_t * release
-Pointer to the function to invoke to release the resource.
-
-@item mcl_value_t resource
-A value representing or referencing the resource; it is used as argument
-to the function.
-
-@item const void * condition
-If @code{release} applied to @code{resource} raises an exception, the
-pointer to the error descriptor is stored in this field.
-@end table
-@end deftp
-
-
-@deftypefn {Function Prototype} void mcl_resource_handler_fun_t (mcl_condition_t @var{there}, mcl_value_t @var{resource})
-Signature of resource handler functions.  @var{resource} represents or
-references the resource to be released.  If an error occurs releasing
-the resource, the function must raise an exception associated to the
-@var{there} location.
-@end deftypefn
-
-
-@defmac MCL_LOCATION_FREE_HANDLERS_MAX
-A customisable preprocessor symbol set to @code{64}.  It is the maximum
-number of handler structures allowed to be cached in a handlers store.
-@end defmac
-
-@c page
-@node locations init
-@section Location initialisation
-
-
-@deftypefun bool mcl_location_init (mcl_location_t @var{there}, mcl_location_t @var{parent})
-Initialise the location referenced by @var{there} using @var{parent} as
-its parent; return @ctrue{}.  @var{parent} can be @cnull{}, in which case
-@var{there} has no ancestors.
-
-@itemize
-@item
-If @var{parent} is @cnull{}: The fields @code{handlers_allocator} and
-@code{failed_handlers_list} are set as:
-
-@smallexample
-@var{there}->handlers_allocator   = mcl_location_handlers_allocator(NULL);
-@var{there}->failed_handlers_list = &( @var{there}->first_failed_handler );
-@end smallexample
-
-@item
-If @var{parent} is non--@cnull{}: The fields @code{handlers_allocator}
-and @code{failed_handlers_list} are set as:
-
-@example
-@var{there}->handlers_allocator e = @var{parent}->handlers_allocator;
-@var{there}->failed_handlers_list = @var{parent}->failed_handlers_list;
-@end example
-
-@noindent
-that is: @var{there} shares the resources with @var{parent}.
-@end itemize
-@end deftypefun
-
-
-@deftypefn {Preprocessor Macro} int mcl_location (mcl_location_t @var{there}, mcl_location_t @var{parent})
-Invoke @cfunc{mcl_location_init} using @var{there} and @var{parent} as
-parameters; then invoke @cfunc{setjmp} and return its value.  If
-@cfunc{longjmp} is invoked upon @var{there}: call
-@cfunc{mcl_location_run_handlers} and return its return value.
-@end deftypefn
-
-
-@deftypefn {Preprocessor Macro} void mcl_location_enter (mcl_location_t @var{there}, mcl_location_t @var{parent})
-@deftypefnx {Preprocessor Macro} void mcl_location_leave (mcl_location_t @var{there})
-These macros are wrappers for the beginning and ending of a
-location--controlled block.
-@end deftypefn
-
-@c page
-@node locations resource
-@section Resource handling
-
-
-@deftypefun void mcl_location_handler (mcl_location_t @var{there}, mcl_value_t @var{resource}, mcl_resource_handler_fun_t * @var{release})
-Register a new resource handler in @var{there}.  @var{release} will be
-used to release the resource referenced by @var{resource}.
-
-The allocator referenced by the @code{handlers_allocator} field in
-@var{there} is used to allocate the new structure; once initialised, the
-structure is prepended to the linked list referenced by the
-@code{first_registered_handler} field.
-@end deftypefun
-
-
-@deftypefun void mcl_location_pointer_handler (mcl_location_t @var{there}, void * @var{resource}, mcl_resource_handler_fun_t * @var{release})
-Wrapper for @cfunc{mcl_location_handler} specialised for pointer resources.
-@end deftypefun
-
-
-@deftypefn {Preprocessor Macro} void MCL_LOCATION_HANDLER (mcl_location_t @var{there}, void * @var{resource}, mcl_resource_handler_fun_t * @var{release})
-Wrapper for @cfunc{mcl_location_handler} specialised for pointer
-resources.
-@end deftypefn
-
-
-@deftypefun bool mcl_location_run_handlers (mcl_location_t @var{here})
-Extract all the resource handlers from the linked list referenced by the
-@code{first_registered_handler} field and apply the release function to
-the resource data.  Return @cfalse{}.
-
-@itemize
-@item
-If a handler does not raise an exception: The release was successful.
-The consumed handler structure is given back to the
-@code{handlers_allocator}, where it is cached or released.
-
-@item
-If a handler function raises an exception: The release failed.  The
-handler structure is prepended to the linked list referenced by the
-@code{failed_handlers_list} field, where it can be examined again later;
-the error descriptor is stored in the @var{condition} field of the
-handler structure.
-@end itemize
-@end deftypefun
-
-@c page
-@node locations throw
-@section Throwing exceptions
-
-
-Jumping back to a location serves two purposes:
-
-@enumerate
-@item
-To trigger the release of resources associated to the location; if we do
-not jump back resources will not be released.
-
-@item
-To signal an error occurred executing the body of code associated to a
-location.
-@end enumerate
-
-To jump back with no error, we call @cfunc{mcl_throw} with @cnull{} as
-second argument:
-
-@example
-mcl_location_t  there;
-
-...
-mcl_throw(there, NULL);
-@end example
-
-@noindent
-or use the @cfunc{mcl_location_leave} macro.  To signal an error we have
-to build a condition object and throw it:
-
-@example
-mcl_location_t  there;
-
-...
-@{
-  mcl_condition_t  C;
-
-  C = make_appropriate_condition();
-  mcl_throw(there, C);
-@}
-@end example
-
-@noindent
-the condition object is stored in the @code{condition} field of the
-location structure, and later we have to release it with
-@cfunc{mcl_condition_final}.
-
-
-@deftypefun void mcl_throw (mcl_location_t @var{there}, const void * @var{condition})
-Store @var{condition} in the @code{condition} field of @var{there}, then
-invoke @cfunc{longjmp} upon the @code{jmp_buf} in @var{there}.
-@end deftypefun
-
-
-@defmac MCL_LOCATION_LONGJMP_CODE_FOR_THROW
-The code used by @cfunc{mcl_throw} as second argument for
-@cfunc{longjmp}.  It is defined to @code{2} by the @code{configure}
-script.
-@end defmac
-
-@c page
-@node locations fail
-@section Failed handlers management
-
-
-Basically we should handle the list of failed handlers with code like
-the following:
-
-@example
-mcl_location_t  there;
-
-mcl_location_enter(there, NULL);
-@{
-  ...
-@}
-mcl_location_leave(there);
-
-mcl_memory_allocator_t  A = there->handlers_allocator;
-mcl_resource_handler_t  H;
-
-while ((H = mcl_location_next_failed_handler(there)))
-  @{
-    handle_the_error(H->condition);
-    mcl_condition_final(H->condition);
-    A.alloc(NULL, A.data, &H, 0);
-  @}
-@end example
-
-We can do what we want with a failed handler, even try to invoke it
-again; if we invoke it again, we have to take responsibility to release
-the original condition object first using @cfunc{mcl_condition_final}.
-
-If we just want to ignore failed handlers, we can do:
-
-@example
-mcl_location_t  there;
-
-mcl_location_enter(there, NULL);
-@{
-  ...
-@}
-mcl_location_leave(there);
-mcl_location_free_failed_handlers_list(there);
-@end example
-
-@noindent
-failing to release the failed handlers will result in memory leakage.
-
-
-@deftypefun mcl_resource_handler_t mcl_location_next_failed_handler (mcl_location_t @var{root})
-Failed handlers structures are stored as a sequence in the state of
-locations; this function extracts the next handler structure and returns
-a pointer to it.  When all the failed handlers have been extracted: The
-return value is @cnull{}.
-
-Notice that this function will extract the handlers only if @var{root}
-is the root location of a hierarchy; that is, if it was initialised
-with:
-
-@example
-mcl_location(@var{root}, NULL)
-@end example
-
-@noindent
-else it will return @cnull{}.
-@end deftypefun
-
-
-@deftypefun void mcl_location_free_failed_handlers_list (mcl_location_t @var{root})
-Access the list referenced by the @code{first_failed_handlers} field in
-@var{root} and release all the handler structures.  The list is reset to
-empty state.
-
-Notice that this function will clean the list only if @var{root} is the
-root location of a hierarchy; that is, if it was initialised with:
-
-@example
-mcl_location(@var{root}, NULL)
-@end example
-
-@noindent
-else it will silently do nothing.
-@end deftypefun
-
-@c page
-@node locations memory
-@section Memory allocation for resource handlers
-
-
-Whenever a location is initialised by @cfunc{mcl_location_init}, its
-@code{handlers_allocator} is initialised with the ``current'' handlers
-allocator: A statically allocated structure implementing a policy for
-@code{mcl_resource_handler_tag_t} structures allocation.
-
-By default the allocator uses @cfunc{malloc} to allocate memory and
-caches released structures in a linked list up to a hard--coded number.
-The default allocator is @strong{not} thread safe.
-
-
-@deftypefun mcl_memory_allocator_t mcl_location_handlers_allocator (mcl_memory_allocator_t * @var{new})
-If @var{new} is @cnull{}: The current allocator is returned and nothing
-else happens.  Else the referenced allocator becomes the current one,
-and the old allocator is returned.
-@end deftypefun
-
-
-@deftypefun mcl_memory_allocator_t mcl_location_default_handlers_allocator (void)
-Return the default handlers allocator.  It is the initial value of the
-``current'' allocator.
-@end deftypefun
-
-
-@deftypefun void mcl_location_clean_default_handlers_allocator (void)
-Release all the handler structures cached in the default allocator.
-@end deftypefun
-
-
-@defmac MCL_LOCATION_FREE_HANDLERS_MAX
-Number of resource handlers to cache in the allocator status.  It is set
-to @code{64} by the @code{configure} script.
-@end defmac
 
 @c page
 @c ------------------------------------------------------------
