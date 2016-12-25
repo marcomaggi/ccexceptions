@@ -178,7 +178,6 @@ typedef cce_handler_tag_t		cce_handler_t[1];
 typedef struct cce_location_tag_t {
   /* The buffer must be the first member of this struct. */
   sigjmp_buf			buffer;
-  int				exception_code;
   void *			condition;
   cce_handler_tag_t *		next_handler;
 } cce_location_tag_t;

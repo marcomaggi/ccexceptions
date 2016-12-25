@@ -27,37 +27,29 @@
 */
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
-#include <memory.h>
 #include "ccexceptions-internals.h"
 
 void
 cce_location_init (cce_location_tag_t * L)
 {
-  memset(L, '\0', sizeof(cce_location_tag_t));
   L->next_handler	= NULL;
   L->condition		= NULL;
 }
 void
 cce_throw (struct cce_location_tag_t * L, void * condition)
 {
-  L->exception_code	= CCE_ERROR;
   L->condition		= condition;
   siglongjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_throw_code (struct cce_location_tag_t * L, int custom_code, void * condition)
 {
-  L->exception_code	= custom_code;
   L->condition		= condition;
   siglongjmp(L->buffer, custom_code);
 }
 void
 cce_retry (struct cce_location_tag_t * L)
 {
-  L->exception_code	= CCE_RETRY;
   L->condition		= NULL;
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
