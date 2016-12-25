@@ -129,39 +129,6 @@ cce_decl int		cce_version_interface_age	(void);
  ** Type declarations.
  ** ----------------------------------------------------------------- */
 
-typedef union {
-  char		t_char;
-  unsigned char	t_unsigned_char;
-  int		t_int;
-  unsigned int	t_unsigned_int;
-  long		t_long;
-  unsigned long	t_unsigned_long;
-
-  int8_t	t_int8;
-  int16_t	t_int16;
-  int32_t	t_int32;
-  int64_t	t_int64;
-  uint8_t	t_uint8;
-  uint16_t	t_uint16;
-  uint32_t	t_uint32;
-  uint64_t	t_uint64;
-
-  intptr_t	t_intptr;
-  uintptr_t	t_uintptr;
-  size_t	t_size;
-  ssize_t	t_ssize;
-
-  float		t_float;
-  double	t_double;
-
-  void *	t_void_pointer;
-} cce_value_t;
-
-
-/** --------------------------------------------------------------------
- ** Location functions.
- ** ----------------------------------------------------------------- */
-
 struct cce_location_tag_t;
 struct cce_handler_tag_t;
 
@@ -184,13 +151,18 @@ typedef struct cce_location_tag_t {
 
 typedef cce_location_tag_t		cce_location_t[1];
 
-cce_decl void cce_location_init		(cce_location_tag_t * here);
-cce_decl void cce_throw			(struct cce_location_tag_t * L, void * condition);
-cce_decl void cce_retry			(struct cce_location_tag_t * L);
+
+/** --------------------------------------------------------------------
+ ** Location functions.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_location_init			(cce_location_tag_t * here);
+cce_decl void cce_raise				(cce_location_tag_t * L, void * condition);
+cce_decl void cce_retry				(cce_location_tag_t * L);
 cce_decl void cce_register_cleanup_handler	(cce_location_tag_t * L, void * H);
 cce_decl void cce_register_error_handler	(cce_location_tag_t * L, void * H);
-cce_decl void cce_run_cleanup_handlers	(cce_location_tag_t * L);
-cce_decl bool cce_run_error_handlers	(cce_location_tag_t * L);
+cce_decl void cce_run_cleanup_handlers		(cce_location_tag_t * L);
+cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
 
 /* The following macro is meant to be used like this:
 

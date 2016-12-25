@@ -36,16 +36,10 @@ cce_location_init (cce_location_tag_t * L)
   L->condition		= NULL;
 }
 void
-cce_throw (struct cce_location_tag_t * L, void * condition)
+cce_raise (struct cce_location_tag_t * L, void * condition)
 {
   L->condition		= condition;
   siglongjmp(L->buffer, (int)CCE_ERROR);
-}
-void
-cce_throw_code (struct cce_location_tag_t * L, int custom_code, void * condition)
-{
-  L->condition		= condition;
-  siglongjmp(L->buffer, custom_code);
 }
 void
 cce_retry (struct cce_location_tag_t * L)
@@ -81,7 +75,7 @@ cce_run_cleanup_handlers (cce_location_tag_t * L)
     }
   }
 }
-bool
+void
 cce_run_error_handlers (cce_location_tag_t * L)
 {
   for (cce_handler_tag_t * H = L->next_handler; H && H->handler_function; H = H->next_handler) {
@@ -90,7 +84,6 @@ cce_run_error_handlers (cce_location_tag_t * L)
        mistake. */
     H->handler_function = NULL;
   }
-  return false;
 }
 
 /* end of file */

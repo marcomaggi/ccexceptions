@@ -96,7 +96,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       cce_register_error_handler(L, &H1);
       cce_register_error_handler(L, &H2);
       if (1) {
-	cce_throw(L, NULL);
+	cce_raise(L, NULL);
       }
       cce_run_cleanup_handlers(L);
     }

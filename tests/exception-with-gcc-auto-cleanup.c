@@ -101,7 +101,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       default:
 	flag1 = true;
 	flag2 = true;
-	cce_throw(L, NULL);
+	cce_raise(L, NULL);
 	cce_run_cleanup_handlers(L);
       }
       assert(NULL == L->condition);

@@ -95,7 +95,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     default:
       cce_register_cleanup_handler(L, &H1);
       cce_register_cleanup_handler(L, &H2);
-      cce_throw(L, NULL);
+      cce_raise(L, NULL);
       cce_run_cleanup_handlers(L);
     }
     assert(NULL == L->condition);

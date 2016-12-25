@@ -44,7 +44,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       flag = false;
       cce_run_error_handlers(L);
     } else { // the body
-      cce_throw(L, NULL);
+      cce_raise(L, NULL);
       flag = true;
       cce_run_cleanup_handlers(L);
     }
@@ -64,7 +64,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       break;
 
     default:
-      cce_throw(L, NULL);
+      cce_raise(L, NULL);
       flag = true;
       cce_run_cleanup_handlers(L);
     }
