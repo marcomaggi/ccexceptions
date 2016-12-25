@@ -45,6 +45,7 @@ libccexceptions_la_SOURCES= \
 check_PROGRAMS	= \
 	tests/version				\
 	tests/setjmp				\
+	tests/gcc-auto-cleanup			\
 	tests/no-exceptions			\
 	tests/exception-no-handlers		\
 	tests/exception-with-cleanup-handler	\
@@ -62,6 +63,9 @@ tests_version_LDADD				= $(ccexceptions_tests_ldadd)
 
 tests_setjmp_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_setjmp_LDADD				= $(ccexceptions_tests_ldadd)
+
+tests_gcc_auto_cleanup_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_gcc_auto_cleanup_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_no_exceptions_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_no_exceptions_LDADD			= $(ccexceptions_tests_ldadd)
