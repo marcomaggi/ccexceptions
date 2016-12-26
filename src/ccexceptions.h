@@ -132,7 +132,7 @@ cce_decl int		cce_version_interface_age	(void);
 struct cce_location_tag_t;
 struct cce_handler_tag_t;
 
-typedef void cce_handler_fun_t (struct cce_location_tag_t * L, void * data);
+typedef void cce_handler_fun_t (struct cce_location_tag_t * L, void * H);
 
 typedef struct cce_handler_tag_t {
   bool				is_cleanup_handler;
@@ -179,25 +179,6 @@ cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
 */
 #define cce_location(HERE)	\
   (cce_location_init(HERE), sigsetjmp((void *)(HERE),0))
-
-/* The following macros are meant to be used like this:
-
-   cce_location_t	here;
-
-   cce_enter(here);
-   {
-     ...
-   }
-   cce_leave(here);
-
-*/
-#define cce_enter(HERE)					\
-							\
-  if (cce_location((HERE))) {
-
-#define cce_leave(HERE)					\
-							\
-  cce_run_cleanup_handlers(HERE); }
 
 
 /** --------------------------------------------------------------------
