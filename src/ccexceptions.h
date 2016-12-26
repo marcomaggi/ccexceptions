@@ -110,7 +110,7 @@ typedef enum {
 
   /* This  code  is  available  to  the  custom  code  to  define  other
      represents the return value of the "sigsetjmp()" evaluation after a
-     "cce_throw()" call. */
+     "cce_raise()" call. */
   CCE_FIRST_NEXT
 } cce_code_t;
 
