@@ -48,7 +48,7 @@
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @value{VERSION} of @value{PACKAGE}, a C language library
+This document describes version @value{VERSION} of @value{PACKAGE}, a C99 language library
 implementing an interface to non--local exits, which is somewhat similar to exceptions handling.
 
 The package is distributed under the terms of the @gnu{} General Public License (@gpl{}).
@@ -148,7 +148,7 @@ Indexes
 @chapter Overview of the package
 
 
-This document describes version @value{VERSION} of @value{PACKAGE}, a C language library
+This document describes version @value{VERSION} of @value{PACKAGE}, a C99 language library
 implementing an interface to non--local exits, which is somewhat similar to exceptions handling.
 
 This tiny library will not solve the problem of error handling in the C language, it just brings a
@@ -167,6 +167,9 @@ shorter and simpler to understand.
 
 @item
 Implement non--local exit handlers to perform synchronous clean--up operations.
+
+@item
+Implement a simple exceptional condition descriptors interface.
 @end enumerate
 
 @noindent
@@ -246,9 +249,6 @@ Return an integer representing the library interface current age.
 Let's recall briefly how the standard, C language, non--local exits mechanism works; for the full
 documentation refer to the C Library.  @glibcref{Non-Local Exits, Non-Local Exits}.
 
-@value{PACKAGE} makes use of @cfunc{sigsetjmp} and @cfunc{siglongjmp}, rather than @cfunc{setjmp}
-and @cfunc{longjmp}, because we are not interested in saving the inter--process Unix signals state.
-
 To use @cfunc{sigsetjmp} and @cfunc{siglongjmp} we write chunks of code like the following:
 
 @example
@@ -264,8 +264,9 @@ if (sigsetjmp(here, DO_NOT_SAVE_SIGS))
 else
   @{
     do_something();
-    if (error)
+    if (an_error_occurred()) @{
       siglongjmp(here, JMP_ERROR_CODE);
+    @}
     do_something_else();
   @}
 @end example
@@ -275,41 +276,42 @@ this is what happens:
 
 @itemize
 @item
-When @cfunc{sigsetjmp} is invoked: it saves the current ``position'' in @code{here}, then it returns
+When @cfunc{sigsetjmp} is invoked: it saves the current ``position'' in @var{here}, then it returns
 zero.
 
 @item
-If @cfunc{siglongjmp} is not applied to @code{here}, nothing strange happens and the execution flow
+If @cfunc{siglongjmp} is not applied to @var{here}, nothing strange happens and the execution flow
 goes on as usual.
 
 @item
-If @cfunc{siglongjmp} is applied to @code{here}: the execution jumps back to the call to
+If @cfunc{siglongjmp} is applied to @var{here}: the execution jumps back to the call to
 @cfunc{sigsetjmp} with @code{JMP_ERROR_CODE} as return value.
 @end itemize
 
-This mechanism allows us to separate the error handling code from the main code.  By using
+This mechanism allows us to separate the exception handling code from the main code.  By using
 @var{here} as argument to nested function calls: we can perform non--local exits across functions;
 something that is not possible with @code{goto} statements.
 
 As always, care must be taken when the body allocates asynchronous resources.  For each resource:
-the error handler must detect if the allocation took place and execute release code.  For example:
+the exception handler must detect if the allocation took place and execute release code.  For
+example:
 
 @example
 #define DO_NOT_SAVE_SIGS        0
 #define JMP_ERROR_CODE          1
 
-sigjmp_buf           here;
-volatile void *   p = NULL;
+sigjmp_buf      here;
+volatile void * P = NULL;
 
-if (sigsetjmp(here, DO_NOT_SAFE_SIGS))
+if (sigsetjmp(here, DO_NOT_SAVE_SIGS))
   @{
-    if (p)
-      free(p);
+    if (P)
+      free(P);
   @}
 else
   @{
     ...
-    p = malloc(4096);
+    P = malloc(4096);
     ...
   @}
 @end example
@@ -330,8 +332,8 @@ In the following code no jump is performed; we just call @cfunc{sigsetjmp} once 
 @cfunc{siglongjmp}:
 
 @example
-sigjmp_buf  L;
-int         flag = 0, code = 0;
+sigjmp_buf      L;
+int             flag = 0, code;
 
 code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
 if (code) @{
@@ -346,9 +348,8 @@ assert(1 == flag);
 In the following code we perform a jump and handle the logic with an @code{if} statement:
 
 @example
-sigjmp_buf  L;
-int         code;
-int         flag = 0;
+sigjmp_buf      L;
+int             flag = 0, code;
 
 code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
 if (JUMP_TO_ERROR == code) @{
@@ -364,9 +365,8 @@ assert(2 == flag);
 In the following code we perform a jump and handle the logic with a @code{switch} statement:
 
 @example
-sigjmp_buf  L;
-int         code;
-int         flag = 0;
+sigjmp_buf      L;
+int             flag = 0, code;
 
 code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
 switch (code) @{
@@ -376,7 +376,6 @@ case JUMP_TO_ERROR:
 default:
   flag = 1;
   siglongjmp(L, JUMP_TO_ERROR);
-  break;
 @}
 assert(JUMP_TO_ERROR == code);
 assert(2 == flag);
@@ -386,9 +385,8 @@ In the following code we perform a jump and try an alternative body; we handle t
 @code{switch} statement:
 
 @example
-sigjmp_buf  L;
-int         code;
-int         flag = 0;
+sigjmp_buf      L;
+int             flag = 0, code;
 
 code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
 switch (code) @{
@@ -404,7 +402,6 @@ default:
   // the body
   flag = 1;
   siglongjmp(L, JUMP_TO_ERROR);
-  break;
 @}
 assert(JUMP_TO_RETRY == code);
 assert(3 == flag);
@@ -413,10 +410,9 @@ assert(3 == flag);
 In the following code we perform a jump and retry the body several times:
 
 @example
-sigjmp_buf          L;
-volatile int        times = 0;
-int                 code = 0;
-int                 flag = 0;
+sigjmp_buf      L;
+int             flag = 0, code;
+volatile int    times = 0;
 
 code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
 switch (code) @{
@@ -436,7 +432,6 @@ default:
     flag = 1;
     siglongjmp(L, JUMP_TO_ERROR);
   @}
-  break;
 @}
 assert(JUMP_TO_RETRY == code);
 assert(3 == flag);
@@ -490,30 +485,30 @@ Initialise the location @var{L}; call @cfunc{sigsetjmp} and return its return va
 @end deftypefn
 
 
-@defmac CCE_SUCCESS
-Constant of type @code{int} used by the library as non--local exit code.  It is the return value of
-@cfunc{cce_location} at the first evaluation.
-@end defmac
+@deftypevr Constant int CCE_SUCCESS
+Constant used by the library as non--local exit code.  It is defined as @code{0} and it represents
+the return value of @cfunc{cce_location} at the first evaluation.
+@end deftypevr
 
 
-@defmac CCE_ERROR
-Constant of type @code{int} used by the library as non--local exit code.  It is the return value of
+@deftypevr Constant int CCE_ERROR
+Constant used by the library as non--local exit code.  It is the return value of
 @cfunc{cce_location} when a non--local exit is performed by @cfunc{cce_raise}.
-@end defmac
+@end deftypevr
 
 
-@defmac CCE_RETRY
-Constant of type @code{int} used by the library as non--local exit code.  It is the return value of
+@deftypevr Constant int CCE_RETRY
+Constant used by the library as non--local exit code.  It is the return value of
 @cfunc{cce_location} when a non--local exit is performed by @cfunc{cce_retry}.
-@end defmac
+@end deftypevr
 
 
-@deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{condition})
+@deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{C})
 Raise an exception associated to the destination @var{L} and with exceptional condition descriptor
-@var{condition}.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
+@var{C}.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
 
-If @var{condition} is @cnull{}: an internal, statically allocated, exceptional condition descriptor
-is selected to represent an ``unknown exceptional condition''.
+If @var{C} is @cnull{}: an internal, statically allocated, exceptional condition descriptor is
+selected to represent an ``unknown exceptional condition''.
 @end deftypefun
 
 
@@ -611,8 +606,8 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_handler_tag_t
 Struct type representing a cleanup or error handler.  Instances of this type are associated to a
-location by calling @cfunc{cce_register_cleanup_handler} or @cfunc{cce_register_error_handler}.
-Handlers are invoked by @cfunc{cce_run_cleanup_handlers} or @cfunc{cce_run_error_handlers}.
+location by calling one of the functions @cfunc{cce_register_*_handler}.  Handlers are invoked by
+calling one of the functions @cfunc{cce_run_*_handlers}.
 
 We are meant to wrap instances of this type into an enclosing struct definition as follows:
 
@@ -659,7 +654,7 @@ a structure of type @code{cce_handler_tag_t}; such structure is meant to be allo
 frame of the function also defining the location @var{L}.
 
 A cleanup handler is meant to be called whenever the execution flow leaves the dynamic extent of a
-location, whether with an exception or as part of the successful execution.
+location, whether with an exception or as part of the successful execution path.
 @end deftypefun
 
 
@@ -670,13 +665,13 @@ structure of type @code{cce_handler_tag_t}; such structure is meant to be alloca
 frame of the function also defining the location @var{L}.
 
 An error handler is meant to be called whenever the execution flow leaves the dynamic extent of a
-location in case of an exception; it must not be called as part of the successful execution.
+location in case of an exception; it must not be called as part of the successful execution path.
 @end deftypefun
 
 
 @deftypefun void cce_run_cleanup_handlers (cce_location_tag_t * @var{L})
 Run all the cleanup handlers associated to the location @var{L}.  Each handler must return to its
-calle, taking care of itself regarding internal error handling and asynchronous resources
+caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
 @end deftypefun
 
@@ -753,12 +748,9 @@ void P_handler (cce_location_tag_t * L, void * H) @{
 @}
 HP->handler_function = P_handler;
 
-switch (cce_location(L)) @{
-case CCE_ERROR:
+if (CCE_ERROR == cce_location(L)) @{
   cce_run_error_handlers(L);
-  break;
-
-default:
+@} else @{
   P = malloc(4096);
   if (P) @{
     cce_register_cleanup_handler(L, HP);
@@ -791,13 +783,10 @@ constructor (cce_location_tag_t * upper_L)
   @}
   HP->handler_function = P_handler;
 
-  switch (cce_location(L)) @{
-  case CCE_ERROR:
+  if (CCE_ERROR == cce_location(L)) @{
     cce_run_error_handlers(L);
     cce_raise(upper_L, NULL);
-    break;
-
-  default:
+  @} else @{
     P = malloc(4096);
     if (P) @{
       cce_register_error_handler(L, HP);
@@ -821,12 +810,9 @@ void caller (void)
   @}
   HP->handler_function = P_handler;
 
-  switch (cce_location(L)) @{
-  case CCE_ERROR:
+  if (CCE_ERROR == cce_location(L)) @{
     cce_run_error_handlers(L);
-    break;
-
-  default:
+  @} else @{
     P = constructor(L);
     cce_register_cleanup_handler(L, HP);
     do_something_with(P);
@@ -871,11 +857,12 @@ descriptors.  It has the following fields:
 
 @table @code
 @item cce_condition_free_fun_t * free
-Release all the dynamic resources associated to the descriptor.  This pointer can be @cnull{},
-meaning that there are no dynamic resources in the condition descriptor.
+Pointer to function which releases all the dynamic resources associated to the descriptor.  This
+pointer can be @cnull{}, meaning that there are no dynamic resources in the condition descriptor.
 
 @item cce_condition_static_message_fun_t * static_message
-Return a statically allocated @asciiz{} string describing the exceptional condition.
+Pointer to function which returns a statically allocated @asciiz{} string describing the exceptional
+condition.
 @end table
 @end deftp
 
