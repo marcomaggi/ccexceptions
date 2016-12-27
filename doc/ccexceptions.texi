@@ -126,6 +126,7 @@ entitled ``@gnu{} Free Documentation License''.
 * setjmp::                      Brief introduction to non-local exits.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
+* conditions::                  Exceptional condition descriptors.
 
 Appendices
 
@@ -460,10 +461,9 @@ Struct type representing the location context.  It contains an instance of @code
 is the target of the @cfunc{siglongjmp} calls.  It has the following public fields:
 
 @table @code
-@item void * condition
-An opaque pointer to a data structure representing the description of the exceptional condition.  It
-is set by @cfunc{cce_raise}.  The client code is responsible of releasing resources associated to
-this value.
+@item cce_condition_t * condition
+Pointer to an exceptional condition descriptor.  It is set by @cfunc{cce_raise} and
+@cfunc{cce_retry}.  The client code is responsible of releasing resources associated to this value.
 @end table
 @end deftp
 
@@ -509,14 +509,27 @@ Constant of type @code{int} used by the library as non--local exit code.  It is 
 
 
 @deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{condition})
-Raise an exception associated to the destination @var{L} and with descriptor @var{condition}.  This
-function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
+Raise an exception associated to the destination @var{L} and with exceptional condition descriptor
+@var{condition}.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
+
+If @var{condition} is @cnull{}: an internal, statically allocated, exceptional condition descriptor
+is selected to represent an ``unknown exceptional condition''.
 @end deftypefun
 
 
 @deftypefun void cce_retry (cce_location_tag_t * @var{L})
 Raise an exception associated to the destination @var{L} with the purpose or retrying the body
 evaluation.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_RETRY}.
+
+This function selects an internal, statically allocated, exceptional condition descriptor to
+represent an ``unknown exceptional condition''.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t *} cce_location_condition (cce_location_tag_t * @var{L})
+Return the current value of the field @code{condition} in the location @var{L}.  This value is
+@strong{never} @cnull{} if an exceptional condition is raised with @cfunc{cce_raise} or
+@cfunc{cce_retry}.
 @end deftypefun
 
 
@@ -821,6 +834,174 @@ void caller (void)
   @}
 @}
 @end example
+
+@c page
+@node conditions
+@chapter Exceptional condition descriptors
+
+
+@menu
+* conditions basic::            Basic interface to conditions.
+* conditions errno::            Predefined @code{errno} conditions.
+@end menu
+
+@c page
+@node conditions basic
+@section Basic interface to conditions
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftypefn {Function Prototype} void cce_condition_free_fun_t (void * @var{C})
+Applied to a pointer to condition descriptor: release all the dynamic resources associated to the
+descriptor @var{C}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} void cce_condition_static_message_fun_t (void * @var{C})
+Applied to a pointer to condition descriptor: return a statically allocated @asciiz{} string
+describing the exceptional condition @var{C}.
+@end deftypefn
+
+
+@deftp {Struct Typedef} cce_condition_functions_table_t
+Type of structures holding a table of function pointers to handle exceptional condition
+descriptors.  It has the following fields:
+
+@table @code
+@item cce_condition_free_fun_t * free
+Release all the dynamic resources associated to the descriptor.  This pointer can be @cnull{},
+meaning that there are no dynamic resources in the condition descriptor.
+
+@item cce_condition_static_message_fun_t * static_message
+Return a statically allocated @asciiz{} string describing the exceptional condition.
+@end table
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_t
+Type of structure representing an exceptional condition descriptor.  It has the following fields:
+
+@table @code
+@item cce_condition_functions_table_t * table
+Pointer to a table of function pointers that handle exceptional condition descriptors.
+@end table
+@end deftp
+
+
+Given a pointer to @code{cce_condition_t} we can act upon it with the following functions.
+
+
+@deftypefun void cce_condition_free (void * @var{C})
+Applied to a pointer to condition descriptor: invoke the @code{free} function referenced by the
+functions table.
+@end deftypefun
+
+
+@deftypefun {const char *} cce_condition_static_message (void * @var{C})
+Applied to a pointer to condition descriptor: invoke the @code{static_message} function referenced
+by the functions table.
+@end deftypefun
+
+
+The basic usage pattern of condition descriptors is as follows:
+
+@example
+cce_location_t      L;
+
+if (cce_location(L))
+  @{
+    @{
+      cce_condition_t * C = cce_location_condition(L);
+      fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+      cce_condition_free(C);
+    @}
+    cce_run_error_handlers(L);
+  @} else @{
+    do_something();
+    if (an_error_occurred()) @{
+      cce_raise(L, select_condition_descriptor());
+    @}
+    cce_run_cleanup_handlers(L);
+  @}
+@end example
+
+If we need to hand the condition descriptor to an upper level location we can do it as follows:
+
+@example
+void
+upper_function (void)
+@{
+  cce_location_t        L;
+
+  if (cce_location(L))
+    @{
+      @{
+        cce_condition_t * C = cce_location_condition(L);
+        do_something_with(cce_condition_static_message(C));
+        cce_condition_free(C);
+      @}
+      cce_run_error_handlers(L);
+    @}
+  else
+    @{
+      lower_function(L);
+      cce_run_cleanup_handlers(L);
+    @}
+@}
+
+void
+lower_function (cce_location_tag_t * upper_L)
+@{
+  cce_location_t        L;
+
+  if (cce_location(L))
+    @{
+      cce_run_error_handlers(L);
+      cce_raise(upper_L, cce_location_condition(L));
+    @}
+  else
+    @{
+      do_something();
+      if (an_error_occurred()) @{
+        cce_raise(L, select_condition_descriptor());
+      @}
+      cce_run_cleanup_handlers(L);
+    @}
+@}
+@end example
+
+
+
+@c page
+@node conditions errno
+@section Predefined @code{errno} conditions
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftypefun {cce_condition_t *} cce_condition_errno (int @var{errnum})
+Given the @code{errno} code @var{errnum} return the pointer to condition descriptor associated to
+it.  If @var{errnum} is zero: return a pointer to condition describing a successful operation.  If
+@var{errnum} is not a valid @code{errno} code for the underlying platform: return a condition
+descriptor that describes an invalid code.
+@end deftypefun
+
+
+We can think of an @code{errno} condition descriptor as the following structure:
+
+@example
+struct cce_errno_condition_t @{
+  cce_condition_functions_table_t *	table;
+  int					errnum;
+  const char *				message;
+@};
+@end example
+
+@noindent
+but this type is kept opaque to the client code.
 
 @c page
 @c ------------------------------------------------------------

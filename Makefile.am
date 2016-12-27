@@ -37,6 +37,7 @@ libccexceptions_la_SOURCES= \
 	src/ccexceptions.h		\
 	src/ccexceptions-internals.h	\
 	src/ccexceptions-locations.c	\
+	src/ccexceptions-conditions.c	\
 	src/ccexceptions-version.c
 
 #page
@@ -52,7 +53,8 @@ check_PROGRAMS	= \
 	tests/exception-with-error-handler	\
 	tests/exception-with-handlers		\
 	tests/exception-with-gcc-auto-cleanup	\
-	tests/handlers-routines
+	tests/handlers-routines			\
+	tests/conditions
 
 TESTS				= $(check_PROGRAMS)
 
@@ -88,6 +90,9 @@ tests_exception_with_gcc_auto_cleanup_LDADD	= $(ccexceptions_tests_ldadd)
 
 tests_handlers_routines_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_handlers_routines_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_conditions_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_conditions_LDADD				= $(ccexceptions_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done

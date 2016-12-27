@@ -48,7 +48,6 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       flag = true;
       cce_run_cleanup_handlers(L);
     }
-    assert(NULL == L->condition);
     assert(false == flag);
   }
 
@@ -68,7 +67,6 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       flag = true;
       cce_run_cleanup_handlers(L);
     }
-    assert(NULL == L->condition);
     assert(false == flag);
   }
 

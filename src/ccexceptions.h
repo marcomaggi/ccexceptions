@@ -126,43 +126,67 @@ cce_decl int		cce_version_interface_age	(void);
 
 
 /** --------------------------------------------------------------------
- ** Type declarations.
+ ** Error and cleanup handlers.
  ** ----------------------------------------------------------------- */
 
-struct cce_location_tag_t;
-struct cce_handler_tag_t;
+typedef struct cce_location_tag_t	cce_location_tag_t;
+typedef struct cce_handler_tag_t	cce_handler_tag_t;
 
 typedef void cce_handler_fun_t (struct cce_location_tag_t * L, void * H);
 
-typedef struct cce_handler_tag_t {
+struct cce_handler_tag_t {
   bool				is_cleanup_handler;
   cce_handler_fun_t *		handler_function;
   struct cce_handler_tag_t *	next_handler;
-} cce_handler_tag_t;
+};
 
 typedef cce_handler_tag_t		cce_handler_t[1];
 
-typedef struct cce_location_tag_t {
-  /* The buffer must be the first member of this struct. */
-  sigjmp_buf			buffer;
-  void *			condition;
-  cce_handler_tag_t *		next_handler;
-} cce_location_tag_t;
-
-typedef cce_location_tag_t		cce_location_t[1];
-
-
-/** --------------------------------------------------------------------
- ** Location functions.
- ** ----------------------------------------------------------------- */
-
-cce_decl void cce_location_init			(cce_location_tag_t * here);
-cce_decl void cce_raise				(cce_location_tag_t * L, void * condition);
-cce_decl void cce_retry				(cce_location_tag_t * L);
 cce_decl void cce_register_cleanup_handler	(cce_location_tag_t * L, void * H);
 cce_decl void cce_register_error_handler	(cce_location_tag_t * L, void * H);
 cce_decl void cce_run_cleanup_handlers		(cce_location_tag_t * L);
 cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition descriptors.
+ ** ----------------------------------------------------------------- */
+
+typedef void		cce_condition_free_fun_t		(void * condition);
+typedef const char *	cce_condition_static_message_fun_t	(void * condition);
+
+typedef struct cce_condition_functions_table_t {
+  cce_condition_free_fun_t *		free;
+  cce_condition_static_message_fun_t *	static_message;
+} cce_condition_functions_table_t;
+
+typedef struct cce_condition_t {
+  cce_condition_functions_table_t *	table;
+} cce_condition_t;
+
+cce_decl void		cce_condition_free		(void * condition);
+cce_decl const char *	cce_condition_static_message	(void * condition);
+
+cce_decl cce_condition_t * cce_condition_errno (int code);
+
+
+/** --------------------------------------------------------------------
+ ** Locations.
+ ** ----------------------------------------------------------------- */
+
+struct cce_location_tag_t {
+  /* The buffer must be the first member of this struct. */
+  sigjmp_buf			buffer;
+  cce_condition_t *		condition;
+  cce_handler_tag_t *		next_handler;
+};
+
+typedef cce_location_tag_t		cce_location_t[1];
+
+cce_decl void cce_location_init	(cce_location_tag_t * here);
+cce_decl void cce_raise		(cce_location_tag_t * L, void * condition);
+cce_decl void cce_retry		(cce_location_tag_t * L);
+cce_decl cce_condition_t * cce_location_condition (cce_location_tag_t * L);
 
 /* The following macro is meant to be used like this:
 

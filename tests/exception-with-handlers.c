@@ -100,7 +100,6 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       }
       cce_run_cleanup_handlers(L);
     }
-    assert(NULL == L->condition);
     assert(true == flag1);
     assert(true == flag2);
   }
@@ -129,7 +128,6 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     default:
       cce_run_cleanup_handlers(L);
     }
-    assert(NULL == L->condition);
     assert(true  == flag1);
     assert(false == flag2);
   }
