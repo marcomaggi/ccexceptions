@@ -85,6 +85,9 @@ extern "C" {
  ** Headers.
  ** ----------------------------------------------------------------- */
 
+/* Enable latest POSIX features. */
+//#define _POSIX_C_SOURCE		200809L
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>

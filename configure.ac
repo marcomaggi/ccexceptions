@@ -52,17 +52,22 @@ dnl page
 #### basic system inspection
 
 AC_LANG([C])
-AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
+dnl AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
 AC_PROG_CC_C99
+
+dnl In future I would like to  switch to C11.  (Marco Maggi; Thu Dec 29,
+dnl 2016)
+dnl
+dnl AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
+dnl AM_CFLAGS="-std=c11 -Wall"
+dnl AC_SUBST(AM_CFLAGS)
+
 AM_PROG_AS
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h])
+AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
 AC_HEADER_STDBOOL
-dnl AC_C_CONST
-dnl AC_C_INLINE
-dnl AC_C_RESTRICT
 
 AC_CACHE_SAVE
 
