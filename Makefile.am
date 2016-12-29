@@ -54,7 +54,9 @@ check_PROGRAMS	= \
 	tests/exception-with-handlers		\
 	tests/exception-with-gcc-auto-cleanup	\
 	tests/handlers-routines			\
-	tests/conditions
+	tests/conditions-raising		\
+	tests/conditions-hierarchy		\
+	tests/conditions-example
 
 TESTS				= $(check_PROGRAMS)
 
@@ -91,8 +93,14 @@ tests_exception_with_gcc_auto_cleanup_LDADD	= $(ccexceptions_tests_ldadd)
 tests_handlers_routines_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_handlers_routines_LDADD			= $(ccexceptions_tests_ldadd)
 
-tests_conditions_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_conditions_LDADD				= $(ccexceptions_tests_ldadd)
+tests_conditions_raising_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_conditions_raising_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_conditions_hierarchy_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_conditions_hierarchy_LDADD		= $(ccexceptions_tests_ldadd)
+
+tests_conditions_example_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done

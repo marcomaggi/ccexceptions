@@ -155,19 +155,49 @@ cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
 typedef void		cce_condition_free_fun_t		(void * condition);
 typedef const char *	cce_condition_static_message_fun_t	(void * condition);
 
-typedef struct cce_condition_functions_table_t {
-  cce_condition_free_fun_t *		free;
-  cce_condition_static_message_fun_t *	static_message;
-} cce_condition_functions_table_t;
+typedef struct cce_condition_descriptor_t {
+  const struct cce_condition_descriptor_t *	parent;
+  cce_condition_free_fun_t *			free;
+  cce_condition_static_message_fun_t *		static_message;
+} cce_condition_descriptor_t;
 
 typedef struct cce_condition_t {
-  cce_condition_functions_table_t *	table;
+  const cce_condition_descriptor_t *		descriptor;
 } cce_condition_t;
 
+cce_decl const cce_condition_descriptor_t *	cce_root_condition_descriptor;
+
+/* ------------------------------------------------------------------ */
+
+cce_decl const cce_condition_descriptor_t *	cce_unknown_condition_descriptor;
+cce_decl const cce_condition_t *		cce_unknown_condition;
+
+/* ------------------------------------------------------------------ */
+
+typedef struct cce_errno_condition_descriptor_t {
+  const cce_condition_descriptor_t *		parent;
+  cce_condition_free_fun_t *			free;
+  cce_condition_static_message_fun_t *		static_message;
+} cce_errno_condition_descriptor_t;
+
+typedef struct cce_errno_condition_t {
+  const cce_errno_condition_descriptor_t *	descriptor;
+  int						errnum;
+  const char *					message;
+} cce_errno_condition_t;
+
+cce_decl cce_condition_t * cce_errno_condition (int code);
+cce_decl const cce_condition_descriptor_t *	cce_errno_condition_descriptor;
+
+/* ------------------------------------------------------------------ */
+
+cce_decl bool		cce_condition_is_a		(const void * condition,
+							 const cce_condition_descriptor_t * descriptor);
+cce_decl bool		cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * child,
+								   const cce_condition_descriptor_t * parent);
+cce_decl const cce_condition_descriptor_t * cce_condition_descriptor (void * condition);
 cce_decl void		cce_condition_free		(void * condition);
 cce_decl const char *	cce_condition_static_message	(void * condition);
-
-cce_decl cce_condition_t * cce_condition_errno (int code);
 
 
 /** --------------------------------------------------------------------

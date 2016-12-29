@@ -29,19 +29,6 @@
 
 #include "ccexceptions-internals.h"
 
-static const char *
-unknown_exceptional_condition_static_message (void * CCE_UNUSED condition)
-{
-  return "unknown exceptional condition";
-}
-static cce_condition_functions_table_t unknown_exceptional_condition_table = {
-  .free = NULL,
-  .static_message = unknown_exceptional_condition_static_message
-};
-static cce_condition_t unknown_exceptional_condition = {
-  .table = &unknown_exceptional_condition_table
-};
-
 void
 cce_location_init (cce_location_tag_t * L)
 {
@@ -56,13 +43,13 @@ cce_location_condition (cce_location_tag_t * L)
 void
 cce_raise (struct cce_location_tag_t * L, void * condition)
 {
-  L->condition		= (condition)? condition : &unknown_exceptional_condition;
+  L->condition		= (condition)? condition : (cce_condition_t *)cce_unknown_condition;
   siglongjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_tag_t * L)
 {
-  L->condition		= &unknown_exceptional_condition;
+  L->condition		= (cce_condition_t *)cce_unknown_condition;
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 void

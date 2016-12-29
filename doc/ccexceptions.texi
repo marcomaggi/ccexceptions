@@ -826,39 +826,76 @@ void caller (void)
 @chapter Exceptional condition descriptors
 
 
+To represent exceptional conditions @value{PACKAGE} allows us to define a tree hierarchy of
+exceptional condition objects.  With such a tree it is possible to react to a raised exception by
+branching according to the type of raised condition object.
+
+Every condition object is a structure of type @objtype{cce_condition_t}, which references a
+condition descriptor of type @objtype{cce_condition_descriptor_t}.  The instances of
+@objtype{cce_condition_descriptor_t} hold the pointers that define the tree hierarchy.
+
+In the following picture: the condition descriptor @samp{A} is a child of the root descriptor; the
+condition descriptor @samp{B} is a child of the condition descriptor @samp{A}.  We can say that: a
+condition object of type @samp{A} is also of type root; a condition object of type @samp{B} is also
+of type @samp{A} and of type root.
+
+@example
+                           ---------------------------
+                          | root condition descriptor |
+                           ---------------------------
+                                        ^
+                                        |
+ --------------------        ------------------------
+| condition object A |----> | condition descriptor A |
+ --------------------        ------------------------
+                                        ^
+                                        |
+ --------------------        ------------------------
+| condition object B |----> | condition descriptor B |
+ --------------------        ------------------------
+@end example
+
 @menu
-* conditions basic::            Basic interface to conditions.
+* conditions types::            Core condition object types.
+* conditions root::             Predefined root condition descriptor.
+* conditions unknown::          Predefined unknown condition.
 * conditions errno::            Predefined @code{errno} conditions.
+* conditions operations::       Acting upon condition objects.
+* conditions custom::           Defining custom condition objects.
 @end menu
 
 @c page
-@node conditions basic
-@section Basic interface to conditions
+@node conditions types
+@section Core condition object types
 
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftypefn {Function Prototype} void cce_condition_free_fun_t (void * @var{C})
-Applied to a pointer to condition descriptor: release all the dynamic resources associated to the
-descriptor @var{C}.
+Applied to a pointer to condition object: release all the dynamic resources associated to @var{C}.
 @end deftypefn
 
 
 @deftypefn {Function Prototype} void cce_condition_static_message_fun_t (void * @var{C})
-Applied to a pointer to condition descriptor: return a statically allocated @asciiz{} string
-describing the exceptional condition @var{C}.
+Applied to a pointer to condition object: return a statically allocated @asciiz{} string describing
+the exceptional condition @var{C}.
 @end deftypefn
 
 
-@deftp {Struct Typedef} cce_condition_functions_table_t
-Type of structures holding a table of function pointers to handle exceptional condition
-descriptors.  It has the following fields:
+@deftp {Struct Typedef} cce_condition_descriptor_t
+Type of structures holding a table of function pointers to handle exceptional condition objects.  It
+has the following fields:
 
 @table @code
+@item const cce_condition_descriptor_t * parent
+Pointer to the condition descriptor that is parent of this one.  This pointer is set to @cnull{}
+only for the root condition descriptor (@pxref{conditions root, Predefined root condition
+descriptor}).
+
 @item cce_condition_free_fun_t * free
-Pointer to function which releases all the dynamic resources associated to the descriptor.  This
-pointer can be @cnull{}, meaning that there are no dynamic resources in the condition descriptor.
+Pointer to function which releases all the dynamic resources associated to the object.  This pointer
+can be @cnull{}, meaning that there are no dynamic resources in the condition object.
 
 @item cce_condition_static_message_fun_t * static_message
 Pointer to function which returns a statically allocated @asciiz{} string describing the exceptional
@@ -868,16 +905,208 @@ condition.
 
 
 @deftp {Struct Typedef} cce_condition_t
-Type of structure representing an exceptional condition descriptor.  It has the following fields:
+Type of structure representing an exceptional condition object.  It has the following fields:
 
 @table @code
-@item cce_condition_functions_table_t * table
-Pointer to a table of function pointers that handle exceptional condition descriptors.
+@item cce_condition_descriptor_t * descriptor
+Pointer to the exceptional condition descriptor.
+@end table
+@end deftp
+
+@c page
+@node conditions root
+@section Predefined root condition descriptor
+
+
+The @dfn{root exceptional condition descriptor} has the only purpose of being the root of the
+condition descriptors tree; there should be no condition objects having this descriptor.  The root
+descriptor has @code{parent} field set to @cnull{}; this should be the only descriptor with such a
+property.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_root_condition_descriptor
+Pointer to a statically allocated structure representing the root condition descriptor for all the
+condition descriptors.  When a condition descriptors hierarchy is correctly built: using this value
+as second argument in calls to the functions:
+
+@example
+cce_condition_is_a()
+cce_condition_descriptor_child_and_parent()
+@end example
+
+@noindent
+will cause the return value to always be @ctrue{}.
+@end defvr
+
+
+To use this value in a custom condition descriptor definition, we must write initialisation code;
+example:
+
+@example
+static const char *
+default_static_message (void * C CCE_UNUSED)
+@{
+  return "default message";
+@}
+
+cce_condition_descriptor_t A_condition_descriptor = @{
+  .parent               = NULL,
+  .free                 = NULL,
+  .static_message       = default_static_message
+@};
+
+void
+condition_descriptors_initialisation (void)
+@{
+  A_condition_descriptor.parent = cce_root_condition_descriptor;
+@}
+@end example
+
+@noindent
+and the function @cfunc{condition_descriptors_initialisation} must be called prior to using the
+conditions system.
+
+@c page
+@node conditions unknown
+@section Predefined unknown condition
+
+
+The @dfn{unknown exceptional condition object} has the purpose of describing an exceptional
+condition with unknown cause; it should be used only by:
+
+@itemize
+@item
+The function @cfunc{cce_raise} when no condition object argument is used.
+
+@item
+The function @cfunc{cce_retry}.
+@end itemize
+
+There should be only one unknown condition object: the one predefined by @value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_unknown_condition_descriptor
+Pointer to a statically allocated structure representing the unknown condition descriptor for the
+single unknown condition object.  The parent of this descriptor is the root descriptor referenced by
+@code{cce_root_condition_descriptor}.
+
+By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure we
+can determine if the condition struct is an unknown condition object.
+@end defvr
+
+
+@defvr {Dynamic Constant} {const cce_condition_t *} cce_unknown_condition
+Pointer to a statically allocated structure representing the unknown condition object.  This should
+be the single condition object having @code{cce_unknown_condition_descriptor} as descriptor.
+@end defvr
+
+@c page
+@node conditions errno
+@section Predefined @code{errno} conditions
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_errno_condition_descriptor_t
+Structure type representing the condition descriptor for @code{errno} condition objects.
+
+In a correctly built condition objects hierarchy: there is only one instance of this type, the one
+referenced by @code{cce_errno_condition_descriptor}; all the instances of
+@code{cce_errno_condition_t} reference the same descriptor.
+
+It has the following fields:
+
+@table @code
+@item const cce_condition_descriptor_t * parent
+Pointer to the parent condition descriptor.  For an @code{errno} condition descriptor the parent is
+the root descriptor referenced by @code{cce_root_condition_descriptor}.
+
+@item cce_condition_free_fun_t * free
+Equivalent to the @code{free} field in a struct of type @objtype{cce_conditions_descriptor_t}.
+
+@item cce_condition_static_message_fun_t * static_message
+Equivalent to the @code{static_message} field in a struct of type
+@objtype{cce_conditions_descriptor_t}.
 @end table
 @end deftp
 
 
-Given a pointer to @code{cce_condition_t} we can act upon it with the following functions.
+@deftp {Struct Typedef} cce_errno_condition_t
+Structure type representing an @code{errno} exceptional condition object, signalled by a system
+function by setting @code{errno} to a non--zero value.  It has the following fields:
+
+@table @code
+@item cce_errno_condition_descriptor_t * descriptor
+Pointer to the exceptional condition descriptor for @code{errno} condition objects.  For all the
+@code{errno} condition objects: the descriptor is the structure referenced by
+@code{cce_errno_condition_descriptor}.
+
+@item int errnum
+The value of @code{errno}.
+
+@item const char * message
+A statically allocated string describing the error.
+@end table
+@end deftp
+
+
+@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_errno_condition_descriptor
+Pointer to a statically allocated structure representing the condition descriptor of all the values
+returned by @cfunc{cce_errno_condition}.
+
+By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure, we
+can determine if such structure is an @code{errno} condition object.
+@end defvr
+
+
+@deftypefun {cce_condition_t *} cce_errno_condition (int @var{errnum})
+Given the @code{errno} code @var{errnum}, return the pointer to condition object associated to it.
+The returned pointer it typed @objtype{cce_condition_t} but it references a structure of type
+@objtype{cce_errno_condition_t}.
+
+If @var{errnum} is zero: return a pointer to condition object representing a successful operation.
+If @var{errnum} is not a valid @code{errno} code for the underlying platform: return a pointer to
+condition object representing an invalid code.
+@end deftypefun
+
+@c page
+@node conditions operations
+@section Acting upon condition objects
+
+
+Given a pointer to @code{cce_condition_t} we can act upon it with the following functions.  All the
+following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftypefun bool cce_condition_is_a (const void * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
+Establish if a condition object is of a selected type.  The argument @var{condition} must be a
+pointer to condition object, a structure of type @objtype{cce_condition_t}. The argument
+@var{descriptor} must be a pointer to condition descriptor, a structure of type
+@objtype{cce_condition_descriptor_t}.  Return @ctrue{} if @var{condition} is an instance of type
+@var{descriptor}, or an instance of a type that is parent of @var{descriptor}; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefun bool cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * @var{child}, const cce_condition_descriptor_t * @var{parent})
+Establish if two condition descriptors are child and parent.  Both the arguments @var{child} and
+@var{parent} must be pointers to condition descriptors, structures of type
+@objtype{cce_condition_descriptor_t}.  Return @ctrue{} if @var{child} is equal to @var{parent} or
+@var{parent} is in the hierarchy of @var{child}'s parents; otherwise return @cfalse{}.
+@end deftypefun
+
+
+@deftypefun {const cce_condition_descriptor_t *} cce_condition_descriptor (void * @var{condition})
+Retrieve the descriptor of a condition object.  The argument @var{condition} must be a pointer to
+condition object, a structure of type @objtype{cce_condition_t}.  Return the pointer to condition
+descriptor in the @var{condition} object.  Using this function is the same as accessing the
+@code{descriptor} field of a @objtype{cce_condition_t} structure.
+@end deftypefun
 
 
 @deftypefun void cce_condition_free (void * @var{C})
@@ -959,36 +1188,98 @@ lower_function (cce_location_tag_t * upper_L)
 @}
 @end example
 
-
-
-@c page
-@node conditions errno
-@section Predefined @code{errno} conditions
-
-
-All the following definitions are accessible from the header file @file{ccexceptions.h}.
-
-
-@deftypefun {cce_condition_t *} cce_condition_errno (int @var{errnum})
-Given the @code{errno} code @var{errnum} return the pointer to condition descriptor associated to
-it.  If @var{errnum} is zero: return a pointer to condition describing a successful operation.  If
-@var{errnum} is not a valid @code{errno} code for the underlying platform: return a condition
-descriptor that describes an invalid code.
-@end deftypefun
-
-
-We can think of an @code{errno} condition descriptor as the following structure:
+If we need to branch according to a condition object's type, we can do it as follows using
+@cfunc{cce_condition_is_a}:
 
 @example
-struct cce_errno_condition_t @{
-  cce_condition_functions_table_t *	table;
-  int					errnum;
-  const char *				message;
-@};
+cce_location_t      L;
+
+if (cce_location(L)) @{
+  cce_condition_t * C = cce_location_condition(L);
+
+  if (cce_condition_is_a(C, cce_unknown_condition_descriptor))
+    @{
+      do_something();
+    @}
+  else if (cce_condition_is_a(C, cce_errno_condition_descriptor))
+    @{
+      do_something();
+    @}
+  else
+    @{
+      do_something();
+    @}
+  cce_condition_free(C);
+  cce_run_error_handlers(L);
+@} else @{
+  do_something();
+  if (an_exception_occurred()) @{
+    cce_raise(L, select_an_exception_object());
+  @}
+  cce_run_cleanup_handlers(L);
+@}
 @end example
 
 @noindent
-but this type is kept opaque to the client code.
+or as follows using @cfunc{cce_condition_descriptor_child_and_parent}:
+
+@example
+cce_location_t      L;
+
+if (cce_location(L)) @{
+  cce_condition_t *                 C  = cce_location_condition(L);
+  const cce_condition_descriptor_t *CD = cce_condition_descriptor(C);
+  cce_condition_free(C);
+
+  if (cce_condition_descriptor_child_and_parent(CD,
+         cce_unknown_condition_descriptor))
+    @{
+      do_something();
+    @}
+  else if (cce_condition_descriptor_child_and_parent(CD,
+              cce_errno_condition_descriptor))
+    @{
+      do_something();
+    @}
+  else
+    @{
+      do_something();
+    @}
+  cce_condition_free(C);
+  cce_run_error_handlers(L);
+@} else @{
+  do_something();
+  if (an_exception_occurred()) @{
+    cce_raise(L, select_an_exception_object());
+  @}
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+@c page
+@node conditions custom
+@section Defining custom condition objects
+
+
+Let's say we want to define the following condition descriptors hierarchy:
+
+@example
+ ------       ---       ---
+| root | <-- | A | <-- | B |
+ ------       ---       ---
+               ^
+               |
+              ---
+             | C |
+              ---
+@end example
+
+@noindent
+where the condition objects of type @samp{A}, @samp{B} and @samp{C} have custom data structures.  We
+do it as follows:
+
+@example
+@end example
 
 @c page
 @c ------------------------------------------------------------
