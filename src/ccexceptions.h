@@ -194,6 +194,7 @@ cce_decl const cce_condition_descriptor_t *	cce_errno_condition_descriptor;
 
 /* ------------------------------------------------------------------ */
 
+cce_decl void		cce_condition_init (void * condition, const void * descriptor);
 cce_decl bool		cce_condition_is_a		(const void * condition,
 							 const cce_condition_descriptor_t * descriptor);
 cce_decl bool		cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * child,

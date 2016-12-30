@@ -31,6 +31,13 @@
 #include <limits.h>	// for INT_MAX
 #include <errno.h>
 
+void
+cce_condition_init (void * _condition, const void * _descriptor)
+{
+  cce_condition_t *			C = _condition;
+  const cce_condition_descriptor_t *	D = _descriptor;
+  C->descriptor = D;
+}
 const cce_condition_descriptor_t *
 cce_condition_descriptor (void * _condition)
 {
