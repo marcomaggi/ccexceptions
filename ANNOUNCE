@@ -1,5 +1,5 @@
 -*- coding: utf-8-unix -*-
-Subject: [announce] CCExceptions revision 0.1d0
+Subject: [announce] CCExceptions revision 0.2d0
 
 			      CCExceptions
 			      ============
@@ -28,6 +28,13 @@ and as backup at:
 the documentation is available online:
 
 	  <http://marcomaggi.github.io/docs/ccexceptions.html>
+
+
+Notes for revision 0.2d0
+------------------------
+
+* Moved the package  under the C11 language with  GCC extensions enabled
+  by "-fplan9-extensions".
 
 
 Notes for revision 0.1d0
