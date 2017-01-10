@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -35,7 +35,7 @@
 #include <ccexceptions.h>
 
 static const char *
-default_static_message (void * C CCE_UNUSED)
+default_static_message (const cce_condition_t * C CCE_UNUSED)
 {
   return "default message";
 }

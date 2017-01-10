@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -32,36 +32,30 @@
 #include <errno.h>
 
 void
-cce_condition_init (void * _condition, const void * _descriptor)
+cce_condition_init (cce_condition_t * C, const cce_condition_descriptor_t * D)
 {
-  cce_condition_t *			C = _condition;
-  const cce_condition_descriptor_t *	D = _descriptor;
   C->descriptor = D;
 }
 const cce_condition_descriptor_t *
-cce_condition_descriptor (void * _condition)
+cce_condition_descriptor (const cce_condition_t * C)
 {
-  cce_condition_t *	C = _condition;
   return C->descriptor;
 }
 void
-cce_condition_free (void * _condition)
+cce_condition_free (cce_condition_t * C)
 {
-  cce_condition_t *	C = _condition;
   if (C->descriptor->free) {
     C->descriptor->free(C);
   }
 }
 const char *
-cce_condition_static_message (void * _condition)
+cce_condition_static_message (cce_condition_t * C)
 {
-  cce_condition_t *	C = _condition;
   return C->descriptor->static_message(C);
 }
 bool
-cce_condition_is_a (const void * _condition, const cce_condition_descriptor_t * descriptor)
+cce_condition_is_a (const cce_condition_t * C, const cce_condition_descriptor_t * descriptor)
 {
-  const cce_condition_t *	C = _condition;
   return cce_condition_descriptor_child_and_parent(C->descriptor, descriptor);
 }
 bool
@@ -77,7 +71,7 @@ cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * ch
 
 
 static const char *
-cce_root_condition_static_message_fun (void * _condition)
+cce_root_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
 {
   return "Unknown exceptional condition";
 }
@@ -116,10 +110,10 @@ const cce_condition_t * cce_unknown_condition		= &cce_unknown_condition_stru;
 /* ------------------------------------------------------------------ */
 
 static const char *
-cce_errno_condition_static_message_fun (void * _condition)
+cce_errno_condition_static_message_fun (const cce_condition_t * C)
 {
-  cce_errno_condition_t	* C = _condition;
-  return C->message;
+  const cce_errno_condition_t *	EC = (const cce_errno_condition_t *)C;
+  return EC->message;
 }
 
 /* This condition descriptor  represents "errno" exceptional conditions.

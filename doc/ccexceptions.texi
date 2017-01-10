@@ -125,6 +125,7 @@ entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * setjmp::                      Brief introduction to non-local exits.
+* extensions::                  Introductions to @code{plan9-extensions}.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
@@ -210,6 +211,9 @@ AC_CHECK_LIB([ccexceptions],[cce_version_string],,
 AC_CHECK_HEADERS([ccexceptions.h],,
   [AC_MSG_FAILURE([test for CCExceptions header failed])])
 @end example
+
+We need to remember that client code using @value{PACKAGE}'s library must be written using the C11
+language and the @gcc{} extensions enabled by @option{-fplan9-extensions}.
 
 @c page
 @node version
@@ -437,6 +441,107 @@ default:
 assert(JUMP_TO_RETRY == code);
 assert(3 == flag);
 @end example
+
+@c page
+@node extensions
+@chapter Introductions to @code{plan9-extensions}
+
+
+The @url{http://www.gnu.org/software/gcc/, @gnu{} C language compiler} supports the
+@url{https://en.wikipedia.org/wiki/C11_(C_standard_revision), C11} standard, with some extensions,
+through the @option{-fplan9-extensions} option.  From a certain point of view, these extensions are
+just the default offered by the C++ language; but under the C language they are very useful.
+@value{PACKAGE} is meant to use such extensions.
+
+Here is an example:
+
+@example
+/* demo.c --
+ *
+ * Compile this with:
+ *
+ *  $ gcc -std=c11 -Wall -fplan9-extensions -o demo demo.c
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct @{
+  int   one;
+@} alpha_t;
+
+typedef struct @{
+  alpha_t;
+  int           two;
+@} beta_t;
+
+void
+print_alpha (alpha_t * self)
+@{
+  fprintf(stderr, "alpha: %d\n", self->one);
+@}
+void
+print_beta (beta_t * self)
+@{
+  fprintf(stderr, "beta: %d %d\n", self->one, self->two);
+@}
+
+int
+main (int argc, const char *const argv[])
+@{
+  beta_t        B = @{ .one = 1, .two = 2 @};
+  print_alpha(&B);
+  print_beta (&B);
+  exit(EXIT_SUCCESS);
+@}
+
+/* end of file */
+@end example
+
+@noindent
+we see that the definition of @code{beta_t} contains an unnamed field of type
+@code{alpha_t}:
+
+@example
+typedef struct @{
+  alpha_t;
+  int           two;
+@} beta_t;
+@end example
+
+@noindent
+and we can access its fields, nested in an instance of @code{beta_t}, transparently
+both in the initialiser:
+
+@example
+beta_t B = @{ .one = 1, .two = 2 @};
+@end example
+
+@noindent
+and from a pointer to @code{beta_t} in the function @cfunc{print_beta}:
+
+@example
+fprintf(stderr, "beta: %d %d\n", self->one, self->two);
+@end example
+
+Also, when a pointer to @code{beta_t} is used as operand for a function expecting a
+pointer to @code{alpha_t} as argument: the pointer conversion is performed
+automatically by the compiler, without the need to cast it explicitly.  So we can
+simply write:
+
+@example
+print_alpha(&B);
+@end example
+
+@noindent
+rather than:
+
+@example
+print_alpha((alpha_t *)&B);
+@end example
+
+
 
 @c page
 @node locations
@@ -870,12 +975,12 @@ of type @samp{A} and of type root.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftypefn {Function Prototype} void cce_condition_free_fun_t (void * @var{C})
+@deftypefn {Function Prototype} void cce_condition_free_fun_t (cce_condition_t * @var{C})
 Applied to a pointer to condition object: release all the dynamic resources associated to @var{C}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} void cce_condition_static_message_fun_t (void * @var{C})
+@deftypefn {Function Prototype} void cce_condition_static_message_fun_t (const cce_condition_t * @var{C})
 Applied to a pointer to condition object: return a statically allocated @asciiz{} string describing
 the exceptional condition @var{C}.
 @end deftypefn
@@ -944,7 +1049,7 @@ example:
 
 @example
 static const char *
-default_static_message (void * C CCE_UNUSED)
+default_static_message (const cce_condition_t * C CCE_UNUSED)
 @{
   return "default message";
 @}
@@ -1017,31 +1122,22 @@ In a correctly built condition objects hierarchy: there is only one instance of 
 referenced by @code{cce_errno_condition_descriptor}; all the instances of
 @code{cce_errno_condition_t} reference the same descriptor.
 
-It has the following fields:
-
-@table @code
-@item const cce_condition_descriptor_t * parent
-Pointer to the parent condition descriptor.  For an @code{errno} condition descriptor the parent is
-the root descriptor referenced by @code{cce_root_condition_descriptor}.
-
-@item cce_condition_free_fun_t * free
-Equivalent to the @code{free} field in a struct of type @objtype{cce_conditions_descriptor_t}.
-
-@item cce_condition_static_message_fun_t * static_message
-Equivalent to the @code{static_message} field in a struct of type
-@objtype{cce_conditions_descriptor_t}.
-@end table
+As single public field it has an unnamed field of type @code{cce_condition_descriptor_t}; the
+sub--fields of this unnamed field can be accessed transparently by code using a pointer to
+@objtype{cce_errno_condition_descriptor_t}.  For an @code{errno} condition descriptor the
+@code{parent} sub--field is the root descriptor referenced by @code{cce_root_condition_descriptor}.
 @end deftp
 
 
 @deftp {Struct Typedef} cce_errno_condition_t
 Structure type representing an @code{errno} exceptional condition object, signalled by a system
-function by setting @code{errno} to a non--zero value.  It has the following fields:
+function by setting @code{errno} to a non--zero value.  It has the following public fields:
 
 @table @code
-@item cce_errno_condition_descriptor_t * descriptor
-Pointer to the exceptional condition descriptor for @code{errno} condition objects.  For all the
-@code{errno} condition objects: the descriptor is the structure referenced by
+@item cce_condition_t
+An unnamed field holding everything required to make an instance of @code{cce_errno_condition_t}
+also an instance of @code{cce_condition_t}.  For all the @code{errno} condition objects: the
+condition descriptor referenced by the @code{descriptor} sub--field is the structure referenced by
 @code{cce_errno_condition_descriptor}.
 
 @item int errnum
@@ -1081,7 +1177,7 @@ Given a pointer to @code{cce_condition_t} we can act upon it with the following 
 following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftypefun void cce_condition_init (void * @var{condition}, const void * @var{descriptor})
+@deftypefun void cce_condition_init (cce_condition_t * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
 Initialise the core fields of an already allocated condition object.  The argument @var{condition}
 must be a pointer to condition object, a structure of type @objtype{cce_condition_t}. The argument
 @var{descriptor} must be a pointer to condition descriptor, a structure of type
@@ -1091,7 +1187,7 @@ The pointer @var{descriptor} is stored in @var{condition} to represent the condi
 @end deftypefun
 
 
-@deftypefun bool cce_condition_is_a (const void * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
+@deftypefun bool cce_condition_is_a (const cce_condition_t * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
 Establish if a condition object is of a selected type.  The argument @var{condition} must be a
 pointer to condition object, a structure of type @objtype{cce_condition_t}. The argument
 @var{descriptor} must be a pointer to condition descriptor, a structure of type
@@ -1109,7 +1205,7 @@ Establish if two condition descriptors are child and parent.  Both the arguments
 @end deftypefun
 
 
-@deftypefun {const cce_condition_descriptor_t *} cce_condition_descriptor (void * @var{condition})
+@deftypefun {const cce_condition_descriptor_t *} cce_condition_descriptor (const cce_condition_t * @var{condition})
 Retrieve the descriptor of a condition object.  The argument @var{condition} must be a pointer to
 condition object, a structure of type @objtype{cce_condition_t}.  Return the pointer to condition
 descriptor in the @var{condition} object.  Using this function is the same as accessing the
@@ -1117,13 +1213,13 @@ descriptor in the @var{condition} object.  Using this function is the same as ac
 @end deftypefun
 
 
-@deftypefun void cce_condition_free (void * @var{C})
+@deftypefun void cce_condition_free (cce_condition_t * @var{C})
 Applied to a pointer to condition descriptor: invoke the @code{free} function referenced by the
 functions table.
 @end deftypefun
 
 
-@deftypefun {const char *} cce_condition_static_message (void * @var{C})
+@deftypefun {const char *} cce_condition_static_message (const cce_condition_t * @var{C})
 Applied to a pointer to condition descriptor: invoke the @code{static_message} function referenced
 by the functions table.
 @end deftypefun
@@ -1282,6 +1378,14 @@ where the condition objects of type @samp{A}, @samp{B} and @samp{C} have custom 
 do it as follows:
 
 @smallexample
+/* demo.c --
+ *
+ * Compile this with:
+ *
+ *  $ gcc -std=c11 -Wall -fplan9-extensions -lccexceptions \
+ *      -o demo demo.c
+ */
+
 #include <stdlib.h>
 #include <assert.h>
 #include <ccexceptions.h>
@@ -1292,28 +1396,28 @@ do it as follows:
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct A_condition_descriptor_t @{
-  cce_condition_descriptor_t    vtable;
+  cce_condition_descriptor_t;
 @} A_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct A_condition_object_t @{
-  cce_condition_t       core;
+  cce_condition_t;
   int                   alpha;
 @} A_condition_object_t;
 
 cce_condition_t *       A_condition_init  (A_condition_object_t * cnd, int alpha);
 void                    A_condition_final (A_condition_object_t * cnd);
 cce_condition_t *       A_condition_constructor (int code);
-static void             A_condition_destructor  (void * cnd);
-static const char *     A_condition_static_message (void * cnd);
+static void             A_condition_destructor  (cce_condition_t * cnd);
+static const char *     A_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL here  and  reinitialised to  "cce_root_condition_descriptor"
    later by an initialisation function. */
 static A_condition_descriptor_t A_condition_descriptor = @{
-  .vtable.parent                = NULL,
-  .vtable.free                  = A_condition_destructor,
-  .vtable.static_message        = A_condition_static_message
+  .parent               = NULL,
+  .free                 = A_condition_destructor,
+  .static_message       = A_condition_static_message
 @};
 
 cce_condition_t *
@@ -1322,7 +1426,7 @@ A_condition_init (A_condition_object_t * cnd, int alpha)
 @{
   cce_condition_init(cnd, &A_condition_descriptor);
   cnd->alpha = alpha;
-  return &(cnd->core);
+  return cnd;
 @}
 
 void
@@ -1343,15 +1447,15 @@ A_condition_constructor (int alpha)
 @}
 
 static void
-A_condition_destructor (void * cnd)
+A_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 @{
-  A_condition_final(cnd);
+  A_condition_final((A_condition_object_t *)cnd);
   free(cnd);
 @}
 
 static const char *
-A_condition_static_message (void * cnd CCE_UNUSED)
+A_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 @{
   return "exceptional condition A";
 @}
@@ -1368,36 +1472,36 @@ A_condition_is (void * condition)
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct B_condition_descriptor_t @{
-  cce_condition_descriptor_t    vtable;
+  cce_condition_descriptor_t;
 @} B_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct B_condition_object_t @{
-  A_condition_object_t  A;
+  A_condition_object_t;
   int                   beta;
 @} B_condition_object_t;
 
 cce_condition_t *       B_condition_init  (B_condition_object_t * cnd, int alpha, int beta);
 void                    B_condition_final (B_condition_object_t * cnd);
 cce_condition_t *       B_condition_constructor (int alpha, int beta);
-static void             B_condition_destructor  (void * cnd);
-static const char *     B_condition_static_message (void * cnd);
+static void             B_condition_destructor  (cce_condition_t * cnd);
+static const char *     B_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor. */
 static B_condition_descriptor_t B_condition_descriptor = @{
-  .vtable.parent                = (const cce_condition_descriptor_t *)&A_condition_descriptor,
-  .vtable.free                  = B_condition_destructor,
-  .vtable.static_message        = B_condition_static_message
+  .parent               = (const cce_condition_descriptor_t *)&A_condition_descriptor,
+  .free                 = B_condition_destructor,
+  .static_message       = B_condition_static_message
 @};
 
 cce_condition_t *
 B_condition_init (B_condition_object_t * cnd, int alpha, int beta)
 /* Initialise an already allocated condition object. */
 @{
-  A_condition_init(&(cnd->A), alpha);
+  A_condition_init(cnd, alpha);
   cce_condition_init(cnd, &B_condition_descriptor);
   cnd->beta = beta;
-  return &(cnd->A.core);
+  return cnd;
 @}
 
 void
@@ -1419,15 +1523,15 @@ B_condition_constructor (int alpha, int beta)
 @}
 
 static void
-B_condition_destructor (void * cnd)
+B_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 @{
-  B_condition_final(cnd);
+  B_condition_final((B_condition_object_t *)cnd);
   free(cnd);
 @}
 
 static const char *
-B_condition_static_message (void * cnd CCE_UNUSED)
+B_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 @{
   return "exceptional condition B";
 @}
@@ -1444,36 +1548,36 @@ B_condition_is (void * condition)
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct C_condition_descriptor_t @{
-  cce_condition_descriptor_t    vtable;
+  cce_condition_descriptor_t;
 @} C_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct C_condition_object_t @{
-  B_condition_object_t  B;
+  B_condition_object_t;
   int                   gamma;
 @} C_condition_object_t;
 
 cce_condition_t *       C_condition_init  (C_condition_object_t * cnd, int alpha, int beta, int gamma);
 void                    C_condition_final (C_condition_object_t * cnd);
 cce_condition_t *       C_condition_constructor (int alpha, int beta, int gamma);
-static void             C_condition_destructor  (void * cnd);
-static const char *     C_condition_static_message (void * cnd);
+static void             C_condition_destructor  (cce_condition_t * cnd);
+static const char *     C_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor. */
 static C_condition_descriptor_t C_condition_descriptor = @{
-  .vtable.parent                = (cce_condition_descriptor_t *)&B_condition_descriptor,
-  .vtable.free                  = C_condition_destructor,
-  .vtable.static_message        = C_condition_static_message
+  .parent               = (cce_condition_descriptor_t *)&B_condition_descriptor,
+  .free                 = C_condition_destructor,
+  .static_message       = C_condition_static_message
 @};
 
 cce_condition_t *
 C_condition_init (C_condition_object_t * cnd, int alpha, int beta, int gamma)
 /* Initialise an already allocated condition object. */
 @{
-  B_condition_init(&(cnd->B), alpha, beta);
+  B_condition_init(cnd, alpha, beta);
   cce_condition_init(cnd, &C_condition_descriptor);
   cnd->gamma = gamma;
-  return &(cnd->B.A.core);
+  return cnd;
 @}
 
 void
@@ -1495,15 +1599,15 @@ C_condition_constructor (int alpha, int beta, int gamma)
 @}
 
 static void
-C_condition_destructor (void * cnd)
+C_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 @{
-  C_condition_final(cnd);
+  C_condition_final((C_condition_object_t *)cnd);
   free(cnd);
 @}
 
 static const char *
-C_condition_static_message (void * cnd CCE_UNUSED)
+C_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 @{
   return "exceptional condition C";
 @}
@@ -1518,7 +1622,7 @@ int
 main (int argc CCE_UNUSED, const char *const argv[])
 @{
   /* Dynamic initialisation. */
-  A_condition_descriptor.vtable.parent  = cce_root_condition_descriptor;
+  A_condition_descriptor.parent = cce_root_condition_descriptor;
 
   /* Raising condition object of type C. */
   @{

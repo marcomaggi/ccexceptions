@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -37,28 +37,28 @@
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct A_condition_descriptor_t {
-  cce_condition_descriptor_t	vtable;
+  cce_condition_descriptor_t;
 } A_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct A_condition_object_t {
-  cce_condition_t	core;
+  cce_condition_t;
   int			alpha;
 } A_condition_object_t;
 
 cce_condition_t *	A_condition_init  (A_condition_object_t * cnd, int alpha);
 void			A_condition_final (A_condition_object_t * cnd);
 cce_condition_t *	A_condition_constructor (int code);
-static void		A_condition_destructor  (void * cnd);
-static const char *	A_condition_static_message (void * cnd);
+static void		A_condition_destructor  (cce_condition_t * cnd);
+static const char *	A_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL here  and  reinitialised to  "cce_root_condition_descriptor"
    later by an initialisation function. */
 static A_condition_descriptor_t A_condition_descriptor = {
-  .vtable.parent		= NULL,
-  .vtable.free			= A_condition_destructor,
-  .vtable.static_message	= A_condition_static_message
+  .parent		= NULL,
+  .free			= A_condition_destructor,
+  .static_message	= A_condition_static_message
 };
 
 cce_condition_t *
@@ -67,7 +67,7 @@ A_condition_init (A_condition_object_t * cnd, int alpha)
 {
   cce_condition_init(cnd, &A_condition_descriptor);
   cnd->alpha = alpha;
-  return &(cnd->core);
+  return cnd;
 }
 
 void
@@ -88,15 +88,15 @@ A_condition_constructor (int alpha)
 }
 
 static void
-A_condition_destructor (void * cnd)
+A_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  A_condition_final(cnd);
+  A_condition_final((A_condition_object_t *)cnd);
   free(cnd);
 }
 
 static const char *
-A_condition_static_message (void * cnd CCE_UNUSED)
+A_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition A";
 }
@@ -114,36 +114,36 @@ A_condition_is (void * condition)
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct B_condition_descriptor_t {
-  cce_condition_descriptor_t	vtable;
+  cce_condition_descriptor_t;
 } B_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct B_condition_object_t {
-  A_condition_object_t	A;
+  A_condition_object_t;
   int			beta;
 } B_condition_object_t;
 
 cce_condition_t *	B_condition_init  (B_condition_object_t * cnd, int alpha, int beta);
 void			B_condition_final (B_condition_object_t * cnd);
 cce_condition_t *	B_condition_constructor (int alpha, int beta);
-static void		B_condition_destructor  (void * cnd);
-static const char *	B_condition_static_message (void * cnd);
+static void		B_condition_destructor  (cce_condition_t * cnd);
+static const char *	B_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor. */
 static B_condition_descriptor_t B_condition_descriptor = {
-  .vtable.parent		= (const cce_condition_descriptor_t *)&A_condition_descriptor,
-  .vtable.free			= B_condition_destructor,
-  .vtable.static_message	= B_condition_static_message
+  .parent		= (const cce_condition_descriptor_t *)&A_condition_descriptor,
+  .free			= B_condition_destructor,
+  .static_message	= B_condition_static_message
 };
 
 cce_condition_t *
 B_condition_init (B_condition_object_t * cnd, int alpha, int beta)
 /* Initialise an already allocated condition object. */
 {
-  A_condition_init(&(cnd->A), alpha);
+  A_condition_init(cnd, alpha);
   cce_condition_init(cnd, &B_condition_descriptor);
   cnd->beta = beta;
-  return &(cnd->A.core);
+  return cnd;
 }
 
 void
@@ -165,15 +165,15 @@ B_condition_constructor (int alpha, int beta)
 }
 
 static void
-B_condition_destructor (void * cnd)
+B_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  B_condition_final(cnd);
+  B_condition_final((B_condition_object_t *)cnd);
   free(cnd);
 }
 
 static const char *
-B_condition_static_message (void * cnd CCE_UNUSED)
+B_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition B";
 }
@@ -191,36 +191,36 @@ B_condition_is (void * condition)
    as  a  table  of  virtual   methods,  which  are  overridden  by  the
    subtypes. */
 typedef struct C_condition_descriptor_t {
-  cce_condition_descriptor_t	vtable;
+  cce_condition_descriptor_t;
 } C_condition_descriptor_t;
 
 /* Exceptional condition object type. */
 typedef struct C_condition_object_t {
-  B_condition_object_t	B;
+  B_condition_object_t;
   int			gamma;
 } C_condition_object_t;
 
 cce_condition_t *	C_condition_init  (C_condition_object_t * cnd, int alpha, int beta, int gamma);
 void			C_condition_final (C_condition_object_t * cnd);
 cce_condition_t *	C_condition_constructor (int alpha, int beta, int gamma);
-static void		C_condition_destructor  (void * cnd);
-static const char *	C_condition_static_message (void * cnd);
+static void		C_condition_destructor  (cce_condition_t * cnd);
+static const char *	C_condition_static_message (const cce_condition_t * cnd);
 
 /* Instance of condition descriptor. */
 static C_condition_descriptor_t C_condition_descriptor = {
-  .vtable.parent		= (cce_condition_descriptor_t *)&B_condition_descriptor,
-  .vtable.free			= C_condition_destructor,
-  .vtable.static_message	= C_condition_static_message
+  .parent		= (cce_condition_descriptor_t *)&B_condition_descriptor,
+  .free			= C_condition_destructor,
+  .static_message	= C_condition_static_message
 };
 
 cce_condition_t *
 C_condition_init (C_condition_object_t * cnd, int alpha, int beta, int gamma)
 /* Initialise an already allocated condition object. */
 {
-  B_condition_init(&(cnd->B), alpha, beta);
+  B_condition_init(cnd, alpha, beta);
   cce_condition_init(cnd, &C_condition_descriptor);
   cnd->gamma = gamma;
-  return &(cnd->B.A.core);
+  return cnd;
 }
 
 void
@@ -242,15 +242,15 @@ C_condition_constructor (int alpha, int beta, int gamma)
 }
 
 static void
-C_condition_destructor (void * cnd)
+C_condition_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  C_condition_final(cnd);
+  C_condition_final((C_condition_object_t *)cnd);
   free(cnd);
 }
 
 static const char *
-C_condition_static_message (void * cnd CCE_UNUSED)
+C_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition C";
 }
@@ -266,7 +266,7 @@ int
 main (int argc CCE_UNUSED, const char *const argv[])
 {
   /* Dynamic initialisation. */
-  A_condition_descriptor.vtable.parent	= cce_root_condition_descriptor;
+  A_condition_descriptor.parent	= cce_root_condition_descriptor;
 
   /* Raising condition object of type C. */
   {
