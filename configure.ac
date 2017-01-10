@@ -7,7 +7,7 @@ AC_INIT([CCExceptions],[0.1d0],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
 AC_REVISION([0.1])
-AC_COPYRIGHT([Copyright (c) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -55,12 +55,11 @@ AC_LANG([C])
 dnl AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
 AC_PROG_CC_C99
 
-dnl In future I would like to  switch to C11.  (Marco Maggi; Thu Dec 29,
-dnl 2016)
-dnl
-dnl AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
-dnl AM_CFLAGS="-std=c11 -Wall"
-dnl AC_SUBST(AM_CFLAGS)
+AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
+AX_CFLAGS="-std=c11"
+AX_CHECK_COMPILE_FLAG([-fplan9-extensions],[],[AC_MSG_ERROR([*** Compiler does not support -fplan9-extensions])],[$AX_CFLAGS])
+AX_CFLAGS="$AX_CFLAGS -fplan9-extensions"
+AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
 AC_PROG_CC

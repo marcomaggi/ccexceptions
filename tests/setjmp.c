@@ -8,7 +8,7 @@
 	Test  file for  "setjmp()"  and  "longjmp()" functions  standard
 	behaviour.
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -26,10 +26,10 @@ main (int argc, const char *const argv[])
 {
   /* No exception.  Call "setjmp()" but not "longjmp()". */
   {
-    sigjmp_buf	L;
+    jmp_buf	L;
     int		flag = 0, code = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     if (code) {
       // error occurred
       flag = 2;
@@ -44,17 +44,17 @@ main (int argc, const char *const argv[])
   /* Exception  with  "if"  logic.    Call  "setjmp()"  and  "longjmp()"
      once. */
   {
-    sigjmp_buf	L;
+    jmp_buf	L;
     int		code;
     int		flag = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     if (JUMP_TO_ERROR == code) {
       // error occurred
       flag = 2;
     } else {
       // the body
-      siglongjmp(L, JUMP_TO_ERROR);
+      longjmp(L, JUMP_TO_ERROR);
       flag = 1;
     }
     assert(JUMP_TO_ERROR == code);
@@ -64,11 +64,11 @@ main (int argc, const char *const argv[])
   /* Exception  with "switch"  logic.  Call  "setjmp()" and  "longjmp()"
      once. */
   {
-    sigjmp_buf	L;
+    jmp_buf	L;
     int		code;
     int		flag = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     switch (code) {
     case JUMP_TO_ERROR:
       // error occurred
@@ -76,7 +76,7 @@ main (int argc, const char *const argv[])
       break;
     default:
       // the body
-      siglongjmp(L, JUMP_TO_ERROR);
+      longjmp(L, JUMP_TO_ERROR);
       flag = 1;
       break;
     }
@@ -87,15 +87,15 @@ main (int argc, const char *const argv[])
   /* Exception  with "switch"  logic.   Retrying with  a handler.   Call
      "setjmp()" and "longjmp()" twice to retry. */
   {
-    sigjmp_buf	L;
+    jmp_buf	L;
     int		code;
     int		flag = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     switch (code) {
     case JUMP_TO_ERROR:
       // error occurred
-      siglongjmp(L, JUMP_TO_RETRY);
+      longjmp(L, JUMP_TO_RETRY);
       flag = 2;
       break;
     case JUMP_TO_RETRY:
@@ -104,7 +104,7 @@ main (int argc, const char *const argv[])
       break;
     default:
       // the body
-      siglongjmp(L, JUMP_TO_ERROR);
+      longjmp(L, JUMP_TO_ERROR);
       flag = 1;
       break;
     }
@@ -115,15 +115,15 @@ main (int argc, const char *const argv[])
   /* Exception with "switch" logic.  Retrying the body.  Call "setjmp()"
      and "longjmp()" twice to retry. */
   {
-    sigjmp_buf	L;
+    jmp_buf	L;
     int		code;
     int		flag = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     switch (code) {
     case JUMP_TO_ERROR:
       // error occurred
-      siglongjmp(L, JUMP_TO_RETRY);
+      longjmp(L, JUMP_TO_RETRY);
       flag = 2;
       break;
     default:
@@ -132,7 +132,7 @@ main (int argc, const char *const argv[])
 	flag = 3;
       } else {
 	// the body
-	siglongjmp(L, JUMP_TO_ERROR);
+	longjmp(L, JUMP_TO_ERROR);
 	flag = 1;
       }
       break;
@@ -144,28 +144,28 @@ main (int argc, const char *const argv[])
   /* Exception with  "switch" logic.  Retrying  the body 5  times.  Call
      "setjmp()" and "longjmp()" multiple times to retry. */
   {
-    sigjmp_buf		L;
+    jmp_buf		L;
     volatile int	times = 0;
     int			code = 0;
     int			flag = 0;
 
-    code = sigsetjmp(L, 0);
+    code = setjmp(L);
     switch (code) {
     case JUMP_TO_ERROR:
       // error occurred
-      siglongjmp(L, JUMP_TO_RETRY);
+      longjmp(L, JUMP_TO_RETRY);
       flag = 2;
       break;
     default:
       if ((JUMP_TO_RETRY == code) && (times < 5)) {
 	// retrying
 	++times;
-	siglongjmp(L, JUMP_TO_ERROR);
+	longjmp(L, JUMP_TO_ERROR);
       } else if (JUMP_TO_RETRY == code) {
 	flag = 3;
       } else {
 	// the body
-	siglongjmp(L, JUMP_TO_ERROR);
+	longjmp(L, JUMP_TO_ERROR);
 	flag = 1;
       }
       break;

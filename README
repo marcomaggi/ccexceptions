@@ -19,8 +19,9 @@ Topics
 1. Introduction
 ---------------
 
-This package installs  a C99 language library  implementing an interface
-to non-local exits, which is somewhat similar to exceptions handling.
+This package installs  a C11 language library  requiring GCC extensions;
+it implements an interface to non-local exits, which is somewhat similar
+to exceptions handling.
 
   The package  makes use  of the  GNU Autotools  and it  is tested  on a
 GNU+Linux system.
@@ -29,7 +30,7 @@ GNU+Linux system.
 2. License
 ----------
 
-Copyright (c) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2016-2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
 it under the terms of the GNU Lesser General Public License as published

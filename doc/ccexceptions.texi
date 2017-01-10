@@ -33,7 +33,7 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2016
+@set COPYRIGHT_YEARS            2016-2017
 
 @c ------------------------------------------------------------
 
@@ -48,8 +48,9 @@
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @value{VERSION} of @value{PACKAGE}, a C99 language library
-implementing an interface to non--local exits, which is somewhat similar to exceptions handling.
+This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library requiring
+@gcc{} extensions; it implements an interface to non--local exits, which is somewhat similar to
+exceptions handling.
 
 The package is distributed under the terms of the @gnu{} General Public License (@gpl{}).
 
@@ -148,8 +149,9 @@ Indexes
 @chapter Overview of the package
 
 
-This document describes version @value{VERSION} of @value{PACKAGE}, a C99 language library
-implementing an interface to non--local exits, which is somewhat similar to exceptions handling.
+This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library requiring
+@gcc{} extensions; it implements an interface to non--local exits, which is somewhat similar to
+exceptions handling.
 
 This tiny library will not solve the problem of error handling in the C language, it just brings a
 little order in the mess resulting from hand--coding the error handling logic.
@@ -249,15 +251,14 @@ Return an integer representing the library interface current age.
 Let's recall briefly how the standard, C language, non--local exits mechanism works; for the full
 documentation refer to the C Library.  @glibcref{Non-Local Exits, Non-Local Exits}.
 
-To use @cfunc{sigsetjmp} and @cfunc{siglongjmp} we write chunks of code like the following:
+To use @cfunc{setjmp} and @cfunc{longjmp} we write chunks of code like the following:
 
 @example
-#define DO_NOT_SAVE_SIGS        0
 #define JMP_ERROR_CODE          1
 
-sigjmp_buf  here;
+jmp_buf  here;
 
-if (sigsetjmp(here, DO_NOT_SAVE_SIGS))
+if (setjmp(here))
   @{
     handle_the_error();
   @}
@@ -265,7 +266,7 @@ else
   @{
     do_something();
     if (an_error_occurred()) @{
-      siglongjmp(here, JMP_ERROR_CODE);
+      longjmp(here, JMP_ERROR_CODE);
     @}
     do_something_else();
   @}
@@ -276,16 +277,16 @@ this is what happens:
 
 @itemize
 @item
-When @cfunc{sigsetjmp} is invoked: it saves the current ``position'' in @var{here}, then it returns
+When @cfunc{setjmp} is invoked: it saves the current ``position'' in @var{here}, then it returns
 zero.
 
 @item
-If @cfunc{siglongjmp} is not applied to @var{here}, nothing strange happens and the execution flow
-goes on as usual.
+If @cfunc{longjmp} is not applied to @var{here}, nothing strange happens and the execution flow goes
+on as usual.
 
 @item
-If @cfunc{siglongjmp} is applied to @var{here}: the execution jumps back to the call to
-@cfunc{sigsetjmp} with @code{JMP_ERROR_CODE} as return value.
+If @cfunc{longjmp} is applied to @var{here}: the execution jumps back to the call to @cfunc{setjmp}
+with @code{JMP_ERROR_CODE} as return value.
 @end itemize
 
 This mechanism allows us to separate the exception handling code from the main code.  By using
@@ -300,10 +301,10 @@ example:
 #define DO_NOT_SAVE_SIGS        0
 #define JMP_ERROR_CODE          1
 
-sigjmp_buf      here;
+jmp_buf         here;
 volatile void * P = NULL;
 
-if (sigsetjmp(here, DO_NOT_SAVE_SIGS))
+if (setjmp(here))
   @{
     if (P)
       free(P);
@@ -328,14 +329,14 @@ Let's see some logic example; we will assume the following preamble:
 #define JUMP_TO_RETRY           3
 @end example
 
-In the following code no jump is performed; we just call @cfunc{sigsetjmp} once and never call
-@cfunc{siglongjmp}:
+In the following code no jump is performed; we just call @cfunc{setjmp} once and never call
+@cfunc{longjmp}:
 
 @example
-sigjmp_buf      L;
+jmp_buf         L;
 int             flag = 0, code;
 
-code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
+code = setjmp(L);
 if (code) @{
   flag = 2;
 @} else @{
@@ -348,15 +349,15 @@ assert(1 == flag);
 In the following code we perform a jump and handle the logic with an @code{if} statement:
 
 @example
-sigjmp_buf      L;
+jmp_buf         L;
 int             flag = 0, code;
 
-code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
+code = setjmp(L);
 if (JUMP_TO_ERROR == code) @{
   flag = 2;
 @} else @{
   flag = 1;
-  siglongjmp(L, JUMP_TO_ERROR);
+  longjmp(L, JUMP_TO_ERROR);
 @}
 assert(JUMP_TO_ERROR == code);
 assert(2 == flag);
@@ -365,17 +366,17 @@ assert(2 == flag);
 In the following code we perform a jump and handle the logic with a @code{switch} statement:
 
 @example
-sigjmp_buf      L;
+jmp_buf         L;
 int             flag = 0, code;
 
-code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
+code = setjmp(L);
 switch (code) @{
 case JUMP_TO_ERROR:
   flag = 2;
   break;
 default:
   flag = 1;
-  siglongjmp(L, JUMP_TO_ERROR);
+  longjmp(L, JUMP_TO_ERROR);
 @}
 assert(JUMP_TO_ERROR == code);
 assert(2 == flag);
@@ -385,14 +386,14 @@ In the following code we perform a jump and try an alternative body; we handle t
 @code{switch} statement:
 
 @example
-sigjmp_buf      L;
+jmp_buf         L;
 int             flag = 0, code;
 
-code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
+code = setjmp(L);
 switch (code) @{
 case JUMP_TO_ERROR:
   flag = 2;
-  siglongjmp(L, JUMP_TO_RETRY);
+  longjmp(L, JUMP_TO_RETRY);
   break;
 case JUMP_TO_RETRY:
   // the alternative body
@@ -401,7 +402,7 @@ case JUMP_TO_RETRY:
 default:
   // the body
   flag = 1;
-  siglongjmp(L, JUMP_TO_ERROR);
+  longjmp(L, JUMP_TO_ERROR);
 @}
 assert(JUMP_TO_RETRY == code);
 assert(3 == flag);
@@ -410,27 +411,27 @@ assert(3 == flag);
 In the following code we perform a jump and retry the body several times:
 
 @example
-sigjmp_buf      L;
+jmp_buf         L;
 int             flag = 0, code;
 volatile int    times = 0;
 
-code = sigsetjmp(L, DO_NOT_SAVE_SIGS);
+code = setjmp(L);
 switch (code) @{
 case JUMP_TO_ERROR:
   flag = 2;
-  siglongjmp(L, JUMP_TO_RETRY);
+  longjmp(L, JUMP_TO_RETRY);
   break;
 default:
   if ((JUMP_TO_RETRY == code) && (times < 5)) @{
     // retrying
     ++times;
-    siglongjmp(L, JUMP_TO_ERROR);
+    longjmp(L, JUMP_TO_ERROR);
   @} else if (JUMP_TO_RETRY == code) @{
     flag = 3;
   @} else @{
     // the body
     flag = 1;
-    siglongjmp(L, JUMP_TO_ERROR);
+    longjmp(L, JUMP_TO_ERROR);
   @}
 @}
 assert(JUMP_TO_RETRY == code);
@@ -443,17 +444,14 @@ assert(3 == flag);
 
 
 Non--local exits are a way to transfer execution from one point to another in a program; they are
-implemented by the standard C library through the @cfunc{sigsetjmp} and @cfunc{siglongjmp}
-functions.  @value{PACKAGE} calls @cfunc{sigsetjmp} and @cfunc{siglongjmp} to make sure that the
-signal context is not saved (consuming time) at each invocation; see the @code{setjmp(3)} manual
-page for details.
+implemented by the standard C library through the @cfunc{setjmp} and @cfunc{longjmp} functions.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_location_tag_t
 Struct type representing the location context.  It contains an instance of @code{setjmp_buf} which
-is the target of the @cfunc{siglongjmp} calls.  It has the following public fields:
+is the target of the @cfunc{longjmp} calls.  It has the following public fields:
 
 @table @code
 @item cce_condition_t * condition
@@ -475,13 +473,13 @@ This type is convenient to define an instance of location.
 
 
 @deftypefun void cce_location_init (cce_location_tag_t * @var{L})
-Initialise the location @var{L}, but do @strong{not} call @cfunc{sigsetjmp}.  We are not meant to
-call this function directly; rather we should use the macro @cfunc{cce_location}.
+Initialise the location @var{L}, but do @strong{not} call @cfunc{setjmp}.  We are not meant to call
+this function directly; rather we should use the macro @cfunc{cce_location}.
 @end deftypefun
 
 
 @deftypefn {Preprocessor Macro} int cce_location (cce_location_tag_t * @var{L})
-Initialise the location @var{L}; call @cfunc{sigsetjmp} and return its return value.
+Initialise the location @var{L}; call @cfunc{setjmp} and return its return value.
 @end deftypefn
 
 
@@ -505,7 +503,7 @@ Constant used by the library as non--local exit code.  It is the return value of
 
 @deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{C})
 Raise an exception associated to the destination @var{L} and with exceptional condition descriptor
-@var{C}.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
+@var{C}.  This function performs the call to @cfunc{longjmp} with code @code{CCE_ERROR}.
 
 If @var{C} is @cnull{}: an internal, statically allocated, exceptional condition descriptor is
 selected to represent an ``unknown exceptional condition''.
@@ -514,7 +512,7 @@ selected to represent an ``unknown exceptional condition''.
 
 @deftypefun void cce_retry (cce_location_tag_t * @var{L})
 Raise an exception associated to the destination @var{L} with the purpose or retrying the body
-evaluation.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_RETRY}.
+evaluation.  This function performs the call to @cfunc{longjmp} with code @code{CCE_RETRY}.
 
 This function selects an internal, statically allocated, exceptional condition descriptor to
 represent an ``unknown exceptional condition''.

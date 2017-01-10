@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -44,13 +44,13 @@ void
 cce_raise (struct cce_location_tag_t * L, void * condition)
 {
   L->condition		= (condition)? condition : (cce_condition_t *)cce_unknown_condition;
-  siglongjmp(L->buffer, (int)CCE_ERROR);
+  longjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_tag_t * L)
 {
   L->condition		= (cce_condition_t *)cce_unknown_condition;
-  siglongjmp(L->buffer, (int)CCE_RETRY);
+  longjmp(L->buffer, (int)CCE_RETRY);
 }
 void
 cce_register_cleanup_handler (cce_location_tag_t * L, void * _H)

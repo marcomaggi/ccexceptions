@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -100,19 +100,19 @@ extern "C" {
 
 typedef enum {
   /* This code  represents the return  value of the first  evaluation of
-     "sigsetjmp()". */
+     "setjmp()". */
   CCE_SUCCESS		= 0,
 
-  /* This  code  represents  the   return  value  of  the  "sigsetjmp()"
+  /* This  code  represents  the   return  value  of  the  "setjmp()"
      evaluation after a "cce_throw()" call. */
   CCE_ERROR,
 
-  /* This  code  represents  the   return  value  of  the  "sigsetjmp()"
+  /* This  code  represents  the   return  value  of  the  "setjmp()"
      evaluation after a "cce_retry()" call. */
   CCE_RETRY,
 
   /* This  code  is  available  to  the  custom  code  to  define  other
-     represents the return value of the "sigsetjmp()" evaluation after a
+     represents the return value of the "setjmp()" evaluation after a
      "cce_raise()" call. */
   CCE_FIRST_NEXT
 } cce_code_t;
@@ -210,7 +210,7 @@ cce_decl const char *	cce_condition_static_message	(void * condition);
 
 struct cce_location_tag_t {
   /* The buffer must be the first member of this struct. */
-  sigjmp_buf			buffer;
+  jmp_buf			buffer;
   cce_condition_t *		condition;
   cce_handler_tag_t *		next_handler;
 };
@@ -236,7 +236,7 @@ cce_decl cce_condition_t * cce_location_condition (cce_location_tag_t * L);
         }
 */
 #define cce_location(HERE)	\
-  (cce_location_init(HERE), sigsetjmp((void *)(HERE),0))
+  (cce_location_init(HERE), setjmp((void *)(HERE)))
 
 
 /** --------------------------------------------------------------------

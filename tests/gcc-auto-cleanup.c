@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -34,14 +34,14 @@ func1 (void)
 }
 
 static void
-func2 (sigjmp_buf bufferp)
+func2 (jmp_buf bufferp)
 {
   void handler (bool * flagp) {
     flag = *flagp;
   }
   bool flag1 __attribute__((cleanup(handler))) = true;
   /* By long-jumping we exclude the cleanup. */
-  siglongjmp(bufferp, 2);
+  longjmp(bufferp, 2);
 }
 
 int
@@ -56,10 +56,10 @@ main (int argc, const char *const argv[])
 
   /* Cleanup with "longjmp()" . */
   {
-    sigjmp_buf	buffer;
+    jmp_buf	buffer;
 
     flag = false;
-    if (sigsetjmp(buffer, 0)) {
+    if (setjmp(buffer)) {
       assert(false == flag);
     } else {
       func2(buffer);
