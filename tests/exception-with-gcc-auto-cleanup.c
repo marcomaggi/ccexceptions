@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -115,18 +115,18 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     bool	out_flag1 = false;
     bool	out_flag2 = false;
     {
-      void handler1 (bool * flagp)
+      void handler1 (volatile bool * flagp)
       {
 	out_flag1 = *flagp;
       }
-      void handler2 (bool * flagp)
+      void handler2 (volatile bool * flagp)
       {
 	out_flag2 = *flagp;
       }
 
       cce_location_t	L;
-      bool		flag1 __attribute__((cleanup(handler1))) = false;
-      bool		flag2 __attribute__((cleanup(handler2))) = false;
+      volatile bool	flag1 __attribute__((cleanup(handler1))) = false;
+      volatile bool	flag2 __attribute__((cleanup(handler2))) = false;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
