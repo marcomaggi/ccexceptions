@@ -220,8 +220,10 @@ struct cce_location_tag_t {
 typedef cce_location_tag_t		cce_location_t[1];
 
 cce_decl void cce_location_init	(cce_location_tag_t * here);
-cce_decl void cce_raise		(cce_location_tag_t * L, void * condition);
-cce_decl void cce_retry		(cce_location_tag_t * L);
+cce_decl void cce_raise		(cce_location_tag_t * L, void * condition)
+  __attribute__((noreturn));
+cce_decl void cce_retry		(cce_location_tag_t * L)
+  __attribute__((noreturn));
 cce_decl cce_condition_t * cce_location_condition (cce_location_tag_t * L);
 
 /* The following macro is meant to be used like this:
