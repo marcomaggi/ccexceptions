@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCExceptions],[0.2d0],
+AC_INIT([CCExceptions],[0.2d1],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
@@ -44,9 +44,9 @@ dnl page
 #### libraries interface version
 
 dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.1])
+AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.2])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],1,0,0)
+MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],2,1,0)
 
 dnl page
 #### basic system inspection
