@@ -213,14 +213,14 @@ cce_decl const char *	cce_condition_static_message	(cce_condition_t * condition)
 struct cce_location_tag_t {
   /* The buffer must be the first member of this struct. */
   jmp_buf			buffer;
-  cce_condition_t *		condition;
+  const cce_condition_t *	condition;
   cce_handler_tag_t *		next_handler;
 };
 
 typedef cce_location_tag_t		cce_location_t[1];
 
 cce_decl void cce_location_init	(cce_location_tag_t * here);
-cce_decl void cce_raise		(cce_location_tag_t * L, void * condition)
+cce_decl void cce_raise		(cce_location_tag_t * L, const cce_condition_t * condition)
   __attribute__((noreturn));
 cce_decl void cce_retry		(cce_location_tag_t * L)
   __attribute__((noreturn));

@@ -41,9 +41,9 @@ cce_location_condition (cce_location_tag_t * L)
   return (cce_condition_t *) L->condition;
 }
 void
-cce_raise (struct cce_location_tag_t * L, void * condition)
+cce_raise (struct cce_location_tag_t * L, const cce_condition_t * condition)
 {
-  L->condition		= (condition)? condition : (cce_condition_t *)cce_unknown_condition;
+  L->condition		= (condition)? condition : cce_unknown_condition;
   longjmp(L->buffer, (int)CCE_ERROR);
 }
 void

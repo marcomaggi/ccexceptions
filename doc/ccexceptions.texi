@@ -559,7 +559,7 @@ Struct type representing the location context.  It contains an instance of @code
 is the target of the @cfunc{longjmp} calls.  It has the following public fields:
 
 @table @code
-@item cce_condition_t * condition
+@item const cce_condition_t * condition
 Pointer to an exceptional condition descriptor.  It is set by @cfunc{cce_raise} and
 @cfunc{cce_retry}.  The client code is responsible of releasing resources associated to this value.
 @end table
@@ -606,7 +606,7 @@ Constant used by the library as non--local exit code.  It is the return value of
 @end deftypevr
 
 
-@deftypefun void cce_raise (cce_location_tag_t * @var{L}, void * @var{C})
+@deftypefun void cce_raise (cce_location_tag_t * @var{L}, const cce_condition_t * @var{C})
 Raise an exception associated to the destination @var{L} and with exceptional condition descriptor
 @var{C}.  This function performs the call to @cfunc{longjmp} with code @code{CCE_ERROR}.
 
