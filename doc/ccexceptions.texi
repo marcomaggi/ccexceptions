@@ -1029,7 +1029,7 @@ property.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_root_condition_descriptor
+@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_root_condition_descriptor
 Pointer to a statically allocated structure representing the root condition descriptor for all the
 condition descriptors.  When a condition descriptors hierarchy is correctly built: using this value
 as second argument in calls to the functions:
@@ -1041,7 +1041,7 @@ cce_condition_descriptor_child_and_parent()
 
 @noindent
 will cause the return value to always be @ctrue{}.
-@end defvr
+@end deftypevr
 
 
 To use this value in a custom condition descriptor definition, we must write initialisation code;
@@ -1092,20 +1092,20 @@ There should be only one unknown condition object: the one predefined by @value{
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_unknown_condition_descriptor
+@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_unknown_condition_descriptor
 Pointer to a statically allocated structure representing the unknown condition descriptor for the
 single unknown condition object.  The parent of this descriptor is the root descriptor referenced by
 @code{cce_root_condition_descriptor}.
 
 By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure we
 can determine if the condition struct is an unknown condition object.
-@end defvr
+@end deftypevr
 
 
-@defvr {Dynamic Constant} {const cce_condition_t *} cce_unknown_condition
+@deftypevr {Dynamic Constant} {const cce_condition_t *} cce_unknown_condition
 Pointer to a statically allocated structure representing the unknown condition object.  This should
 be the single condition object having @code{cce_unknown_condition_descriptor} as descriptor.
-@end defvr
+@end deftypevr
 
 @c page
 @node conditions errno
@@ -1149,13 +1149,13 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@defvr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_errno_condition_descriptor
+@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_errno_condition_descriptor
 Pointer to a statically allocated structure representing the condition descriptor of all the values
 returned by @cfunc{cce_errno_condition}.
 
 By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure, we
 can determine if such structure is an @code{errno} condition object.
-@end defvr
+@end deftypevr
 
 
 @deftypefun {cce_condition_t *} cce_errno_condition (int @var{errnum})
