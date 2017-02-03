@@ -783,6 +783,10 @@ allocation.  Handlers are called starting from the last registered one.
 Run all the error handlers associated to the location @var{L}.  Each handler must return to its
 caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
+
+@strong{NOTE} It is always better to assume that an error handler might access the exceptional
+condition object associated to @var{L}, so this function should always be called @strong{before}
+applying @cfunc{cce_condition_free} to the return value of @cfunc{cce_location_condition}.
 @end deftypefun
 
 
@@ -1232,12 +1236,12 @@ cce_location_t      L;
 
 if (cce_location(L))
   @{
+    cce_condition_t * C = cce_location_condition(L);
     @{
-      cce_condition_t * C = cce_location_condition(L);
       fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-      cce_condition_free(C);
+      cce_run_error_handlers(L);
     @}
-    cce_run_error_handlers(L);
+    cce_condition_free(C);
   @} else @{
     do_something();
     if (an_error_occurred()) @{
@@ -1257,12 +1261,12 @@ upper_function (void)
 
   if (cce_location(L))
     @{
+      cce_condition_t * C = cce_location_condition(L);
       @{
-        cce_condition_t * C = cce_location_condition(L);
         do_something_with(cce_condition_static_message(C));
-        cce_condition_free(C);
+        cce_run_error_handlers(L);
       @}
-      cce_run_error_handlers(L);
+      cce_condition_free(C);
     @}
   else
     @{
@@ -1300,21 +1304,22 @@ cce_location_t      L;
 
 if (cce_location(L)) @{
   cce_condition_t * C = cce_location_condition(L);
-
-  if (cce_condition_is_a(C, cce_unknown_condition_descriptor))
-    @{
-      do_something();
-    @}
-  else if (cce_condition_is_a(C, cce_errno_condition_descriptor))
-    @{
-      do_something();
-    @}
-  else
-    @{
-      do_something();
-    @}
+  @{
+    if (cce_condition_is_a(C, cce_unknown_condition_descriptor))
+      @{
+        do_something();
+      @}
+    else if (cce_condition_is_a(C, cce_errno_condition_descriptor))
+      @{
+        do_something();
+      @}
+    else
+      @{
+        do_something();
+      @}
+    cce_run_error_handlers(L);
+  @}
   cce_condition_free(C);
-  cce_run_error_handlers(L);
 @} else @{
   do_something();
   if (an_exception_occurred()) @{
@@ -1333,24 +1338,24 @@ cce_location_t      L;
 if (cce_location(L)) @{
   cce_condition_t *                 C  = cce_location_condition(L);
   const cce_condition_descriptor_t *CD = cce_condition_descriptor(C);
+  @{
+    if (cce_condition_descriptor_child_and_parent(CD,
+           cce_unknown_condition_descriptor))
+      @{
+        do_something();
+      @}
+    else if (cce_condition_descriptor_child_and_parent(CD,
+                cce_errno_condition_descriptor))
+      @{
+        do_something();
+      @}
+    else
+      @{
+        do_something();
+      @}
+    cce_run_error_handlers(L);
+  @}
   cce_condition_free(C);
-
-  if (cce_condition_descriptor_child_and_parent(CD,
-         cce_unknown_condition_descriptor))
-    @{
-      do_something();
-    @}
-  else if (cce_condition_descriptor_child_and_parent(CD,
-              cce_errno_condition_descriptor))
-    @{
-      do_something();
-    @}
-  else
-    @{
-      do_something();
-    @}
-  cce_condition_free(C);
-  cce_run_error_handlers(L);
 @} else @{
   do_something();
   if (an_exception_occurred()) @{
@@ -1644,8 +1649,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       @} else @{
         flag = 0;
       @}
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     @} else @{
       cce_raise(L, C_condition_constructor(1, 2, 3));
       cce_run_cleanup_handlers(L);
@@ -1673,8 +1678,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       @} else @{
         flag = 0;
       @}
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     @} else @{
       cce_raise(L, B_condition_constructor(1, 2));
       cce_run_cleanup_handlers(L);
@@ -1702,8 +1707,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       @} else @{
         flag = 0;
       @}
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     @} else @{
       cce_raise(L, A_condition_constructor(1));
       cce_run_cleanup_handlers(L);
