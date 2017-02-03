@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -47,10 +47,10 @@ main (int argc CCE_UNUSED, const char *const argv[])
       {
 	cce_condition_t *	C = cce_location_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_run_error_handlers(L);
 	cce_condition_free(C);
       }
       flag = false;
-      cce_run_error_handlers(L);
     } else {
       flag = true;
       cce_raise(L, cce_errno_condition(0));
@@ -69,10 +69,10 @@ main (int argc CCE_UNUSED, const char *const argv[])
       {
 	cce_condition_t *	C = cce_location_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_run_error_handlers(L);
 	cce_condition_free(C);
       }
       flag = false;
-      cce_run_error_handlers(L);
     } else {
       flag = true;
       cce_raise(L, cce_errno_condition(EINVAL));
@@ -91,10 +91,10 @@ main (int argc CCE_UNUSED, const char *const argv[])
       {
 	cce_condition_t *	C = cce_location_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_run_error_handlers(L);
 	cce_condition_free(C);
       }
       flag = false;
-      cce_run_error_handlers(L);
     } else {
       flag = true;
       cce_raise(L, cce_errno_condition(INT_MAX));
@@ -113,10 +113,10 @@ main (int argc CCE_UNUSED, const char *const argv[])
       {
 	cce_condition_t *	C = cce_location_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_run_error_handlers(L);
 	cce_condition_free(C);
       }
       flag = false;
-      cce_run_error_handlers(L);
     } else {
       flag = true;
       cce_raise(L, cce_errno_condition(-1));

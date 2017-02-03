@@ -288,8 +288,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       } else {
 	flag = 0;
       }
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     } else {
       cce_raise(L, C_condition_constructor(1, 2, 3));
       cce_run_cleanup_handlers(L);
@@ -317,8 +317,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       } else {
 	flag = 0;
       }
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     } else {
       cce_raise(L, B_condition_constructor(1, 2));
       cce_run_cleanup_handlers(L);
@@ -346,8 +346,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
       } else {
 	flag = 0;
       }
-      cce_condition_free(cnd);
       cce_run_error_handlers(L);
+      cce_condition_free(cnd);
     } else {
       cce_raise(L, A_condition_constructor(1));
       cce_run_cleanup_handlers(L);

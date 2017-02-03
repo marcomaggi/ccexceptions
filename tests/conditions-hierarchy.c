@@ -138,8 +138,8 @@ main (int argc CCE_UNUSED, const char *const argv[])
 	{
 	  flag = false;
 	}
-      cce_condition_free(C);
       cce_run_error_handlers(L);
+      cce_condition_free(C);
     } else {
       cce_raise(L, cce_errno_condition(EINVAL));
       cce_run_cleanup_handlers(L);
@@ -155,7 +155,6 @@ main (int argc CCE_UNUSED, const char *const argv[])
     if (cce_location(L)) {
       cce_condition_t *			C  = cce_location_condition(L);
       const cce_condition_descriptor_t *CD = cce_condition_descriptor(C);
-      cce_condition_free(C);
 
       if (cce_condition_descriptor_child_and_parent(CD, cce_unknown_condition_descriptor))
 	{
@@ -170,6 +169,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 	  flag = false;
 	}
       cce_run_error_handlers(L);
+      cce_condition_free(C);
     } else {
       cce_raise(L, cce_errno_condition(EINVAL));
       cce_run_cleanup_handlers(L);
