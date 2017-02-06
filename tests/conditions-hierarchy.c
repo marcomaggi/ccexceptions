@@ -77,7 +77,7 @@ static const cce_condition_t C_condition = {
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* Dynamic initialisation. */
   A_condition_descriptor.parent = cce_root_condition_descriptor;
@@ -120,7 +120,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Branching upon condition types with "cce_condition_is_a()". */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {
@@ -149,7 +149,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Branching upon condition types with "cce_descriptor_child_and_parent()". */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {

@@ -1,5 +1,5 @@
 -*- coding: utf-8-unix -*-
-Subject: [announce] CCExceptions revision 0.2d0
+Subject: [announce] CCExceptions revision 0.3d0
 
 			      CCExceptions
 			      ============
@@ -28,6 +28,13 @@ and as backup at:
 the documentation is available online:
 
 	  <http://marcomaggi.github.io/docs/ccexceptions.html>
+
+
+Notes for revision 0.3d0
+------------------------
+
+* Changed the type definitions  for "cce_location_t" and "cce_handler_t"
+  to favour uniformity.  This is a backwards incompatible change.
 
 
 Notes for revision 0.2d0

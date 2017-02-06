@@ -263,14 +263,14 @@ C_condition_is (void * condition)
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* Dynamic initialisation. */
   A_condition_descriptor.parent	= cce_root_condition_descriptor;
 
   /* Raising condition object of type C. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     int			flag;
 
     if (cce_location(L)) {
@@ -299,7 +299,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Raising condition object of type B. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     int			flag;
 
     if (cce_location(L)) {
@@ -328,7 +328,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Raising condition object of type A. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     int			flag;
 
     if (cce_location(L)) {

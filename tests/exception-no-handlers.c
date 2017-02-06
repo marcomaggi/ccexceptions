@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -33,11 +33,11 @@
 #include <ccexceptions.h>
 
 int
-main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
+main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[] CCE_UNUSED)
 {
   /* "if" statement */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) { // the error handler
@@ -53,7 +53,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* "switch" statement, error */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     switch (cce_location(L)) {
@@ -72,7 +72,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* "switch" statement, retry */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     switch (cce_location(L)) {

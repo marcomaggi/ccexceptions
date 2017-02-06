@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -33,37 +33,37 @@
 #include <ccexceptions.h>
 
 typedef struct handler1_t {
-  cce_handler_tag_t	handler;
+  cce_handler_t;
   bool *		flagp;
 } handler1_t;
 static void
-handler1 (cce_location_tag_t * L, void * _data)
+handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * _data)
 {
-  handler1_t *	data = _data;
+  handler1_t *	data = (handler1_t *)_data;
   *(data->flagp) = true;
 }
 
 typedef struct handler2_t {
-  cce_handler_tag_t	handler;
+  cce_handler_t;
   bool *		flagp;
 } handler2_t;
 static void
-handler2 (cce_location_tag_t * L, void * _data)
+handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * _data)
 {
-  handler1_t *	data = _data;
+  handler1_t *	data = (handler1_t *)_data;
   *(data->flagp) = true;
 }
 
 int
-main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* no exception */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .handler.handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler.handler_function = handler2, .flagp = &flag2 };
+    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -81,11 +81,11 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* with error */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .handler.handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler.handler_function = handler2, .flagp = &flag2 };
+    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -104,11 +104,11 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* with retry */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .handler.handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler.handler_function = handler2, .flagp = &flag2 };
+    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:

@@ -36,11 +36,11 @@
 #include <ccexceptions.h>
 
 int
-main (int argc CCE_UNUSED, const char *const argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* Raising a no-error error. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {
@@ -62,7 +62,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Raising an EINVAL error. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {
@@ -84,7 +84,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Raising an errno condition with invalid errno code: INT_MAX. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {
@@ -106,7 +106,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
 
   /* Raising an errno condition with invalid errno code: -1. */
   {
-    cce_location_t	L;
+    cce_location_t	L[1];
     bool		flag = false;
 
     if (cce_location(L)) {

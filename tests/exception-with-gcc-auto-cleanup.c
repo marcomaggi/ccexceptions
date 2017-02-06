@@ -33,7 +33,7 @@
 #include <ccexceptions.h>
 
 int
-main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* no exception */
   {
@@ -49,7 +49,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 	out_flag2 = *flagp;
       }
 
-      cce_location_t	L;
+      cce_location_t	L[1];
       bool		flag1 __attribute__((cleanup(handler1))) = false;
       bool		flag2 __attribute__((cleanup(handler2))) = false;
 
@@ -86,7 +86,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 	out_flag2 = *flagp;
       }
 
-      cce_location_t	L;
+      cce_location_t	L[1];
       bool		flag1 __attribute__((cleanup(handler1))) = false;
       bool		flag2 __attribute__((cleanup(handler2))) = false;
 
@@ -124,7 +124,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 	out_flag2 = *flagp;
       }
 
-      cce_location_t	L;
+      cce_location_t	L[1];
       volatile bool	flag1 __attribute__((cleanup(handler1))) = false;
       volatile bool	flag2 __attribute__((cleanup(handler2))) = false;
 

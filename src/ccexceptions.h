@@ -27,7 +27,6 @@
 #ifndef CCEXCEPTIONS_H
 #define CCEXCEPTIONS_H 1
 
-
 /** --------------------------------------------------------------------
  ** Preliminary definitions.
  ** ----------------------------------------------------------------- */
@@ -80,7 +79,6 @@ extern "C" {
 #  endif
 #endif
 
-
 /** --------------------------------------------------------------------
  ** Headers.
  ** ----------------------------------------------------------------- */
@@ -93,7 +91,6 @@ extern "C" {
 #include <stdbool.h>
 #include <setjmp.h>
 
-
 /** --------------------------------------------------------------------
  ** Constants.
  ** ----------------------------------------------------------------- */
@@ -117,40 +114,43 @@ typedef enum {
   CCE_FIRST_NEXT
 } cce_code_t;
 
-
 /** --------------------------------------------------------------------
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-cce_decl const char *	cce_version_string		(void);
-cce_decl int		cce_version_interface_current	(void);
-cce_decl int		cce_version_interface_revision	(void);
-cce_decl int		cce_version_interface_age	(void);
+cce_decl const char *	cce_version_string		(void)
+  __attribute__((pure));
+cce_decl int		cce_version_interface_current	(void)
+  __attribute__((pure));
+cce_decl int		cce_version_interface_revision	(void)
+  __attribute__((pure));
+cce_decl int		cce_version_interface_age	(void)
+  __attribute__((pure));
 
-
 /** --------------------------------------------------------------------
  ** Error and cleanup handlers.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_location_tag_t	cce_location_tag_t;
-typedef struct cce_handler_tag_t	cce_handler_tag_t;
+typedef struct cce_location_t		cce_location_t;
+typedef struct cce_handler_t		cce_handler_t;
 
-typedef void cce_handler_fun_t (struct cce_location_tag_t * L, void * H);
+typedef void cce_handler_fun_t (cce_location_t * L, cce_handler_t * H);
 
-struct cce_handler_tag_t {
+struct cce_handler_t {
   bool				is_cleanup_handler;
   cce_handler_fun_t *		handler_function;
-  struct cce_handler_tag_t *	next_handler;
+  cce_handler_t *		next_handler;
 };
 
-typedef cce_handler_tag_t		cce_handler_t[1];
+cce_decl void cce_register_cleanup_handler	(cce_location_t * L, cce_handler_t * H)
+  __attribute__((nonnull(1,2)));
+cce_decl void cce_register_error_handler	(cce_location_t * L, cce_handler_t * H)
+  __attribute__((nonnull(1,2)));
+cce_decl void cce_run_cleanup_handlers		(cce_location_t * L)
+  __attribute__((nonnull(1)));
+cce_decl void cce_run_error_handlers		(cce_location_t * L)
+  __attribute__((nonnull(1)));
 
-cce_decl void cce_register_cleanup_handler	(cce_location_tag_t * L, void * H);
-cce_decl void cce_register_error_handler	(cce_location_tag_t * L, void * H);
-cce_decl void cce_run_cleanup_handlers		(cce_location_tag_t * L);
-cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
-
-
 /** --------------------------------------------------------------------
  ** Exceptional condition descriptors.
  ** ----------------------------------------------------------------- */
@@ -158,8 +158,10 @@ cce_decl void cce_run_error_handlers		(cce_location_tag_t * L);
 /* Forward declaration. */
 typedef struct cce_condition_t		cce_condition_t;
 
-typedef void		cce_condition_free_fun_t		(cce_condition_t * condition);
-typedef const char *	cce_condition_static_message_fun_t	(const cce_condition_t * condition);
+typedef void		cce_condition_free_fun_t		(cce_condition_t * condition)
+  __attribute__((nonnull(1)));
+typedef const char *	cce_condition_static_message_fun_t	(const cce_condition_t * condition)
+  __attribute__((nonnull(1)));
 
 typedef struct cce_condition_descriptor_t {
   const struct cce_condition_descriptor_t *	parent;
@@ -196,35 +198,40 @@ cce_decl const cce_condition_descriptor_t *	cce_errno_condition_descriptor;
 /* ------------------------------------------------------------------ */
 
 cce_decl void		cce_condition_init (cce_condition_t * condition,
-					    const cce_condition_descriptor_t * descriptor);
+					    const cce_condition_descriptor_t * descriptor)
+  __attribute__((nonnull(1,2)));
 cce_decl bool		cce_condition_is_a (const cce_condition_t * condition,
-					    const cce_condition_descriptor_t * descriptor);
+					    const cce_condition_descriptor_t * descriptor)
+  __attribute__((nonnull(1,2)));
 cce_decl bool		cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * child,
-								   const cce_condition_descriptor_t * parent);
-cce_decl const cce_condition_descriptor_t * cce_condition_descriptor (const cce_condition_t * condition);
-cce_decl void		cce_condition_free		(cce_condition_t * condition);
-cce_decl const char *	cce_condition_static_message	(cce_condition_t * condition);
+								   const cce_condition_descriptor_t * parent)
+  __attribute__((nonnull(1,2)));
+cce_decl const cce_condition_descriptor_t * cce_condition_descriptor (const cce_condition_t * condition)
+  __attribute__((nonnull(1)));
+cce_decl void		cce_condition_free		(cce_condition_t * condition)
+  __attribute__((nonnull(1)));
+cce_decl const char *	cce_condition_static_message	(cce_condition_t * condition)
+  __attribute__((nonnull(1)));
 
-
 /** --------------------------------------------------------------------
  ** Locations.
  ** ----------------------------------------------------------------- */
 
-struct cce_location_tag_t {
+struct cce_location_t {
   /* The buffer must be the first member of this struct. */
   jmp_buf			buffer;
   const cce_condition_t *	condition;
-  cce_handler_tag_t *		next_handler;
+  cce_handler_t *		next_handler;
 };
 
-typedef cce_location_tag_t		cce_location_t[1];
-
-cce_decl void cce_location_init	(cce_location_tag_t * here);
-cce_decl void cce_raise		(cce_location_tag_t * L, const cce_condition_t * condition)
-  __attribute__((noreturn));
-cce_decl void cce_retry		(cce_location_tag_t * L)
-  __attribute__((noreturn));
-cce_decl cce_condition_t * cce_location_condition (cce_location_tag_t * L);
+cce_decl void cce_location_init	(cce_location_t * here)
+  __attribute__((nonnull(1)));
+cce_decl void cce_raise		(cce_location_t * L, const cce_condition_t * condition)
+  __attribute__((noreturn,nonnull(1)));
+cce_decl void cce_retry		(cce_location_t * L)
+  __attribute__((noreturn,nonnull(1)));
+cce_decl cce_condition_t * cce_location_condition (cce_location_t * L)
+  __attribute__((nonnull(1)));
 
 /* The following macro is meant to be used like this:
 
@@ -242,7 +249,6 @@ cce_decl cce_condition_t * cce_location_condition (cce_location_tag_t * L);
 #define cce_location(HERE)	\
   (cce_location_init(HERE), setjmp((void *)(HERE)))
 
-
 /** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */

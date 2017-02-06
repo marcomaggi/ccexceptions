@@ -7,7 +7,7 @@
 
 	Test file for version functions.
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -17,7 +17,7 @@
 #include <ccexceptions.h>
 
 int
-main (int argc, const char *const argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   printf("version number string: %s\n", cce_version_string());
   printf("libtool version number: %d:%d:%d\n",

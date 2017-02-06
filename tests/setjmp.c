@@ -22,7 +22,7 @@
 #define JUMP_TO_RETRY		3
 
 int
-main (int argc, const char *const argv[])
+main (int argc __attribute__((unused)), const char *const argv[] __attribute__((unused)))
 {
   /* No exception.  Call "setjmp()" but not "longjmp()". */
   {

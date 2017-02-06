@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -33,7 +33,7 @@
 #include <ccexceptions.h>
 
 int
-main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
+main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* Just run cleanup handlers. */
   {
@@ -41,20 +41,20 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     bool	flag2 = false;
     bool	flag3 = false;
 
-    void handler1 (cce_location_tag_t * L, void * H) {
+    void handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag1 = true;
     }
-    void handler2 (cce_location_tag_t * L, void * H) {
+    void handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag2 = true;
     }
-    void handler3 (cce_location_tag_t * L, void * H) {
+    void handler3 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag3 = true;
     }
 
-    cce_location_t	L;
-    cce_handler_tag_t	H1 = { .handler_function = handler1 };
-    cce_handler_tag_t	H2 = { .handler_function = handler2 };
-    cce_handler_tag_t	H3 = { .handler_function = handler3 };
+    cce_location_t	L[1];
+    cce_handler_t	H1 = { .handler_function = handler1 };
+    cce_handler_t	H2 = { .handler_function = handler2 };
+    cce_handler_t	H3 = { .handler_function = handler3 };
 
     cce_location_init(L);
     cce_register_cleanup_handler(L, &H1);
@@ -73,20 +73,20 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     bool	flag2 = false;
     bool	flag3 = false;
 
-    void handler1 (cce_location_tag_t * L, void * H) {
+    void handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag1 = true;
     }
-    void handler2 (cce_location_tag_t * L, void * H) {
+    void handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag2 = true;
     }
-    void handler3 (cce_location_tag_t * L, void * H) {
+    void handler3 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag3 = true;
     }
 
-    cce_location_t	L;
-    cce_handler_tag_t	H1 = { .handler_function = handler1 };
-    cce_handler_tag_t	H2 = { .handler_function = handler2 };
-    cce_handler_tag_t	H3 = { .handler_function = handler3 };
+    cce_location_t	L[1];
+    cce_handler_t	H1 = { .handler_function = handler1 };
+    cce_handler_t	H2 = { .handler_function = handler2 };
+    cce_handler_t	H3 = { .handler_function = handler3 };
 
     cce_location_init(L);
     cce_register_error_handler(L, &H1);
@@ -101,16 +101,16 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* Allocating memory: success execution path. */
   {
-    cce_location_t	L;
-    cce_handler_t	HP;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
     void *		P;
     bool		flag = false;
 
-    void P_handler (cce_location_tag_t * L, void * H) {
+    void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       free(P);
       flag = true;
     }
-    HP->handler_function = P_handler;
+    H->handler_function = P_handler;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -120,7 +120,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     default:
       P = malloc(4096);
       if (P) {
-	cce_register_cleanup_handler(L, HP);
+	cce_register_cleanup_handler(L, H);
       } else {
 	cce_raise(L, NULL);
       }
@@ -132,16 +132,16 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* Allocating memory: exceptional execution path. */
   {
-    cce_location_t	L;
-    cce_handler_t	HP;
+    cce_location_t	L[1];
+    cce_handler_t	H;
     void *		P;
     bool		flag = false;
 
-    void P_handler (cce_location_tag_t * L, void * H) {
+    void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       free(P);
       flag = true;
     }
-    HP->handler_function = P_handler;
+    H.handler_function = P_handler;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -151,7 +151,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
     default:
       P = malloc(4096);
       if (P) {
-	cce_register_cleanup_handler(L, HP);
+	cce_register_cleanup_handler(L, &H);
       } else {
 	cce_raise(L, NULL);
       }
@@ -166,16 +166,16 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* Constructor scheme: success path. */
   {
-    void * constructor (cce_location_tag_t * upper_L)
+    void * constructor (cce_location_t * upper_L)
     {
-      cce_location_t	L;
-      cce_handler_t	HP;
+      cce_location_t	L[1];
+      cce_handler_t	H[1];
       void *		P;
 
-      void P_handler (cce_location_tag_t * L, void * H) {
+      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      HP->handler_function = P_handler;
+      H->handler_function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -186,7 +186,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       default:
 	P = malloc(4096);
 	if (P) {
-	  cce_register_error_handler(L, HP);
+	  cce_register_error_handler(L, H);
 	} else {
 	  cce_raise(L, NULL);
 	}
@@ -201,16 +201,16 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
     void caller (void)
     {
-      cce_location_t	L;
-      cce_handler_t	HP;
+      cce_location_t	L[1];
+      cce_handler_t	H[1];
       void *		P;
       bool		flag = false;
 
-      void P_handler (cce_location_tag_t * L, void * H) {
+      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
 	flag = true;
       }
-      HP->handler_function = P_handler;
+      H->handler_function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -220,7 +220,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       default:
 	P = constructor(L);
 	assert(NULL != P);
-	cce_register_cleanup_handler(L, HP);
+	cce_register_cleanup_handler(L, H);
 	// do_something_with(P);
 	cce_run_cleanup_handlers(L);
       }
@@ -232,16 +232,16 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
   /* Constructor scheme: exceptional path. */
   {
-    void * constructor (cce_location_tag_t * upper_L)
+    void * constructor (cce_location_t * upper_L)
     {
-      cce_location_t	L;
-      cce_handler_t	HP;
+      cce_location_t	L[1];
+      cce_handler_t	H[1];
       void *		P;
 
-      void P_handler (cce_location_tag_t * L, void * H) {
+      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      HP->handler_function = P_handler;
+      H->handler_function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -252,7 +252,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       default:
 	P = malloc(4096);
 	if (P) {
-	  cce_register_error_handler(L, HP);
+	  cce_register_error_handler(L, H);
 	} else {
 	  cce_raise(L, NULL);
 	}
@@ -267,15 +267,15 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
 
     void caller (void)
     {
-      cce_location_t	L;
-      cce_handler_t	HP;
+      cce_location_t	L[1];
+      cce_handler_t	H[1];
       void *		P;
       bool		flag = false;
 
-      void P_handler (cce_location_tag_t * L, void * H) {
+      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      HP->handler_function = P_handler;
+      H->handler_function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -286,7 +286,7 @@ main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[])
       default:
 	P = constructor(L);
 	assert(NULL != P);
-	cce_register_cleanup_handler(L, HP);
+	cce_register_cleanup_handler(L, H);
 	// do_something_with(P);
 	cce_run_cleanup_handlers(L);
       }
