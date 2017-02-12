@@ -41,13 +41,13 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     bool	flag2 = false;
     bool	flag3 = false;
 
-    void handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag1 = true;
     }
-    void handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag2 = true;
     }
-    void handler3 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler3 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag3 = true;
     }
 
@@ -73,13 +73,13 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     bool	flag2 = false;
     bool	flag3 = false;
 
-    void handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag1 = true;
     }
-    void handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag2 = true;
     }
-    void handler3 (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void handler3 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       flag3 = true;
     }
 
@@ -106,7 +106,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     void *		P;
     bool		flag = false;
 
-    void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       free(P);
       flag = true;
     }
@@ -137,7 +137,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     void *		P;
     bool		flag = false;
 
-    void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+    void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
       free(P);
       flag = true;
     }
@@ -172,7 +172,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_handler_t	H[1];
       void *		P;
 
-      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+      void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
       H->handler_function = P_handler;
@@ -206,7 +206,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       void *		P;
       bool		flag = false;
 
-      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+      void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
 	flag = true;
       }
@@ -238,7 +238,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_handler_t	H[1];
       void *		P;
 
-      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+      void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
       H->handler_function = P_handler;
@@ -272,7 +272,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       void *		P;
       bool		flag = false;
 
-      void P_handler (cce_location_t * L CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
+      void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
       H->handler_function = P_handler;

@@ -128,13 +128,18 @@ cce_decl int		cce_version_interface_age	(void)
   __attribute__((pure));
 
 /** --------------------------------------------------------------------
- ** Error and cleanup handlers.
+ ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
 typedef struct cce_location_t		cce_location_t;
 typedef struct cce_handler_t		cce_handler_t;
+typedef struct cce_condition_t		cce_condition_t;
 
-typedef void cce_handler_fun_t (cce_location_t * L, cce_handler_t * H);
+/** --------------------------------------------------------------------
+ ** Error and cleanup handlers.
+ ** ----------------------------------------------------------------- */
+
+typedef void cce_handler_fun_t (const cce_condition_t * L, cce_handler_t * H);
 
 struct cce_handler_t {
   bool				is_cleanup_handler;
@@ -154,9 +159,6 @@ cce_decl void cce_run_error_handlers		(cce_location_t * L)
 /** --------------------------------------------------------------------
  ** Exceptional condition descriptors.
  ** ----------------------------------------------------------------- */
-
-/* Forward declaration. */
-typedef struct cce_condition_t		cce_condition_t;
 
 typedef void		cce_condition_free_fun_t		(cce_condition_t * condition)
   __attribute__((nonnull(1)));
@@ -221,33 +223,22 @@ struct cce_location_t {
   /* The buffer must be the first member of this struct. */
   jmp_buf			buffer;
   const cce_condition_t *	condition;
-  cce_handler_t *		next_handler;
+  cce_handler_t *		first_handler;
 };
 
 cce_decl void cce_location_init	(cce_location_t * here)
   __attribute__((nonnull(1)));
-cce_decl void cce_raise		(cce_location_t * L, const cce_condition_t * condition)
+
+cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * condition)
   __attribute__((noreturn,nonnull(1)));
-cce_decl void cce_retry		(cce_location_t * L)
+
+cce_decl void cce_retry (cce_location_t * L)
   __attribute__((noreturn,nonnull(1)));
+
 cce_decl cce_condition_t * cce_location_condition (cce_location_t * L)
-  __attribute__((nonnull(1)));
+  __attribute__((nonnull(1),returns_nonnull));
 
-/* The following macro is meant to be used like this:
-
-	cce_location_t	here;
-
-	if (cce_location(here)) {
-	  cce_run_error_handlers(here);
-	} else {
-	  ...
-	  if (error) cce_throw(here, NULL);
-          ...
-	  cce_run_cleanup_handlers(here);
-        }
-*/
-#define cce_location(HERE)	\
-  (cce_location_init(HERE), setjmp((void *)(HERE)))
+#define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
 
 /** --------------------------------------------------------------------
  ** Done.

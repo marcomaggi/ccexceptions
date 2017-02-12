@@ -26,112 +26,235 @@
 
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <errno.h>
 #include <ccexceptions.h>
 
-typedef struct handler1_t {
-  cce_handler_t;
-  bool *		flagp;
-} handler1_t;
 static void
-handler1 (cce_location_t * L CCE_UNUSED, cce_handler_t * _data)
+test_no_exception (void)
 {
-  handler1_t *	data = (handler1_t *)_data;
-  *(data->flagp) = true;
+  typedef struct handler1_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler1_t;
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+  {
+    handler1_t *	data = (handler1_t *)_data;
+    *(data->flagp) = true;
+  }
+
+  typedef struct handler2_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler2_t;
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+  {
+    handler1_t *	data = (handler1_t *)_data;
+    *(data->flagp) = true;
+  }
+
+  cce_location_t	L[1];
+  bool		flag1 = false;
+  bool		flag2 = false;
+  handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+  handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
+
+  switch (cce_location(L)) {
+  case CCE_ERROR:
+    cce_run_error_handlers(L);
+    cce_condition_free(cce_location_condition(L));
+    break;
+
+  default:
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_error_handler(L, &H2);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true  == flag1);
+  assert(false == flag2);
 }
 
-typedef struct handler2_t {
-  cce_handler_t;
-  bool *		flagp;
-} handler2_t;
 static void
-handler2 (cce_location_t * L CCE_UNUSED, cce_handler_t * _data)
+test_with_error (void)
 {
-  handler1_t *	data = (handler1_t *)_data;
-  *(data->flagp) = true;
+  typedef struct handler1_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler1_t;
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+  {
+    handler1_t *	data = (handler1_t *)_data;
+    *(data->flagp) = true;
+  }
+
+  typedef struct handler2_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler2_t;
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+  {
+    handler1_t *	data = (handler1_t *)_data;
+    *(data->flagp) = true;
+  }
+
+  cce_location_t	L[1];
+  bool		flag1 = false;
+  bool		flag2 = false;
+  handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+  handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
+
+  switch (cce_location(L)) {
+  case CCE_ERROR:
+    cce_run_error_handlers(L);
+    cce_condition_free(cce_location_condition(L));
+    break;
+
+  default:
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_error_handler(L, &H2);
+    if (1) {
+      cce_raise(L, NULL);
+    }
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag1);
+  assert(true == flag2);
+}
+
+static void
+test_with_retry (void)
+{
+  typedef struct handler1_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler1_t;
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+  {
+    handler1_t *	H = (handler1_t *)_H;
+    *(H->flagp) = true;
+  }
+
+  typedef struct handler2_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler2_t;
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+  {
+    handler1_t *	H = (handler1_t *)_H;
+    *(H->flagp) = true;
+  }
+
+  cce_location_t	L[1];
+  bool		flag1 = false;
+  bool		flag2 = false;
+  handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
+  handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
+
+  switch (cce_location(L)) {
+  case CCE_ERROR:
+    cce_run_error_handlers(L);
+    cce_condition_free(cce_location_condition(L));
+    break;
+
+  case CCE_SUCCESS:
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_error_handler(L, &H2);
+    if (1) {
+      cce_retry(L);
+    }
+    // else fall through
+
+  default:
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true  == flag1);
+  assert(false == flag2);
+}
+
+static void
+test_dynamically_allocated_handlers (void)
+{
+  typedef struct handler1_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler1_t;
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+  {
+    handler1_t *	H = (handler1_t *)_H;
+    *(H->flagp) = true;
+    free(H);
+  }
+  handler1_t * alloc_handler1 (cce_location_t * there, cce_handler_fun_t * handler, bool * flagp)
+  {
+    handler1_t *	H;
+    errno = 0;
+    H = malloc(sizeof(handler1_t));
+    if (NULL != H) {
+      H->handler_function = handler;
+      H->flagp            = flagp;
+      return H;
+    } else {
+      cce_raise(there, cce_errno_condition(errno));
+    }
+  }
+
+  typedef struct handler2_t {
+    cce_handler_t;
+    bool * flagp;
+  } handler2_t;
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+  {
+    handler1_t *	H = (handler1_t *)_H;
+    *(H->flagp) = true;
+    free(H);
+  }
+  handler2_t * alloc_handler2 (cce_location_t * there, cce_handler_fun_t * handler, bool * flagp)
+  {
+    handler2_t *	H;
+    errno = 0;
+    H = malloc(sizeof(handler2_t));
+    if (NULL != H) {
+      H->handler_function = handler;
+      H->flagp		= flagp;
+      return H;
+    } else {
+      cce_raise(there, cce_errno_condition(errno));
+    }
+  }
+
+  cce_location_t	L[1];
+  bool			flag1 = false;
+  bool			flag2 = false;
+  handler1_t *		H1;
+  handler2_t *		H2;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers(L);
+    cce_condition_free(cce_location_condition(L));
+  } else {
+    H1 = alloc_handler1(L, handler1, &flag1);
+    H2 = alloc_handler2(L, handler1, &flag2);
+    cce_register_cleanup_handler(L, H1);
+    cce_register_error_handler(L, H2);
+    if (1) {
+      cce_raise(L, NULL);
+    }
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag1);
+  assert(true == flag2);
 }
 
 int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
-  /* no exception */
-  {
-    cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_error_handlers(L);
-      break;
-
-    default:
-      cce_register_cleanup_handler(L, &H1);
-      cce_register_error_handler(L, &H2);
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true  == flag1);
-    assert(false == flag2);
-  }
-
-  /* with error */
-  {
-    cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_error_handlers(L);
-      break;
-
-    default:
-      cce_register_cleanup_handler(L, &H1);
-      cce_register_error_handler(L, &H2);
-      if (1) {
-	cce_raise(L, NULL);
-      }
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true == flag1);
-    assert(true == flag2);
-  }
-
-  /* with retry */
-  {
-    cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .handler_function = handler1, .flagp = &flag1 };
-    handler2_t		H2 = { .handler_function = handler2, .flagp = &flag2 };
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_error_handlers(L);
-      break;
-
-    case CCE_SUCCESS:
-      cce_register_cleanup_handler(L, &H1);
-      cce_register_error_handler(L, &H2);
-      if (1) {
-	cce_retry(L);
-      }
-      // else fall through
-
-    default:
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true  == flag1);
-    assert(false == flag2);
-  }
-
+  if (1) test_no_exception();
+  if (1) test_with_error();
+  if (1) test_with_retry();
+  if (1) test_dynamically_allocated_handlers();
+  //
   exit(EXIT_SUCCESS);
 }
 

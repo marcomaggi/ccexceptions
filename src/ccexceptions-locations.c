@@ -26,66 +26,73 @@
 
 */
 
-
 #include "ccexceptions-internals.h"
 
 void
 cce_location_init (cce_location_t * L)
 {
-  L->next_handler	= NULL;
-  L->condition		= NULL;
+  L->first_handler	= NULL;
+  L->condition		= cce_unknown_condition;
 }
 cce_condition_t *
 cce_location_condition (cce_location_t * L)
 {
-  return (cce_condition_t *) L->condition;
+  return (cce_condition_t *)L->condition;
 }
 void
 cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
 {
-  L->condition		= (condition)? condition : cce_unknown_condition;
+  L->condition = (condition)? condition : cce_unknown_condition;
   longjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_t * L)
 {
-  L->condition		= (cce_condition_t *)cce_unknown_condition;
+  L->condition = cce_unknown_condition;
   longjmp(L->buffer, (int)CCE_RETRY);
 }
 void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = true;
-  H->next_handler = L->next_handler;
-  L->next_handler = H;
+  H->next_handler	= L->first_handler;
+  L->first_handler	= H;
 }
 void
 cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = false;
-  H->next_handler = L->next_handler;
-  L->next_handler = H;
+  H->next_handler	= L->first_handler;
+  L->first_handler	= H;
 }
 void
 cce_run_cleanup_handlers (cce_location_t * L)
+/* Traverse the linked  list of registered handlers and  run the cleanup
+   ones.   This  is a  destructive  function:  once  the list  has  been
+   traversed, it is not valid anymore.
+*/
 {
-  for (cce_handler_t * H = L->next_handler; H && H->handler_function; H = H->next_handler) {
+  cce_handler_t *	next = L->first_handler;
+  L->first_handler = NULL;
+  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
+    next = H->next_handler;
     if (true == H->is_cleanup_handler) {
-      H->handler_function(L, H);
-      /* Null the  handler pointer so  that we do  not call it  twice by
-	 mistake. */
-      H->handler_function = NULL;
+      H->handler_function(L->condition, H);
     }
   }
 }
 void
 cce_run_error_handlers (cce_location_t * L)
+/* Traverse the  linked list  of registered handlers  and run  the error
+   ones.   This  is a  destructive  function:  once  the list  has  been
+   traversed, it is not valid anymore.
+*/
 {
-  for (cce_handler_t * H = L->next_handler; H && H->handler_function; H = H->next_handler) {
-    H->handler_function(L, H);
-    /* Null  the handler  pointer so  that we  do not  call it  twice by
-       mistake. */
-    H->handler_function = NULL;
+  cce_handler_t *	next = L->first_handler;
+  L->first_handler = NULL;
+  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
+    next = H->next_handler;
+    H->handler_function(L->condition, H);
   }
 }
 

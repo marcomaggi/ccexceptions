@@ -26,7 +26,6 @@
 
 */
 
-
 #include "ccexceptions-internals.h"
 #include <limits.h>	// for INT_MAX
 #include <errno.h>
@@ -105,7 +104,7 @@ static const cce_condition_t cce_unknown_condition_stru = {
   .descriptor = &cce_unknown_condition_descriptor_stru
 };
 
-const cce_condition_t * cce_unknown_condition		= &cce_unknown_condition_stru;
+const cce_condition_t * cce_unknown_condition = &cce_unknown_condition_stru;
 
 /* ------------------------------------------------------------------ */
 
