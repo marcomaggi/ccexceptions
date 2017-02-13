@@ -1434,8 +1434,8 @@ do it as follows:
 
 /*** Exceptional condition A. ***/
 
-/* Exceptional condition descriptor type.  The  field "core" can be seen
-   as  a  table  of  virtual   methods,  which  are  overridden  by  the
+/* Exceptional condition  descriptor type.   The anonymous field  can be
+   seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct A_condition_descriptor_t @{
   cce_condition_descriptor_t;
@@ -1447,11 +1447,12 @@ typedef struct A_condition_object_t @{
   int                   alpha;
 @} A_condition_object_t;
 
-cce_condition_t *       A_condition_init  (A_condition_object_t * cnd, int alpha);
-void                    A_condition_final (A_condition_object_t * cnd);
-cce_condition_t *       A_condition_constructor (int code);
-static void             A_condition_destructor  (cce_condition_t * cnd);
-static const char *     A_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *   A_condition_init  (A_condition_object_t * cnd, int alpha);
+void                A_condition_final (A_condition_object_t * cnd);
+cce_condition_t *   A_condition_constructor (int code);
+static void         A_condition_destructor  (cce_condition_t * cnd);
+static const char * A_condition_static_message (const cce_condition_t * cnd);
+bool                A_condition_is (void * condition);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL here  and  reinitialised to  "cce_root_condition_descriptor"
@@ -1505,13 +1506,13 @@ A_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 A_condition_is (void * condition)
 @{
-  return cce_condition_is_a(condition, (const cce_condition_descriptor_t *)&A_condition_descriptor);
+  return cce_condition_is_a(condition, &A_condition_descriptor);
 @}
 
 /*** Exceptional condition B. ***/
 
-/* Exceptional condition descriptor type.  The  field "core" can be seen
-   as  a  table  of  virtual   methods,  which  are  overridden  by  the
+/* Exceptional condition  descriptor type.   The anonymous field  can be
+   seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct B_condition_descriptor_t @{
   cce_condition_descriptor_t;
@@ -1523,15 +1524,16 @@ typedef struct B_condition_object_t @{
   int                   beta;
 @} B_condition_object_t;
 
-cce_condition_t *       B_condition_init  (B_condition_object_t * cnd, int alpha, int beta);
-void                    B_condition_final (B_condition_object_t * cnd);
-cce_condition_t *       B_condition_constructor (int alpha, int beta);
-static void             B_condition_destructor  (cce_condition_t * cnd);
-static const char *     B_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *   B_condition_init  (B_condition_object_t * cnd, int alpha, int beta);
+void                B_condition_final (B_condition_object_t * cnd);
+cce_condition_t *   B_condition_constructor (int alpha, int beta);
+static void         B_condition_destructor  (cce_condition_t * cnd);
+static const char * B_condition_static_message (const cce_condition_t * cnd);
+bool                B_condition_is (void * condition)
 
 /* Instance of condition descriptor. */
 static B_condition_descriptor_t B_condition_descriptor = @{
-  .parent               = (const cce_condition_descriptor_t *)&A_condition_descriptor,
+  .parent               = &A_condition_descriptor,
   .free                 = B_condition_destructor,
   .static_message       = B_condition_static_message
 @};
@@ -1581,13 +1583,13 @@ B_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 B_condition_is (void * condition)
 @{
-  return cce_condition_is_a(condition, (const cce_condition_descriptor_t *)&B_condition_descriptor);
+  return cce_condition_is_a(condition, &B_condition_descriptor);
 @}
 
 /*** Exceptional condition C. ***/
 
-/* Exceptional condition descriptor type.  The  field "core" can be seen
-   as  a  table  of  virtual   methods,  which  are  overridden  by  the
+/* Exceptional condition  descriptor type.   The anonymous field  can be
+   seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct C_condition_descriptor_t @{
   cce_condition_descriptor_t;
@@ -1599,15 +1601,16 @@ typedef struct C_condition_object_t @{
   int                   gamma;
 @} C_condition_object_t;
 
-cce_condition_t *       C_condition_init  (C_condition_object_t * cnd, int alpha, int beta, int gamma);
-void                    C_condition_final (C_condition_object_t * cnd);
-cce_condition_t *       C_condition_constructor (int alpha, int beta, int gamma);
-static void             C_condition_destructor  (cce_condition_t * cnd);
-static const char *     C_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *   C_condition_init  (C_condition_object_t * cnd, int alpha, int beta, int gamma);
+void                C_condition_final (C_condition_object_t * cnd);
+cce_condition_t *   C_condition_constructor (int alpha, int beta, int gamma);
+static void         C_condition_destructor  (cce_condition_t * cnd);
+static const char * C_condition_static_message (const cce_condition_t * cnd);
+bool                C_condition_is (void * condition);
 
 /* Instance of condition descriptor. */
 static C_condition_descriptor_t C_condition_descriptor = @{
-  .parent               = (cce_condition_descriptor_t *)&B_condition_descriptor,
+  .parent               = &B_condition_descriptor,
   .free                 = C_condition_destructor,
   .static_message       = C_condition_static_message
 @};
@@ -1657,7 +1660,7 @@ C_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 C_condition_is (void * condition)
 @{
-  return cce_condition_is_a(condition, (const cce_condition_descriptor_t *)&C_condition_descriptor);
+  return cce_condition_is_a(condition, &C_condition_descriptor);
 @}
 
 int
