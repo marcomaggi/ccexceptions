@@ -34,11 +34,6 @@ cce_location_init (cce_location_t * L)
   L->first_handler	= NULL;
   L->condition		= cce_unknown_condition;
 }
-cce_condition_t *
-cce_location_condition (cce_location_t * L)
-{
-  return (cce_condition_t *)L->condition;
-}
 void
 cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
 {

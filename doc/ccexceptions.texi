@@ -637,7 +637,7 @@ an ``unknown exceptional condition''; we can transparently apply the function
 @end deftypefun
 
 
-@deftypefun {cce_condition_t *} cce_location_condition (cce_location_t * @var{L})
+@deftypefn {Inline Function} {cce_condition_t *} cce_location_condition (cce_location_t * @var{L})
 Return the condition object associated to the location @var{L}; this value is @strong{never}
 @cnull{}.
 
@@ -645,7 +645,7 @@ If we apply this function to a location without calling @cfunc{cce_raise} or @cf
 returned pointer references an internal, statically allocated, exceptional condition object
 representing an ``unknown exceptional condition''; we can transparently apply the function
 @cfunc{cce_condition_free} to this object.
-@end deftypefun
+@end deftypefn
 
 
 If we want to evaluate a body of code and catch its raised exceptions locally, we can use the
@@ -1092,12 +1092,14 @@ condition.
 
 
 @deftp {Struct Typedef} cce_condition_t
-Type of structure representing an exceptional condition object.  It has the following fields:
+Type of structure representing an exceptional condition object.  It is meant to be used as base type
+for new exceptional condition object types, as follows:
 
-@table @code
-@item cce_condition_descriptor_t * descriptor
-Pointer to the exceptional condition descriptor.
-@end table
+@example
+typedef struct my_t @{
+  cce_condition_t;
+@} my_t;
+@end example
 @end deftp
 
 @c page
@@ -1131,11 +1133,10 @@ to @var{parent} or @var{parent} is in the hierarchy of @var{child}'s parents; ot
 @end deftypefun
 
 
-@deftypefun {const cce_condition_descriptor_t *} cce_condition_descriptor (const cce_condition_t * @var{condition})
+@deftypefn {Inline Function} {const cce_condition_descriptor_t *} cce_condition_descriptor (const cce_condition_t * @var{condition})
 Retrieve the descriptor of a condition object.  Return the pointer to condition descriptor in the
-@var{condition} object.  Using this function is the same as accessing the @code{descriptor} field of
-a @objtype{cce_condition_t} structure.
-@end deftypefun
+@var{condition} object.
+@end deftypefn
 
 
 @deftypefun void cce_condition_free (cce_condition_t * @var{condition})
@@ -1149,75 +1150,7 @@ table.
 @end deftypefun
 
 
-The basic usage pattern of condition descriptors is as follows:
-
-@example
-cce_location_t      L[1];
-
-if (cce_location(L))
-  @{
-    cce_condition_t * C = cce_location_condition(L);
-    @{
-      fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-      cce_run_error_handlers(L);
-    @}
-    cce_condition_free(C);
-  @} else @{
-    do_something();
-    if (an_error_occurred()) @{
-      cce_raise(L, select_condition_descriptor());
-    @}
-    cce_run_cleanup_handlers(L);
-  @}
-@end example
-
-If we need to hand the condition descriptor to an upper level location we can do it as follows:
-
-@example
-void
-upper_function (void)
-@{
-  cce_location_t        L[1];
-
-  if (cce_location(L))
-    @{
-      cce_condition_t * C = cce_location_condition(L);
-      @{
-        do_something_with(cce_condition_static_message(C));
-        cce_run_error_handlers(L);
-      @}
-      cce_condition_free(C);
-    @}
-  else
-    @{
-      lower_function(L);
-      cce_run_cleanup_handlers(L);
-    @}
-@}
-
-void
-lower_function (cce_location_t * upper_L)
-@{
-  cce_location_t        L[1];
-
-  if (cce_location(L))
-    @{
-      cce_run_error_handlers(L);
-      cce_raise(upper_L, cce_location_condition(L));
-    @}
-  else
-    @{
-      do_something();
-      if (an_error_occurred()) @{
-        cce_raise(L, select_condition_descriptor());
-      @}
-      cce_run_cleanup_handlers(L);
-    @}
-@}
-@end example
-
-If we need to branch according to a condition object's type, we can do it as follows using
-@cfunc{cce_condition_is_a}:
+The basic usage pattern of condition objects is as follows:
 
 @example
 cce_location_t      L[1];
@@ -1225,61 +1158,81 @@ cce_location_t      L[1];
 if (cce_location(L)) @{
   cce_condition_t * C = cce_location_condition(L);
   @{
-    if (cce_condition_is_a(C, cce_unknown_condition_descriptor))
-      @{
-        do_something();
-      @}
-    else if (cce_condition_is_a(C, cce_errno_condition_descriptor))
-      @{
-        do_something();
-      @}
-    else
-      @{
-        do_something();
-      @}
+    fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
     cce_run_error_handlers(L);
   @}
   cce_condition_free(C);
 @} else @{
   do_something();
-  if (an_exception_occurred()) @{
-    cce_raise(L, select_an_exception_object());
+  if (an_error_occurred()) @{
+    cce_raise(L, select_condition_object());
   @}
   cce_run_cleanup_handlers(L);
 @}
 @end example
 
-@noindent
-or as follows using @cfunc{cce_condition_descriptor_child_and_parent}:
+If we need to hand the condition object to an upper level location we can do it as follows:
+
+@example
+void
+upper_function (void)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_condition_t * C = cce_location_condition(L);
+    @{
+      do_something_with(cce_condition_static_message(C));
+      cce_run_error_handlers(L);
+    @}
+    cce_condition_free(C);
+  @} else @{
+    lower_function(L);
+    cce_run_cleanup_handlers(L);
+  @}
+@}
+
+void
+lower_function (cce_location_t * upper_L)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers(L);
+    cce_raise(upper_L, cce_location_condition(L));
+  @} else @{
+    do_something();
+    if (an_error_occurred()) @{
+      cce_raise(L, select_condition_object());
+    @}
+   cce_run_cleanup_handlers(L);
+  @}
+@}
+@end example
+
+If we need to branch according to a condition object's type, we can do it as follows using wrappers
+for @cfunc{cce_condition_is_a}:
 
 @example
 cce_location_t      L[1];
 
 if (cce_location(L)) @{
-  cce_condition_t *                 C  = cce_location_condition(L);
-  const cce_condition_descriptor_t *CD = cce_condition_descriptor(C);
+  cce_condition_t * C = cce_location_condition(L);
   @{
-    if (cce_condition_descriptor_child_and_parent(CD,
-           cce_unknown_condition_descriptor))
-      @{
-        do_something();
-      @}
-    else if (cce_condition_descriptor_child_and_parent(CD,
-                cce_errno_condition_descriptor))
-      @{
-        do_something();
-      @}
-    else
-      @{
-        do_something();
-      @}
+    if (cce_unknown_condition_is_a(C)) @{
+      do_something();
+    @} else if (cce_errno_condition_is_a(C)) @{
+      do_something();
+    @} else @{
+      do_something();
+    @}
     cce_run_error_handlers(L);
   @}
   cce_condition_free(C);
 @} else @{
   do_something();
   if (an_exception_occurred()) @{
-    cce_raise(L, select_an_exception_object());
+    cce_raise(L, select_condition_object());
   @}
   cce_run_cleanup_handlers(L);
 @}

@@ -182,16 +182,24 @@ cce_decl const cce_condition_descriptor_t *	cce_root_condition_descriptor;
 cce_decl void		cce_condition_init (cce_condition_t * condition,
 					    const cce_condition_descriptor_t * descriptor)
   __attribute__((nonnull(1,2)));
+
 cce_decl bool		cce_condition_is_a (const cce_condition_t * condition,
 					    const cce_condition_descriptor_t * descriptor)
   __attribute__((nonnull(1,2)));
+
 cce_decl bool		cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * child,
 								   const cce_condition_descriptor_t * parent)
   __attribute__((nonnull(1,2)));
-cce_decl const cce_condition_descriptor_t * cce_condition_descriptor (const cce_condition_t * condition)
-  __attribute__((nonnull(1)));
+
+__attribute__((pure,nonnull(1),returns_nonnull)) static inline const cce_condition_descriptor_t *
+cce_condition_descriptor (const cce_condition_t * C)
+{
+  return C->descriptor;
+}
+
 cce_decl void		cce_condition_free		(cce_condition_t * condition)
   __attribute__((nonnull(1)));
+
 cce_decl const char *	cce_condition_static_message	(cce_condition_t * condition)
   __attribute__((nonnull(1)));
 
@@ -200,7 +208,7 @@ cce_decl const char *	cce_condition_static_message	(cce_condition_t * condition)
 cce_decl const cce_condition_descriptor_t *	cce_unknown_condition_descriptor;
 cce_decl const cce_condition_t *		cce_unknown_condition;
 
-static inline bool
+__attribute__((pure,nonnull(1))) static inline bool
 cce_unknown_condition_is_a (const cce_condition_t * condition)
 {
   return cce_condition_is_a(condition, cce_unknown_condition_descriptor);
@@ -221,7 +229,7 @@ typedef struct cce_errno_condition_t {
 cce_decl cce_condition_t * cce_errno_condition (int code);
 cce_decl const cce_condition_descriptor_t *	cce_errno_condition_descriptor;
 
-static inline bool
+__attribute__((nonnull(1))) static inline bool
 cce_errno_condition_is_a (const cce_condition_t * condition)
 {
   return cce_condition_is_a(condition, cce_errno_condition_descriptor);
@@ -247,8 +255,11 @@ cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * condition)
 cce_decl void cce_retry (cce_location_t * L)
   __attribute__((noreturn,nonnull(1)));
 
-cce_decl cce_condition_t * cce_location_condition (cce_location_t * L)
-  __attribute__((nonnull(1),returns_nonnull));
+__attribute__((pure,nonnull(1),returns_nonnull)) static inline cce_condition_t *
+cce_location_condition (cce_location_t * L)
+{
+  return (cce_condition_t *)(L->condition);
+}
 
 #define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
 

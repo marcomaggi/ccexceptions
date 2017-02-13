@@ -35,11 +35,6 @@ cce_condition_init (cce_condition_t * C, const cce_condition_descriptor_t * D)
 {
   C->descriptor = D;
 }
-const cce_condition_descriptor_t *
-cce_condition_descriptor (const cce_condition_t * C)
-{
-  return C->descriptor;
-}
 void
 cce_condition_free (cce_condition_t * C)
 {
