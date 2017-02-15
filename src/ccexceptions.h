@@ -84,12 +84,16 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 /* Enable latest POSIX features. */
-//#define _POSIX_C_SOURCE		200809L
+#define _POSIX_C_SOURCE		200809L
 
-#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <setjmp.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/uio.h>
 
 /** --------------------------------------------------------------------
  ** Constants.
@@ -266,6 +270,41 @@ cce_condition (cce_location_t * L)
 }
 
 #define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
+
+/** --------------------------------------------------------------------
+ ** POSIX wrappers.
+ ** ----------------------------------------------------------------- */
+
+cce_decl int cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
+  __attribute__((nonnull(1,2)));
+cce_decl int cce_sys_close (cce_location_t * L, int filedes)
+  __attribute__((nonnull(1)));
+
+cce_decl ssize_t cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
+  __attribute__((nonnull(1,3)));
+cce_decl ssize_t cce_sys_pread (cce_location_t * L, int filedes, void * buffer, size_t size, off_t offset)
+  __attribute__((nonnull(1,3)));
+cce_decl ssize_t cce_sys_write (cce_location_t * L, int filedes, const void *buffer, size_t size)
+  __attribute__((nonnull(1,3)));
+cce_decl ssize_t cce_sys_pwrite (cce_location_t * L, int filedes, const void *buffer, size_t size, off_t offset)
+  __attribute__((nonnull(1,3)));
+
+cce_decl off_t cce_sys_lseek (cce_location_t * L, int filedes, off_t offset, int whence)
+  __attribute__((nonnull(1)));
+
+cce_decl ssize_t cce_sys_readv (cce_location_t * L, int filedes, const struct iovec * vector, int count)
+  __attribute__((nonnull(1,3)));
+cce_decl ssize_t cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, int count)
+  __attribute__((nonnull(1,3)));
+
+cce_decl void * cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
+  __attribute__((nonnull(1)));
+cce_decl int cce_sys_munmap (cce_location_t * L, void * addr, size_t length)
+  __attribute__((nonnull(1,2)));
+cce_decl int cce_sys_msync (cce_location_t * L, void *address, size_t length, int flags)
+  __attribute__((nonnull(1,2)));
+cce_decl int cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
+  __attribute__((nonnull(1,2)));
 
 /** --------------------------------------------------------------------
  ** Done.

@@ -129,6 +129,7 @@ entitled ``@gnu{} Free Documentation License''.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
+* posix::                       @posix{} system calls.
 
 Appendices
 
@@ -1781,6 +1782,94 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
   exit(EXIT_SUCCESS);
 @}
 @end smallexample
+
+@c page
+@node posix
+@chapter @posix{} system calls
+
+
+@value{PACKAGE} defines function wrappers for the most common @posix{} system calls.  Each wrapper
+accepts a pointer to @objtype{cce_location_t} as argument and, in case of error, will perform a
+non--local exit by jumping to the selected location.  The raised exceptional condition objects are
+of type @objtype{cce_errno_C_t}.
+
+The wrapper functions accept the same arguments of the system call and return the same return value
+of the system call (if it completes successfully).  All the wrappers reset @code{errno} to zero
+before performing the system call.
+
+@menu
+* posix io::                    Input/output system calls.
+@end menu
+
+@c page
+@node posix io
+@section Input/output system calls
+
+
+@deftypefun int cce_sys_open (cce_location_t * @var{L}, const char * @var{filename}, int @var{flags}, mode_t @var{mode})
+Wrapper for @cfunc{open}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_close (cce_location_t * @var{L}, int @var{filedes})
+Wrapper for @cfunc{close}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_read (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{read}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_pread (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size}, off_t @var{offset})
+Wrapper for @cfunc{pread}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_write (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{write}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_pwrite (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size}, off_t @var{offset})
+Wrapper for @cfunc{pwrite}.
+@end deftypefun
+
+
+@deftypefun off_t cce_sys_lseek (cce_location_t * @var{L}, int @var{filedes}, off_t @var{offset}, int @var{whence})
+Wrapper for @cfunc{lseek}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_readv (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
+Wrapper for @cfunc{readv}.
+@end deftypefun
+
+
+@deftypefun ssize_t cce_sys_writev (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
+Wrapper for @cfunc{writev}.
+@end deftypefun
+
+
+@deftypefun {void *} cce_sys_mmap (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
+Wrapper for @cfunc{mmap}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_munmap (cce_location_t * @var{L}, void * @var{addr}, size_t @var{length})
+Wrapper for @cfunc{munmap}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_msync (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{flags})
+Wrapper for @cfunc{msync}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_mprotect (cce_location_t * @var{L}, void * @var{addr}, size_t @var{len}, int @var{prot})
+Wrapper for @cfunc{mprotect}.
+@end deftypefun
+
 
 @c page
 @c ------------------------------------------------------------
