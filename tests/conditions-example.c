@@ -274,7 +274,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_location_condition(L);
+      void *	cnd = cce_condition(L);
 
       if        (C_condition_is(cnd)) {
 	C_condition_object_t *	C = cnd;
@@ -303,7 +303,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_location_condition(L);
+      void *	cnd = cce_condition(L);
 
       if        (C_condition_is(cnd)) {
 	C_condition_object_t *	C = cnd;
@@ -332,7 +332,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_location_condition(L);
+      void *	cnd = cce_condition(L);
 
       if        (B_condition_is(cnd)) {
 	C_condition_object_t *	C = cnd;

@@ -45,7 +45,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_location_condition(L);
+	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
 	cce_run_error_handlers(L);
 	cce_condition_free(C);
@@ -56,7 +56,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_raise(L, cce_errno_condition(0));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_errno_condition(0) == cce_location_condition(L));
+    assert(cce_errno_condition(0) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -67,7 +67,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_location_condition(L);
+	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
 	cce_run_error_handlers(L);
 	cce_condition_free(C);
@@ -78,7 +78,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_raise(L, cce_errno_condition(EINVAL));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_errno_condition(EINVAL) == cce_location_condition(L));
+    assert(cce_errno_condition(EINVAL) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -89,7 +89,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_location_condition(L);
+	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
 	cce_run_error_handlers(L);
 	cce_condition_free(C);
@@ -100,7 +100,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_raise(L, cce_errno_condition(INT_MAX));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_errno_condition(INT_MAX) == cce_location_condition(L));
+    assert(cce_errno_condition(INT_MAX) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -111,7 +111,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_location_condition(L);
+	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
 	cce_run_error_handlers(L);
 	cce_condition_free(C);
@@ -122,7 +122,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_raise(L, cce_errno_condition(-1));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_errno_condition(-1) == cce_location_condition(L));
+    assert(cce_errno_condition(-1) == cce_condition(L));
     assert(false == flag);
   }
 

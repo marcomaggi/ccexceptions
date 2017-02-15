@@ -124,7 +124,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     bool		flag = false;
 
     if (cce_location(L)) {
-      cce_condition_t *	C = cce_location_condition(L);
+      cce_condition_t *	C = cce_condition(L);
 
       if (cce_condition_is_a(C, cce_unknown_condition_descriptor))
 	{
@@ -153,7 +153,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     bool		flag = false;
 
     if (cce_location(L)) {
-      cce_condition_t *			C  = cce_location_condition(L);
+      cce_condition_t *			C  = cce_condition(L);
       const cce_condition_descriptor_t *CD = cce_condition_descriptor(C);
 
       if (cce_condition_descriptor_child_and_parent(CD, cce_unknown_condition_descriptor))

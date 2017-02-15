@@ -556,7 +556,7 @@ cce_location_t  L[1];
 if (cce_loction(L)) @{
   /* handle the error here */
   cce_run_error_handlers(L);
-  cce_condition_free(cce_location_condition(L));
+  cce_condition_free(cce_condition(L));
 @} else @{
   /* do something useful here */
   cce_run_cleanup_handlers(L);
@@ -577,7 +577,7 @@ in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @ob
 
 Instances of this structure reference an instance of type @objtype{cce_condition_t}; it is set by
 @cfunc{cce_raise} and @cfunc{cce_retry}.  The client code is responsible for releasing resources
-associated to this value by retrieving a pointer to it with @cfunc{cce_location_condition} and
+associated to this value by retrieving a pointer to it with @cfunc{cce_condition} and
 releasing it with @cfunc{cce_condition_free}.
 
 Before terminating the use of instances of this type we must always call
@@ -637,7 +637,7 @@ an ``unknown exceptional condition''; we can transparently apply the function
 @end deftypefun
 
 
-@deftypefn {Inline Function} {cce_condition_t *} cce_location_condition (cce_location_t * @var{L})
+@deftypefn {Inline Function} {cce_condition_t *} cce_condition (cce_location_t * @var{L})
 Return the condition object associated to the location @var{L}; this value is @strong{never}
 @cnull{}.
 
@@ -657,7 +657,7 @@ cce_location_t  L[1];
 if (cce_loction(L)) @{
   /* handle the error here */
   cce_run_error_handlers(L);
-  cce_condition_free(cce_location_condition(L));
+  cce_condition_free(cce_condition(L));
 @} else @{
   /* do something useful here */
   cce_run_cleanup_handlers(L);
@@ -675,7 +675,7 @@ outer (void)
 
   if (cce_loction(L)) @{
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
   @} else @{
     inner(L);
     cce_run_cleanup_handlers(L);
@@ -689,7 +689,7 @@ inner (cce_location_t * there)
 
   if (cce_loction(L)) @{
     cce_run_error_handlers(L);
-    cce_raise(there, cce_location_condition(L));
+    cce_raise(there, cce_condition(L));
   @} else @{
     /* do something useful here */
     cce_run_cleanup_handlers(L);
@@ -707,7 +707,7 @@ cce_location_t  L[1];
 switch (cce_location(L)) @{
 case CCE_ERROR:
   cce_run_error_handlers(L);
-  cce_condition_free(cce_location_condition(L));
+  cce_condition_free(cce_condition(L));
   break;
 
 case CCE_RETRY:
@@ -733,7 +733,7 @@ cce_location_t  L[1];
 switch (cce_location(L)) @{
 case CCE_ERROR:
   cce_run_error_handlers(L);
-  cce_condition_free(cce_location_condition(L));
+  cce_condition_free(cce_condition(L));
   break;
 
 case CCE_RETRY:
@@ -845,7 +845,7 @@ from the context of @var{L}, so it can be finalised and its memory released.
 
 @strong{NOTE} It must assume that an error handler might access the exceptional condition object
 associated to @var{L}, so this function should always be called @strong{before} applying
-@cfunc{cce_condition_free} to the return value of @cfunc{cce_location_condition}.
+@cfunc{cce_condition_free} to the return value of @cfunc{cce_condition}.
 @end deftypefun
 
 
@@ -917,7 +917,7 @@ H->handler_function = P_handler;
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_free(cce_location_condition(L));
+  cce_condition_free(cce_condition(L));
 @} else @{
   errno = 0;
   P = malloc(4096);
@@ -960,7 +960,7 @@ constructor (cce_location_t * there)
 
   if (cce_location(L)) @{
     cce_run_error_handlers(L);
-    cce_raise(there, cce_location_condition(L));
+    cce_raise(there, cce_condition(L));
   @} else @{
     errno = 0;
     P = malloc(4096);
@@ -995,7 +995,7 @@ void caller (void)
 
   if (cce_location(L)) @{
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
   @} else @{
     P = constructor(L);
     H->pointer = P;
@@ -1156,7 +1156,7 @@ The basic usage pattern of condition objects is as follows:
 cce_location_t      L[1];
 
 if (cce_location(L)) @{
-  cce_condition_t * C = cce_location_condition(L);
+  cce_condition_t * C = cce_condition(L);
   @{
     fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
     cce_run_error_handlers(L);
@@ -1180,7 +1180,7 @@ upper_function (void)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_condition_t * C = cce_location_condition(L);
+    cce_condition_t * C = cce_condition(L);
     @{
       do_something_with(cce_condition_static_message(C));
       cce_run_error_handlers(L);
@@ -1199,7 +1199,7 @@ lower_function (cce_location_t * upper_L)
 
   if (cce_location(L)) @{
     cce_run_error_handlers(L);
-    cce_raise(upper_L, cce_location_condition(L));
+    cce_raise(upper_L, cce_condition(L));
   @} else @{
     do_something();
     if (an_error_occurred()) @{
@@ -1217,7 +1217,7 @@ for @cfunc{cce_condition_is_a}:
 cce_location_t      L[1];
 
 if (cce_location(L)) @{
-  cce_condition_t * C = cce_location_condition(L);
+  cce_condition_t * C = cce_condition(L);
   @{
     if (cce_unknown_condition_is_a(C)) @{
       do_something();
@@ -1675,7 +1675,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
     int                 flag;
 
     if (cce_location(L)) @{
-      void *    cnd = cce_location_condition(L);
+      void *    cnd = cce_condition(L);
 
       if        (C_condition_is(cnd)) @{
         C_condition_object_t *  C = cnd;
@@ -1704,7 +1704,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
     int                 flag;
 
     if (cce_location(L)) @{
-      void *    cnd = cce_location_condition(L);
+      void *    cnd = cce_condition(L);
 
       if        (C_condition_is(cnd)) @{
         C_condition_object_t *  C = cnd;
@@ -1733,7 +1733,7 @@ main (int argc CCE_UNUSED, const char *const argv[])
     int                 flag;
 
     if (cce_location(L)) @{
-      void *    cnd = cce_location_condition(L);
+      void *    cnd = cce_condition(L);
 
       if        (B_condition_is(cnd)) @{
         C_condition_object_t *  C = cnd;

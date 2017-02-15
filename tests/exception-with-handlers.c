@@ -64,7 +64,7 @@ test_no_exception (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
     break;
 
   default:
@@ -108,7 +108,7 @@ test_with_error (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
     break;
 
   default:
@@ -155,7 +155,7 @@ test_with_retry (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
     break;
 
   case CCE_SUCCESS:
@@ -232,7 +232,7 @@ test_dynamically_allocated_handlers (void)
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
-    cce_condition_free(cce_location_condition(L));
+    cce_condition_free(cce_condition(L));
   } else {
     H1 = alloc_handler1(L, handler1, &flag1);
     H2 = alloc_handler2(L, handler1, &flag2);
