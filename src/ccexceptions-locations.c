@@ -32,18 +32,18 @@ void
 cce_location_init (cce_location_t * L)
 {
   L->first_handler	= NULL;
-  L->condition		= cce_unknown_condition;
+  L->condition		= cce_unknown_E;
 }
 void
 cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
 {
-  L->condition = (condition)? condition : cce_unknown_condition;
+  L->condition = (condition)? condition : cce_unknown_E;
   longjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_t * L)
 {
-  L->condition = cce_unknown_condition;
+  L->condition = cce_unknown_E;
   longjmp(L->buffer, (int)CCE_RETRY);
 }
 void

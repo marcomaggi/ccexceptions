@@ -5,7 +5,7 @@
 
   Abstract
 
-
+	This example is copied in the documentation.
 
   Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -36,75 +36,76 @@
 /* Exceptional condition  descriptor type.   The anonymous field  can be
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
-typedef struct A_condition_descriptor_t {
+typedef struct alpha_D_t {
   cce_condition_descriptor_t;
-} A_condition_descriptor_t;
+} alpha_D_t;
 
 /* Exceptional condition object type. */
-typedef struct A_condition_object_t {
+typedef struct alpha_C_t {
   cce_condition_t;
   int			alpha;
-} A_condition_object_t;
+} alpha_C_t;
 
-cce_condition_t *	A_condition_init  (A_condition_object_t * cnd, int alpha);
-void			A_condition_final (A_condition_object_t * cnd);
-cce_condition_t *	A_condition_constructor (int code);
-static void		A_condition_destructor  (cce_condition_t * cnd);
-static const char *	A_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *	alpha_C_init  (alpha_C_t * cnd, int alpha);
+void			alpha_C_final (alpha_C_t * cnd);
+cce_condition_t *	alpha_C_constructor (int code);
+static void		alpha_C_destructor  (cce_condition_t * cnd);
+static const char *	alpha_C_static_message (const cce_condition_t * cnd);
+bool                    alpha_C_is_a (const cce_condition_t * condition);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
-   to  NULL here  and  reinitialised to  "cce_root_condition_descriptor"
-   later by an initialisation function. */
-static A_condition_descriptor_t A_condition_descriptor = {
+   to  NULL  here   and  reinitialised  to  "cce_root_D"   later  by  an
+   initialisation function. */
+static alpha_D_t alpha_D = {
   .parent		= NULL,
-  .free			= A_condition_destructor,
-  .static_message	= A_condition_static_message
+  .free			= alpha_C_destructor,
+  .static_message	= alpha_C_static_message
 };
 
 cce_condition_t *
-A_condition_init (A_condition_object_t * cnd, int alpha)
+alpha_C_init (alpha_C_t * cnd, int alpha)
 /* Initialise an already allocated condition object. */
 {
-  cce_condition_init(cnd, &A_condition_descriptor);
+  cce_condition_init(cnd, &alpha_D);
   cnd->alpha = alpha;
   return cnd;
 }
 
 void
-A_condition_final (A_condition_object_t * cnd CCE_UNUSED)
+alpha_C_final (alpha_C_t * cnd CCE_UNUSED)
 /* Finalise a condition object; do not release memory. */
 {
   return;
 }
 
 cce_condition_t *
-A_condition_constructor (int alpha)
+alpha_C_constructor (int alpha)
 /* Allocate and initialise an instance of condition object. */
 {
-  A_condition_object_t *	cnd;
-  cnd = malloc(sizeof(A_condition_object_t));
+  alpha_C_t *	cnd;
+  cnd = malloc(sizeof(alpha_C_t));
   assert(cnd);
-  return A_condition_init(cnd, alpha);
+  return alpha_C_init(cnd, alpha);
 }
 
 static void
-A_condition_destructor (cce_condition_t * cnd)
+alpha_C_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  A_condition_final((A_condition_object_t *)cnd);
+  alpha_C_final((alpha_C_t *)cnd);
   free(cnd);
 }
 
 static const char *
-A_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
+alpha_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition A";
 }
 
 bool
-A_condition_is (void * condition)
+alpha_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_a(condition, &A_condition_descriptor);
+  return cce_condition_is_a(condition, &alpha_D);
 }
 
 
@@ -113,75 +114,76 @@ A_condition_is (void * condition)
 /* Exceptional condition  descriptor type.   The anonymous field  can be
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
-typedef struct B_condition_descriptor_t {
+typedef struct beta_D_t {
   cce_condition_descriptor_t;
-} B_condition_descriptor_t;
+} beta_D_t;
 
 /* Exceptional condition object type. */
-typedef struct B_condition_object_t {
-  A_condition_object_t;
+typedef struct beta_C_t {
+  alpha_C_t;
   int			beta;
-} B_condition_object_t;
+} beta_C_t;
 
-cce_condition_t *	B_condition_init  (B_condition_object_t * cnd, int alpha, int beta);
-void			B_condition_final (B_condition_object_t * cnd);
-cce_condition_t *	B_condition_constructor (int alpha, int beta);
-static void		B_condition_destructor  (cce_condition_t * cnd);
-static const char *	B_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *	beta_C_init  (beta_C_t * cnd, int alpha, int beta);
+void			beta_C_final (beta_C_t * cnd);
+cce_condition_t *	beta_C_constructor (int alpha, int beta);
+static void		beta_C_destructor  (cce_condition_t * cnd);
+static const char *	beta_C_static_message (const cce_condition_t * cnd);
+bool			beta_C_is_a (const cce_condition_t * condition);
 
 /* Instance of condition descriptor. */
-static B_condition_descriptor_t B_condition_descriptor = {
-  .parent		= &A_condition_descriptor,
-  .free			= B_condition_destructor,
-  .static_message	= B_condition_static_message
+static beta_D_t beta_D = {
+  .parent		= &alpha_D,
+  .free			= beta_C_destructor,
+  .static_message	= beta_C_static_message
 };
 
 cce_condition_t *
-B_condition_init (B_condition_object_t * cnd, int alpha, int beta)
+beta_C_init (beta_C_t * cnd, int alpha, int beta)
 /* Initialise an already allocated condition object. */
 {
-  A_condition_init(cnd, alpha);
-  cce_condition_init(cnd, &B_condition_descriptor);
+  alpha_C_init(cnd, alpha);
+  cce_condition_init(cnd, &beta_D);
   cnd->beta = beta;
   return cnd;
 }
 
 void
-B_condition_final (B_condition_object_t * cnd)
+beta_C_final (beta_C_t * cnd)
 /* Finalise a condition object; do not release memory. */
 {
-  A_condition_final((A_condition_object_t *)cnd);
+  alpha_C_final((alpha_C_t *)cnd);
 }
 
 cce_condition_t *
-B_condition_constructor (int alpha, int beta)
+beta_C_constructor (int alpha, int beta)
 /* Allocate and initialise an instance of condition object. */
 {
-  B_condition_object_t *	cnd;
+  beta_C_t *	cnd;
 
-  cnd = malloc(sizeof(B_condition_object_t));
+  cnd = malloc(sizeof(beta_C_t));
   assert(cnd);
-  return B_condition_init(cnd, alpha, beta);
+  return beta_C_init(cnd, alpha, beta);
 }
 
 static void
-B_condition_destructor (cce_condition_t * cnd)
+beta_C_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  B_condition_final((B_condition_object_t *)cnd);
+  beta_C_final((beta_C_t *)cnd);
   free(cnd);
 }
 
 static const char *
-B_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
+beta_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition B";
 }
 
 bool
-B_condition_is (void * condition)
+beta_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_a(condition, &B_condition_descriptor);
+  return cce_condition_is_a(condition, &beta_D);
 }
 
 
@@ -190,75 +192,76 @@ B_condition_is (void * condition)
 /* Exceptional condition  descriptor type.   The anonymous field  can be
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
-typedef struct C_condition_descriptor_t {
+typedef struct gamma_D_t {
   cce_condition_descriptor_t;
-} C_condition_descriptor_t;
+} gamma_D_t;
 
 /* Exceptional condition object type. */
-typedef struct C_condition_object_t {
-  B_condition_object_t;
+typedef struct gamma_C_t {
+  beta_C_t;
   int			gamma;
-} C_condition_object_t;
+} gamma_C_t;
 
-cce_condition_t *	C_condition_init  (C_condition_object_t * cnd, int alpha, int beta, int gamma);
-void			C_condition_final (C_condition_object_t * cnd);
-cce_condition_t *	C_condition_constructor (int alpha, int beta, int gamma);
-static void		C_condition_destructor  (cce_condition_t * cnd);
-static const char *	C_condition_static_message (const cce_condition_t * cnd);
+cce_condition_t *	gamma_C_init  (gamma_C_t * cnd, int alpha, int beta, int gamma);
+void			gamma_C_final (gamma_C_t * cnd);
+cce_condition_t *	gamma_C_constructor (int alpha, int beta, int gamma);
+static void		gamma_C_destructor  (cce_condition_t * cnd);
+static const char *	gamma_C_static_message (const cce_condition_t * cnd);
+bool			gamma_C_is_a (const cce_condition_t * condition);
 
 /* Instance of condition descriptor. */
-static C_condition_descriptor_t C_condition_descriptor = {
-  .parent		= &B_condition_descriptor,
-  .free			= C_condition_destructor,
-  .static_message	= C_condition_static_message
+static gamma_D_t gamma_D = {
+  .parent		= &beta_D,
+  .free			= gamma_C_destructor,
+  .static_message	= gamma_C_static_message
 };
 
 cce_condition_t *
-C_condition_init (C_condition_object_t * cnd, int alpha, int beta, int gamma)
+gamma_C_init (gamma_C_t * cnd, int alpha, int beta, int gamma)
 /* Initialise an already allocated condition object. */
 {
-  B_condition_init(cnd, alpha, beta);
-  cce_condition_init(cnd, &C_condition_descriptor);
+  beta_C_init(cnd, alpha, beta);
+  cce_condition_init(cnd, &gamma_D);
   cnd->gamma = gamma;
   return cnd;
 }
 
 void
-C_condition_final (C_condition_object_t * cnd)
+gamma_C_final (gamma_C_t * cnd)
 /* Finalise a condition object; do not release memory. */
 {
-  B_condition_final((B_condition_object_t *)cnd);
+  beta_C_final((beta_C_t *)cnd);
 }
 
 cce_condition_t *
-C_condition_constructor (int alpha, int beta, int gamma)
+gamma_C_constructor (int alpha, int beta, int gamma)
 /* Allocate and initialise an instance of condition object. */
 {
-  C_condition_object_t *	cnd;
+  gamma_C_t *	cnd;
 
-  cnd = malloc(sizeof(C_condition_object_t));
+  cnd = malloc(sizeof(gamma_C_t));
   assert(cnd);
-  return C_condition_init(cnd, alpha, beta, gamma);
+  return gamma_C_init(cnd, alpha, beta, gamma);
 }
 
 static void
-C_condition_destructor (cce_condition_t * cnd)
+gamma_C_destructor (cce_condition_t * cnd)
 /* Finalise and release memory of an instance of condition object. */
 {
-  C_condition_final((C_condition_object_t *)cnd);
+  gamma_C_final((gamma_C_t *)cnd);
   free(cnd);
 }
 
 static const char *
-C_condition_static_message (const cce_condition_t * cnd CCE_UNUSED)
+gamma_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 {
   return "exceptional condition C";
 }
 
 bool
-C_condition_is (void * condition)
+gamma_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_a(condition, &C_condition_descriptor);
+  return cce_condition_is_a(condition, &gamma_D);
 }
 
 
@@ -266,7 +269,7 @@ int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   /* Dynamic initialisation. */
-  A_condition_descriptor.parent	= cce_root_condition_descriptor;
+  alpha_D.parent	= cce_root_D;
 
   /* Raising condition object of type C. */
   {
@@ -274,24 +277,24 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_condition(L);
+      cce_condition_t *	C = cce_condition(L);
 
-      if        (C_condition_is(cnd)) {
-	C_condition_object_t *	C = cnd;
-	flag = C->gamma;
-      } else if (B_condition_is(cnd)) {
-	B_condition_object_t *	B = cnd;
-	flag = B->beta;
-      } else if (A_condition_is(cnd)) {
-	A_condition_object_t *	A = cnd;
-	flag = A->alpha;
+      if (gamma_C_is_a(C)) {
+	gamma_C_t *	K = (gamma_C_t *)C;
+	flag = K->gamma;
+      } else if (beta_C_is_a(C)) {
+	beta_C_t *	K = (beta_C_t *)C;
+	flag = K->beta;
+      } else if (alpha_C_is_a(C)) {
+	alpha_C_t *	K = (alpha_C_t *)C;
+	flag = K->alpha;
       } else {
 	flag = 0;
       }
       cce_run_error_handlers(L);
-      cce_condition_free(cnd);
+      cce_condition_free(C);
     } else {
-      cce_raise(L, C_condition_constructor(1, 2, 3));
+      cce_raise(L, gamma_C_constructor(1, 2, 3));
       cce_run_cleanup_handlers(L);
     }
     assert(3 == flag);
@@ -303,24 +306,24 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_condition(L);
+      cce_condition_t *	C = cce_condition(L);
 
-      if        (C_condition_is(cnd)) {
-	C_condition_object_t *	C = cnd;
-	flag = C->gamma;
-      } else if (B_condition_is(cnd)) {
-	B_condition_object_t *	B = cnd;
-	flag = B->beta;
-      } else if (A_condition_is(cnd)) {
-	A_condition_object_t *	A = cnd;
-	flag = A->alpha;
+      if (gamma_C_is_a(C)) {
+	gamma_C_t *	K = (gamma_C_t *)C;
+	flag = K->gamma;
+      } else if (beta_C_is_a(C)) {
+	beta_C_t *	K = (beta_C_t *)C;
+	flag = K->beta;
+      } else if (alpha_C_is_a(C)) {
+	alpha_C_t *	K = (alpha_C_t *)C;
+	flag = K->alpha;
       } else {
 	flag = 0;
       }
       cce_run_error_handlers(L);
-      cce_condition_free(cnd);
+      cce_condition_free(C);
     } else {
-      cce_raise(L, B_condition_constructor(1, 2));
+      cce_raise(L, beta_C_constructor(1, 2));
       cce_run_cleanup_handlers(L);
     }
     assert(2 == flag);
@@ -332,24 +335,24 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     int			flag;
 
     if (cce_location(L)) {
-      void *	cnd = cce_condition(L);
+      cce_condition_t *	C = cce_condition(L);
 
-      if        (B_condition_is(cnd)) {
-	C_condition_object_t *	C = cnd;
-	flag = C->gamma;
-      } else if (B_condition_is(cnd)) {
-	B_condition_object_t *	B = cnd;
-	flag = B->beta;
-      } else if (A_condition_is(cnd)) {
-	A_condition_object_t *	A = cnd;
-	flag = A->alpha;
+      if (gamma_C_is_a(C)) {
+	gamma_C_t *	K = (gamma_C_t *)C;
+	flag = K->gamma;
+      } else if (beta_C_is_a(C)) {
+	beta_C_t *	K = (beta_C_t *)C;
+	flag = K->beta;
+      } else if (alpha_C_is_a(C)) {
+	alpha_C_t *	K = (alpha_C_t *)C;
+	flag = K->alpha;
       } else {
 	flag = 0;
       }
       cce_run_error_handlers(L);
-      cce_condition_free(cnd);
+      cce_condition_free(C);
     } else {
-      cce_raise(L, A_condition_constructor(1));
+      cce_raise(L, alpha_C_constructor(1));
       cce_run_cleanup_handlers(L);
     }
     assert(1 == flag);
