@@ -207,4 +207,48 @@ cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+int
+cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_fds, fd_set * except_fds, struct timeval * timeout)
+{
+  int	rv;
+  errno = 0;
+  rv = select(nfds, read_fds, write_fds, except_fds, timeout);
+  if (-1 != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+int
+cce_sys_dup (cce_location_t * L, int old)
+{
+  int	rv;
+  errno = 0;
+  rv = dup(old);
+  if (-1 != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+int
+cce_sys_dup2 (cce_location_t * L, int old, int new)
+{
+  int	rv;
+  errno = 0;
+  rv = dup2(old, new);
+  if (-1 != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+
 /* end of file */

@@ -1871,6 +1871,20 @@ Wrapper for @cfunc{mprotect}.
 @end deftypefun
 
 
+@deftypefun int cce_sys_select (cce_location_t * @var{L}, int @var{nfds}, fd_set * @var{read_fds}, fd_set * @var{write_fds}, fd_set * @var{except_fds}, struct timeval * @var{timeout})
+Wrapper for @cfunc{select}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_dup (cce_location_t * @var{L}, int @var{old})
+Wrapper for @cfunc{dup}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_dup2 (cce_location_t * @var{L}, int @var{old}, int @var{new})
+Wrapper for @cfunc{dup2}.
+@end deftypefun
+
 @c page
 @c ------------------------------------------------------------
 @c Appendices.

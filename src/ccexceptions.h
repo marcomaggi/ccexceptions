@@ -94,6 +94,7 @@ extern "C" {
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/uio.h>
+#include <sys/select.h>
 
 /** --------------------------------------------------------------------
  ** Constants.
@@ -305,6 +306,15 @@ cce_decl int cce_sys_msync (cce_location_t * L, void *address, size_t length, in
   __attribute__((nonnull(1,2)));
 cce_decl int cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
   __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_fds, fd_set * except_fds,
+			     struct timeval * timeout)
+  __attribute__((nonnull(1,3,4,5)));
+
+cce_decl int cce_sys_dup (cce_location_t * L, int old)
+  __attribute__((nonnull(1)));
+cce_decl int cce_sys_dup2 (cce_location_t * L, int old, int new)
+  __attribute__((nonnull(1)));
 
 /** --------------------------------------------------------------------
  ** Done.
