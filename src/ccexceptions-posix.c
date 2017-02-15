@@ -30,6 +30,53 @@
 #include <errno.h>
 #include <sys/mman.h>
 
+/** --------------------------------------------------------------------
+ ** POSIX memory allocation.
+ ** ----------------------------------------------------------------- */
+
+void *
+cce_sys_malloc (cce_location_t * L, size_t size)
+{
+  void *	rv;
+  errno = 0;
+  rv = malloc (size);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+void *
+cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
+{
+  void *	rv;
+  errno = 0;
+  rv = realloc(ptr, newsize);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+void *
+cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
+{
+  void *	rv;
+  errno = 0;
+  rv = calloc(count, eltsize);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_condition(errno));
+  }
+}
+
+/** --------------------------------------------------------------------
+ ** POSIX input/output and file descriptors.
+ ** ----------------------------------------------------------------- */
+
 int
 cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
 {

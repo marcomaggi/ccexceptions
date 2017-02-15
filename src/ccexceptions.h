@@ -273,7 +273,7 @@ cce_condition (cce_location_t * L)
 #define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers.
+ ** POSIX wrappers: input/output and file descriptors.
  ** ----------------------------------------------------------------- */
 
 cce_decl int cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
@@ -315,6 +315,17 @@ cce_decl int cce_sys_dup (cce_location_t * L, int old)
   __attribute__((nonnull(1)));
 cce_decl int cce_sys_dup2 (cce_location_t * L, int old, int new)
   __attribute__((nonnull(1)));
+
+/** --------------------------------------------------------------------
+ ** POSIX wrappers: memory allocation.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void * cce_sys_malloc (cce_location_t * L, size_t size)
+  __attribute__((nonnull(1),returns_nonnull));
+cce_decl void * cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
+  __attribute__((nonnull(1),returns_nonnull));
+cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
+  __attribute__((nonnull(1),returns_nonnull));
 
 /** --------------------------------------------------------------------
  ** Done.

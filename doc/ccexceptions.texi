@@ -1798,8 +1798,28 @@ of the system call (if it completes successfully).  All the wrappers reset @code
 before performing the system call.
 
 @menu
+* posix memory::                Memory allocation.
 * posix io::                    Input/output system calls.
 @end menu
+
+@c page
+@node posix memory
+@section Memory allocation
+
+
+@deftypefun {void *} cce_sys_malloc (cce_location_t * @var{L}, size_t @var{size})
+Wrapper for @cfunc{malloc}.
+@end deftypefun
+
+
+@deftypefun {void *} cce_sys_realloc (cce_location_t * @var{L}, void * @var{ptr}, size_t @var{newsize})
+Wrapper for @cfunc{realloc}.
+@end deftypefun
+
+
+@deftypefun {void *} cce_sys_calloc (cce_location_t * @var{L}, size_t @var{count}, size_t @var{eltsize})
+Wrapper for @cfunc{calloc}.
+@end deftypefun
 
 @c page
 @node posix io
