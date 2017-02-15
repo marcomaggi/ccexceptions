@@ -21,7 +21,7 @@ Topics
 
 This package installs  a C11 language library  requiring GCC extensions;
 it implements an interface to non-local exits, which is somewhat similar
-to exceptions handling.
+to exceptions handling.  The library targets POSIX systems.
 
   The package  makes use  of the  GNU Autotools  and it  is tested  on a
 GNU+Linux system.
