@@ -926,7 +926,7 @@ if (cce_location(L)) @{
   if (P) @{
     cce_register_cleanup_handler(L, H);
   @} else @{
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   @}
   do_something(L, P);
   cce_run_cleanup_handlers(L);
@@ -970,7 +970,7 @@ constructor (cce_location_t * there)
       H->pointer = P;
       cce_register_error_handler(L, H);
     @} else @{
-      cce_raise(L, cce_errno_condition(errno));
+      cce_raise(L, cce_errno_C(errno));
     @}
     do_some_initialisation_in(P);
     cce_run_cleanup_handlers(L);
@@ -1070,7 +1070,7 @@ of type @samp{A} and of type root.
 * conditions types::            Core condition object types.
 * conditions operations::       Acting upon condition objects.
 * conditions root::             Predefined root condition descriptor.
-* conditions unknown::          Predefined unknown condition.
+* conditions unknown::          Predefined unknown condition object.
 * conditions errno::            Predefined @code{errno} conditions.
 * conditions custom::           Defining custom condition objects.
 @end menu
@@ -1122,9 +1122,9 @@ Type of structure representing an exceptional condition object.  It is meant to 
 for new exceptional condition object types, as follows:
 
 @example
-typedef struct my_t @{
+typedef struct my_C_t @{
   cce_condition_t;
-@} my_t;
+@} my_C_t;
 @end example
 @end deftp
 
@@ -1157,6 +1157,21 @@ Establish if two condition descriptors are child and parent.  Return @true{} if 
 to @var{parent} or @var{parent} is in the hierarchy of @var{child}'s parents; otherwise return
 @false{}.
 @end deftypefun
+
+
+@deftypefn {Inline Function} bool cce_condition_equal (const cce_condition_t * @var{A}, const cce_condition_t * @var{B})
+Compare the pointer arguments: return @true{} if they are equal, otherwise return @false{}.  This
+function exists to avoid pointer mismatch warnings when comparing pointers with the @code{==}
+operator:
+
+@example
+cce_errno_C_t   * A = ...;
+cce_condition_t * B = ...;
+
+A == B;                         /* raises a warning */
+cce_condition_equal(A, B);      /* no warning */
+@end example
+@end deftypefn
 
 
 @deftypefn {Inline Function} {const cce_condition_descriptor_t *} cce_condition_descriptor (const cce_condition_t * @var{condition})
@@ -1245,9 +1260,9 @@ cce_location_t      L[1];
 if (cce_location(L)) @{
   cce_condition_t * C = cce_condition(L);
   @{
-    if (cce_unknown_condition_is_a(C)) @{
+    if (cce_unknown_C_is_a(C)) @{
       do_something();
-    @} else if (cce_errno_condition_is_a(C)) @{
+    @} else if (cce_errno_C_is_a(C)) @{
       do_something();
     @} else @{
       do_something();
@@ -1277,7 +1292,7 @@ property.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_root_D
+@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t * const} cce_root_D
 Pointer to a statically allocated structure representing the root condition descriptor for all the
 condition descriptors.  When a condition descriptors hierarchy is correctly built: using this value
 as second argument in calls to the functions:
@@ -1302,7 +1317,7 @@ default_static_message (const cce_condition_t * C CCE_UNUSED)
   return "default message";
 @}
 
-cce_condition_descriptor_t A_condition_descriptor = @{
+cce_condition_descriptor_t alpha_D = @{
   .parent               = NULL,
   .free                 = NULL,
   .static_message       = default_static_message
@@ -1311,7 +1326,7 @@ cce_condition_descriptor_t A_condition_descriptor = @{
 void
 condition_descriptors_initialisation (void)
 @{
-  A_condition_descriptor.parent = cce_root_D;
+  alpha_D.parent = cce_root_D;
 @}
 @end example
 
@@ -1321,7 +1336,7 @@ conditions system.
 
 @c page
 @node conditions unknown
-@section Predefined unknown condition
+@section Predefined unknown condition object
 
 
 The @dfn{unknown exceptional condition object} has the purpose of describing an exceptional
@@ -1340,7 +1355,17 @@ There should be only one unknown condition object: the one predefined by @value{
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_unknown_D
+@deftp {Struct Typedef} cce_unknown_D_t
+Structure type representing the descriptor for unknown condition objects.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_unknown_C_t
+Structure type representing an unknown condition object.
+@end deftp
+
+
+@deftypevr {Dynamic Constant} {const cce_unknown_D_t * const} cce_unknown_D
 Pointer to a statically allocated structure representing the unknown condition descriptor for the
 single unknown condition object.  The parent of this descriptor is the root descriptor referenced by
 @code{cce_root_D}.
@@ -1350,13 +1375,13 @@ can determine if the condition struct is an unknown condition object.
 @end deftypevr
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_t *} cce_unknown_E
+@deftypevr {Dynamic Constant} {const cce_unknown_C_t * const} cce_unknown_C
 Pointer to a statically allocated structure representing the unknown condition object.  This should
 be the single condition object having @code{cce_unknown_D} as descriptor.
 @end deftypevr
 
 
-@deftypefn {Inline Function} bool cce_unknown_condition_is_a (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_unknown_C_is_a (const cce_condition_t * @var{C})
 Return @true{} if @var{C} has @code{cce_unknown_D} as descriptor; otherwise return @false{}.
 @end deftypefn
 
@@ -1369,7 +1394,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_errno_D_t
-Type of data structures type representing the descriptor for @code{errno} condition objects.
+Structure type representing the descriptor for @code{errno} condition objects.
 
 In a correctly built condition objects hierarchy: there is only one instance of this type, the one
 referenced by @code{cce_errno_D}; all the instances of
@@ -1402,19 +1427,18 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_descriptor_t *} cce_errno_D
+@deftypevr {Dynamic Constant} {const cce_errno_D_t * const} cce_errno_D
 Pointer to a statically allocated structure representing the condition descriptor of all the values
-returned by @cfunc{cce_errno_condition}.
+returned by @cfunc{cce_errno_C}.
 
 By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure, we
 can determine if such structure is an @code{errno} condition object.
 @end deftypevr
 
 
-@deftypefun {cce_condition_t *} cce_errno_condition (int @var{errnum})
-Given the @code{errno} code @var{errnum}, return the pointer to condition object associated to it.
-The returned pointer is typed @objtype{cce_condition_t} but it references a structure of type
-@objtype{cce_errno_C_t}.
+@deftypefun {const cce_errno_C_t *} cce_errno_C (int @var{errnum})
+Given the @code{errno} code @var{errnum}, return the pointer to the condition object associated to
+it.
 
 If @var{errnum} is zero: return a pointer to condition object representing a successful operation.
 If @var{errnum} is not a valid @code{errno} code for the underlying platform: return a pointer to
@@ -1422,7 +1446,7 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_errno_condition_is_a (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_errno_C_is_a (const cce_condition_t * @var{C})
 Return @true{} if @var{C} has @code{cce_errno_D} as descriptor; otherwise return @false{}.
 @end deftypefn
 

@@ -43,7 +43,7 @@ cce_sys_malloc (cce_location_t * L, size_t size)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -56,7 +56,7 @@ cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -69,7 +69,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -86,7 +86,7 @@ cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -99,7 +99,7 @@ cce_sys_close (cce_location_t * L, int filedes)
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -114,7 +114,7 @@ cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -127,7 +127,7 @@ cce_sys_pread (cce_location_t * L, int filedes, void * buffer, size_t size, off_
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -140,7 +140,7 @@ cce_sys_write (cce_location_t * L, int filedes, const void *buffer, size_t size)
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -153,7 +153,7 @@ cce_sys_pwrite (cce_location_t * L, int filedes, const void *buffer, size_t size
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -168,7 +168,7 @@ cce_sys_lseek (cce_location_t * L, int filedes, off_t offset, int whence)
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -183,7 +183,7 @@ cce_sys_readv (cce_location_t * L, int filedes, const struct iovec * vector, int
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -196,7 +196,7 @@ cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, in
   if (rv >= 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -211,7 +211,7 @@ cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, in
   if (MAP_FAILED != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -224,7 +224,7 @@ cce_sys_munmap (cce_location_t * L, void * addr, size_t length)
   if (-1 != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -237,7 +237,7 @@ cce_sys_msync (cce_location_t * L, void *address, size_t length, int flags)
   if (-1 != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -250,7 +250,7 @@ cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
   if (-1 != 0) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -265,7 +265,7 @@ cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_
   if (-1 != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -280,7 +280,7 @@ cce_sys_dup (cce_location_t * L, int old)
   if (-1 != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
 
@@ -293,9 +293,8 @@ cce_sys_dup2 (cce_location_t * L, int old, int new)
   if (-1 != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_errno_condition(errno));
+    cce_raise(L, cce_errno_C(errno));
   }
 }
-
 
 /* end of file */

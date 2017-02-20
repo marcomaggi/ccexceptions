@@ -189,9 +189,11 @@ struct cce_condition_t {
   const cce_condition_descriptor_t *		descriptor;
 };
 
-cce_decl const cce_condition_descriptor_t *	cce_root_D;
+cce_decl const cce_condition_descriptor_t * const	cce_root_D;
 
-/* ------------------------------------------------------------------ */
+/** --------------------------------------------------------------------
+ ** Operations on exceptional condition objects.
+ ** ----------------------------------------------------------------- */
 
 cce_decl void cce_condition_init (cce_condition_t * condition,
 				  const cce_condition_descriptor_t * descriptor)
@@ -214,18 +216,51 @@ cce_condition_descriptor (const cce_condition_t * C)
   return C->descriptor;
 }
 
-/* ------------------------------------------------------------------ */
+__attribute__((const,nonnull(1,2),always_inline))
+static inline bool
+cce_condition_equal (const cce_condition_t * A, const cce_condition_t * B)
+{
+  return (A == B)? true : false;
+}
 
-cce_decl const cce_condition_descriptor_t *	cce_unknown_D;
-cce_decl const cce_condition_t *		cce_unknown_E;
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: unknown exception.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_unknown_D_t		cce_unknown_D_t;
+typedef struct cce_unknown_C_t		cce_unknown_C_t;
+
+struct cce_unknown_D_t {
+  cce_condition_descriptor_t;
+};
+
+struct cce_unknown_C_t {
+  cce_condition_t;
+};
+
+cce_decl const cce_unknown_D_t * const	cce_unknown_D;
+cce_decl const cce_unknown_C_t * const	cce_unknown_C;
 
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
-cce_unknown_condition_is_a (const cce_condition_t * condition)
+cce_unknown_C_is_a (const cce_condition_t * condition)
 {
   return cce_condition_is_a(condition, cce_unknown_D);
 }
 
-/* ------------------------------------------------------------------ */
+/* Output of: (my-c-insert-cast-function "cce" "condition" "unknown_C") */
+__attribute__((const,always_inline))
+static inline cce_unknown_C_t *
+cce_cast_to_unknown_C_from_condition (cce_condition_t * src)
+{
+  return (cce_unknown_C_t *)src;
+}
+#define cce_cast_to_unknown_C(SRC)		\
+  _Generic(SRC, cce_condition_t *: cce_cast_to_unknown_C_from_condition(SRC))
+/* End of output. */
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: errno exception.
+ ** ----------------------------------------------------------------- */
 
 typedef struct cce_errno_D_t {
   cce_condition_descriptor_t;
@@ -233,17 +268,17 @@ typedef struct cce_errno_D_t {
 
 typedef struct cce_errno_C_t {
   cce_condition_t;
-  int						errnum;
-  const char *					message;
+  int			errnum;
+  const char *		message;
 } cce_errno_C_t;
 
-cce_decl const cce_condition_descriptor_t *	cce_errno_D;
+cce_decl const cce_errno_D_t * const cce_errno_D;
 
-cce_decl cce_condition_t * cce_errno_condition (int code)
+cce_decl const cce_errno_C_t * cce_errno_C (int code)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((nonnull(1),always_inline)) static inline bool
-cce_errno_condition_is_a (const cce_condition_t * condition)
+cce_errno_C_is_a (const cce_condition_t * condition)
 {
   return cce_condition_is_a(condition, cce_errno_D);
 }

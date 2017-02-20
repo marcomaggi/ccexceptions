@@ -196,7 +196,7 @@ test_dynamically_allocated_handlers (void)
       H->flagp            = flagp;
       return H;
     } else {
-      cce_raise(there, cce_errno_condition(errno));
+      cce_raise(there, cce_errno_C(errno));
     }
   }
 
@@ -220,7 +220,7 @@ test_dynamically_allocated_handlers (void)
       H->flagp		= flagp;
       return H;
     } else {
-      cce_raise(there, cce_errno_condition(errno));
+      cce_raise(there, cce_errno_C(errno));
     }
   }
 

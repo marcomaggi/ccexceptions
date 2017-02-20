@@ -30,6 +30,10 @@
 #include <limits.h>	// for INT_MAX
 #include <errno.h>
 
+/** --------------------------------------------------------------------
+ ** Condition objects operations.
+ ** ----------------------------------------------------------------- */
+
 void
 cce_condition_init (cce_condition_t * C, const cce_condition_descriptor_t * D)
 {
@@ -63,7 +67,10 @@ cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * ch
   return false;
 }
 
-
+/** --------------------------------------------------------------------
+ ** Root condition.
+ ** ----------------------------------------------------------------- */
+
 static const char *
 cce_root_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
 {
@@ -78,33 +85,37 @@ static const cce_condition_descriptor_t cce_root_D_stru = {
   .static_message	= cce_root_condition_static_message_fun
 };
 
-const cce_condition_descriptor_t * cce_root_D = &cce_root_D_stru;
+const cce_condition_descriptor_t * const cce_root_D = &cce_root_D_stru;
 
-/* ------------------------------------------------------------------ */
+/** --------------------------------------------------------------------
+ ** Unknown condition.
+ ** ----------------------------------------------------------------- */
 
 /* This   condition  descriptor   represents   an  unknown   exceptional
    condition.   This   descriptor  has  only  one   instance  statically
-   allocated below: "cce_unknown_E". */
-static const cce_condition_descriptor_t cce_unknown_D_stru = {
+   allocated below: "cce_unknown_C". */
+static const cce_unknown_D_t cce_unknown_D_stru = {
   .parent		= &cce_root_D_stru,
   .free			= NULL,
   .static_message	= cce_root_condition_static_message_fun
 };
 
-const cce_condition_descriptor_t * cce_unknown_D = &cce_unknown_D_stru;
+const cce_unknown_D_t * const cce_unknown_D = &cce_unknown_D_stru;
 
 /* This is the single instance  of unknown exceptional condition.  It is
    used by "cce_raise()" and "cce_retry()". */
-static const cce_condition_t cce_unknown_E_stru = {
+static const cce_unknown_C_t cce_unknown_C_stru = {
   .descriptor = &cce_unknown_D_stru
 };
 
-const cce_condition_t * cce_unknown_E = &cce_unknown_E_stru;
+const cce_unknown_C_t * const cce_unknown_C = &cce_unknown_C_stru;
 
-/* ------------------------------------------------------------------ */
+/** --------------------------------------------------------------------
+ ** Errno condition.
+ ** ----------------------------------------------------------------- */
 
 static const char *
-cce_errno_condition_static_message_fun (const cce_condition_t * C)
+cce_errno_C_static_message_fun (const cce_condition_t * C)
 {
   const cce_errno_C_t *	EC = (const cce_errno_C_t *)C;
   return EC->message;
@@ -115,13 +126,11 @@ cce_errno_condition_static_message_fun (const cce_condition_t * C)
 const cce_errno_D_t cce_errno_D_stru = {
   .parent		= &cce_root_D_stru,
   .free			= NULL,
-  .static_message	= cce_errno_condition_static_message_fun
+  .static_message	= cce_errno_C_static_message_fun
 };
 
-const cce_condition_descriptor_t * cce_errno_D = \
-  (const cce_condition_descriptor_t *) &cce_errno_D_stru;
+const cce_errno_D_t * const cce_errno_D = (const cce_errno_D_t *) &cce_errno_D_stru;
 
-
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)	\
   							\
   {							\
@@ -134,7 +143,7 @@ const cce_condition_descriptor_t * cce_errno_D = \
 #define LAST_ERRNO_CONDITION		148
 
 static const cce_errno_C_t
-cce_errno_conditions[ERRNO_CONDITIONS_NUM] = {
+errno_conditions[ERRNO_CONDITIONS_NUM] = {
   /* 000 */ CCE_DECLARE_ERRNO_CONDITION(0,			"(errno=0) Success"),
   /* Whenever  an  errno  constant  is not  defined  by  the  underlying
      platform: the "configure" script  defines the associated "VALUEOF_"
@@ -291,17 +300,17 @@ cce_errno_conditions[ERRNO_CONDITIONS_NUM] = {
   /* 148 */ CCE_DECLARE_ERRNO_CONDITION(INT_MAX,		"Unknown errno code")
 };
 
-cce_condition_t *
-cce_errno_condition (int errnum)
+const cce_errno_C_t *
+cce_errno_C (int errnum)
 {
   for (int i = 0; i < ERRNO_CONDITIONS_NUM; ++i) {
-    if (errnum == cce_errno_conditions[i].errnum) {
-      return (cce_condition_t *)&(cce_errno_conditions[i]);
+    if (errnum == errno_conditions[i].errnum) {
+      return &(errno_conditions[i]);
     }
   }
   /* If  we  are  here  ERRNUM  is an  invalid  "errno"  value  for  the
      underlying platform. */
-  return (cce_condition_t *)&(cce_errno_conditions[LAST_ERRNO_CONDITION]);
+  return &(errno_conditions[LAST_ERRNO_CONDITION]);
 }
 
 /* end of file */
