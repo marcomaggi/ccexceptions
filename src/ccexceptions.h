@@ -198,7 +198,7 @@ cce_decl const cce_condition_descriptor_t * const	cce_root_D;
 cce_decl void cce_condition_init (cce_condition_t * condition,
 				  const cce_condition_descriptor_t * descriptor)
   __attribute__((leaf,nonnull(1,2)));
-cce_decl bool cce_condition_is_a (const cce_condition_t * condition,
+cce_decl bool cce_is_a_condition (const cce_condition_t * condition,
 				  const cce_condition_descriptor_t * descriptor)
   __attribute__((leaf,nonnull(1,2)));
 cce_decl bool cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * child,
@@ -242,9 +242,9 @@ cce_decl const cce_unknown_D_t * const	cce_unknown_D;
 cce_decl const cce_unknown_C_t * const	cce_unknown_C;
 
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
-cce_unknown_C_is_a (const cce_condition_t * condition)
+cce_is_a_unknown_C (const cce_condition_t * condition)
 {
-  return cce_condition_is_a(condition, cce_unknown_D);
+  return cce_is_a_condition(condition, cce_unknown_D);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "unknown_C") */
@@ -278,9 +278,9 @@ cce_decl const cce_errno_C_t * cce_errno_C (int code)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((nonnull(1),always_inline)) static inline bool
-cce_errno_C_is_a (const cce_condition_t * condition)
+cce_is_a_errno_C (const cce_condition_t * condition)
 {
-  return cce_condition_is_a(condition, cce_errno_D);
+  return cce_is_a_condition(condition, cce_errno_D);
 }
 
 /** --------------------------------------------------------------------

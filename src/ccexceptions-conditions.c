@@ -52,7 +52,7 @@ cce_condition_static_message (cce_condition_t * C)
   return C->descriptor->static_message(C);
 }
 bool
-cce_condition_is_a (const cce_condition_t * C, const cce_condition_descriptor_t * descriptor)
+cce_is_a_condition (const cce_condition_t * C, const cce_condition_descriptor_t * descriptor)
 {
   return cce_condition_descriptor_child_and_parent(C->descriptor, descriptor);
 }

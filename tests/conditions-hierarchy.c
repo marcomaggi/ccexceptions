@@ -82,43 +82,43 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
   /* Dynamic initialisation. */
   A_condition_descriptor.parent = cce_root_D;
 
-  assert(true  == cce_condition_is_a(cce_unknown_C,		  cce_root_D));
-  assert(true  == cce_condition_is_a(cce_errno_C(EINVAL), cce_root_D));
-  assert(true  == cce_condition_is_a(&A_condition,                cce_root_D));
-  assert(true  == cce_condition_is_a(&B_condition,                cce_root_D));
-  assert(true  == cce_condition_is_a(&C_condition,                cce_root_D));
+  assert(true  == cce_is_a_condition(cce_unknown_C,		  cce_root_D));
+  assert(true  == cce_is_a_condition(cce_errno_C(EINVAL), cce_root_D));
+  assert(true  == cce_is_a_condition(&A_condition,                cce_root_D));
+  assert(true  == cce_is_a_condition(&B_condition,                cce_root_D));
+  assert(true  == cce_is_a_condition(&C_condition,                cce_root_D));
 
-  assert(true  == cce_condition_is_a(cce_unknown_C,		  cce_unknown_D));
-  assert(false == cce_condition_is_a(cce_errno_C(EINVAL), cce_unknown_D));
-  assert(false == cce_condition_is_a(&A_condition,                cce_unknown_D));
-  assert(false == cce_condition_is_a(&B_condition,                cce_unknown_D));
-  assert(false == cce_condition_is_a(&C_condition,                cce_unknown_D));
+  assert(true  == cce_is_a_condition(cce_unknown_C,		  cce_unknown_D));
+  assert(false == cce_is_a_condition(cce_errno_C(EINVAL), cce_unknown_D));
+  assert(false == cce_is_a_condition(&A_condition,                cce_unknown_D));
+  assert(false == cce_is_a_condition(&B_condition,                cce_unknown_D));
+  assert(false == cce_is_a_condition(&C_condition,                cce_unknown_D));
 
-  assert(false == cce_condition_is_a(cce_unknown_C,		  cce_errno_D));
-  assert(true  == cce_condition_is_a(cce_errno_C(EINVAL), cce_errno_D));
-  assert(false == cce_condition_is_a(&A_condition,                cce_errno_D));
-  assert(false == cce_condition_is_a(&B_condition,                cce_errno_D));
-  assert(false == cce_condition_is_a(&C_condition,                cce_errno_D));
+  assert(false == cce_is_a_condition(cce_unknown_C,		  cce_errno_D));
+  assert(true  == cce_is_a_condition(cce_errno_C(EINVAL), cce_errno_D));
+  assert(false == cce_is_a_condition(&A_condition,                cce_errno_D));
+  assert(false == cce_is_a_condition(&B_condition,                cce_errno_D));
+  assert(false == cce_is_a_condition(&C_condition,                cce_errno_D));
 
-  assert(false == cce_condition_is_a(cce_unknown_C,		  &A_condition_descriptor));
-  assert(false == cce_condition_is_a(cce_errno_C(EINVAL), &A_condition_descriptor));
-  assert(true  == cce_condition_is_a(&A_condition,                &A_condition_descriptor));
-  assert(true  == cce_condition_is_a(&B_condition,                &A_condition_descriptor));
-  assert(true  == cce_condition_is_a(&C_condition,                &A_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_unknown_C,		  &A_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_errno_C(EINVAL), &A_condition_descriptor));
+  assert(true  == cce_is_a_condition(&A_condition,                &A_condition_descriptor));
+  assert(true  == cce_is_a_condition(&B_condition,                &A_condition_descriptor));
+  assert(true  == cce_is_a_condition(&C_condition,                &A_condition_descriptor));
 
-  assert(false == cce_condition_is_a(cce_unknown_C,		  &B_condition_descriptor));
-  assert(false == cce_condition_is_a(cce_errno_C(EINVAL), &B_condition_descriptor));
-  assert(false == cce_condition_is_a(&A_condition,                &B_condition_descriptor));
-  assert(true  == cce_condition_is_a(&B_condition,                &B_condition_descriptor));
-  assert(true  == cce_condition_is_a(&C_condition,                &B_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_unknown_C,		  &B_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_errno_C(EINVAL), &B_condition_descriptor));
+  assert(false == cce_is_a_condition(&A_condition,                &B_condition_descriptor));
+  assert(true  == cce_is_a_condition(&B_condition,                &B_condition_descriptor));
+  assert(true  == cce_is_a_condition(&C_condition,                &B_condition_descriptor));
 
-  assert(false == cce_condition_is_a(cce_unknown_C,	       &C_condition_descriptor));
-  assert(false == cce_condition_is_a(cce_errno_C(EINVAL), &C_condition_descriptor));
-  assert(false == cce_condition_is_a(&A_condition,                &C_condition_descriptor));
-  assert(false == cce_condition_is_a(&B_condition,                &C_condition_descriptor));
-  assert(true  == cce_condition_is_a(&C_condition,                &C_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_unknown_C,	       &C_condition_descriptor));
+  assert(false == cce_is_a_condition(cce_errno_C(EINVAL), &C_condition_descriptor));
+  assert(false == cce_is_a_condition(&A_condition,                &C_condition_descriptor));
+  assert(false == cce_is_a_condition(&B_condition,                &C_condition_descriptor));
+  assert(true  == cce_is_a_condition(&C_condition,                &C_condition_descriptor));
 
-  /* Branching upon condition types with "cce_condition_is_a()". */
+  /* Branching upon condition types with "cce_is_a_condition()". */
   {
     cce_location_t	L[1];
     bool		flag = false;
@@ -126,11 +126,11 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     if (cce_location(L)) {
       cce_condition_t *	C = cce_condition(L);
 
-      if (cce_condition_is_a(C, cce_unknown_D))
+      if (cce_is_a_condition(C, cce_unknown_D))
 	{
 	  flag = false;
 	}
-      else if (cce_condition_is_a(C, cce_errno_D))
+      else if (cce_is_a_condition(C, cce_errno_D))
 	{
 	  flag = true;
 	}

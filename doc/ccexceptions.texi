@@ -1145,7 +1145,7 @@ usually called from a type--specific initialisation function.
 @end deftypefun
 
 
-@deftypefun bool cce_condition_is_a (const cce_condition_t * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
+@deftypefun bool cce_is_a_condition (const cce_condition_t * @var{condition}, const cce_condition_descriptor_t * @var{descriptor})
 Establish if a condition object is of a selected type.  Return @true{} if @var{condition} is an
 instance of type @var{descriptor}, or an instance of a type that is parent of @var{descriptor};
 otherwise return @false{}.
@@ -1252,7 +1252,7 @@ lower_function (cce_location_t * upper_L)
 @end example
 
 If we need to branch according to a condition object's type, we can do it as follows using wrappers
-for @cfunc{cce_condition_is_a}:
+for @cfunc{cce_is_a_condition}:
 
 @example
 cce_location_t      L[1];
@@ -1260,9 +1260,9 @@ cce_location_t      L[1];
 if (cce_location(L)) @{
   cce_condition_t * C = cce_condition(L);
   @{
-    if (cce_unknown_C_is_a(C)) @{
+    if (cce_is_a_unknown_C(C)) @{
       do_something();
-    @} else if (cce_errno_C_is_a(C)) @{
+    @} else if (cce_is_a_errno_C(C)) @{
       do_something();
     @} else @{
       do_something();
@@ -1298,7 +1298,7 @@ condition descriptors.  When a condition descriptors hierarchy is correctly buil
 as second argument in calls to the functions:
 
 @example
-cce_condition_is_a()
+cce_is_a_condition()
 cce_condition_descriptor_child_and_parent()
 @end example
 
@@ -1381,7 +1381,7 @@ be the single condition object having @code{cce_unknown_D} as descriptor.
 @end deftypevr
 
 
-@deftypefn {Inline Function} bool cce_unknown_C_is_a (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_is_a_unknown_C (const cce_condition_t * @var{C})
 Return @true{} if @var{C} has @code{cce_unknown_D} as descriptor; otherwise return @false{}.
 @end deftypefn
 
@@ -1446,7 +1446,7 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_errno_C_is_a (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_is_a_errno_C (const cce_condition_t * @var{C})
 Return @true{} if @var{C} has @code{cce_errno_D} as descriptor; otherwise return @false{}.
 @end deftypefn
 
@@ -1554,7 +1554,7 @@ alpha_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 alpha_C_is_a (const cce_condition_t * condition)
 @{
-  return cce_condition_is_a(condition, &alpha_D);
+  return cce_is_a_condition(condition, &alpha_D);
 @}
 
 /*** Exceptional condition B. ***/
@@ -1631,7 +1631,7 @@ beta_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 beta_C_is_a (const cce_condition_t * condition)
 @{
-  return cce_condition_is_a(condition, &beta_D);
+  return cce_is_a_condition(condition, &beta_D);
 @}
 
 /*** Exceptional condition C. ***/
@@ -1708,7 +1708,7 @@ gamma_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 gamma_C_is_a (const cce_condition_t * condition)
 @{
-  return cce_condition_is_a(condition, &gamma_D);
+  return cce_is_a_condition(condition, &gamma_D);
 @}
 
 int
