@@ -283,6 +283,17 @@ cce_is_a_errno_C (const cce_condition_t * condition)
   return cce_is_a_condition(condition, cce_errno_D);
 }
 
+/* Output of: (my-c-insert-cast-function "cce" "condition" "errno_C") */
+__attribute__((const,always_inline))
+static inline cce_errno_C_t *
+cce_cast_to_errno_C_from_condition (cce_condition_t * src)
+{
+  return (cce_errno_C_t *)src;
+}
+#define cce_cast_to_errno_C(SRC)		\
+  _Generic(SRC, cce_condition_t *: cce_cast_to_errno_C_from_condition(SRC))
+/* End of output. */
+
 /** --------------------------------------------------------------------
  ** Locations.
  ** ----------------------------------------------------------------- */

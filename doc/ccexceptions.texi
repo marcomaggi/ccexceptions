@@ -1385,6 +1385,12 @@ be the single condition object having @code{cce_unknown_D} as descriptor.
 Return @true{} if @var{C} has @code{cce_unknown_D} as descriptor; otherwise return @false{}.
 @end deftypefn
 
+
+@deftypefn {Preprocessor Macro} {cce_unknown_C_t *} cce_cast_to_unknown_C (cce_condition_t * @var{C})
+Cast a pointer to condition object type.  This macro provides type checking and documents that this
+conversion is sometimes needed.
+@end deftypefn
+
 @c page
 @node conditions errno
 @section Predefined @code{errno} conditions
@@ -1448,6 +1454,12 @@ condition object representing an invalid code.
 
 @deftypefn {Inline Function} bool cce_is_a_errno_C (const cce_condition_t * @var{C})
 Return @true{} if @var{C} has @code{cce_errno_D} as descriptor; otherwise return @false{}.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} {cce_errno_C_t *} cce_cast_to_errno_C (cce_condition_t * @var{C})
+Cast a pointer to condition object type.  This macro provides type checking and documents that this
+conversion is sometimes needed.
 @end deftypefn
 
 @c page
