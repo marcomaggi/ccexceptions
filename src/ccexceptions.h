@@ -255,7 +255,7 @@ cce_cast_to_unknown_C_from_condition (cce_condition_t * src)
   return (cce_unknown_C_t *)src;
 }
 #define cce_cast_to_unknown_C(SRC)		\
-  _Generic(SRC, cce_condition_t *: cce_cast_to_unknown_C_from_condition(SRC))
+  _Generic((SRC), cce_condition_t *: cce_cast_to_unknown_C_from_condition)(SRC)
 /* End of output. */
 
 /** --------------------------------------------------------------------
@@ -291,7 +291,7 @@ cce_cast_to_errno_C_from_condition (cce_condition_t * src)
   return (cce_errno_C_t *)src;
 }
 #define cce_cast_to_errno_C(SRC)		\
-  _Generic(SRC, cce_condition_t *: cce_cast_to_errno_C_from_condition(SRC))
+  _Generic((SRC), cce_condition_t *: cce_cast_to_errno_C_from_condition)(SRC)
 /* End of output. */
 
 /** --------------------------------------------------------------------
