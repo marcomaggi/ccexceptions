@@ -365,6 +365,9 @@ cce_decl int cce_sys_dup (cce_location_t * L, int old)
 cce_decl int cce_sys_dup2 (cce_location_t * L, int old, int new)
   __attribute__((nonnull(1)));
 
+cce_decl void cce_sys_pipe (cce_location_t * L, int pipefd[2])
+  __attribute__((nonnull(1,2)));
+
 /** --------------------------------------------------------------------
  ** POSIX wrappers: memory allocation.
  ** ----------------------------------------------------------------- */

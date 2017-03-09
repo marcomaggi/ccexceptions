@@ -1942,6 +1942,11 @@ Wrapper for @cfunc{dup}.
 Wrapper for @cfunc{dup2}.
 @end deftypefun
 
+
+@deftypefun void cce_sys_pipe (cce_location_t * @var{L}, int @var{pipefd}[2])
+Wrapper for @cfunc{pipe}.
+@end deftypefun
+
 @c page
 @node helpers
 @chapter Helper functions and macros

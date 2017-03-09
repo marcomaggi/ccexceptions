@@ -297,4 +297,15 @@ cce_sys_dup2 (cce_location_t * L, int old, int new)
   }
 }
 
+void
+cce_sys_pipe (cce_location_t * L, int pipefd[2])
+{
+  int	rv;
+  errno = 0;
+  rv = pipe(pipefd);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C(errno));
+  }
+}
+
 /* end of file */
