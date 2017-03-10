@@ -1837,6 +1837,7 @@ before performing the system call.
 @menu
 * posix memory::                Memory allocation.
 * posix io::                    Input/output system calls.
+* posix process::               Process system calls.
 @end menu
 
 @c page
@@ -1873,23 +1874,28 @@ Wrapper for @cfunc{close}.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_read (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size})
-Wrapper for @cfunc{read}.
+@deftypefun size_t cce_sys_read (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{read}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{read} are consumed by this function, so the return value is an unsigned integer.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_pread (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size}, off_t @var{offset})
-Wrapper for @cfunc{pread}.
+@deftypefun size_t cce_sys_pread (cce_location_t * @var{L}, int @var{filedes}, void * @var{buffer}, size_t @var{size}, off_t @var{offset})
+Wrapper for @cfunc{pread}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{pread} are consumed by this function, so the return value is an unsigned integer.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_write (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size})
-Wrapper for @cfunc{write}.
+@deftypefun size_t cce_sys_write (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{write}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{write} are consumed by this function, so the return value is an unsigned integer.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_pwrite (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size}, off_t @var{offset})
-Wrapper for @cfunc{pwrite}.
+@deftypefun size_t cce_sys_pwrite (cce_location_t * @var{L}, int @var{filedes}, const void * @var{buffer}, size_t @var{size}, off_t @var{offset})
+Wrapper for @cfunc{pwrite}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{pwrite} are consumed by this function, so the return value is an unsigned
+integer.
 @end deftypefun
 
 
@@ -1898,13 +1904,16 @@ Wrapper for @cfunc{lseek}.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_readv (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
-Wrapper for @cfunc{readv}.
+@deftypefun size_t cce_sys_readv (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
+Wrapper for @cfunc{readv}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{readv} are consumed by this function, so the return value is an unsigned integer.
 @end deftypefun
 
 
-@deftypefun ssize_t cce_sys_writev (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
-Wrapper for @cfunc{writev}.
+@deftypefun size_t cce_sys_writev (cce_location_t * @var{L}, int @var{filedes}, const struct iovec * @var{vector}, int @var{count})
+Wrapper for @cfunc{writev}.  Notice the return value of type @objtype{size_t}: the negative values
+returned by @cfunc{writev} are consumed by this function, so the return value is an unsigned
+integer.
 @end deftypefun
 
 
@@ -1945,6 +1954,20 @@ Wrapper for @cfunc{dup2}.
 
 @deftypefun void cce_sys_pipe (cce_location_t * @var{L}, int @var{pipefd}[2])
 Wrapper for @cfunc{pipe}.
+@end deftypefun
+
+@c page
+@node posix process
+@section Process system calls
+
+
+@deftypefun int cce_sys_fork (cce_location_t * @var{L})
+Wrapper for @cfunc{fork}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_waitpid (cce_location_t * @var{L}, pid_t @var{pid}, int * @var{wstatus}, int @var{options})
+Wrapper for @cfunc{waitpid}.
 @end deftypefun
 
 @c page

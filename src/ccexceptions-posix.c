@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 
+
 /** --------------------------------------------------------------------
  ** POSIX memory allocation.
  ** ----------------------------------------------------------------- */
@@ -73,6 +74,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
   }
 }
 
+
 /** --------------------------------------------------------------------
  ** POSIX input/output and file descriptors.
  ** ----------------------------------------------------------------- */
@@ -105,53 +107,53 @@ cce_sys_close (cce_location_t * L, int filedes)
 
 /* ------------------------------------------------------------------ */
 
-ssize_t
+size_t
 cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
 {
   ssize_t	rv;
   errno = 0;
   rv = read(filedes, buffer, size);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
 }
 
-ssize_t
+size_t
 cce_sys_pread (cce_location_t * L, int filedes, void * buffer, size_t size, off_t offset)
 {
   ssize_t	rv;
   errno = 0;
   rv = pread(filedes, buffer, size, offset);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
 }
 
-ssize_t
+size_t
 cce_sys_write (cce_location_t * L, int filedes, const void *buffer, size_t size)
 {
   ssize_t	rv;
   errno = 0;
   rv = write(filedes, buffer, size);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
 }
 
-ssize_t
+size_t
 cce_sys_pwrite (cce_location_t * L, int filedes, const void *buffer, size_t size, off_t offset)
 {
   ssize_t	rv;
   errno = 0;
   rv = pwrite(filedes, buffer, size, offset);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
@@ -174,33 +176,36 @@ cce_sys_lseek (cce_location_t * L, int filedes, off_t offset, int whence)
 
 /* ------------------------------------------------------------------ */
 
-ssize_t
+size_t
 cce_sys_readv (cce_location_t * L, int filedes, const struct iovec * vector, int count)
 {
   ssize_t	rv;
   errno = 0;
   rv = readv(filedes, vector, count);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
 }
 
-ssize_t
+size_t
 cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, int count)
 {
   ssize_t	rv;
   errno = 0;
   rv = writev(filedes, vector, count);
   if (rv >= 0) {
-    return rv;
+    return (size_t)rv;
   } else {
     cce_raise(L, cce_errno_C(errno));
   }
 }
 
-/* ------------------------------------------------------------------ */
+
+/** --------------------------------------------------------------------
+ ** Memory mapping.
+ ** ----------------------------------------------------------------- */
 
 void *
 cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
@@ -254,7 +259,10 @@ cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
   }
 }
 
-/* ------------------------------------------------------------------ */
+
+/** --------------------------------------------------------------------
+ ** File descriptor operations.
+ ** ----------------------------------------------------------------- */
 
 int
 cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_fds, fd_set * except_fds, struct timeval * timeout)
@@ -303,6 +311,35 @@ cce_sys_pipe (cce_location_t * L, int pipefd[2])
   int	rv;
   errno = 0;
   rv = pipe(pipefd);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C(errno));
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Process handling.
+ ** ----------------------------------------------------------------- */
+
+int
+cce_sys_fork (cce_location_t * L)
+{
+  int	rv;
+  errno = 0;
+  rv = fork();
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C(errno));
+  } else {
+    return rv;
+  }
+}
+
+void
+cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
+{
+  int	rv;
+  errno = 0;
+  rv = waitpid(pid, wstatus, options);
   if (-1 == rv) {
     cce_raise(L, cce_errno_C(errno));
   }

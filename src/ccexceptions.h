@@ -27,6 +27,7 @@
 #ifndef CCEXCEPTIONS_H
 #define CCEXCEPTIONS_H 1
 
+
 /** --------------------------------------------------------------------
  ** Preliminary definitions.
  ** ----------------------------------------------------------------- */
@@ -82,6 +83,7 @@ extern "C" {
 /* Pointer cast macro helper. */
 #define CCE_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
 
+
 /** --------------------------------------------------------------------
  ** Headers.
  ** ----------------------------------------------------------------- */
@@ -98,7 +100,10 @@ extern "C" {
 #include <fcntl.h>
 #include <sys/uio.h>
 #include <sys/select.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
+
 /** --------------------------------------------------------------------
  ** Constants.
  ** ----------------------------------------------------------------- */
@@ -122,6 +127,7 @@ typedef enum {
   CCE_FIRST_NEXT
 } cce_code_t;
 
+
 /** --------------------------------------------------------------------
  ** Version functions.
  ** ----------------------------------------------------------------- */
@@ -135,6 +141,7 @@ cce_decl int		cce_version_interface_revision	(void)
 cce_decl int		cce_version_interface_age	(void)
   __attribute__((leaf,pure));
 
+
 /** --------------------------------------------------------------------
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
@@ -144,6 +151,7 @@ typedef struct cce_handler_t			cce_handler_t;
 typedef struct cce_condition_descriptor_t	cce_condition_descriptor_t;
 typedef struct cce_condition_t			cce_condition_t;
 
+
 /** --------------------------------------------------------------------
  ** Error and cleanup handlers.
  ** ----------------------------------------------------------------- */
@@ -170,6 +178,7 @@ cce_decl void cce_run_cleanup_handlers		(cce_location_t * L)
 cce_decl void cce_run_error_handlers		(cce_location_t * L)
   __attribute__((nonnull(1)));
 
+
 /** --------------------------------------------------------------------
  ** Exceptional condition descriptors.
  ** ----------------------------------------------------------------- */
@@ -191,6 +200,7 @@ struct cce_condition_t {
 
 cce_decl const cce_condition_descriptor_t * const	cce_root_D;
 
+
 /** --------------------------------------------------------------------
  ** Operations on exceptional condition objects.
  ** ----------------------------------------------------------------- */
@@ -223,6 +233,7 @@ cce_condition_equal (const cce_condition_t * A, const cce_condition_t * B)
   return (A == B)? true : false;
 }
 
+
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: unknown exception.
  ** ----------------------------------------------------------------- */
@@ -258,6 +269,7 @@ cce_cast_to_unknown_C_from_condition (cce_condition_t * src)
   _Generic((SRC), cce_condition_t *: cce_cast_to_unknown_C_from_condition)(SRC)
 /* End of output. */
 
+
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: errno exception.
  ** ----------------------------------------------------------------- */
@@ -294,6 +306,7 @@ cce_cast_to_errno_C_from_condition (cce_condition_t * src)
   _Generic((SRC), cce_condition_t *: cce_cast_to_errno_C_from_condition)(SRC)
 /* End of output. */
 
+
 /** --------------------------------------------------------------------
  ** Locations.
  ** ----------------------------------------------------------------- */
@@ -321,6 +334,7 @@ cce_condition (cce_location_t * L)
 
 #define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
 
+
 /** --------------------------------------------------------------------
  ** POSIX wrappers: input/output and file descriptors.
  ** ----------------------------------------------------------------- */
@@ -330,21 +344,21 @@ cce_decl int cce_sys_open (cce_location_t * L, const char *filename, int flags, 
 cce_decl int cce_sys_close (cce_location_t * L, int filedes)
   __attribute__((nonnull(1)));
 
-cce_decl ssize_t cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
+cce_decl size_t cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
   __attribute__((nonnull(1,3)));
-cce_decl ssize_t cce_sys_pread (cce_location_t * L, int filedes, void * buffer, size_t size, off_t offset)
+cce_decl size_t cce_sys_pread (cce_location_t * L, int filedes, void * buffer, size_t size, off_t offset)
   __attribute__((nonnull(1,3)));
-cce_decl ssize_t cce_sys_write (cce_location_t * L, int filedes, const void *buffer, size_t size)
+cce_decl size_t cce_sys_write (cce_location_t * L, int filedes, const void *buffer, size_t size)
   __attribute__((nonnull(1,3)));
-cce_decl ssize_t cce_sys_pwrite (cce_location_t * L, int filedes, const void *buffer, size_t size, off_t offset)
+cce_decl size_t cce_sys_pwrite (cce_location_t * L, int filedes, const void *buffer, size_t size, off_t offset)
   __attribute__((nonnull(1,3)));
 
 cce_decl off_t cce_sys_lseek (cce_location_t * L, int filedes, off_t offset, int whence)
   __attribute__((nonnull(1)));
 
-cce_decl ssize_t cce_sys_readv (cce_location_t * L, int filedes, const struct iovec * vector, int count)
+cce_decl size_t cce_sys_readv (cce_location_t * L, int filedes, const struct iovec * vector, int count)
   __attribute__((nonnull(1,3)));
-cce_decl ssize_t cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, int count)
+cce_decl size_t cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, int count)
   __attribute__((nonnull(1,3)));
 
 cce_decl void * cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
@@ -368,6 +382,7 @@ cce_decl int cce_sys_dup2 (cce_location_t * L, int old, int new)
 cce_decl void cce_sys_pipe (cce_location_t * L, int pipefd[2])
   __attribute__((nonnull(1,2)));
 
+
 /** --------------------------------------------------------------------
  ** POSIX wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
@@ -379,6 +394,18 @@ cce_decl void * cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
 cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
   __attribute__((nonnull(1),returns_nonnull));
 
+
+/** --------------------------------------------------------------------
+ ** Process handling.
+ ** ----------------------------------------------------------------- */
+
+cce_decl int cce_sys_fork (cce_location_t * L)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
+  __attribute__((nonnull(1,3)));
+
+
 /** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
