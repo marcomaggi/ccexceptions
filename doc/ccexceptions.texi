@@ -1833,8 +1833,10 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
 @value{PACKAGE} defines function wrappers for the most common @posix{} system calls.  Each wrapper
 accepts a pointer to @objtype{cce_location_t} as argument and, in case of error, will perform a
-non--local exit by jumping to the selected location.  The raised exceptional condition objects are
-of type @objtype{cce_errno_C_t}.
+non--local exit by jumping to the selected location.
+
+The raised exceptional condition objects are of type @objtype{cce_errno_C_t}; all the system call
+wrappers make use of @cfunc{cce_errno_C_clear}, so they clear @code{errno} to zero before returning.
 
 The wrapper functions accept the same arguments of the system call and return the same return value
 of the system call (if it completes successfully).  All the wrappers reset @code{errno} to zero
@@ -1851,23 +1853,84 @@ before performing the system call.
 @section Memory allocation
 
 
+@menu
+* posix memory calls::          System call wrappers.
+* posix memory handler::        Exception handler for pointers.
+@end menu
+
+@c page
+@node posix memory calls
+@subsection System call wrappers
+
+
 @deftypefun {void *} cce_sys_malloc (cce_location_t * @var{L}, size_t @var{size})
-Wrapper for @cfunc{malloc}.
+Wrapper for @cfunc{malloc}.  This function never returns @cnull{}.
 @end deftypefun
 
 
 @deftypefun {void *} cce_sys_realloc (cce_location_t * @var{L}, void * @var{ptr}, size_t @var{newsize})
-Wrapper for @cfunc{realloc}.
+Wrapper for @cfunc{realloc}.  This function never returns @cnull{}.
 @end deftypefun
 
 
 @deftypefun {void *} cce_sys_calloc (cce_location_t * @var{L}, size_t @var{count}, size_t @var{eltsize})
-Wrapper for @cfunc{calloc}.
+Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 @end deftypefun
+
+@c page
+@node posix memory handler
+@subsection Exception handler for pointers
+
+
+We can handle memory that must be released with the standard function @cfunc{free} as follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_malloc_t        H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  void *        P = cce_sys_malloc(L, 4096);
+  cce_cleanup_handler_malloc_init(L, H, P);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_malloc_t
+Type of data structures representing exceptional condition handlers for memory that must be released
+with @cfunc{free}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
+anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the memory block referenced by @var{P} using the standard function @cfunc{free}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_malloc_t *} cce_cast_to_handler_malloc (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_malloc_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
 
 @c page
 @node posix io
 @section Input/output system calls
+
+
+@menu
+* posix io calls::              System call wrappers.
+* posix io handler filedes::    Exception handler for file descriptors.
+@end menu
+
+@c page
+@node posix io calls
+@subsection System call wrappers
 
 
 @deftypefun int cce_sys_open (cce_location_t * @var{L}, const char * @var{filename}, int @var{flags}, mode_t @var{mode})
@@ -1961,6 +2024,49 @@ Wrapper for @cfunc{dup2}.
 @deftypefun void cce_sys_pipe (cce_location_t * @var{L}, int @var{pipefd}[2])
 Wrapper for @cfunc{pipe}.
 @end deftypefun
+
+@c page
+@node posix io handler filedes
+@subsection Exception handler for file descriptors
+
+
+We can handle file descriptors that must be released with the standard function @cfunc{close} as
+follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_filedes_t       H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  int   fd = cce_sys_open("name.ext", O_CREAT, S_IRWXU);
+  cce_cleanup_handler_filedes_init(L, H, fd);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_filedes_t
+Type of data structures representing exceptional condition handlers for file descriptors that must
+be released with @cfunc{close}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the
+first field is anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
+@deftypefunx void cce_error_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the file descriptor @var{fd} using the standard function @cfunc{close}; errors in
+@cfunc{close} are @strong{ignored}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_filedes_t *} cce_cast_to_handler_filedes (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_filedes_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
 
 @c page
 @node posix process

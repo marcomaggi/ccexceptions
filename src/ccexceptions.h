@@ -408,7 +408,7 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
 
 
 /** --------------------------------------------------------------------
- ** Process handling.
+ ** POSIX wrappers: process handling.
  ** ----------------------------------------------------------------- */
 
 cce_decl int cce_sys_fork (cce_location_t * L)
@@ -416,6 +416,64 @@ cce_decl int cce_sys_fork (cce_location_t * L)
 
 cce_decl void cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
   __attribute__((nonnull(1,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: malloc pointer.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_malloc_t	cce_handler_malloc_t;
+
+struct cce_handler_malloc_t {
+  cce_handler_t;
+  void *	pointer;
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_malloc") */
+__attribute__((const,always_inline))
+static inline cce_handler_malloc_t *
+cce_cast_to_handler_malloc_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_malloc_t *)src;
+}
+#define cce_cast_to_handler_malloc(SRC)		\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_malloc_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: file descriptor.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_filedes_t	cce_handler_filedes_t;
+
+struct cce_handler_filedes_t {
+  cce_handler_t;
+  int		filedes;
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_filedes") */
+__attribute__((const,always_inline))
+static inline cce_handler_filedes_t *
+cce_cast_to_handler_filedes_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_filedes_t *)src;
+}
+#define cce_cast_to_handler_filedes(SRC)				\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_filedes_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+  __attribute__((nonnull(1,2)));
 
 
 /** --------------------------------------------------------------------
