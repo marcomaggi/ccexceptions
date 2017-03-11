@@ -96,6 +96,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <setjmp.h>
+#include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/uio.h>
@@ -305,6 +306,17 @@ cce_cast_to_errno_C_from_condition (cce_condition_t * src)
 #define cce_cast_to_errno_C(SRC)		\
   _Generic((SRC), cce_condition_t *: cce_cast_to_errno_C_from_condition)(SRC)
 /* End of output. */
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((returns_nonnull,always_inline))
+static inline const cce_errno_C_t *
+cce_errno_C_clear (void)
+{
+  int	errnum = errno;
+  errno = 0;
+  return cce_errno_C(errnum);
+}
 
 
 /** --------------------------------------------------------------------
