@@ -32,6 +32,7 @@
  ** ----------------------------------------------------------------- */
 
 #include "ccexceptions.h"
+#include <string.h>
 
 
 /** --------------------------------------------------------------------
@@ -123,6 +124,45 @@ cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, i
   H->handler_function	= cce_handler_pipedes_function;
   H->pipedes[0]		= pipedes[0];
   H->pipedes[1]		= pipedes[1];
+  cce_register_error_handler(L, H);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: pipe descriptors.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((nonnull(1,2)))
+static void
+cce_handler_tmpfile_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+{
+  cce_handler_tmpfile_t *	H = cce_cast_to_handler_tmpfile(_H);
+  remove(H->pathname);
+  free(H->pathname);
+  if (0) { fprintf(stderr, "%s: done\n", __func__); }
+}
+
+void
+cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+{
+  size_t	len = 1+strlen(pathname);
+  char *	ptr = cce_sys_malloc(L, len);
+  strncpy(ptr, pathname, len);
+  ptr[len] = '\n';
+  H->handler_function	= cce_handler_tmpfile_function;
+  H->pathname		= ptr;
+  cce_register_cleanup_handler(L, H);
+}
+
+void
+cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+{
+  size_t	len = 1+strlen(pathname);
+  char *	ptr = cce_sys_malloc(L, len);
+  strncpy(ptr, pathname, len);
+  ptr[len] = '\n';
+  H->handler_function	= cce_handler_tmpfile_function;
+  H->pathname		= ptr;
   cce_register_error_handler(L, H);
 }
 

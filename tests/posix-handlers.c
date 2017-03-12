@@ -184,12 +184,64 @@ test_handler_pipedes (void)
 }
 
 
+void
+test_handler_tmpfile (void)
+{
+  /* No error.  Cleanup call. */
+  {
+    cce_location_t		L[1];
+    cce_handler_filedes_t	filedes_H[1];
+    cce_handler_tmpfile_t	tmpfile_H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRUSR|S_IWUSR);
+      cce_cleanup_handler_filedes_init(L, filedes_H, fd);
+      cce_cleanup_handler_tmpfile_init(L, tmpfile_H, "name.ext");
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(false == error_flag);
+    assert(true  == done_flag);
+  }
+  /* Error. */
+  {
+    cce_location_t		L[1];
+    cce_handler_filedes_t	filedes_H[1];
+    cce_handler_tmpfile_t	tmpfile_H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRUSR|S_IWUSR);
+      cce_cleanup_handler_filedes_init(L, filedes_H, fd);
+      cce_cleanup_handler_tmpfile_init(L, tmpfile_H, "name.ext");
+      cce_raise(L, cce_unknown_C);
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(true  == error_flag);
+    assert(false == done_flag);
+  }
+}
+
+
 int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   if (1) test_handler_malloc();
   if (1) test_handler_filedes();
   if (1) test_handler_pipedes();
+  if (1) test_handler_tmpfile();
   exit(EXIT_SUCCESS);
 }
 

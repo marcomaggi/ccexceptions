@@ -506,6 +506,35 @@ cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pi
 
 
 /** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: removal of temporary file.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_tmpfile_t	cce_handler_tmpfile_t;
+
+struct cce_handler_tmpfile_t {
+  cce_handler_t;
+  char *	pathname;
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_tmpfile") */
+__attribute__((const,always_inline))
+static inline cce_handler_tmpfile_t *
+cce_cast_to_handler_tmpfile_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_tmpfile_t *)src;
+}
+#define cce_cast_to_handler_tmpfile(SRC)				\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_tmpfile_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 
