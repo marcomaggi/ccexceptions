@@ -2027,6 +2027,17 @@ Wrapper for @cfunc{dup2}.
 Wrapper for @cfunc{pipe}.
 @end deftypefun
 
+
+@deftypefun int cce_sys_mkstemp (cce_location_t * @var{L}, char * @var{template})
+Wrapper for @cfunc{mkstemp}.  Remember that this call will mutate @var{template}.
+@end deftypefun
+
+
+@deftypefun {char *} cce_sys_mkdtemp (cce_location_t * @var{L}, char * @var{template})
+Wrapper for @cfunc{mkdtemp}.  This function never returns @cnull{}.  Remember that this call will
+mutate @var{template}.
+@end deftypefun
+
 @c page
 @node posix io handler filedes
 @subsection Handler for file descriptors

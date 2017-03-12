@@ -373,15 +373,6 @@ cce_decl size_t cce_sys_readv (cce_location_t * L, int filedes, const struct iov
 cce_decl size_t cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, int count)
   __attribute__((nonnull(1,3)));
 
-cce_decl void * cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
-  __attribute__((nonnull(1)));
-cce_decl int cce_sys_munmap (cce_location_t * L, void * addr, size_t length)
-  __attribute__((nonnull(1,2)));
-cce_decl int cce_sys_msync (cce_location_t * L, void *address, size_t length, int flags)
-  __attribute__((nonnull(1,2)));
-cce_decl int cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
-  __attribute__((nonnull(1,2)));
-
 cce_decl int cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_fds, fd_set * except_fds,
 			     struct timeval * timeout)
   __attribute__((nonnull(1,3,4,5)));
@@ -396,13 +387,43 @@ cce_decl void cce_sys_pipe (cce_location_t * L, int pipefd[2])
 
 
 /** --------------------------------------------------------------------
+ ** POSIX wrappers: memory mapping.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void * cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
+  __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_munmap (cce_location_t * L, void * address, size_t length)
+  __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_msync (cce_location_t * L, void * address, size_t length, int flags)
+  __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length, int prot)
+  __attribute__((nonnull(1,2)));
+
+
+/** --------------------------------------------------------------------
+ ** POSIX wrappers: temporary files.
+ ** ----------------------------------------------------------------- */
+
+cce_decl int cce_sys_mkstemp (cce_location_t * L, char * template)
+  __attribute__((nonnull(1,2)));
+
+cce_decl char * cce_sys_mkdtemp (cce_location_t * L, char * template)
+  __attribute__((nonnull(1,2)));
+
+
+/** --------------------------------------------------------------------
  ** POSIX wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
 
 cce_decl void * cce_sys_malloc (cce_location_t * L, size_t size)
   __attribute__((nonnull(1),returns_nonnull));
+
 cce_decl void * cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
   __attribute__((nonnull(1),returns_nonnull));
+
 cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
   __attribute__((nonnull(1),returns_nonnull));
 

@@ -318,6 +318,39 @@ cce_sys_pipe (cce_location_t * L, int pipefd[2])
 
 
 /** --------------------------------------------------------------------
+ ** Temporary files.
+ ** ----------------------------------------------------------------- */
+
+int
+cce_sys_mkstemp (cce_location_t * L, char * template)
+{
+  int	rv;
+  errno = 0;
+  /* Remember that this call will mutate TEMPLATE. */
+  rv = mkstemp(template);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+char *
+cce_sys_mkdtemp (cce_location_t * L, char * template)
+{
+  char *	rv;
+  errno = 0;
+  /* Remember that this call will mutate TEMPLATE. */
+  rv = mkdtemp(template);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+
+/** --------------------------------------------------------------------
  ** Process handling.
  ** ----------------------------------------------------------------- */
 
