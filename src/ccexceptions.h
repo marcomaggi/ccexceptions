@@ -477,6 +477,35 @@ cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_fi
 
 
 /** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: file descriptor.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_pipedes_t	cce_handler_pipedes_t;
+
+struct cce_handler_pipedes_t {
+  cce_handler_t;
+  int		pipedes[2];
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_pipedes") */
+__attribute__((const,always_inline))
+static inline cce_handler_pipedes_t *
+cce_cast_to_handler_pipedes_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_pipedes_t *)src;
+}
+#define cce_cast_to_handler_pipedes(SRC)				\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_pipedes_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 

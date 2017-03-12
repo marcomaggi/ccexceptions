@@ -135,11 +135,61 @@ test_handler_filedes (void)
 }
 
 
+void
+test_handler_pipedes (void)
+{
+  /* No error.  Cleanup call. */
+  {
+    cce_location_t		L[1];
+    cce_handler_pipedes_t	H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      int	pipedes[2];
+      cce_sys_pipe(L, pipedes);
+      cce_cleanup_handler_pipedes_init(L, H, pipedes);
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(false == error_flag);
+    assert(true  == done_flag);
+  }
+  /* Error. */
+  {
+    cce_location_t		L[1];
+    cce_handler_pipedes_t	H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      int	pipedes[2];
+      cce_sys_pipe(L, pipedes);
+      cce_cleanup_handler_pipedes_init(L, H, pipedes);
+      cce_raise(L, cce_unknown_C);
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(true  == error_flag);
+    assert(false == done_flag);
+  }
+}
+
+
 int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
   if (1) test_handler_malloc();
   if (1) test_handler_filedes();
+  if (1) test_handler_pipedes();
   exit(EXIT_SUCCESS);
 }
 

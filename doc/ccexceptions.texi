@@ -1925,7 +1925,8 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 
 @menu
 * posix io calls::              System call wrappers.
-* posix io handler filedes::    Exception handler for file descriptors.
+* posix io handler filedes::    Handler for file descriptors.
+* posix io handler pipedes::    Handler for pipe descriptors.
 @end menu
 
 @c page
@@ -2027,7 +2028,7 @@ Wrapper for @cfunc{pipe}.
 
 @c page
 @node posix io handler filedes
-@subsection Exception handler for file descriptors
+@subsection Handler for file descriptors
 
 
 We can handle file descriptors that must be released with the standard function @cfunc{close} as
@@ -2065,6 +2066,50 @@ release the file descriptor @var{fd} using the standard function @cfunc{close}; 
 
 @deftypefn {Preprocessor Macro} {cce_handler_filedes_t *} cce_cast_to_handler_filedes (cce_handler_t * @var{H})
 Cast the pointer @var{H} to a pointer to @objtype{cce_handler_filedes_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
+
+@c page
+@node posix io handler pipedes
+@subsection Handler for file descriptors
+
+
+We can handle file descriptors that must be released with the standard function @cfunc{close} as
+follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_pipedes_t       H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  int   pipedes[2]
+  cce_sys_pipe(L, pipedes);
+  cce_cleanup_handler_pipedes_init(L, H, pipedes);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_pipedes_t
+Type of data structures representing exceptional condition handlers for file descriptors created by
+@cfunc{pipe} that must be released with @cfunc{close}.  It is ``derived'' from
+@objtype{cce_handler_t}, meaning that the first field is anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
+@deftypefunx void cce_error_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the file descriptors in @var{pipedes} using the standard function @cfunc{close}; errors in
+@cfunc{close} are @strong{ignored}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_pipedes_t *} cce_cast_to_handler_pipedes (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_pipedes_t}.  This macro is built upon
 the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
