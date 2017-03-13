@@ -2066,6 +2066,15 @@ Wrapper for @cfunc{mremap}.
 @end quotation
 @end deftypefun
 
+
+@deftypefun void cce_sys_madvise (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{advice})
+Wrapper for @cfunc{madvise}.
+
+@quotation
+@strong{NOTE}  This function is implemented by the @gnu{} C Library.
+@end quotation
+@end deftypefun
+
 @c page
 @node syscalls fs
 @section File system system calls

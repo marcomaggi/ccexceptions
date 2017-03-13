@@ -414,6 +414,21 @@ cce_sys_mremap (cce_location_t * L, void * address, size_t length, size_t new_le
 #endif
 }
 
+void
+cce_sys_madvise (cce_location_t * L, void * address, size_t length, int advice)
+{
+#ifdef HAVE_MADVISE
+  int	rv;
+  errno = 0;
+  rv = madvise(address, length, advice);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: file system operations.

@@ -93,7 +93,7 @@ AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
 
 AM_COND_IF([WANT_GLIBC],
   [dnl AC_CHECK_HEADERS([search.h])
-   AC_CHECK_FUNCS([mkdtemp mremap])])
+   AC_CHECK_FUNCS([mkdtemp mremap madvise])])
 
 dnl AM_COND_IF([WANT_LINUX],
 dnl   [AC_CHECK_FUNCS([])])

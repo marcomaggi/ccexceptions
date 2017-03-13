@@ -455,6 +455,9 @@ cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length
 cce_decl void * cce_sys_mremap (cce_location_t * L, void * address, size_t length, size_t new_length, int flag)
   __attribute__((nonnull(1,2),returns_nonnull));
 
+cce_decl void cce_sys_madvise (cce_location_t * L, void * address, size_t length, int advice)
+  __attribute__((nonnull(1,2)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: locking memory pages.
