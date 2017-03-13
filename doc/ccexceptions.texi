@@ -1936,6 +1936,35 @@ Wrapper for @cfunc{realloc}.  This function never returns @cnull{}.
 Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@subsubheading Locking memory pages
+
+
+@deftypefun void cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
+Wrapper for @cfunc{mlock}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_mlock2 (cce_location_t * L, const void * addr, size_t len, int flags)
+Wrapper for @cfunc{mlock2}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
+Wrapper for @cfunc{munlock}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_mlockall (cce_location_t * L, int flags)
+Wrapper for @cfunc{mlockall}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_munlockall (cce_location_t * L)
+Wrapper for @cfunc{munlockall}.
+@end deftypefun
+
 @c page
 @node sys memory handler
 @subsection Exception handler for pointers

@@ -390,7 +390,7 @@ cce_condition (cce_location_t * L)
 
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers: input/output and file descriptors.
+ ** System call wrappers: input/output and file descriptors.
  ** ----------------------------------------------------------------- */
 
 cce_decl int cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
@@ -435,7 +435,7 @@ cce_decl void cce_sys_pipe (cce_location_t * L, int pipefd[2])
 
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers: memory mapping.
+ ** System call wrappers: memory mapping.
  ** ----------------------------------------------------------------- */
 
 cce_decl void * cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
@@ -452,7 +452,27 @@ cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length
 
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers: file system operations.
+ ** System call wrappers: locking memory pages.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_mlock2 (cce_location_t * L, const void * addr, size_t len, int flags)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_mlockall (cce_location_t * L, int flags)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_munlockall (cce_location_t * L)
+  __attribute__((nonnull(1)));
+
+
+/** --------------------------------------------------------------------
+ ** System call wrappers: file system operations.
  ** ----------------------------------------------------------------- */
 
 cce_decl void cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
@@ -482,7 +502,7 @@ cce_decl char * cce_sys_mkdtemp (cce_location_t * L, char * template)
 
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers: memory allocation.
+ ** System call wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
 
 cce_decl void * cce_sys_malloc (cce_location_t * L, size_t size)
@@ -496,7 +516,7 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
 
 
 /** --------------------------------------------------------------------
- ** POSIX wrappers: process handling.
+ ** System call wrappers: process handling.
  ** ----------------------------------------------------------------- */
 
 cce_decl int cce_sys_fork (cce_location_t * L)

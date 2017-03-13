@@ -88,11 +88,13 @@ dnl page
 
 AC_FUNC_MALLOC
 
+AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
+
 AM_COND_IF([WANT_GLIBC],
   [AC_CHECK_FUNCS([mkdtemp])])
 
-dnl AM_COND_IF([WANT_LINUX],
-dnl   [AC_CHECK_FUNCS([])])
+AM_COND_IF([WANT_LINUX],
+  [AC_CHECK_FUNCS([mlock2])])
 
 AC_CACHE_SAVE
 

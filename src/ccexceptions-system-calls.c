@@ -77,6 +77,87 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
 
 
 /** --------------------------------------------------------------------
+ ** System wrappers: locking memory pages.
+ ** ----------------------------------------------------------------- */
+
+void
+cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
+{
+#ifdef HAVE_MLOCK
+  int	rv;
+  errno = 0;
+  rv = mlock(addr, len);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
+void
+cce_sys_mlock2 (cce_location_t * L CCE_UNUSED, const void * addr CCE_UNUSED,
+		size_t len CCE_UNUSED, int flags CCE_UNUSED)
+{
+#ifdef HAVE_MLOCK2
+  int	rv;
+  errno = 0;
+  rv = mlock2(addr, len, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
+void
+cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
+{
+#ifdef HAVE_MUNLOCK
+  int	rv;
+  errno = 0;
+  rv = munlock(addr, len);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
+void
+cce_sys_mlockall (cce_location_t * L, int flags)
+{
+#ifdef HAVE_MLOCKALL
+  int	rv;
+  errno = 0;
+  rv = mlockall(flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
+void
+cce_sys_munlockall (cce_location_t * L)
+{
+#ifdef HAVE_MUNLOCKALL
+  int	rv;
+  errno = 0;
+  rv = munlockall();
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
+
+/** --------------------------------------------------------------------
  ** System wrappers: input/output and file descriptors.
  ** ----------------------------------------------------------------- */
 
@@ -425,7 +506,7 @@ cce_sys_mkdtemp (cce_location_t * L, char * template)
     cce_raise(L, cce_errno_C_clear());
   }
 #else
-  cce_raise(L, cce_unimplemented_C());
+  cce_raise(L, cce_unimplemented_C);
 #endif
 }
 
