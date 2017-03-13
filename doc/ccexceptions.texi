@@ -2080,6 +2080,25 @@ Wrapper for @cfunc{madvise}.
 @section File system system calls
 
 
+@subsubheading Current working directory
+
+
+@deftypefun void cce_sys_getcwd (cce_location_t * @var{L}, char * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{getcwd}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_chdir (cce_location_t * @var{L}, const char * @var{pathname})
+Wrapper for @cfunc{chdir}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fchdir (cce_location_t * @var{L}, int @var{dirfd})
+Wrapper for @cfunc{fchdir}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
 @subsubheading Inspecting the file system
 
 

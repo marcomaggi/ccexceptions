@@ -480,6 +480,17 @@ cce_decl void cce_sys_munlockall (cce_location_t * L)
  ** System call wrappers: file system operations.
  ** ----------------------------------------------------------------- */
 
+cce_decl void cce_sys_getcwd (cce_location_t * L, char * buffer, size_t size)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_chdir (cce_location_t * L, const char * pathname)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_fchdir (cce_location_t * L, int dirfd)
+  __attribute__((nonnull(1)));
+
+/* ------------------------------------------------------------------ */
+
 cce_decl void cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
   __attribute__((nonnull(1,2,3)));
 

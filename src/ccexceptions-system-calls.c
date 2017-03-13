@@ -299,8 +299,6 @@ cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_
   }
 }
 
-/* ------------------------------------------------------------------ */
-
 int
 cce_sys_dup (cce_location_t * L, int old)
 {
@@ -433,6 +431,41 @@ cce_sys_madvise (cce_location_t * L, void * address, size_t length, int advice)
 /** --------------------------------------------------------------------
  ** System wrappers: file system operations.
  ** ----------------------------------------------------------------- */
+
+void
+cce_sys_getcwd (cce_location_t * L, char * buffer, size_t size)
+{
+  char *	rv;
+  errno = 0;
+  rv = getcwd(buffer, size);
+  if (NULL == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_chdir (cce_location_t * L, const char * pathname)
+{
+  int	rv;
+  errno = 0;
+  rv = chdir(pathname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fchdir (cce_location_t * L, int dirfd)
+{
+  int	rv;
+  errno = 0;
+  rv = fchdir(dirfd);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
