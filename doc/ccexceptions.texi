@@ -2099,6 +2099,30 @@ Wrapper for @cfunc{fchdir}.
 
 @c ------------------------------------------------------------------------
 
+@subsubheading Reading directory entries
+
+
+@deftypefun {DIR *} cce_sys_opendir (cce_location_t * @var{L}, const char * @var{pathname})
+Wrapper for @cfunc{opendir}.
+@end deftypefun
+
+
+@deftypefun {DIR *} cce_sys_fdopendir (cce_location_t * @var{L}, int @var{dirfd})
+Wrapper for @cfunc{fdopendir}.
+@end deftypefun
+
+
+@deftypefun {struct dirent *} cce_sys_readdir (cce_location_t * @var{L}, DIR * @var{dirstream})
+Wrapper for @cfunc{readdir}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_closedir (cce_location_t * @var{L}, DIR * @var{dirstream})
+Wrapper for @cfunc{closedir}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
 @subsubheading Inspecting the file system
 
 

@@ -102,6 +102,7 @@ extern "C" {
 #include <setjmp.h>
 #include <errno.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <fcntl.h>
 #include <sys/select.h>
 #include <sys/stat.h>
@@ -488,6 +489,20 @@ cce_decl void cce_sys_chdir (cce_location_t * L, const char * pathname)
 
 cce_decl void cce_sys_fchdir (cce_location_t * L, int dirfd)
   __attribute__((nonnull(1)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl DIR * cce_sys_opendir (cce_location_t * L, const char * pathname)
+  __attribute__((nonnull(1,2)));
+
+cce_decl DIR * cce_sys_fdopendir (cce_location_t * L, int dirfd)
+  __attribute__((nonnull(1)));
+
+cce_decl struct dirent * cce_sys_readdir (cce_location_t * L, DIR * dirstream)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_closedir (cce_location_t * L, DIR * dirstream)
+  __attribute__((nonnull(1,2)));
 
 /* ------------------------------------------------------------------ */
 

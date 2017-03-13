@@ -467,6 +467,60 @@ cce_sys_fchdir (cce_location_t * L, int dirfd)
 
 /* ------------------------------------------------------------------ */
 
+DIR *
+cce_sys_opendir (cce_location_t * L, const char * pathname)
+{
+  DIR *	rv;
+  errno = 0;
+  rv = opendir(pathname);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+DIR *
+cce_sys_fdopendir (cce_location_t * L, int dirfd)
+{
+  DIR *	rv;
+  errno = 0;
+  rv = fdopendir(dirfd);
+  if (NULL != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+struct dirent *
+cce_sys_readdir (cce_location_t * L, DIR * dirstream)
+{
+  struct dirent *	rv;
+  errno = 0;
+  rv = readdir(dirstream);
+  if (NULL != rv) {
+    return rv;
+  } else if (0 == errno) {
+    return NULL;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_closedir (cce_location_t * L, DIR * dirstream)
+{
+  int	rv;
+  errno = 0;
+  rv = closedir(dirstream);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
 void
 cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
 {
