@@ -99,9 +99,10 @@ extern "C" {
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/uio.h>
 #include <sys/select.h>
+#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <sys/wait.h>
 
 
@@ -443,16 +444,24 @@ cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length
  ** POSIX wrappers: file system operations.
  ** ----------------------------------------------------------------- */
 
+cce_decl void cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_fstat (cce_location_t * L, int fd, struct stat * buf)
+  __attribute__((nonnull(1,3)));
+
+cce_decl void cce_sys_lstat (cce_location_t * L, const char * pathname, struct stat * buf)
+  __attribute__((nonnull(1,2,3)));
+
+/* ------------------------------------------------------------------ */
+
 cce_decl void cce_sys_mkdir (cce_location_t * L, const char * pathname, mode_t mode)
   __attribute__((nonnull(1,2)));
 
 cce_decl void cce_sys_rmdir (cce_location_t * L, const char * pathname)
   __attribute__((nonnull(1,2)));
 
-
-/** --------------------------------------------------------------------
- ** POSIX wrappers: temporary files.
- ** ----------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
 
 cce_decl int cce_sys_mkstemp (cce_location_t * L, char * template)
   __attribute__((nonnull(1,2)));

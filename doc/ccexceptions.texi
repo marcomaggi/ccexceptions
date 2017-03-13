@@ -2192,6 +2192,28 @@ Wrapper for @cfunc{mprotect}.
 @subsection System call wrappers
 
 
+@subsubheading Inspecting the file system
+
+
+@deftypefun void cce_sys_stat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
+Wrapper for @cfunc{stat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fstat (cce_location_t * @var{L}, int @var{fd}, struct stat * @var{buf})
+Wrapper for @cfunc{fstat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_lstat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
+Wrapper for @cfunc{lstat}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Making and removing directories
+
+
 @deftypefun void cce_sys_mkdir (cce_location_t * @var{L}, const char * @var{pathname}, mode_t @var{mode})
 Wrapper for @cfunc{mkdir}.
 @end deftypefun
@@ -2200,6 +2222,10 @@ Wrapper for @cfunc{mkdir}.
 @deftypefun void cce_sys_rmdir (cce_location_t * @var{L}, const char * @var{pathname})
 Wrapper for @cfunc{rmdir}.
 @end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Temporary files and directories
 
 
 @deftypefun int cce_sys_mkstemp (cce_location_t * @var{L}, char * @var{template})

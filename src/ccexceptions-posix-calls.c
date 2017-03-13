@@ -323,6 +323,41 @@ cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
  ** ----------------------------------------------------------------- */
 
 void
+cce_sys_stat (cce_location_t * L, const char * pathname, struct stat * buf)
+{
+  int	rv;
+  errno = 0;
+  rv = stat(pathname, buf);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fstat (cce_location_t * L, int fd, struct stat * buf)
+{
+  int	rv;
+  errno = 0;
+  rv = fstat(fd, buf);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_lstat (cce_location_t * L, const char * pathname, struct stat * buf)
+{
+  int	rv;
+  errno = 0;
+  rv = lstat(pathname, buf);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+void
 cce_sys_mkdir (cce_location_t * L, const char * pathname, mode_t mode)
 {
   int	rv;
