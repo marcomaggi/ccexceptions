@@ -2218,6 +2218,20 @@ exception with condition object of type @objtype{cce_unimplemented_C_t}.
 @end quotation
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@subsubheading Removing files
+
+
+@deftypefun void cce_sys_unlink (cce_location_t * @var{L}, const char * @var{filename})
+Wrapper for @cfunc{unlink}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_remove (cce_location_t * @var{L}, const char * @var{pathname})
+Wrapper for @cfunc{remove}.  This function removes both files and empty directories.
+@end deftypefun
+
 @c page
 @node syscalls process
 @section Process system calls

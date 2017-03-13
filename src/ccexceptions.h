@@ -557,6 +557,14 @@ cce_decl size_t cce_sys_readlinkat (cce_location_t * L, int dirfd, const char * 
 cce_decl char * cce_sys_realpath (cce_location_t * L, const char * pathname, char * resolved_path)
   __attribute__((nonnull(1,2),returns_nonnull));
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_unlink (cce_location_t * L, const char * pathname)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_remove (cce_location_t * L, const char * pathname)
+  __attribute__((nonnull(1,2)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.

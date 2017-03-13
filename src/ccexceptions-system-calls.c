@@ -668,6 +668,30 @@ cce_sys_realpath (cce_location_t * L, const char * pathname, char * resolved_pat
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_unlink (cce_location_t * L, const char * pathname)
+{
+  int	rv;
+  errno = 0;
+  rv = unlink(pathname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_remove (cce_location_t * L, const char * pathname)
+{
+  int	rv;
+  errno = 0;
+  rv = remove(pathname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.
