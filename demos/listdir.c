@@ -40,7 +40,7 @@ main (int argc, const char *const argv[])
 {
   cce_location_t		L[1];
   cce_handler_dirstream_t	dirstream_H[1];
-  volatile char *		pathname;
+  const char *			pathname;
 
   if (2 == argc) {
     pathname = argv[1];

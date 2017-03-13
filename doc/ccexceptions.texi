@@ -2449,9 +2449,9 @@ Using a directory stream opened with @cfunc{cce_sys_opendir} and to be closed by
 we can read the contents of a directory as follows:
 
 @example
-cce_location_t                L[1];
-cce_handler_dirstream_t       dirstream_H[1];
-volatile char *               pathname;
+cce_location_t          L[1];
+cce_handler_dirstream_t dirstream_H[1];
+const char *            pathname = "./";
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
