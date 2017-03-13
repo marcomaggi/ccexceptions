@@ -65,7 +65,8 @@ dnl page
 #### basic system inspection
 
 AC_LANG([C])
-dnl AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
+AM_COND_IF([WANT_GLIBC],
+  [AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])])
 AC_PROG_CC_C99
 
 AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
@@ -91,7 +92,8 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
 
 AM_COND_IF([WANT_GLIBC],
-  [AC_CHECK_FUNCS([mkdtemp])])
+  [dnl AC_CHECK_HEADERS([search.h])
+   AC_CHECK_FUNCS([mkdtemp mremap])])
 
 dnl AM_COND_IF([WANT_LINUX],
 dnl   [AC_CHECK_FUNCS([])])

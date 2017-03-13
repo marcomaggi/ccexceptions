@@ -395,6 +395,25 @@ cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void *
+cce_sys_mremap (cce_location_t * L, void * address, size_t length, size_t new_length, int flag)
+{
+#ifdef HAVE_MREMAP
+  void *	rv;
+  errno = 0;
+  rv = mremap(address, length, new_length, flag);
+  if (rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+#else
+  cce_raise(L, cce_unimplemented_C);
+#endif
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: file system operations.

@@ -2205,6 +2205,15 @@ Wrapper for @cfunc{msync}.
 Wrapper for @cfunc{mprotect}.
 @end deftypefun
 
+
+@deftypefun {void *} cce_sys_mremap (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, size_t @var{new_length}, int @var{flag})
+Wrapper for @cfunc{mremap}.
+
+@quotation
+@strong{NOTE}  This function is implemented by the @gnu{} C Library.
+@end quotation
+@end deftypefun
+
 @c page
 @node sys fs
 @section File system system calls

@@ -450,6 +450,11 @@ cce_decl int cce_sys_msync (cce_location_t * L, void * address, size_t length, i
 cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length, int prot)
   __attribute__((nonnull(1,2)));
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void * cce_sys_mremap (cce_location_t * L, void * address, size_t length, size_t new_length, int flag)
+  __attribute__((nonnull(1,2),returns_nonnull));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: locking memory pages.
