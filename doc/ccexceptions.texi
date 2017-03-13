@@ -1998,6 +1998,11 @@ Wrapper for @cfunc{open}.
 @end deftypefun
 
 
+@deftypefun int cce_sys_openat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{filename}, int @var{flags}, mode_t @var{mode})
+Wrapper for @cfunc{openat}.
+@end deftypefun
+
+
 @deftypefun int cce_sys_close (cce_location_t * @var{L}, int @var{filedes})
 Wrapper for @cfunc{close}.
 @end deftypefun

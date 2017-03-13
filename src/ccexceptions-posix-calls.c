@@ -86,10 +86,23 @@ cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
   int	rv;
   errno = 0;
   rv = open(filename, flags, mode);
-  if (rv >= 0) {
-    return rv;
-  } else {
+  if (-1 == rv) {
     cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+int
+cce_sys_openat (cce_location_t * L, int dirfd, const char *filename, int flags, mode_t mode)
+{
+  int	rv;
+  errno = 0;
+  rv = openat(dirfd, filename, flags, mode);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
   }
 }
 
@@ -99,10 +112,10 @@ cce_sys_close (cce_location_t * L, int filedes)
   int	rv;
   errno = 0;
   rv = close(filedes);
-  if (rv >= 0) {
-    return rv;
-  } else {
+  if (-1 == rv) {
     cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
   }
 }
 

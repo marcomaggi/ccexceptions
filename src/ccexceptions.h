@@ -390,8 +390,14 @@ cce_condition (cce_location_t * L)
 
 cce_decl int cce_sys_open (cce_location_t * L, const char *filename, int flags, mode_t mode)
   __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_openat (cce_location_t * L, int dirfd, const char *filename, int flags, mode_t mode)
+  __attribute__((nonnull(1, 3)));
+
 cce_decl int cce_sys_close (cce_location_t * L, int filedes)
   __attribute__((nonnull(1)));
+
+/* ------------------------------------------------------------------ */
 
 cce_decl size_t cce_sys_read (cce_location_t * L, int filedes, void * buffer, size_t size)
   __attribute__((nonnull(1,3)));
