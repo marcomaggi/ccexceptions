@@ -38,18 +38,17 @@
 int
 main (int argc, const char *const argv[])
 {
+  static const char *		progname = "listdir";
   cce_location_t		L[1];
   cce_handler_dirstream_t	dirstream_H[1];
   const char *			pathname;
 
-  if (2 == argc) {
-    pathname = argv[1];
-  } else {
-    pathname = "./";
-  }
+  pathname = (2 == argc)? argv[1] : "./";
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
+    fprintf(stderr, "%s: error: %s\n", progname,
+	    cce_condition_static_message(cce_condition(L)));
     cce_condition_free(cce_condition(L));
     exit(EXIT_FAILURE);
   } else {
