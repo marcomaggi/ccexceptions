@@ -41,6 +41,19 @@ LT_PREREQ([2.4])
 LT_INIT
 
 dnl page
+#### configuration
+
+CCE_ENABLE_OPTION([GLIBC],[glibc],[yes],
+  [whether GNU C Library features are enabled],
+  [enable GNU C Library features])
+AM_CONDITIONAL([WANT_GLIBC],[test "x$cce_enable_GLIBC" = xyes])
+
+CCE_ENABLE_OPTION([LINUX],[linux],[yes],
+  [whether Linux features are enabled],
+  [enable Linux features])
+AM_CONDITIONAL([WANT_LINUX],[test "x$cce_enable_LINUX" = xyes])
+
+dnl page
 #### libraries interface version
 
 dnl This is the version stored in the pkg-config data file.
@@ -74,6 +87,12 @@ dnl page
 #### checks for library functions
 
 AC_FUNC_MALLOC
+
+AM_COND_IF([WANT_GLIBC],
+  [AC_CHECK_FUNCS([mkdtemp])])
+
+dnl AM_COND_IF([WANT_LINUX],
+dnl   [AC_CHECK_FUNCS([])])
 
 AC_CACHE_SAVE
 

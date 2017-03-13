@@ -64,6 +64,14 @@ to inspect the available configuration options:
 
     $ ../configure --help
 
+  The script offers the following special options:
+
+--enable-glibc
+    Enable GNU C Library features (default is yes).
+
+--enable-linux
+    Enable Linux features (default is yes).
+
   The Makefile is designed to allow parallel builds, so we can do:
 
    $ make -j4 all && make -j4 check
