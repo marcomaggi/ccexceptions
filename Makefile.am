@@ -38,8 +38,8 @@ libccexceptions_la_SOURCES= \
 	src/ccexceptions-internals.h		\
 	src/ccexceptions-locations.c		\
 	src/ccexceptions-conditions.c		\
-	src/ccexceptions-posix-calls.c		\
-	src/ccexceptions-posix-handlers.c	\
+	src/ccexceptions-system-calls.c		\
+	src/ccexceptions-system-handlers.c	\
 	src/ccexceptions-version.c
 
 #page
@@ -59,7 +59,7 @@ check_PROGRAMS	= \
 	tests/conditions-raising		\
 	tests/conditions-hierarchy		\
 	tests/conditions-example		\
-	tests/posix-handlers
+	tests/system-handlers
 
 TESTS				= $(check_PROGRAMS)
 
@@ -105,8 +105,8 @@ tests_conditions_hierarchy_LDADD		= $(ccexceptions_tests_ldadd)
 tests_conditions_example_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
 
-tests_posix_handlers_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_posix_handlers_LDADD			= $(ccexceptions_tests_ldadd)
+tests_system_handlers_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_system_handlers_LDADD			= $(ccexceptions_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
