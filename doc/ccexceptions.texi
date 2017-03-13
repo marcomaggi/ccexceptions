@@ -2195,16 +2195,17 @@ Wrapper for @cfunc{waitpid}.
 
 
 @menu
-* syshandlers malloc::          Exception handler for allocated memory.
+* syshandlers malloc::          Handler for allocated memory.
 * syshandlers filedes::         Handler for file descriptors.
 * syshandlers pipedes::         Handler for pipe descriptors.
 * syshandlers tmpfile::         Handler for temporary files.
 * syshandlers tmpdir::          Handler for temporary directories.
+* syshandlers dirstream::       Handler for directory streams.
 @end menu
 
 @c page
 @node syshandlers malloc
-@section Exception handler for allocated memory
+@section Handler for allocated memory
 
 
 We can handle memory that must be released with the standard function @cfunc{free} as follows:
@@ -2437,6 +2438,62 @@ exit to @var{L}.
 @deftypefn {Preprocessor Macro} {cce_handler_tmpdir_t *} cce_cast_to_handler_tmpdir (cce_handler_t * @var{H})
 Cast the pointer @var{H} to a pointer to @objtype{cce_handler_tmpdir_t}.  This macro is built upon
 the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
+
+@c page
+@node syshandlers dirstream
+@section Handler for directory streams
+
+
+Using a directory stream opened with @cfunc{cce_sys_opendir} and to be closed by @cfunc{closedir},
+we can read the contents of a directory as follows:
+
+@example
+cce_location_t                L[1];
+cce_handler_dirstream_t       dirstream_H[1];
+volatile char *               pathname;
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  DIR *               dirstream;
+  struct dirent *     direntry;
+
+  dirstream = cce_sys_opendir(L, pathname);
+  cce_cleanup_handler_dirstream_init(L, dirstream_H, dirstream);
+  for (direntry = cce_sys_readdir(L, dirstream);
+       direntry;
+       direntry = cce_sys_readdir(L, dirstream)) @{
+    printf("%s\n", direntry->d_name);
+    fflush(stdout);
+  @}
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+The handler documented here will ignore errors returned by @cfunc{closedir}, which is generally bad;
+we can use the source code of this handler as template to implement a more complete procedure.
+
+
+@deftp {Struct Typedef} cce_handler_dirstream_t
+Type of data structures representing exceptional condition handlers for the finalisation of
+directory streams.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
+anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_dirstream_t * @var{H}, DIR * @var{dirstream})
+@deftypefunx void cce_error_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_dirstream_t * @var{H}, DIR * @var{dirstream})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+finalise the directory stream using the standard function @cfunc{closedir}; errors in
+@cfunc{closedir} are @strong{ignored}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_dirstream_t *} cce_cast_to_handler_dirstream (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_dirstream_t}.  This macro is built
+upon the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page

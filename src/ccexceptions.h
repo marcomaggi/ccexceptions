@@ -616,7 +616,7 @@ cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_fi
 
 
 /** --------------------------------------------------------------------
- ** Predefined POSIX exception handler: file descriptor.
+ ** Predefined POSIX exception handler: pipe descriptors.
  ** ----------------------------------------------------------------- */
 
 typedef struct cce_handler_pipedes_t	cce_handler_pipedes_t;
@@ -699,6 +699,35 @@ cce_decl void cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_t
   __attribute__((nonnull(1,2,3)));
 
 cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: directory streams.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_dirstream_t	cce_handler_dirstream_t;
+
+struct cce_handler_dirstream_t {
+  cce_handler_t;
+  DIR *		dirstream;
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_dirstream") */
+__attribute__((const,always_inline))
+static inline cce_handler_dirstream_t *
+cce_cast_to_handler_dirstream_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_dirstream_t *)src;
+}
+#define cce_cast_to_handler_dirstream(SRC)				\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_dirstream_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
   __attribute__((nonnull(1,2,3)));
 
 

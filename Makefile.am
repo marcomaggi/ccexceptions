@@ -113,4 +113,19 @@ tests_system_handlers_LDADD			= $(ccexceptions_tests_ldadd)
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
+#page
+#### demo programs
+
+EXTRA_DIST	+= \
+	demos/listdir.c
+
+noinst_PROGRAMS	= \
+	demos/listdir
+
+ccexceptions_demos_cppflags	= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS)
+ccexceptions_demos_ldadd	= libccexceptions.la
+
+demos_listdir_CPPFLAGS		= $(ccexceptions_demos_cppflags)
+demos_listdir_LDADD		= $(ccexceptions_demos_ldadd)
+
 ### end of file
