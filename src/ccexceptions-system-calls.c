@@ -682,6 +682,17 @@ cce_sys_unlink (cce_location_t * L, const char * pathname)
 }
 
 void
+cce_sys_unlinkat (cce_location_t * L, int dirfd, const char * pathname, int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = unlinkat(dirfd, pathname, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
 cce_sys_remove (cce_location_t * L, const char * pathname)
 {
   int	rv;

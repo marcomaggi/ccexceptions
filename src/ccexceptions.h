@@ -562,6 +562,9 @@ cce_decl char * cce_sys_realpath (cce_location_t * L, const char * pathname, cha
 cce_decl void cce_sys_unlink (cce_location_t * L, const char * pathname)
   __attribute__((nonnull(1,2)));
 
+cce_decl void cce_sys_unlinkat (cce_location_t * L, int dirfc, const char * pathname, int flags)
+  __attribute__((nonnull(1,3)));
+
 cce_decl void cce_sys_remove (cce_location_t * L, const char * pathname)
   __attribute__((nonnull(1,2)));
 

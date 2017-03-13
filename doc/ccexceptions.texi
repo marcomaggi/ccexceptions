@@ -2228,6 +2228,11 @@ Wrapper for @cfunc{unlink}.
 @end deftypefun
 
 
+@deftypefun void cce_sys_unlinkat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{filename}, int @var{flags})
+Wrapper for @cfunc{unlinkat}.
+@end deftypefun
+
+
 @deftypefun void cce_sys_remove (cce_location_t * @var{L}, const char * @var{pathname})
 Wrapper for @cfunc{remove}.  This function removes both files and empty directories.
 @end deftypefun
