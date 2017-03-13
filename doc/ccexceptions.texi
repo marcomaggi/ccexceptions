@@ -129,7 +129,8 @@ entitled ``@gnu{} Free Documentation License''.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
-* sys::                         System call adapters.
+* syscalls::                    System call adapters.
+* syshandlers::                 Predefined exception handlers.
 * helpers::                     Helper functions and macros.
 
 Appendices
@@ -1879,7 +1880,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 @end smallexample
 
 @c page
-@node sys
+@node syscalls
 @chapter System call adapters
 
 
@@ -1900,26 +1901,16 @@ with, respectively, @option{--enable-glibc} and @option{--enable-linux}.  If a s
 available: the associated wrapper will raise an exception of type @objtype{cce_unimplemented_C_t}.
 
 @menu
-* sys memory::                  Memory allocation.
-* sys io::                      Input/output system calls.
-* sys mmap::                    Memory mapping system calls.
-* sys fs::                      File system system calls.
-* sys process::                 Process system calls.
+* syscalls memory::             Memory allocation.
+* syscalls io::                 Input/output system calls.
+* syscalls mmap::               Memory mapping system calls.
+* syscalls fs::                 File system system calls.
+* syscalls process::            Process system calls.
 @end menu
 
 @c page
-@node sys memory
+@node syscalls memory
 @section Memory allocation
-
-
-@menu
-* sys memory calls::          System call wrappers.
-* sys memory handler::        Exception handler for pointers.
-@end menu
-
-@c page
-@node sys memory calls
-@subsection System call wrappers
 
 
 @deftypefun {void *} cce_sys_malloc (cce_location_t * @var{L}, size_t @var{size})
@@ -1961,60 +1952,8 @@ Wrapper for @cfunc{munlockall}.
 @end deftypefun
 
 @c page
-@node sys memory handler
-@subsection Exception handler for pointers
-
-
-We can handle memory that must be released with the standard function @cfunc{free} as follows:
-
-@example
-cce_location_t              L[1];
-cce_handler_malloc_t        H[1];
-
-if (cce_location(L)) @{
-  cce_run_error_handlers(L);
-  cce_condition_free(cce_condition(L));
-@} else @{
-  void *        P = cce_sys_malloc(L, 4096);
-  cce_cleanup_handler_malloc_init(L, H, P);
-  cce_run_cleanup_handlers(L);
-@}
-@end example
-
-
-@deftp {Struct Typedef} cce_handler_malloc_t
-Type of data structures representing exceptional condition handlers for memory that must be released
-with @cfunc{free}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
-anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the memory block referenced by @var{P} using the standard function @cfunc{free}.
-@end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_malloc_t *} cce_cast_to_handler_malloc (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_malloc_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
-
-@c page
-@node sys io
+@node syscalls io
 @section Input/output system calls
-
-
-@menu
-* sys io calls::              System call wrappers.
-* sys io handler filedes::    Handler for file descriptors.
-* sys io handler pipedes::    Handler for pipe descriptors.
-@end menu
-
-@c page
-@node sys io calls
-@subsection System call wrappers
 
 
 @deftypefun int cce_sys_open (cce_location_t * @var{L}, const char * @var{filename}, int @var{flags}, mode_t @var{mode})
@@ -2095,94 +2034,7 @@ Wrapper for @cfunc{pipe}.
 @end deftypefun
 
 @c page
-@node sys io handler filedes
-@subsection Handler for file descriptors
-
-
-We can handle file descriptors that must be released with the standard function @cfunc{close} as
-follows:
-
-@example
-cce_location_t              L[1];
-cce_handler_filedes_t       H[1];
-
-if (cce_location(L)) @{
-  cce_run_error_handlers(L);
-  cce_condition_free(cce_condition(L));
-@} else @{
-  int   fd = cce_sys_open("name.ext", O_CREAT, S_IRWXU);
-  cce_cleanup_handler_filedes_init(L, H, fd);
-  cce_run_cleanup_handlers(L);
-@}
-@end example
-
-
-@deftp {Struct Typedef} cce_handler_filedes_t
-Type of data structures representing exceptional condition handlers for file descriptors that must
-be released with @cfunc{close}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the
-first field is anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
-@deftypefunx void cce_error_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the file descriptor @var{fd} using the standard function @cfunc{close}; errors in
-@cfunc{close} are @strong{ignored}.
-@end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_filedes_t *} cce_cast_to_handler_filedes (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_filedes_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
-
-@c page
-@node sys io handler pipedes
-@subsection Handler for file descriptors
-
-
-We can handle file descriptors that must be released with the standard function @cfunc{close} as
-follows:
-
-@example
-cce_location_t              L[1];
-cce_handler_pipedes_t       H[1];
-
-if (cce_location(L)) @{
-  cce_run_error_handlers(L);
-  cce_condition_free(cce_condition(L));
-@} else @{
-  int   pipedes[2]
-  cce_sys_pipe(L, pipedes);
-  cce_cleanup_handler_pipedes_init(L, H, pipedes);
-  cce_run_cleanup_handlers(L);
-@}
-@end example
-
-
-@deftp {Struct Typedef} cce_handler_pipedes_t
-Type of data structures representing exceptional condition handlers for file descriptors created by
-@cfunc{pipe} that must be released with @cfunc{close}.  It is ``derived'' from
-@objtype{cce_handler_t}, meaning that the first field is anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
-@deftypefunx void cce_error_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the file descriptors in @var{pipedes} using the standard function @cfunc{close}; errors in
-@cfunc{close} are @strong{ignored}.
-@end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_pipedes_t *} cce_cast_to_handler_pipedes (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_pipedes_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
-
-@c page
-@node sys mmap
+@node syscalls mmap
 @section Memory mapping system calls
 
 
@@ -2215,19 +2067,8 @@ Wrapper for @cfunc{mremap}.
 @end deftypefun
 
 @c page
-@node sys fs
+@node syscalls fs
 @section File system system calls
-
-
-@menu
-* sys fs calls::              System call wrappers.
-* sys fs handler tmpfile::    Handler for temporary files.
-* sys fs handler tmpdir::     Handler for temporary directories.
-@end menu
-
-@c page
-@node sys fs calls
-@subsection System call wrappers
 
 
 @subsubheading Inspecting the file system
@@ -2283,8 +2124,163 @@ exception with condition object of type @objtype{cce_unimplemented_C_t}.
 @end deftypefun
 
 @c page
-@node sys fs handler tmpfile
-@subsection Handler for temporary files
+@node syscalls process
+@section Process system calls
+
+
+@deftypefun int cce_sys_fork (cce_location_t * @var{L})
+Wrapper for @cfunc{fork}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_waitpid (cce_location_t * @var{L}, pid_t @var{pid}, int * @var{wstatus}, int @var{options})
+Wrapper for @cfunc{waitpid}.
+@end deftypefun
+
+@c page
+@node syshandlers
+@chapter Predefined exception handlers
+
+
+@menu
+* syshandlers malloc::          Exception handler for allocated memory.
+* syshandlers filedes::         Handler for file descriptors.
+* syshandlers pipedes::         Handler for pipe descriptors.
+* syshandlers tmpfile::         Handler for temporary files.
+* syshandlers tmpdir::          Handler for temporary directories.
+@end menu
+
+@c page
+@node syshandlers malloc
+@section Exception handler for allocated memory
+
+
+We can handle memory that must be released with the standard function @cfunc{free} as follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_malloc_t        H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  void *        P = cce_sys_malloc(L, 4096);
+  cce_cleanup_handler_malloc_init(L, H, P);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_malloc_t
+Type of data structures representing exceptional condition handlers for memory that must be released
+with @cfunc{free}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
+anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the memory block referenced by @var{P} using the standard function @cfunc{free}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_malloc_t *} cce_cast_to_handler_malloc (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_malloc_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
+
+@c page
+@node syshandlers filedes
+@section Handler for file descriptors
+
+
+We can handle file descriptors that must be released with the standard function @cfunc{close} as
+follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_filedes_t       H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  int   fd = cce_sys_open("name.ext", O_CREAT, S_IRWXU);
+  cce_cleanup_handler_filedes_init(L, H, fd);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_filedes_t
+Type of data structures representing exceptional condition handlers for file descriptors that must
+be released with @cfunc{close}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the
+first field is anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
+@deftypefunx void cce_error_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the file descriptor @var{fd} using the standard function @cfunc{close}; errors in
+@cfunc{close} are @strong{ignored}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_filedes_t *} cce_cast_to_handler_filedes (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_filedes_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
+
+@c page
+@node syshandlers pipedes
+@section Handler for file descriptors
+
+
+We can handle file descriptors that must be released with the standard function @cfunc{close} as
+follows:
+
+@example
+cce_location_t              L[1];
+cce_handler_pipedes_t       H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers(L);
+  cce_condition_free(cce_condition(L));
+@} else @{
+  int   pipedes[2]
+  cce_sys_pipe(L, pipedes);
+  cce_cleanup_handler_pipedes_init(L, H, pipedes);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftp {Struct Typedef} cce_handler_pipedes_t
+Type of data structures representing exceptional condition handlers for file descriptors created by
+@cfunc{pipe} that must be released with @cfunc{close}.  It is ``derived'' from
+@objtype{cce_handler_t}, meaning that the first field is anonymous of type @objtype{cce_handler_t}.
+@end deftp
+
+
+@deftypefun void cce_cleanup_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
+@deftypefunx void cce_error_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the file descriptors in @var{pipedes} using the standard function @cfunc{close}; errors in
+@cfunc{close} are @strong{ignored}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {cce_handler_pipedes_t *} cce_cast_to_handler_pipedes (cce_handler_t * @var{H})
+Cast the pointer @var{H} to a pointer to @objtype{cce_handler_pipedes_t}.  This macro is built upon
+the @code{_Generic} keyword, so it allows compile--time type checking.
+@end deftypefn
+
+@c page
+@node syshandlers tmpfile
+@section Handler for temporary files
 
 
 We can remove temporary files with the standard function @cfunc{remove} as follows:
@@ -2338,8 +2334,8 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node sys fs handler tmpdir
-@subsection Handler for temporary files
+@node syshandlers tmpdir
+@section Handler for temporary files
 
 
 We can remove @strong{empty} temporary directories with the standard function @cfunc{rmdir} as
@@ -2390,20 +2386,6 @@ exit to @var{L}.
 Cast the pointer @var{H} to a pointer to @objtype{cce_handler_tmpdir_t}.  This macro is built upon
 the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
-
-@c page
-@node sys process
-@section Process system calls
-
-
-@deftypefun int cce_sys_fork (cce_location_t * @var{L})
-Wrapper for @cfunc{fork}.
-@end deftypefun
-
-
-@deftypefun void cce_sys_waitpid (cce_location_t * @var{L}, pid_t @var{pid}, int * @var{wstatus}, int @var{options})
-Wrapper for @cfunc{waitpid}.
-@end deftypefun
 
 @c page
 @node helpers
