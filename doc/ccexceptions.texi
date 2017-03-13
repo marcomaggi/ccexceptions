@@ -2182,12 +2182,12 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @subsection System call wrappers
 
 
-@deftypefun int cce_sys_mkdir (cce_location_t * @var{L}, const char * @var{pathname}, mode_t @var{mode})
+@deftypefun void cce_sys_mkdir (cce_location_t * @var{L}, const char * @var{pathname}, mode_t @var{mode})
 Wrapper for @cfunc{mkdir}.
 @end deftypefun
 
 
-@deftypefun int cce_sys_rmdir (cce_location_t * @var{L}, const char * @var{pathname})
+@deftypefun void cce_sys_rmdir (cce_location_t * @var{L}, const char * @var{pathname})
 Wrapper for @cfunc{rmdir}.
 @end deftypefun
 
