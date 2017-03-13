@@ -96,22 +96,6 @@ cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
 }
 
 void
-cce_sys_mlock2 (cce_location_t * L CCE_UNUSED, const void * addr CCE_UNUSED,
-		size_t len CCE_UNUSED, int flags CCE_UNUSED)
-{
-#ifdef HAVE_MLOCK2
-  int	rv;
-  errno = 0;
-  rv = mlock2(addr, len, flags);
-  if (-1 == rv) {
-    cce_raise(L, cce_errno_C_clear());
-  }
-#else
-  cce_raise(L, cce_unimplemented_C);
-#endif
-}
-
-void
 cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
 {
 #ifdef HAVE_MUNLOCK

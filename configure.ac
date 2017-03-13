@@ -93,8 +93,8 @@ AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
 AM_COND_IF([WANT_GLIBC],
   [AC_CHECK_FUNCS([mkdtemp])])
 
-AM_COND_IF([WANT_LINUX],
-  [AC_CHECK_FUNCS([mlock2])])
+dnl AM_COND_IF([WANT_LINUX],
+dnl   [AC_CHECK_FUNCS([])])
 
 AC_CACHE_SAVE
 

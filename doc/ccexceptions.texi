@@ -1946,11 +1946,6 @@ Wrapper for @cfunc{mlock}.
 @end deftypefun
 
 
-@deftypefun void cce_sys_mlock2 (cce_location_t * L, const void * addr, size_t len, int flags)
-Wrapper for @cfunc{mlock2}.
-@end deftypefun
-
-
 @deftypefun void cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
 Wrapper for @cfunc{munlock}.
 @end deftypefun

@@ -458,9 +458,6 @@ cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length
 cce_decl void cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
   __attribute__((nonnull(1,2)));
 
-cce_decl void cce_sys_mlock2 (cce_location_t * L, const void * addr, size_t len, int flags)
-  __attribute__((nonnull(1,2)));
-
 cce_decl void cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
   __attribute__((nonnull(1,2)));
 
