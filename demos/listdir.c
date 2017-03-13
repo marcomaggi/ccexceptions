@@ -57,9 +57,7 @@ main (int argc, const char *const argv[])
 
     dirstream = cce_sys_opendir(L, pathname);
     cce_cleanup_handler_dirstream_init(L, dirstream_H, dirstream);
-    for (direntry = cce_sys_readdir(L, dirstream);
-	 direntry;
-	 direntry = cce_sys_readdir(L, dirstream)) {
+    while ((direntry = cce_sys_readdir(L, dirstream))) {
       printf("%s\n", direntry->d_name);
       fflush(stdout);
     }
