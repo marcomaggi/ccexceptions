@@ -531,6 +531,32 @@ cce_decl int cce_sys_mkstemp (cce_location_t * L, char * template)
 cce_decl char * cce_sys_mkdtemp (cce_location_t * L, char * template)
   __attribute__((nonnull(1,2)));
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_link (cce_location_t * L, const char * oldname, const char * newname)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_linkat (cce_location_t * L,
+			      int oldfd, const char * oldname,
+			      int newfd, const char * newname,
+			      int flags)
+  __attribute__((nonnull(1,3,5)));
+
+cce_decl void cce_sys_symlink (cce_location_t * L, const char * oldname, const char * newname)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_symlinkat (cce_location_t * L, const char * oldname, int newdirfd, const char * newname)
+  __attribute__((nonnull(1,2,4)));
+
+cce_decl size_t cce_sys_readlink (cce_location_t * L, const char * filename, char * buffer, size_t size)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl size_t cce_sys_readlinkat (cce_location_t * L, int dirfd, const char * filename, char * buffer, size_t size)
+  __attribute__((nonnull(1,3,4)));
+
+cce_decl char * cce_sys_realpath (cce_location_t * L, const char * pathname, char * resolved_path)
+  __attribute__((nonnull(1,2),returns_nonnull));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.

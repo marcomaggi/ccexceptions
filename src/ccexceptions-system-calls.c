@@ -578,6 +578,96 @@ cce_sys_rmdir (cce_location_t * L, const char * pathname)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_link (cce_location_t * L, const char * oldname, const char * newname)
+{
+  int	rv;
+  errno = 0;
+  rv = link(oldname, newname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_linkat (cce_location_t * L,
+		int oldfd, const char * oldname,
+		int newfd, const char * newname,
+		int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = linkat(oldfd, oldname, newfd, newname, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_symlink (cce_location_t * L, const char * oldname, const char * newname)
+{
+  int	rv;
+  errno = 0;
+  rv = symlink(oldname, newname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_symlinkat (cce_location_t * L, const char * oldname, int newdirfd, const char * newname)
+{
+  int	rv;
+  errno = 0;
+  rv = symlinkat(oldname, newdirfd, newname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+size_t
+cce_sys_readlink (cce_location_t * L, const char * filename, char * buffer, size_t size)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = readlink(filename, buffer, size);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
+size_t
+cce_sys_readlinkat (cce_location_t * L, int dirfd, const char * filename, char * buffer, size_t size)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = readlinkat(dirfd, filename, buffer, size);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
+char *
+cce_sys_realpath (cce_location_t * L, const char * pathname, char * resolved_path)
+{
+  char *	rv;
+  errno = 0;
+  rv = realpath(pathname, resolved_path);
+  if (rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.

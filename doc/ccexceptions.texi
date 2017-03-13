@@ -2156,6 +2156,49 @@ Wrapper for @cfunc{rmdir}.
 
 @c ------------------------------------------------------------------------
 
+@subsubheading Hard and symbolic links
+
+
+@deftypefun void cce_sys_link (cce_location_t * @var{L}, const char * @var{oldname}, const char * @var{newname})
+Wrapper for @cfunc{link}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_linkat (cce_location_t * @var{L}, int @var{olddirfd}, const char * @var{oldname}, int @var{newdirfd}, const char * @var{newname}, int @var{flags})
+Wrapper for @cfunc{linkat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_symlink (cce_location_t * @var{L}, const char * @var{oldname}, const char * @var{newname})
+Wrapper for @cfunc{symlink}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_symlinkat (cce_location_t * @var{L}, const char * @var{oldname}, int @var{newdirfd}, const char * @var{newname})
+Wrapper for @cfunc{symlinkat}.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_readlink (cce_location_t * @var{L}, const char * @var{filename}, char * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{readlink}.  Notice the return value of type @objtype{size_t}, rather than the
+original @objtype{ssize_t}: the wrapper function returns a non--negative integer because the error
+conditions cause a non--local exit.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_readlinkat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{filename}, char * @var{buffer}, size_t @var{size})
+Wrapper for @cfunc{readlinkat}.  Notice the return value of type @objtype{size_t}, rather than the
+original @objtype{ssize_t}: the wrapper function returns a non--negative integer because the error
+conditions cause a non--local exit.
+@end deftypefun
+
+
+@deftypefun {char *} cce_sys_realpath (cce_location_t * @var{L}, const char * @var{pathname}, char * @var{resolved_path})
+Wrapper for @cfunc{realpath}.  Notice that this function never returns @cnull{}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
 @subsubheading Temporary files and directories
 
 
