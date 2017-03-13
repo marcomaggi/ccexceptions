@@ -272,6 +272,42 @@ cce_cast_to_unknown_C_from_condition (cce_condition_t * src)
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional condition objects: unimplemented exception.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_unimplemented_D_t	cce_unimplemented_D_t;
+typedef struct cce_unimplemented_C_t	cce_unimplemented_C_t;
+
+struct cce_unimplemented_D_t {
+  cce_condition_descriptor_t;
+};
+
+struct cce_unimplemented_C_t {
+  cce_condition_t;
+};
+
+cce_decl const cce_unimplemented_D_t * const	cce_unimplemented_D;
+cce_decl const cce_unimplemented_C_t * const	cce_unimplemented_C;
+
+__attribute__((pure,nonnull(1),always_inline)) static inline bool
+cce_is_a_unimplemented_C (const cce_condition_t * condition)
+{
+  return cce_is_a_condition(condition, cce_unimplemented_D);
+}
+
+/* Output of: (my-c-insert-cast-function "cce" "condition" "unimplemented_C") */
+__attribute__((const,always_inline))
+static inline cce_unimplemented_C_t *
+cce_cast_to_unimplemented_C_from_condition (cce_condition_t * src)
+{
+  return (cce_unimplemented_C_t *)src;
+}
+#define cce_cast_to_unimplemented_C(SRC)		\
+  _Generic((SRC), cce_condition_t *: cce_cast_to_unimplemented_C_from_condition)(SRC)
+/* End of output. */
+
+
+/** --------------------------------------------------------------------
  ** Exceptional condition objects: errno exception.
  ** ----------------------------------------------------------------- */
 
@@ -400,6 +436,17 @@ cce_decl int cce_sys_msync (cce_location_t * L, void * address, size_t length, i
   __attribute__((nonnull(1,2)));
 
 cce_decl int cce_sys_mprotect (cce_location_t * L, void * address, size_t length, int prot)
+  __attribute__((nonnull(1,2)));
+
+
+/** --------------------------------------------------------------------
+ ** POSIX wrappers: file system operations.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_sys_mkdir (cce_location_t * L, const char * pathname, mode_t mode)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_rmdir (cce_location_t * L, const char * pathname)
   __attribute__((nonnull(1,2)));
 
 
@@ -552,6 +599,35 @@ cce_decl void cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_
   __attribute__((nonnull(1,2,3)));
 
 cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined POSIX exception handler: removal of temporary directory.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_handler_tmpdir_t	cce_handler_tmpdir_t;
+
+struct cce_handler_tmpdir_t {
+  cce_handler_t;
+  char *	pathname;
+};
+
+/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_tmpdir") */
+__attribute__((const,always_inline))
+static inline cce_handler_tmpdir_t *
+cce_cast_to_handler_tmpdir_from_handler (cce_handler_t * src)
+{
+  return (cce_handler_tmpdir_t *)src;
+}
+#define cce_cast_to_handler_tmpdir(SRC)				\
+  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_tmpdir_from_handler)(SRC)
+/* End of output. */
+
+cce_decl void cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
   __attribute__((nonnull(1,2,3)));
 
 

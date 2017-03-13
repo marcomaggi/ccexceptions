@@ -30,6 +30,7 @@
 #include <limits.h>	// for INT_MAX
 #include <errno.h>
 
+
 /** --------------------------------------------------------------------
  ** Condition objects operations.
  ** ----------------------------------------------------------------- */
@@ -67,6 +68,7 @@ cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * ch
   return false;
 }
 
+
 /** --------------------------------------------------------------------
  ** Root condition.
  ** ----------------------------------------------------------------- */
@@ -74,7 +76,7 @@ cce_condition_descriptor_child_and_parent (const cce_condition_descriptor_t * ch
 static const char *
 cce_root_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
 {
-  return "Unknown exceptional condition";
+  return "Roo exceptional condition";
 }
 
 /* This  condition descriptor  is  the  root of  the  tree of  condition
@@ -87,9 +89,16 @@ static const cce_condition_descriptor_t cce_root_D_stru = {
 
 const cce_condition_descriptor_t * const cce_root_D = &cce_root_D_stru;
 
+
 /** --------------------------------------------------------------------
  ** Unknown condition.
  ** ----------------------------------------------------------------- */
+
+static const char *
+cce_unknown_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
+{
+  return "Unknown exceptional condition";
+}
 
 /* This   condition  descriptor   represents   an  unknown   exceptional
    condition.   This   descriptor  has  only  one   instance  statically
@@ -97,7 +106,7 @@ const cce_condition_descriptor_t * const cce_root_D = &cce_root_D_stru;
 static const cce_unknown_D_t cce_unknown_D_stru = {
   .parent		= &cce_root_D_stru,
   .free			= NULL,
-  .static_message	= cce_root_condition_static_message_fun
+  .static_message	= cce_unknown_condition_static_message_fun
 };
 
 const cce_unknown_D_t * const cce_unknown_D = &cce_unknown_D_stru;
@@ -110,6 +119,37 @@ static const cce_unknown_C_t cce_unknown_C_stru = {
 
 const cce_unknown_C_t * const cce_unknown_C = &cce_unknown_C_stru;
 
+
+/** --------------------------------------------------------------------
+ ** Unimplemented condition.
+ ** ----------------------------------------------------------------- */
+
+static const char *
+cce_unimplemented_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
+{
+  return "Unimplemented exceptional condition";
+}
+
+/* This  condition descriptor  represents  an unimplemented  exceptional
+   condition.   This   descriptor  has  only  one   instance  statically
+   allocated below: "cce_unimplemented_C". */
+static const cce_unimplemented_D_t cce_unimplemented_D_stru = {
+  .parent		= &cce_root_D_stru,
+  .free			= NULL,
+  .static_message	= cce_unimplemented_condition_static_message_fun
+};
+
+const cce_unimplemented_D_t * const cce_unimplemented_D = &cce_unimplemented_D_stru;
+
+/* This is  the single instance of  unimplemented exceptional condition.
+   It is used by "cce_raise()" and "cce_retry()". */
+static const cce_unimplemented_C_t cce_unimplemented_C_stru = {
+  .descriptor = &cce_unimplemented_D_stru
+};
+
+const cce_unimplemented_C_t * const cce_unimplemented_C = &cce_unimplemented_C_stru;
+
+
 /** --------------------------------------------------------------------
  ** Errno condition.
  ** ----------------------------------------------------------------- */

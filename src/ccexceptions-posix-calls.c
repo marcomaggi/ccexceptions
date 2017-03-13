@@ -28,11 +28,12 @@
 
 #include "ccexceptions-internals.h"
 #include <errno.h>
+#include <sys/stat.h>
 #include <sys/mman.h>
 
 
 /** --------------------------------------------------------------------
- ** POSIX memory allocation.
+ ** System wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
 
 void *
@@ -76,7 +77,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
 
 
 /** --------------------------------------------------------------------
- ** POSIX input/output and file descriptors.
+ ** System wrappers: input/output and file descriptors.
  ** ----------------------------------------------------------------- */
 
 int
@@ -204,64 +205,7 @@ cce_sys_writev (cce_location_t * L, int filedes, const struct iovec * vector, in
 
 
 /** --------------------------------------------------------------------
- ** Memory mapping.
- ** ----------------------------------------------------------------- */
-
-void *
-cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
-{
-  void *	rv;
-  errno = 0;
-  rv = mmap(address, length, protect, flags, filedes, offset);
-  if (MAP_FAILED != rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_errno_C_clear());
-  }
-}
-
-int
-cce_sys_munmap (cce_location_t * L, void * addr, size_t length)
-{
-  int	rv;
-  errno = 0;
-  rv = munmap(addr, length);
-  if (-1 != rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_errno_C_clear());
-  }
-}
-
-int
-cce_sys_msync (cce_location_t * L, void *address, size_t length, int flags)
-{
-  int	rv;
-  errno = 0;
-  rv = msync(address, length, flags);
-  if (-1 != rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_errno_C_clear());
-  }
-}
-
-int
-cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
-{
-  int	rv;
-  errno = 0;
-  rv = mprotect(addr, len, prot);
-  if (-1 != 0) {
-    return rv;
-  } else {
-    cce_raise(L, cce_errno_C_clear());
-  }
-}
-
-
-/** --------------------------------------------------------------------
- ** File descriptor operations.
+ ** System wrappers: file descriptor operations.
  ** ----------------------------------------------------------------- */
 
 int
@@ -318,7 +262,91 @@ cce_sys_pipe (cce_location_t * L, int pipefd[2])
 
 
 /** --------------------------------------------------------------------
- ** Temporary files.
+ ** System wrappers: memory mapping.
+ ** ----------------------------------------------------------------- */
+
+void *
+cce_sys_mmap (cce_location_t * L, void * address, size_t length, int protect, int flags, int filedes, off_t offset)
+{
+  void *	rv;
+  errno = 0;
+  rv = mmap(address, length, protect, flags, filedes, offset);
+  if (MAP_FAILED != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+int
+cce_sys_munmap (cce_location_t * L, void * addr, size_t length)
+{
+  int	rv;
+  errno = 0;
+  rv = munmap(addr, length);
+  if (-1 != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+int
+cce_sys_msync (cce_location_t * L, void *address, size_t length, int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = msync(address, length, flags);
+  if (-1 != rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+int
+cce_sys_mprotect (cce_location_t * L, void * addr, size_t len, int prot)
+{
+  int	rv;
+  errno = 0;
+  rv = mprotect(addr, len, prot);
+  if (-1 != 0) {
+    return rv;
+  } else {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** System wrappers: file system operations.
+ ** ----------------------------------------------------------------- */
+
+void
+cce_sys_mkdir (cce_location_t * L, const char * pathname, mode_t mode)
+{
+  int	rv;
+  errno = 0;
+  rv = mkdir(pathname, mode);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_rmdir (cce_location_t * L, const char * pathname)
+{
+  int	rv;
+  errno = 0;
+  rv = rmdir(pathname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** System wrappers: temporary files and directories.
  ** ----------------------------------------------------------------- */
 
 int
@@ -338,6 +366,7 @@ cce_sys_mkstemp (cce_location_t * L, char * template)
 char *
 cce_sys_mkdtemp (cce_location_t * L, char * template)
 {
+#ifdef HAVE_MKDTEMP
   char *	rv;
   errno = 0;
   /* Remember that this call will mutate TEMPLATE. */
@@ -347,11 +376,14 @@ cce_sys_mkdtemp (cce_location_t * L, char * template)
   } else {
     cce_raise(L, cce_errno_C_clear());
   }
+#else
+  cce_raise(L, cce_unimplemented_C());
+#endif
 }
 
 
 /** --------------------------------------------------------------------
- ** Process handling.
+ ** System wrappers: process handling.
  ** ----------------------------------------------------------------- */
 
 int

@@ -235,6 +235,53 @@ test_handler_tmpfile (void)
 }
 
 
+void
+test_handler_tmpdir (void)
+{
+  /* No error.  Cleanup call. */
+  {
+    cce_location_t		L[1];
+    cce_handler_tmpdir_t	tmpdir_H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      cce_sys_mkdir(L, "name.d", 0);
+      cce_cleanup_handler_tmpdir_init(L, tmpdir_H, "name.d");
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(false == error_flag);
+    assert(true  == done_flag);
+  }
+  /* Error. */
+  {
+    cce_location_t		L[1];
+    cce_handler_tmpdir_t	tmpdir_H[1];
+    volatile bool		done_flag  = false;
+    volatile bool		error_flag = false;
+
+    if (cce_location(L)) {
+      cce_run_error_handlers(L);
+      cce_condition_free(cce_condition(L));
+      error_flag = true;
+    } else {
+      cce_sys_mkdir(L, "name.d", 0);
+      cce_cleanup_handler_tmpdir_init(L, tmpdir_H, "name.d");
+      cce_raise(L, cce_unknown_C);
+      cce_run_cleanup_handlers(L);
+      done_flag = true;
+    }
+    assert(true  == error_flag);
+    assert(false == done_flag);
+  }
+}
+
+
 int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 {
@@ -242,6 +289,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
   if (1) test_handler_filedes();
   if (1) test_handler_pipedes();
   if (1) test_handler_tmpfile();
+  if (1) test_handler_tmpdir();
   exit(EXIT_SUCCESS);
 }
 
