@@ -28,6 +28,7 @@
 
 #include "ccexceptions-internals.h"
 
+__attribute__((hot))
 void
 cce_location_init (cce_location_t * L)
 {
@@ -47,21 +48,21 @@ cce_retry (struct cce_location_t * L)
   L->condition = cce_unknown_C;
   longjmp(L->buffer, (int)CCE_RETRY);
 }
-void
+__attribute__((hot)) void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = true;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
-void
+__attribute__((hot)) void
 cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = false;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
-void
+__attribute__((hot)) void
 cce_run_cleanup_handlers (cce_location_t * L)
 /* Traverse the linked  list of registered handlers and  run the cleanup
    ones.   This  is a  destructive  function:  once  the list  has  been
@@ -77,7 +78,7 @@ cce_run_cleanup_handlers (cce_location_t * L)
     }
   }
 }
-void
+__attribute__((hot)) void
 cce_run_error_handlers (cce_location_t * L)
 /* Traverse the  linked list  of registered handlers  and run  the error
    ones.   This  is a  destructive  function:  once  the list  has  been

@@ -53,6 +53,10 @@ extern "C" {
 #  define __attribute__(...)	/* empty */
 #endif
 
+#ifndef __GNUC__
+#  define __builtin_expect(...)	/* empty */
+#endif
+
 /* I found  the following chunk on  the Net.  (Marco Maggi;  Sun Feb 26,
    2012) */
 #if defined _WIN32 || defined __CYGWIN__
@@ -381,7 +385,8 @@ cce_condition (cce_location_t * L)
   return (cce_condition_t *)(L->condition);
 }
 
-#define cce_location(HERE)	(cce_location_init(HERE),setjmp((void *)(HERE)))
+#define cce_location(HERE)	\
+  __builtin_expect((cce_location_init(HERE),setjmp((void *)(HERE))),0)
 
 
 /** --------------------------------------------------------------------
