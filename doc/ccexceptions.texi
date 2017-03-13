@@ -129,7 +129,7 @@ entitled ``@gnu{} Free Documentation License''.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
-* posix::                       @posix{} system calls.
+* sys::                         System call adapters.
 * helpers::                     Helper functions and macros.
 
 Appendices
@@ -1879,40 +1879,46 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 @end smallexample
 
 @c page
-@node posix
-@chapter @posix{} system calls
+@node sys
+@chapter System call adapters
 
 
-@value{PACKAGE} defines function wrappers for the most common @posix{} system calls.  Each wrapper
-accepts a pointer to @objtype{cce_location_t} as argument and, in case of error, will perform a
-non--local exit by jumping to the selected location.
-
-The raised exceptional condition objects are of type @objtype{cce_errno_C_t}; all the system call
-wrappers make use of @cfunc{cce_errno_C_clear}, so they clear @code{errno} to zero before returning.
+@value{PACKAGE} defines function wrappers for the most common @posix{}, @gnu{} C Library and Linux
+system calls.  Each wrapper accepts a pointer to @objtype{cce_location_t} as argument and, in case
+of error, will perform a non--local exit by jumping to the selected location.
 
 The wrapper functions accept the same arguments of the system call and return the same return value
-of the system call (if it completes successfully).  All the wrappers reset @code{errno} to zero
-before performing the system call.
+of the system call (if it completes successfully).
+
+All the wrappers reset @code{errno} to zero before performing the system call and reset it to zero
+before returning.  In case of error: the raised exceptional condition objects are of type
+@objtype{cce_errno_C_t}.
+
+The library assumes to run on a @posix{} system, so the @posix{} system calls are available by
+default.  The @gnu{} C Library and Linux calls are available only if the package was configured
+with, respectively, @option{--enable-glibc} and @option{--enable-linux}.  If a system call is not
+available: the associated wrapper will raise an exception of type @objtype{cce_unimplemented_C_t}.
 
 @menu
-* posix memory::                Memory allocation.
-* posix io::                    Input/output system calls.
-* posix fs::                    File system system calls.
-* posix process::               Process system calls.
+* sys memory::                  Memory allocation.
+* sys io::                      Input/output system calls.
+* sys mmap::                    Memory mapping system calls.
+* sys fs::                      File system system calls.
+* sys process::                 Process system calls.
 @end menu
 
 @c page
-@node posix memory
+@node sys memory
 @section Memory allocation
 
 
 @menu
-* posix memory calls::          System call wrappers.
-* posix memory handler::        Exception handler for pointers.
+* sys memory calls::          System call wrappers.
+* sys memory handler::        Exception handler for pointers.
 @end menu
 
 @c page
-@node posix memory calls
+@node sys memory calls
 @subsection System call wrappers
 
 
@@ -1931,7 +1937,7 @@ Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 @end deftypefun
 
 @c page
-@node posix memory handler
+@node sys memory handler
 @subsection Exception handler for pointers
 
 
@@ -1972,18 +1978,18 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node posix io
+@node sys io
 @section Input/output system calls
 
 
 @menu
-* posix io calls::              System call wrappers.
-* posix io handler filedes::    Handler for file descriptors.
-* posix io handler pipedes::    Handler for pipe descriptors.
+* sys io calls::              System call wrappers.
+* sys io handler filedes::    Handler for file descriptors.
+* sys io handler pipedes::    Handler for pipe descriptors.
 @end menu
 
 @c page
-@node posix io calls
+@node sys io calls
 @subsection System call wrappers
 
 
@@ -2040,26 +2046,6 @@ integer.
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_mmap (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
-Wrapper for @cfunc{mmap}.
-@end deftypefun
-
-
-@deftypefun int cce_sys_munmap (cce_location_t * @var{L}, void * @var{addr}, size_t @var{length})
-Wrapper for @cfunc{munmap}.
-@end deftypefun
-
-
-@deftypefun int cce_sys_msync (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{flags})
-Wrapper for @cfunc{msync}.
-@end deftypefun
-
-
-@deftypefun int cce_sys_mprotect (cce_location_t * @var{L}, void * @var{addr}, size_t @var{len}, int @var{prot})
-Wrapper for @cfunc{mprotect}.
-@end deftypefun
-
-
 @deftypefun int cce_sys_select (cce_location_t * @var{L}, int @var{nfds}, fd_set * @var{read_fds}, fd_set * @var{write_fds}, fd_set * @var{except_fds}, struct timeval * @var{timeout})
 Wrapper for @cfunc{select}.
 @end deftypefun
@@ -2080,7 +2066,7 @@ Wrapper for @cfunc{pipe}.
 @end deftypefun
 
 @c page
-@node posix io handler filedes
+@node sys io handler filedes
 @subsection Handler for file descriptors
 
 
@@ -2123,7 +2109,7 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node posix io handler pipedes
+@node sys io handler pipedes
 @subsection Handler for file descriptors
 
 
@@ -2167,18 +2153,42 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node posix fs
+@node sys mmap
+@section Memory mapping system calls
+
+
+@deftypefun {void *} cce_sys_mmap (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
+Wrapper for @cfunc{mmap}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_munmap (cce_location_t * @var{L}, void * @var{addr}, size_t @var{length})
+Wrapper for @cfunc{munmap}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_msync (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{flags})
+Wrapper for @cfunc{msync}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_mprotect (cce_location_t * @var{L}, void * @var{addr}, size_t @var{len}, int @var{prot})
+Wrapper for @cfunc{mprotect}.
+@end deftypefun
+
+@c page
+@node sys fs
 @section File system system calls
 
 
 @menu
-* posix fs calls::              System call wrappers.
-* posix fs handler tmpfile::    Handler for temporary files.
-* posix fs handler tmpdir::     Handler for temporary directories.
+* sys fs calls::              System call wrappers.
+* sys fs handler tmpfile::    Handler for temporary files.
+* sys fs handler tmpdir::     Handler for temporary directories.
 @end menu
 
 @c page
-@node posix fs calls
+@node sys fs calls
 @subsection System call wrappers
 
 
@@ -2209,7 +2219,7 @@ exception with condition object of type @objtype{cce_unimplemented_C_t}.
 @end deftypefun
 
 @c page
-@node posix fs handler tmpfile
+@node sys fs handler tmpfile
 @subsection Handler for temporary files
 
 
@@ -2264,7 +2274,7 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node posix fs handler tmpdir
+@node sys fs handler tmpdir
 @subsection Handler for temporary files
 
 
@@ -2318,7 +2328,7 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 @end deftypefn
 
 @c page
-@node posix process
+@node sys process
 @section Process system calls
 
 
