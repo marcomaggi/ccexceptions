@@ -33,6 +33,7 @@
   MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+#define CCE_INCLUDE_SYSTEM_CALLS	1
 #include "ccexceptions.h"
 
 static int list_dirs (const char * pathname);

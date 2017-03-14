@@ -31,6 +31,7 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
+#define CCE_INCLUDE_SYSTEM_CALLS	1
 #include "ccexceptions.h"
 #include <string.h>
 

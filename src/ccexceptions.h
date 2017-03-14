@@ -104,19 +104,6 @@ extern "C" {
 #include <setjmp.h>
 #include <errno.h>
 #include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <utime.h>
-//#include <net/if.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <sys/select.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/uio.h>
-#include <sys/wait.h>
 
 
 /** --------------------------------------------------------------------
@@ -370,6 +357,56 @@ cce_errno_C_clear (void)
 
 
 /** --------------------------------------------------------------------
+ ** Locations.
+ ** ----------------------------------------------------------------- */
+
+struct cce_location_t {
+  /* The buffer must be the first member of this struct. */
+  jmp_buf			buffer;
+  const cce_condition_t *	condition;
+  cce_handler_t *		first_handler;
+};
+
+cce_decl void cce_location_init	(cce_location_t * here)
+  __attribute__((leaf,nonnull(1)));
+cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * condition)
+  __attribute__((noreturn,nonnull(1)));
+cce_decl void cce_retry (cce_location_t * L)
+  __attribute__((noreturn,nonnull(1)));
+
+__attribute__((pure,nonnull(1),returns_nonnull,always_inline))
+static inline cce_condition_t *
+cce_condition (cce_location_t * L)
+{
+  return (cce_condition_t *)(L->condition);
+}
+
+#define cce_location(HERE)	\
+  __builtin_expect((cce_location_init(HERE),setjmp((void *)(HERE))),0)
+
+
+/** --------------------------------------------------------------------
+ ** Start of system call wrappers.
+ ** ----------------------------------------------------------------- */
+
+#ifdef CCE_INCLUDE_SYSTEM_CALLS
+
+#include <dirent.h>
+#include <fcntl.h>
+#include <utime.h>
+//#include <net/if.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/uio.h>
+#include <sys/wait.h>
+
+
+/** --------------------------------------------------------------------
  ** Exceptional condition objects: h_errno exception.
  ** ----------------------------------------------------------------- */
 
@@ -415,35 +452,6 @@ cce_h_errno_C_clear (void)
   h_errno = 0;
   return cce_h_errno_C(errnum);
 }
-
-
-/** --------------------------------------------------------------------
- ** Locations.
- ** ----------------------------------------------------------------- */
-
-struct cce_location_t {
-  /* The buffer must be the first member of this struct. */
-  jmp_buf			buffer;
-  const cce_condition_t *	condition;
-  cce_handler_t *		first_handler;
-};
-
-cce_decl void cce_location_init	(cce_location_t * here)
-  __attribute__((leaf,nonnull(1)));
-cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * condition)
-  __attribute__((noreturn,nonnull(1)));
-cce_decl void cce_retry (cce_location_t * L)
-  __attribute__((noreturn,nonnull(1)));
-
-__attribute__((pure,nonnull(1),returns_nonnull,always_inline))
-static inline cce_condition_t *
-cce_condition (cce_location_t * L)
-{
-  return (cce_condition_t *)(L->condition);
-}
-
-#define cce_location(HERE)	\
-  __builtin_expect((cce_location_init(HERE),setjmp((void *)(HERE))),0)
 
 
 /** --------------------------------------------------------------------
@@ -948,6 +956,13 @@ cce_decl void cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handle
 
 cce_decl void cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
   __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** End of system call wrappers.
+ ** ----------------------------------------------------------------- */
+
+#endif /* if defined CCE_INCLUDE_SYSTEM_CALLS */
 
 
 /** --------------------------------------------------------------------
