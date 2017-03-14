@@ -2123,25 +2123,6 @@ Wrapper for @cfunc{closedir}.
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Inspecting the file system
-
-
-@deftypefun void cce_sys_stat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
-Wrapper for @cfunc{stat}.
-@end deftypefun
-
-
-@deftypefun void cce_sys_fstat (cce_location_t * @var{L}, int @var{fd}, struct stat * @var{buf})
-Wrapper for @cfunc{fstat}.
-@end deftypefun
-
-
-@deftypefun void cce_sys_lstat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
-Wrapper for @cfunc{lstat}.
-@end deftypefun
-
-@c ------------------------------------------------------------------------
-
 @subsubheading Making and removing directories
 
 
@@ -2239,11 +2220,80 @@ Wrapper for @cfunc{remove}.  This function removes both files and empty director
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Other operations
+@subsubheading Renaming files
 
 
 @deftypefun void cce_sys_rename (cce_location_t * @var{L}, const char * @var{oldname}, const char * @var{newname})
 Wrapper for @cfunc{rename}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Inspecting the file system
+
+
+@deftypefun void cce_sys_stat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
+Wrapper for @cfunc{stat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fstat (cce_location_t * @var{L}, int @var{fd}, struct stat * @var{buf})
+Wrapper for @cfunc{fstat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_lstat (cce_location_t * @var{L}, const char * @var{pathname}, struct stat * @var{buf})
+Wrapper for @cfunc{lstat}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading File system attributes
+
+
+@deftypefun void cce_sys_chown (cce_location_t * @var{L}, const char * @var{pathname}, uid_t @var{owner}, gid_t @var{group})
+Wrapper for @cfunc{chown}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fchown (cce_location_t * @var{L}, int @var{filedes}, uid_t @var{owner}, gid_t @var{group})
+Wrapper for @cfunc{fchown}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_lchown (cce_location_t * @var{L}, const char * @var{pathname}, uid_t @var{owner}, gid_t @var{group})
+Wrapper for @cfunc{lchown}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fchownat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{pathname}, uid_t @var{owner}, gid_t @var{group}, int @var{flags})
+Wrapper for @cfunc{fchownat}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_chmod (cce_location_t * @var{L}, const char * @var{pathname}, mode_t @var{mode})
+Wrapper for @cfunc{chmod}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fchmod (cce_location_t * @var{L}, int @var{filedes}, mode_t @var{mode})
+Wrapper for @cfunc{fchmod}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_fchmodat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{pathname}, mode_t @var{mode}, int @var{flags})
+Wrapper for @cfunc{fchmodat}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_access (cce_location_t * @var{L}, const char * @var{pathname}, int @var{how})
+Wrapper for @cfunc{access}.  The return value is @samp{0} if access is denied; the return value is
+@samp{-1} if access is granted.
+@end deftypefun
+
+
+@deftypefun int cce_sys_faccessat (cce_location_t * @var{L}, int @var{dirfd}, const char * @var{pathname}, int @var{how}, int @var{flags})
+Wrapper for @cfunc{faccessat}.
 @end deftypefun
 
 @c page

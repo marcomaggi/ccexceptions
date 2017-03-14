@@ -716,6 +716,119 @@ cce_sys_rename (cce_location_t * L, const char * oldname, const char * newname)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_chown (cce_location_t * L, const char * pathname, uid_t owner, gid_t group)
+{
+  int	rv;
+  errno = 0;
+  rv = chown(pathname, owner, group);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fchown (cce_location_t * L, int filedes, uid_t owner, gid_t group)
+{
+  int	rv;
+  errno = 0;
+  rv = fchown(filedes, owner, group);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_lchown (cce_location_t * L, const char * pathname, uid_t owner, gid_t group)
+{
+  int	rv;
+  errno = 0;
+  rv = lchown(pathname, owner, group);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fchownat (cce_location_t * L, int dirfd, const char * pathname, uid_t owner, gid_t group, int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = fchownat(dirfd, pathname, owner, group, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_chmod (cce_location_t * L, const char * pathname, mode_t mode)
+{
+  int	rv;
+  errno = 0;
+  rv = chmod(pathname, mode);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fchmod (cce_location_t * L, int filedes, mode_t mode)
+{
+  int	rv;
+  errno = 0;
+  rv = fchmod(filedes, mode);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_fchmodat (cce_location_t * L, int dirfd, const char * pathname, mode_t mode, int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = fchmodat(dirfd, pathname, mode, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+int
+cce_sys_access (cce_location_t * L, const char * pathname, int how)
+{
+  int	rv;
+  errno = 0;
+  rv = access(pathname, how);
+  if (0 == rv) {
+    return rv;
+  } else if (errno) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+int
+cce_sys_faccessat (cce_location_t * L, int dirfd, const char * pathname, int how, int flags)
+{
+  int	rv;
+  errno = 0;
+  rv = faccessat(dirfd, pathname, how, flags);
+  if (0 == rv) {
+    return rv;
+  } else if (errno) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.

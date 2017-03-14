@@ -573,6 +573,39 @@ cce_decl void cce_sys_remove (cce_location_t * L, const char * pathname)
 cce_decl void cce_sys_rename (cce_location_t * L, const char * oldname, const char * newname)
   __attribute__((nonnull(1,2,3)));
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_chown (cce_location_t * L, const char * pathname, uid_t owner, gid_t group)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_fchown (cce_location_t * L, int filedes, uid_t owner, gid_t group)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_lchown (cce_location_t * L, const char * pathname, uid_t owner, gid_t group)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_fchownat (cce_location_t * L, int dirfd, const char * pathname, uid_t owner, gid_t group, int flags)
+  __attribute__((nonnull(1,3)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_chmod (cce_location_t * L, const char * pathname, mode_t mode)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_fchmod (cce_location_t * L, int filedes, mode_t mode)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_fchmodat (cce_location_t * L, int dirfd, const char * pathname, mode_t mode, int flags)
+  __attribute__((nonnull(1,3)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl int cce_sys_access (cce_location_t * L, const char * pathname, int how)
+  __attribute__((nonnull(1,2)));
+
+cce_decl int cce_sys_faccessat (cce_location_t * L, int dirfd, const char * pathname, int how, int flags)
+  __attribute__((nonnull(1,3)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.
