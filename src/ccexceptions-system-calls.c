@@ -1043,7 +1043,40 @@ cce_sys_gethostbyaddr (cce_location_t * L, const void * addr, socklen_t length, 
 
 /* ------------------------------------------------------------------ */
 
+int
+cce_sys_socket (cce_location_t * L, int namespace, int style, int protocol)
+{
+  int	rv;
+  errno = 0;
+  rv = socket(namespace, style, protocol);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
 
+void
+cce_sys_shutdown (cce_location_t * L, int socket, int how)
+{
+  int	rv;
+  errno = 0;
+  rv = shutdown(socket, how);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_socketpair (cce_location_t * L, int namespace, int style, int protocol, int filedes[2])
+{
+  int	rv;
+  errno = 0;
+  rv = socketpair(namespace, style, protocol, filedes);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
 
 
 /** --------------------------------------------------------------------

@@ -2459,6 +2459,20 @@ Wrapper for @cfunc{gethostbyaddr}.
 @end deftypefun
 
 
+@deftypefun int cce_sys_socket (cce_location_t * @var{L}, int @var{namespace}, int @var{style}, int @var{protocol})
+Wrapper for @cfunc{socket}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_shutdown (cce_location_t * @var{L}, int @var{socket}, int @var{how})
+Wrapper for @cfunc{shutdown}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_socketpair (cce_location_t * @var{L}, int @var{namespace}, int @var{style}, int @var{protocol}, int @var{filedes}[2])
+Wrapper for @cfunc{socketpair}.
+@end deftypefun
+
 @c page
 @node syscalls process
 @section Process system calls

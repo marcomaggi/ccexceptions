@@ -713,6 +713,15 @@ cce_decl struct hostent * cce_sys_gethostbyname2 (cce_location_t * L, const char
 cce_decl struct hostent * cce_sys_gethostbyaddr (cce_location_t * L, const void * addr, socklen_t length, int format)
   __attribute__((nonnull(1,2),returns_nonnull));
 
+cce_decl int cce_sys_socket (cce_location_t * L, int namespace, int style, int protocol)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_shutdown (cce_location_t * L, int socket, int how)
+  __attribute__((nonnull(1)));
+
+cce_decl void cce_sys_socketpair (cce_location_t * L, int namespace, int style, int protocol, int filedes[2])
+  __attribute__((nonnull(1,5)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.
