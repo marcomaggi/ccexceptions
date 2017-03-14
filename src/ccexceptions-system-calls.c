@@ -703,6 +703,19 @@ cce_sys_remove (cce_location_t * L, const char * pathname)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_rename (cce_location_t * L, const char * oldname, const char * newname)
+{
+  int	rv;
+  errno = 0;
+  rv = rename(oldname, newname);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.

@@ -2237,6 +2237,15 @@ Wrapper for @cfunc{unlinkat}.
 Wrapper for @cfunc{remove}.  This function removes both files and empty directories.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@subsubheading Other operations
+
+
+@deftypefun void cce_sys_rename (cce_location_t * @var{L}, const char * @var{oldname}, const char * @var{newname})
+Wrapper for @cfunc{rename}.
+@end deftypefun
+
 @c page
 @node syscalls process
 @section Process system calls

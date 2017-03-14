@@ -568,6 +568,11 @@ cce_decl void cce_sys_unlinkat (cce_location_t * L, int dirfc, const char * path
 cce_decl void cce_sys_remove (cce_location_t * L, const char * pathname)
   __attribute__((nonnull(1,2)));
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_rename (cce_location_t * L, const char * oldname, const char * newname)
+  __attribute__((nonnull(1,2,3)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.
