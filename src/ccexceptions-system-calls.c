@@ -949,6 +949,104 @@ cce_sys_mkdtemp (cce_location_t * L, char * template)
 
 
 /** --------------------------------------------------------------------
+ ** System call wrappers: sockets.
+ ** ----------------------------------------------------------------- */
+
+void
+cce_sys_bind (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t length)
+{
+  int	rv;
+  errno = 0;
+  rv = bind(socket, addr, length);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_getsockname (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t * length_ptr)
+{
+  int	rv;
+  errno = 0;
+  rv = getsockname(socket, addr, length_ptr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_inet_aton (cce_location_t * L, const char * name, struct in_addr * addr)
+{
+  int	rv;
+  errno = 0;
+  rv = inet_aton(name, addr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+in_addr_t
+cce_sys_inet_network (cce_location_t * L, const char * name)
+{
+  in_addr_t	rv;
+  errno = 0;
+  rv = inet_network(name);
+  if (((in_addr_t)-1) == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+struct hostent *
+cce_sys_gethostbyname (cce_location_t * L, const char * name)
+{
+  struct hostent *	rv;
+  h_errno = 0;
+  rv = gethostbyname(name);
+  if (rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_h_errno_C_clear());
+  }
+}
+
+struct hostent *
+cce_sys_gethostbyname2 (cce_location_t * L, const char * name, int af)
+{
+  struct hostent *	rv;
+  h_errno = 0;
+  rv = gethostbyname2(name, af);
+  if (rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_h_errno_C_clear());
+  }
+}
+
+struct hostent *
+cce_sys_gethostbyaddr (cce_location_t * L, const void * addr, socklen_t length, int format)
+{
+  struct hostent *	rv;
+  h_errno = 0;
+  rv = gethostbyaddr(addr, length, format);
+  if (rv) {
+    return rv;
+  } else {
+    cce_raise(L, cce_h_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+
+
+
+/** --------------------------------------------------------------------
  ** System wrappers: process handling.
  ** ----------------------------------------------------------------- */
 

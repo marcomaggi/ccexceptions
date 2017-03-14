@@ -92,6 +92,8 @@ extern "C" {
  ** Headers.
  ** ----------------------------------------------------------------- */
 
+#define _GNU_SOURCE		1
+
 /* Enable latest POSIX features. */
 #define _POSIX_C_SOURCE		200809L
 
@@ -105,10 +107,14 @@ extern "C" {
 #include <dirent.h>
 #include <fcntl.h>
 #include <utime.h>
+//#include <net/if.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
 
@@ -360,6 +366,54 @@ cce_errno_C_clear (void)
   int	errnum = errno;
   errno = 0;
   return cce_errno_C(errnum);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: h_errno exception.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_h_errno_D_t {
+  cce_condition_descriptor_t;
+} cce_h_errno_D_t;
+
+typedef struct cce_h_errno_C_t {
+  cce_condition_t;
+  int			errnum;
+  const char *		message;
+} cce_h_errno_C_t;
+
+cce_decl const cce_h_errno_D_t * const cce_h_errno_D;
+
+cce_decl const cce_h_errno_C_t * cce_h_errno_C (int code)
+  __attribute__((leaf,returns_nonnull));
+
+__attribute__((nonnull(1),always_inline)) static inline bool
+cce_is_a_h_errno_C (const cce_condition_t * condition)
+{
+  return cce_is_a_condition(condition, cce_h_errno_D);
+}
+
+/* Output of: (my-c-insert-cast-function "cce" "condition" "h_errno_C") */
+__attribute__((const,always_inline))
+static inline cce_h_errno_C_t *
+cce_cast_to_h_errno_C_from_condition (cce_condition_t * src)
+{
+  return (cce_h_errno_C_t *)src;
+}
+#define cce_cast_to_h_errno_C(SRC)		\
+  _Generic((SRC), cce_condition_t *: cce_cast_to_h_errno_C_from_condition)(SRC)
+/* End of output. */
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((returns_nonnull,always_inline))
+static inline const cce_h_errno_C_t *
+cce_h_errno_C_clear (void)
+{
+  int	errnum = h_errno;
+  h_errno = 0;
+  return cce_h_errno_C(errnum);
 }
 
 
@@ -632,6 +686,32 @@ cce_decl void cce_sys_truncate (cce_location_t * L, const char * pathname, off_t
 
 cce_decl void cce_sys_ftruncate (cce_location_t * L, int filedes, off_t length)
   __attribute__((nonnull(1)));
+
+
+/** --------------------------------------------------------------------
+ ** System call wrappers: sockets.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_sys_bind (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t length)
+  __attribute__((nonnull(1,3)));
+
+cce_decl void cce_sys_getsockname (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t * length_ptr)
+  __attribute__((nonnull(1,3,4)));
+
+cce_decl void cce_sys_inet_aton (cce_location_t * L, const char * name, struct in_addr * addr)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl in_addr_t cce_sys_inet_network (cce_location_t * L, const char * name)
+  __attribute__((nonnull(1,2)));
+
+cce_decl struct hostent * cce_sys_gethostbyname (cce_location_t * L, const char * name)
+  __attribute__((nonnull(1,2),returns_nonnull));
+
+cce_decl struct hostent * cce_sys_gethostbyname2 (cce_location_t * L, const char * name, int af)
+  __attribute__((nonnull(1,2),returns_nonnull));
+
+cce_decl struct hostent * cce_sys_gethostbyaddr (cce_location_t * L, const void * addr, socklen_t length, int format)
+  __attribute__((nonnull(1,2),returns_nonnull));
 
 
 /** --------------------------------------------------------------------

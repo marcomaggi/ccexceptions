@@ -353,4 +353,60 @@ cce_errno_C (int errnum)
   return &(errno_conditions[LAST_ERRNO_CONDITION]);
 }
 
+
+/** --------------------------------------------------------------------
+ ** H_Errno condition.
+ ** ----------------------------------------------------------------- */
+
+static const char *
+cce_h_errno_C_static_message_fun (const cce_condition_t * C)
+{
+  const cce_h_errno_C_t *	EC = (const cce_h_errno_C_t *)C;
+  return EC->message;
+}
+
+/* This condition descriptor  represents "h_errno" exceptional conditions.
+   It is a child of the root descriptor. */
+const cce_h_errno_D_t cce_h_errno_D_stru = {
+  .parent		= &cce_root_D_stru,
+  .free			= NULL,
+  .static_message	= cce_h_errno_C_static_message_fun
+};
+
+const cce_h_errno_D_t * const cce_h_errno_D = (const cce_h_errno_D_t *) &cce_h_errno_D_stru;
+
+#define CCE_DECLARE_H_ERRNO_CONDITION(H_ERRNO,MESSAGE)	\
+  							\
+  {							\
+    .descriptor	= &cce_h_errno_D_stru,			\
+    .errnum	= H_ERRNO,				\
+    .message	= MESSAGE				\
+  }
+
+#define H_ERRNO_CONDITIONS_NUM		6
+#define LAST_H_ERRNO_CONDITION		5
+
+static const cce_h_errno_C_t
+h_errno_conditions[H_ERRNO_CONDITIONS_NUM] = {
+  /* 000 */ CCE_DECLARE_H_ERRNO_CONDITION(0,			"(h_errno=0) Success"),
+  /* 001 */ CCE_DECLARE_H_ERRNO_CONDITION(HOST_NOT_FOUND,	"(h_errno=HOST_NOT_FOUND) No such host is known in the database"),
+  /* 002 */ CCE_DECLARE_H_ERRNO_CONDITION(TRY_AGAIN,		"(h_errno=TRY_AGAIN) The name server could not be contacted"),
+  /* 003 */ CCE_DECLARE_H_ERRNO_CONDITION(NO_RECOVERY,		"(h_errno=NO_RECOVERY) A non-recoverable error occurred"),
+  /* 004 */ CCE_DECLARE_H_ERRNO_CONDITION(NO_ADDRESS,		"(h_errno=NO_ADDRESS) No Internet address found"),
+  /* 005 */ CCE_DECLARE_H_ERRNO_CONDITION(INT_MAX,		"Unknown h_errno code")
+};
+
+const cce_h_errno_C_t *
+cce_h_errno_C (int errnum)
+{
+  for (int i = 0; i < H_ERRNO_CONDITIONS_NUM; ++i) {
+    if (errnum == h_errno_conditions[i].errnum) {
+      return &(h_errno_conditions[i]);
+    }
+  }
+  /* If  we are  here  ERRNUM  is an  invalid  "h_errno"  value for  the
+     underlying platform. */
+  return &(h_errno_conditions[LAST_H_ERRNO_CONDITION]);
+}
+
 /* end of file */

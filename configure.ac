@@ -91,9 +91,11 @@ AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
 
-AM_COND_IF([WANT_GLIBC],
-  [dnl AC_CHECK_HEADERS([search.h])
-   AC_CHECK_FUNCS([mkdtemp mremap madvise])])
+AM_COND_IF([WANT_GLIBC],[
+  dnl AC_CHECK_HEADERS([search.h])
+  AC_CHECK_FUNCS([mkdtemp mremap madvise])
+  dnl AC_CHECK_FUNCS([gethostbyname_r gethostbyname2_r gethostbyaddr_r])
+])
 
 dnl AM_COND_IF([WANT_LINUX],
 dnl   [AC_CHECK_FUNCS([])])

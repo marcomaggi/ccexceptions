@@ -1075,6 +1075,7 @@ of type @samp{A} and of type root.
 * conditions unimplemented::    Predefined unimplemented condition
                                 object.
 * conditions errno::            Predefined @code{errno} conditions.
+* conditions h_errno::          Predefined @code{h_errno} conditions.
 * conditions custom::           Defining custom condition objects.
 @end menu
 
@@ -1522,6 +1523,83 @@ conversion is sometimes needed.
 @end deftypefn
 
 @c page
+@node conditions h_errno
+@section Predefined @code{h_errno} conditions
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_h_errno_D_t
+Structure type representing the descriptor for @code{h_errno} condition objects.
+
+In a correctly built condition objects hierarchy: there is only one instance of this type, the one
+referenced by @code{cce_h_errno_D}; all the instances of @code{cce_h_errno_C_t} reference the same
+descriptor.
+
+As single public field it has an unnamed field of type @code{cce_condition_descriptor_t}; the
+sub--fields of this unnamed field can be accessed transparently by code using a pointer to
+@objtype{cce_h_errno_D_t}.  For an @code{h_errno} condition descriptor the @code{parent} sub--field
+is the root descriptor referenced by @code{cce_root_D}.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_h_errno_C_t
+Structure type representing an @code{h_errno} exceptional condition object, signalled by a system
+function by setting @code{h_errno} to a non--zero value.  It has the following public fields:
+
+@table @code
+@item cce_condition_t
+An unnamed field holding everything required to make an instance of @code{cce_h_errno_C_t} also an
+instance of @code{cce_condition_t}.  For all the @code{h_errno} condition objects: the condition
+descriptor referenced by the @code{descriptor} sub--field is the structure referenced by
+@code{cce_h_errno_D}.
+
+@item int errnum
+The value of @code{h_errno}.
+
+@item const char * message
+A statically allocated string describing the error.
+@end table
+@end deftp
+
+
+@deftypevr {Dynamic Constant} {const cce_h_errno_D_t * const} cce_h_errno_D
+Pointer to a statically allocated structure representing the condition descriptor of all the values
+returned by @cfunc{cce_h_errno_C}.
+
+By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure, we
+can determine if such structure is an @code{h_errno} condition object.
+@end deftypevr
+
+
+@deftypefun {const cce_h_errno_C_t *} cce_h_errno_C (int @var{errnum})
+Given the @code{h_errno} code @var{errnum}, return the pointer to the condition object associated to
+it.
+
+If @var{errnum} is zero: return a pointer to condition object representing a successful operation.
+If @var{errnum} is not a valid @code{h_errno} code for the underlying platform: return a pointer to
+condition object representing an invalid code.
+@end deftypefun
+
+
+@deftypefun {const cce_h_errno_C_t *} cce_h_errno_C_clear (void)
+Consume the current value of @code{h_errno} and return the return value of @cfunc{cce_h_errno_C}
+applied to it.  Before returning: @code{h_errno} is reset to zero.
+@end deftypefun
+
+
+@deftypefn {Inline Function} bool cce_is_a_h_errno_C (const cce_condition_t * @var{C})
+Return @true{} if @var{C} has @code{cce_h_errno_D} as descriptor; otherwise return @false{}.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} {cce_h_errno_C_t *} cce_cast_to_h_errno_C (cce_condition_t * @var{C})
+Cast a pointer to condition object type.  This macro provides type checking and documents that this
+conversion is sometimes needed.
+@end deftypefn
+
+@c page
 @node conditions custom
 @section Defining custom condition objects
 
@@ -1905,6 +1983,7 @@ available: the associated wrapper will raise an exception of type @objtype{cce_u
 * syscalls io::                 Input/output system calls.
 * syscalls mmap::               Memory mapping system calls.
 * syscalls fs::                 File system system calls.
+* syscalls sockets::            Socket system calls.
 * syscalls process::            Process system calls.
 @end menu
 
@@ -2337,6 +2416,46 @@ Wrapper for @cfunc{truncate}.
 
 @deftypefun void cce_sys_ftruncate (cce_location_t * @var{L}, int @var{filedes}, off_t @var{length})
 Wrapper for @cfunc{ftruncate}.
+@end deftypefun
+
+
+@c page
+@node syscalls sockets
+@section Socket system calls
+
+
+@deftypefun void cce_sys_bind (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t @var{length})
+Wrapper for @cfunc{bind}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_getsockname (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t * @var{length_ptr})
+Wrapper for @cfunc{getsockname}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_inet_aton (cce_location_t * @var{L}, const char * @var{name}, struct in_addr * @var{addr})
+Wrapper for @cfunc{inet_aton}.
+@end deftypefun
+
+
+@deftypefun in_addr_t cce_sys_inet_network (cce_location_t * @var{L}, const char * @var{name})
+Wrapper for @cfunc{inet_network}.
+@end deftypefun
+
+
+@deftypefun {struct hostent *} cce_sys_gethostbyname (cce_location_t * @var{L}, const char * @var{name})
+Wrapper for @cfunc{gethostbyname}.
+@end deftypefun
+
+
+@deftypefun {struct hostent *} cce_sys_gethostbyname2 (cce_location_t * @var{L}, const char * @var{name}, int @var{af})
+Wrapper for @cfunc{gethostbyname2}.
+@end deftypefun
+
+
+@deftypefun {struct hostent *} cce_sys_gethostbyaddr (cce_location_t * @var{L}, const void * @var{addr}, socklen_t @var{length}, int @var{format})
+Wrapper for @cfunc{gethostbyaddr}.
 @end deftypefun
 
 
