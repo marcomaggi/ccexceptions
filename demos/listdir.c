@@ -35,22 +35,32 @@
 
 #include "ccexceptions.h"
 
+static int list_dirs (const char * pathname);
+
+static const char *	progname = "listdir";
+
 int
 main (int argc, const char *const argv[])
 {
-  static const char *		progname = "listdir";
+  const char *	pathname = (2 == argc)? argv[1] : "./";
+  int		rv;
+
+  rv = list_dirs(pathname);
+  exit(rv);
+}
+
+int
+list_dirs (const char * pathname)
+{
   cce_location_t		L[1];
   cce_handler_dirstream_t	dirstream_H[1];
-  const char *			pathname;
-
-  pathname = (2 == argc)? argv[1] : "./";
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
     fprintf(stderr, "%s: error: %s\n", progname,
 	    cce_condition_static_message(cce_condition(L)));
     cce_condition_free(cce_condition(L));
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   } else {
     DIR *		dirstream;
     struct dirent *	direntry;
@@ -62,7 +72,7 @@ main (int argc, const char *const argv[])
       fflush(stdout);
     }
     cce_run_cleanup_handlers(L);
-    exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
   }
 }
 
