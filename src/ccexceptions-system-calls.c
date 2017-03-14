@@ -1078,6 +1078,108 @@ cce_sys_socketpair (cce_location_t * L, int namespace, int style, int protocol, 
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_connect (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t length)
+{
+  int	rv;
+  errno = 0;
+  rv = connect(socket, addr, length);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_listen (cce_location_t * L, int socket, int N)
+{
+  int	rv;
+  errno = 0;
+  rv = listen(socket, N);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+int
+cce_sys_accept (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t * length_ptr)
+{
+  int	rv;
+  errno = 0;
+  rv = accept(socket, addr, length_ptr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+void
+cce_sys_getpeername (cce_location_t * L, int socket, struct sockaddr * addr, socklen_t * length_ptr)
+{
+  int	rv;
+  errno = 0;
+  rv = getpeername(socket, addr, length_ptr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+size_t
+cce_sys_send (cce_location_t * L, int socket, const void * buffer, size_t size, int flags)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = send(socket, buffer, size, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
+size_t
+cce_sys_recv (cce_location_t * L, int socket, void * buffer, size_t size, int flags)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = recv(socket, buffer, size, flags);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+size_t
+cce_sys_sendto (cce_location_t * L, int socket, const void * buffer, size_t size, int flags, struct sockaddr * addr, socklen_t length)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = sendto(socket, buffer, size, flags, addr, length);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
+size_t
+cce_sys_recvfrom (cce_location_t * L, int socket, void * buffer, size_t size, int flags, struct sockaddr * addr, socklen_t * length_ptr)
+{
+  ssize_t	rv;
+  errno = 0;
+  rv = recvfrom(socket, buffer, size, flags, addr, length_ptr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return (size_t)rv;
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: process handling.

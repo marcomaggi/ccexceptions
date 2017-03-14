@@ -2473,6 +2473,47 @@ Wrapper for @cfunc{shutdown}.
 Wrapper for @cfunc{socketpair}.
 @end deftypefun
 
+
+@deftypefun void cce_sys_connect (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t @var{length})
+Wrapper for @cfunc{connect}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_listen (cce_location_t * @var{L}, int @var{socket}, int @var{N})
+Wrapper for @cfunc{listen}.
+@end deftypefun
+
+
+@deftypefun int cce_sys_accept (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t * @var{length_ptr})
+Wrapper for @cfunc{accept}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_getpeername (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t * @var{length}_ptr)
+Wrapper for @cfunc{getpeername}.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_send (cce_location_t * @var{L}, int @var{socket}, const void * @var{buffer}, size_t @var{size}, int @var{flags})
+Wrapper for @cfunc{send}.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_recv (cce_location_t * @var{L}, int @var{socket}, void * @var{buffer}, size_t @var{size}, int @var{flags})
+Wrapper for @cfunc{recv}.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_sendto (cce_location_t * @var{L}, int @var{socket}, const void * @var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr * @var{addr}, socklen_t @var{length})
+Wrapper for @cfunc{sendto}.
+@end deftypefun
+
+
+@deftypefun size_t cce_sys_recvfrom (cce_location_t * @var{L}, int @var{socket}, void * @var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr * @var{addr}, socklen_t * @var{length_ptr})
+Wrapper for @cfunc{recvfrom}.
+@end deftypefun
+
+
 @c page
 @node syscalls process
 @section Process system calls
