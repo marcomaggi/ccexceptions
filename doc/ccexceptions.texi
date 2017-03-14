@@ -2033,6 +2033,11 @@ Wrapper for @cfunc{dup2}.
 Wrapper for @cfunc{pipe}.
 @end deftypefun
 
+
+@deftypefun void cce_sys_mkfifo (cce_location_t * @var{L}, const char * @var{pathname}, mode_t @var{mode})
+Wrapper for @cfunc{mkfifo}.
+@end deftypefun
+
 @c page
 @node syscalls mmap
 @section Memory mapping system calls

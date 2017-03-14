@@ -336,6 +336,17 @@ cce_sys_pipe (cce_location_t * L, int pipefd[2])
   }
 }
 
+void
+cce_sys_mkfifo (cce_location_t * L, const char * pathname, mode_t mode)
+{
+  int	rv;
+  errno = 0;
+  rv = mkfifo(pathname, mode);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: memory mapping.

@@ -436,6 +436,9 @@ cce_decl int cce_sys_dup2 (cce_location_t * L, int old, int new)
 cce_decl void cce_sys_pipe (cce_location_t * L, int pipefd[2])
   __attribute__((nonnull(1,2)));
 
+cce_decl void cce_sys_mkfifo (cce_location_t * L, const char * pathname, mode_t mode)
+  __attribute__((nonnull(1,2)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory mapping.
