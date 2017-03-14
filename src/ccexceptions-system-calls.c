@@ -829,6 +829,52 @@ cce_sys_faccessat (cce_location_t * L, int dirfd, const char * pathname, int how
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_utime (cce_location_t * L, const char * pathname, const struct utimbuf * times)
+{
+  int	rv;
+  errno = 0;
+  rv = utime(pathname, times);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_utimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+{
+  int	rv;
+  errno = 0;
+  rv = utimes(pathname, TVP);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+{
+  int	rv;
+  errno = 0;
+  rv = lutimes(pathname, TVP);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
+{
+  int	rv;
+  errno = 0;
+  rv = futimes(filedes, TVP);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.

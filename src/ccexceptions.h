@@ -104,8 +104,10 @@ extern "C" {
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <utime.h>
 #include <sys/select.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
@@ -604,6 +606,20 @@ cce_decl int cce_sys_access (cce_location_t * L, const char * pathname, int how)
   __attribute__((nonnull(1,2)));
 
 cce_decl int cce_sys_faccessat (cce_location_t * L, int dirfd, const char * pathname, int how, int flags)
+  __attribute__((nonnull(1,3)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_utime (cce_location_t * L, const char * pathname, const struct utimbuf * times)
+  __attribute__((nonnull(1,2)));
+
+cce_decl void cce_sys_utimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
   __attribute__((nonnull(1,3)));
 
 

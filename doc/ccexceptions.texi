@@ -2296,6 +2296,30 @@ Wrapper for @cfunc{access}.  The return value is @samp{0} if access is denied; t
 Wrapper for @cfunc{faccessat}.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@subsubheading File times
+
+
+@deftypefun void cce_sys_utime (cce_location_t * @var{L}, const char * @var{pathname}, const struct utimbuf * @var{times})
+Wrapper for @cfunc{utime}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_utimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+Wrapper for @cfunc{utimes}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+Wrapper for @cfunc{lutimes}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
+Wrapper for @cfunc{futimes}.
+@end deftypefun
+
 @c page
 @node syscalls process
 @section Process system calls
