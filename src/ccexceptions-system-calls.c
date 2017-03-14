@@ -875,6 +875,30 @@ cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_truncate (cce_location_t * L, const char * pathname, off_t length)
+{
+  int	rv;
+  errno = 0;
+  rv = truncate(pathname, length);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_ftruncate (cce_location_t * L, int filedes, off_t length)
+{
+  int	rv;
+  errno = 0;
+  rv = ftruncate(filedes, length);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: temporary files and directories.

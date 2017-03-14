@@ -2306,19 +2306,34 @@ Wrapper for @cfunc{utime}.
 @end deftypefun
 
 
-@deftypefun void cce_sys_utimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+@deftypefun void cce_sys_utimes (cce_location_t * @var{L}, const char * @var{pathname}, const struct timeval @var{TVP} [2])
 Wrapper for @cfunc{utimes}.
 @end deftypefun
 
 
-@deftypefun void cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
+@deftypefun void cce_sys_lutimes (cce_location_t * @var{L}, const char * @var{pathname}, const struct timeval @var{TVP} [2])
 Wrapper for @cfunc{lutimes}.
 @end deftypefun
 
 
-@deftypefun void cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
+@deftypefun void cce_sys_futimes (cce_location_t * @var{L}, int @var{filedes}, const struct timeval @var{TVP} [2])
 Wrapper for @cfunc{futimes}.
 @end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Truncating files
+
+
+@deftypefun void cce_sys_truncate (cce_location_t * @var{L}, const char * @var{pathname}, off_t @var{length})
+Wrapper for @cfunc{truncate}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_ftruncate (cce_location_t * @var{L}, int @var{filedes}, off_t @var{length})
+Wrapper for @cfunc{ftruncate}.
+@end deftypefun
+
 
 @c page
 @node syscalls process
