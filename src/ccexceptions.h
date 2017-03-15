@@ -783,8 +783,24 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
  ** System call wrappers: process handling.
  ** ----------------------------------------------------------------- */
 
-cce_decl int cce_sys_fork (cce_location_t * L)
+cce_decl int cce_sys_system (cce_location_t * L, const char * command)
+  __attribute__((nonnull(1,2)));
+
+cce_decl pid_t cce_sys_fork (cce_location_t * L)
   __attribute__((nonnull(1)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_sys_execv (cce_location_t * L, const char * filename, char * const argv [])
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void cce_sys_execve (cce_location_t * L, const char * filename, char * const argv [], char * const env [])
+  __attribute__((nonnull(1,2,3,4)));
+
+cce_decl void cce_sys_execvp (cce_location_t * L, const char * filename, char * const argv [])
+  __attribute__((nonnull(1,2,3)));
+
+/* ------------------------------------------------------------------ */
 
 cce_decl void cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
   __attribute__((nonnull(1,3)));

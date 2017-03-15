@@ -2545,8 +2545,28 @@ Wrapper for @cfunc{setsockopt}.
 @section Process system calls
 
 
-@deftypefun int cce_sys_fork (cce_location_t * @var{L})
+@deftypefun int cce_sys_system (cce_location_t * @var{L}, const char * @var{command})
+Wrapper for @cfunc{system}.
+@end deftypefun
+
+
+@deftypefun pid_t cce_sys_fork (cce_location_t * @var{L})
 Wrapper for @cfunc{fork}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_execv (cce_location_t * @var{L}, const char * @var{filename}, char * const @var{argv} [])
+Wrapper for @cfunc{execv}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_execve (cce_location_t * @var{L}, const char * @var{filename}, char * const @var{argv} [], char * const @var{env} [])
+Wrapper for @cfunc{execve}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_execvp (cce_location_t * @var{L}, const char * @var{filename}, char * const @var{argv} [])
+Wrapper for @cfunc{execvp}.
 @end deftypefun
 
 

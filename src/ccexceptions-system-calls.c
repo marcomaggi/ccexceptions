@@ -1211,9 +1211,22 @@ cce_sys_setsockopt (cce_location_t * L, int socket, int level, int optname, cons
  ** ----------------------------------------------------------------- */
 
 int
-cce_sys_fork (cce_location_t * L)
+cce_sys_system (cce_location_t * L, const char * command)
 {
   int	rv;
+  errno = 0;
+  rv = system(command);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  } else {
+    return rv;
+  }
+}
+
+pid_t
+cce_sys_fork (cce_location_t * L)
+{
+  pid_t	rv;
   errno = 0;
   rv = fork();
   if (-1 == rv) {
@@ -1222,6 +1235,43 @@ cce_sys_fork (cce_location_t * L)
     return rv;
   }
 }
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_execv (cce_location_t * L, const char * filename, char * const argv [])
+{
+  int	rv;
+  errno = 0;
+  rv = execv(filename, argv);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_execve (cce_location_t * L, const char * filename, char * const argv [], char * const env [])
+{
+  int	rv;
+  errno = 0;
+  rv = execve(filename, argv, env);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_execvp (cce_location_t * L, const char * filename, char * const argv [])
+{
+  int	rv;
+  errno = 0;
+  rv = execvp(filename, argv);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
