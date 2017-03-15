@@ -1995,6 +1995,14 @@ default.  The @gnu{} C Library and Linux calls are available only if the package
 with, respectively, @option{--enable-glibc} and @option{--enable-linux}.  If a system call is not
 available: the associated wrapper will raise an exception of type @objtype{cce_unimplemented_C_t}.
 
+By default, the system call definitions in the header file are excluded; to include the we must
+define a preprocessor symbol as follows:
+
+@example
+#define CCE_INCLUDE_SYSTEM_CALLS        1
+#include <ccexceptions.h>
+@end example
+
 @menu
 * syscalls memory::             Memory allocation.
 * syscalls io::                 Input/output system calls.
@@ -2578,6 +2586,14 @@ Wrapper for @cfunc{waitpid}.
 @node syshandlers
 @chapter Predefined exception handlers
 
+
+By default, the system handlers definitions in the header file are excluded; to include the we must
+define a preprocessor symbol as follows:
+
+@example
+#define CCE_INCLUDE_SYSTEM_CALLS        1
+#include <ccexceptions.h>
+@end example
 
 @menu
 * syshandlers malloc::          Handler for allocated memory.
