@@ -758,6 +758,12 @@ cce_decl size_t cce_sys_recvfrom (cce_location_t * L, int socket, void * buffer,
 				  struct sockaddr * addr, socklen_t * length_ptr)
   __attribute__((nonnull(1,3,6,7)));
 
+cce_decl void cce_sys_getsockopt (cce_location_t * L, int socket, int level, int optname, void * optval, socklen_t * optlen_ptr)
+  __attribute__((nonnull(1,5,6)));
+
+cce_decl void cce_sys_setsockopt (cce_location_t * L, int socket, int level, int optname, const void * optval, socklen_t optlen)
+  __attribute__((nonnull(1,5)));
+
 
 /** --------------------------------------------------------------------
  ** System call wrappers: memory allocation.

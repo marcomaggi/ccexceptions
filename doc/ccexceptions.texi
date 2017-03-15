@@ -2531,6 +2531,15 @@ Wrapper for @cfunc{recvfrom}.
 @end deftypefun
 
 
+@deftypefun void cce_sys_getsockopt (cce_location_t * @var{L}, int @var{socket}, int @var{level}, int @var{optname}, void * @var{optval}, socklen_t * @var{optlen_ptr})
+Wrapper for @cfunc{getsockopt}.
+@end deftypefun
+
+
+@deftypefun void cce_sys_setsockopt (cce_location_t * @var{L}, int @var{socket}, int @var{level}, int @var{optname}, const void * @var{optval}, socklen_t @var{optlen})
+Wrapper for @cfunc{setsockopt}.
+@end deftypefun
+
 @c page
 @node syscalls process
 @section Process system calls

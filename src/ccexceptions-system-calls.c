@@ -1181,6 +1181,30 @@ cce_sys_recvfrom (cce_location_t * L, int socket, void * buffer, size_t size, in
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_sys_getsockopt (cce_location_t * L, int socket, int level, int optname, void * optval, socklen_t * optlen_ptr)
+{
+  int	rv;
+  errno = 0;
+  rv = getsockopt(socket, level, optname, optval, optlen_ptr);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
+void
+cce_sys_setsockopt (cce_location_t * L, int socket, int level, int optname, const void * optval, socklen_t optlen)
+{
+  int	rv;
+  errno = 0;
+  rv = setsockopt(socket, level, optname, optval, optlen);
+  if (-1 == rv) {
+    cce_raise(L, cce_errno_C_clear());
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** System wrappers: process handling.
