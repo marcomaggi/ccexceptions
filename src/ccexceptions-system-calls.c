@@ -1276,7 +1276,7 @@ cce_sys_execvp (cce_location_t * L, const char * filename, char * const argv [])
 void
 cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int options)
 {
-  int	rv;
+  pid_t	rv;
   errno = 0;
   rv = waitpid(pid, wstatus, options);
   if (-1 == rv) {
