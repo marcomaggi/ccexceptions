@@ -153,10 +153,6 @@ Indexes
 @chapter Overview of the package
 
 
-@cindex @code{CCE_INCLUDE_SYSTEM_CALLS}, preprocessor macro
-@cindex Preprocessor macro @code{CCE_INCLUDE_SYSTEM_CALLS}
-
-
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library requiring
 @gcc{} extensions; it implements an interface to non--local exits, which is somewhat similar to
 exceptions handling.  The library targets @posix{} systems but supports some @gnu{} C Library
@@ -181,23 +177,10 @@ Implement a simple exceptional condition descriptors interface.
 these features come at the cost of slowing down execution in a possibly sensible way (with respect
 to, for example, hand--coded @code{goto} instructions that jump to labels).
 
-@value{PACKAGE} installs the single header file @file{ccexceptions.h}.  All the function names in
-the @api{} are prefixed with @code{cce_}; all the constant names are prefixed with @code{CCE_}; all
-the type names are prefixed with @code{cce_} and suffixed with @code{_t}.
-
-Many system calls for a @gnu{}+Linux system are wrapped in @value{PACKAGE} functions to allow usage
-of the location mechanism; this implies that a lot of header files are included by the file
-@file{ccexceptions.h}; this is sometimes unwanted.  So, by default, the definitions of the system
-call wrappers is @strong{excluded} from the header file; to include such definitions we have to
-include the file as follows:
-
-@example
-#define CCE_INCLUDE_SYSTEM_CALLS        1
-#include <ccexceptions.h>
-@end example
-
-@noindent
-the definition of the preprocessor symbols enables inclusion.
+@value{PACKAGE} installs the main header file @file{ccexceptions.h} along with other headers with
+names in the pattern @file{ccexceptions-*.h}.  All the function names in the @api{} are prefixed
+with @code{cce_}; all the constant names are prefixed with @code{CCE_}; all the type names are
+prefixed with @code{cce_} and suffixed with @code{_t}.
 
 @menu
 * overview linking::            Linking code with the library.
@@ -1544,7 +1527,7 @@ conversion is sometimes needed.
 @section Predefined @code{h_errno} conditions
 
 
-All the following definitions are accessible from the header file @file{ccexceptions.h}.
+All the following definitions are accessible from the header file @file{ccexceptions-networking.h}.
 
 
 @deftp {Struct Typedef} cce_h_errno_D_t
@@ -1995,16 +1978,9 @@ default.  The @gnu{} C Library and Linux calls are available only if the package
 with, respectively, @option{--enable-glibc} and @option{--enable-linux}.  If a system call is not
 available: the associated wrapper will raise an exception of type @objtype{cce_unimplemented_C_t}.
 
-By default, the system call definitions in the header file are excluded; to include the we must
-define a preprocessor symbol as follows:
-
-@example
-#define CCE_INCLUDE_SYSTEM_CALLS        1
-#include <ccexceptions.h>
-@end example
-
 @menu
-* syscalls memory::             Memory allocation.
+* syscalls alloc::              Memory allocation.
+* syscalls mlock::              Locking memory pages.
 * syscalls io::                 Input/output system calls.
 * syscalls mmap::               Memory mapping system calls.
 * syscalls fs::                 File system system calls.
@@ -2013,8 +1989,11 @@ define a preprocessor symbol as follows:
 @end menu
 
 @c page
-@node syscalls memory
+@node syscalls alloc
 @section Memory allocation
+
+
+The following symbols are defined in the header file @file{ccexceptions.h}.
 
 
 @deftypefun {void *} cce_sys_malloc (cce_location_t * @var{L}, size_t @var{size})
@@ -2031,9 +2010,12 @@ Wrapper for @cfunc{realloc}.  This function never returns @cnull{}.
 Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 @end deftypefun
 
-@c ------------------------------------------------------------------------
+@c page
+@node syscalls mlock
+@section Locking memory pages
 
-@subsubheading Locking memory pages
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftypefun void cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
@@ -2058,6 +2040,9 @@ Wrapper for @cfunc{munlockall}.
 @c page
 @node syscalls io
 @section Input/output system calls
+
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftypefun int cce_sys_open (cce_location_t * @var{L}, const char * @var{filename}, int @var{flags}, mode_t @var{mode})
@@ -2147,6 +2132,9 @@ Wrapper for @cfunc{mkfifo}.
 @section Memory mapping system calls
 
 
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
+
+
 @deftypefun {void *} cce_sys_mmap (cce_location_t * @var{L}, void * @var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
 Wrapper for @cfunc{mmap}.
 @end deftypefun
@@ -2187,6 +2175,9 @@ Wrapper for @cfunc{madvise}.
 @c page
 @node syscalls fs
 @section File system system calls
+
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @subsubheading Current working directory
@@ -2449,6 +2440,9 @@ Wrapper for @cfunc{ftruncate}.
 @section Socket system calls
 
 
+The following symbols are defined in the header file @file{ccexceptions-networking.h}.
+
+
 @deftypefun void cce_sys_bind (cce_location_t * @var{L}, int @var{socket}, struct sockaddr * @var{addr}, socklen_t @var{length})
 Wrapper for @cfunc{bind}.
 @end deftypefun
@@ -2553,6 +2547,9 @@ Wrapper for @cfunc{setsockopt}.
 @section Process system calls
 
 
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
+
+
 @deftypefun int cce_sys_system (cce_location_t * @var{L}, const char * @var{command})
 Wrapper for @cfunc{system}.
 @end deftypefun
@@ -2587,14 +2584,6 @@ Wrapper for @cfunc{waitpid}.
 @chapter Predefined exception handlers
 
 
-By default, the system handlers definitions in the header file are excluded; to include the we must
-define a preprocessor symbol as follows:
-
-@example
-#define CCE_INCLUDE_SYSTEM_CALLS        1
-#include <ccexceptions.h>
-@end example
-
 @menu
 * syshandlers malloc::          Handler for allocated memory.
 * syshandlers filedes::         Handler for file descriptors.
@@ -2624,6 +2613,8 @@ if (cce_location(L)) @{
   cce_run_cleanup_handlers(L);
 @}
 @end example
+
+The following symbols are defined in the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_handler_malloc_t
@@ -2666,6 +2657,8 @@ if (cce_location(L)) @{
   cce_run_cleanup_handlers(L);
 @}
 @end example
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftp {Struct Typedef} cce_handler_filedes_t
@@ -2710,6 +2703,8 @@ if (cce_location(L)) @{
   cce_run_cleanup_handlers(L);
 @}
 @end example
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftp {Struct Typedef} cce_handler_pipedes_t
@@ -2759,6 +2754,8 @@ The handler documented here will ignore errors returned by @cfunc{remove}, which
 we can use the source code of this handler as template to implement a more complete procedure.
 Remember that a good way to create temporary files is to use the @posix{} standard function
 @cfunc{mkstemp}.
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftp {Struct Typedef} cce_handler_tmpfile_t
@@ -2813,6 +2810,8 @@ The handler documented here will ignore errors returned by @cfunc{rmdir}, which 
 can use the source code of this handler as template to implement a more complete procedure.
 Remember that a good way to create temporary files is to use the function @cfunc{mkdtemp}
 implemented by the @gnu{} C Library.
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftp {Struct Typedef} cce_handler_tmpdir_t
@@ -2875,6 +2874,8 @@ if (cce_location(L)) @{
 
 The handler documented here will ignore errors returned by @cfunc{closedir}, which is generally bad;
 we can use the source code of this handler as template to implement a more complete procedure.
+
+The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
 @deftp {Struct Typedef} cce_handler_dirstream_t

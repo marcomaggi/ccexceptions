@@ -31,8 +31,9 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#define CCE_INCLUDE_SYSTEM_CALLS		1
 #include "ccexceptions.h"
+#include "ccexceptions-system.h"
+#include "ccexceptions-networking.h"
 #include <assert.h>
 
 

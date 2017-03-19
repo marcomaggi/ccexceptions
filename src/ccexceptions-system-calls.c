@@ -26,11 +26,14 @@
 
 */
 
-#define CCE_INCLUDE_SYSTEM_CALLS	1
+
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
 #include "ccexceptions-internals.h"
-#include <errno.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
+#include "ccexceptions-system.h"
+#include "ccexceptions-networking.h"
 
 
 /** --------------------------------------------------------------------

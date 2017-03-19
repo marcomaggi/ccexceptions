@@ -8,7 +8,7 @@
 	This  header  file is  for  internal  definitions.  It  must  be
 	included by all the source files in this package.
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  lesser  General  Public License  as
@@ -28,6 +28,10 @@
 #ifndef CCEXCEPTIONS_INTERNALS_H
 #define CCEXCEPTIONS_INTERNALS_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /** --------------------------------------------------------------------
  ** Headers.
@@ -37,6 +41,9 @@
 #  include <config.h>
 #endif
 #include "ccexceptions.h"
+
+#include <sys/stat.h>
+#include <sys/mman.h>
 
 
 /** --------------------------------------------------------------------

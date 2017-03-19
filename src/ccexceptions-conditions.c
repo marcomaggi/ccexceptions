@@ -26,8 +26,8 @@
 
 */
 
-#define CCE_INCLUDE_SYSTEM_CALLS	1
 #include "ccexceptions-internals.h"
+#include <netdb.h>	// for h_errno
 #include <limits.h>	// for INT_MAX
 
 
@@ -407,6 +407,13 @@ cce_h_errno_C (int errnum)
   /* If  we are  here  ERRNUM  is an  invalid  "h_errno"  value for  the
      underlying platform. */
   return &(h_errno_conditions[LAST_H_ERRNO_CONDITION]);
+}
+const cce_h_errno_C_t *
+cce_h_errno_C_clear (void)
+{
+  int	errnum = h_errno;
+  h_errno = 0;
+  return cce_h_errno_C(errnum);
 }
 
 /* end of file */

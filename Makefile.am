@@ -29,7 +29,10 @@ ccexceptions_CURRENT	= @ccexceptions_VERSION_INTERFACE_CURRENT@
 ccexceptions_REVISION	= @ccexceptions_VERSION_INTERFACE_REVISION@
 ccexceptions_AGE	= @ccexceptions_VERSION_INTERFACE_AGE@
 
-include_HEADERS		= src/ccexceptions.h
+include_HEADERS		= \
+	src/ccexceptions.h		\
+	src/ccexceptions-system.h	\
+	src/ccexceptions-networking.h
 
 lib_LTLIBRARIES		= libccexceptions.la
 libccexceptions_la_LDFLAGS= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
