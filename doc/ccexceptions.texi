@@ -558,8 +558,9 @@ print_alpha((alpha_t *)&B);
 
 
 Non--local exits are a way to transfer execution from one point to another in a program; they are
-implemented by the standard C library through the @cfunc{setjmp} and @cfunc{longjmp} functions.  The
-main usage pattern for this module is the following:
+implemented by the standard C library through the @cfunc{setjmp} and @cfunc{longjmp} functions.
+@value{PACKAGE} makes use of the @posix{} variants @cfunc{sigsetjmp} and @cfunc{siglongjmp}, and it
+does @strong{not} save the signals mask.  The main usage pattern for this module is the following:
 
 @example
 cce_location_t  L[1];
@@ -583,8 +584,8 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_location_t
-Struct type representing the location context.  This type is ``derived'' from @objtype{setjmp_buf}
-in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @objtype{setjmp_buf}.
+Struct type representing the location context.  This type is ``derived'' from @objtype{sigjmp_buf}
+in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @objtype{sigjmp_buf}.
 
 Instances of this structure reference an instance of type @objtype{cce_condition_t}; it is set by
 @cfunc{cce_raise} and @cfunc{cce_retry}.  The client code is responsible for releasing resources
@@ -599,13 +600,13 @@ we release the condition object.
 
 
 @deftypefun void cce_location_init (cce_location_t * @var{L})
-Initialise the location @var{L}, but do @strong{not} call @cfunc{setjmp}.  We are not meant to call
-this function directly; rather we should use the macro @cfunc{cce_location}.
+Initialise the location @var{L}, but do @strong{not} call @cfunc{sigsetjmp}.  We are not meant to
+call this function directly; rather we should use the macro @cfunc{cce_location}.
 @end deftypefun
 
 
 @deftypefn {Preprocessor Macro} int cce_location (cce_location_t * @var{L})
-Initialise the location @var{L}; call @cfunc{setjmp} and return its return value.
+Initialise the location @var{L}; call @cfunc{sigsetjmp} and return its return value.
 @end deftypefn
 
 
@@ -629,7 +630,7 @@ Constant used by the library as non--local exit code.  It is the return value of
 
 @deftypefun void cce_raise (cce_location_t * @var{L}, const cce_condition_t * @var{C})
 Raise an exception associated to the location @var{L} and with exceptional condition object @var{C}.
-This function performs the call to @cfunc{longjmp} with code @code{CCE_ERROR}.
+This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
 
 With a call to this function: the client code is put in charge of releasing resources associated to
 @var{C}.  If @var{C} is @cnull{}: an internal, statically allocated, exceptional condition object is
@@ -640,7 +641,7 @@ selected to represent an ``unknown exceptional condition''; we can transparently
 
 @deftypefun void cce_retry (cce_location_t * @var{L})
 Raise an exception associated to the location @var{L} with the purpose or retrying the body
-evaluation.  This function performs the call to @cfunc{longjmp} with code @code{CCE_RETRY}.
+evaluation.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_RETRY}.
 
 This function selects an internal, statically allocated, exceptional condition object to represent
 an ``unknown exceptional condition''; we can transparently apply the function
