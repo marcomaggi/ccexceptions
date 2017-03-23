@@ -182,6 +182,14 @@ names in the pattern @file{ccexceptions-*.h}.  All the function names in the @ap
 with @code{cce_}; all the constant names are prefixed with @code{CCE_}; all the type names are
 prefixed with @code{cce_} and suffixed with @code{_t}.
 
+@strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
+standard header files; so either we include @file{ccexceptions.h} as first header, or we include the
+following definitions before including @strong{all} the header files:
+
+@example
+#define _POSIX_C_SOURCE         200809L
+@end example
+
 @menu
 * overview linking::            Linking code with the library.
 @end menu

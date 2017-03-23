@@ -40,13 +40,13 @@ cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
 {
   const cce_condition_t *	default_C = cce_unknown_C;
   L->condition = (condition)? condition : default_C;
-  longjmp(L->buffer, (int)CCE_ERROR);
+  siglongjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_t * L)
 {
   L->condition = cce_unknown_C;
-  longjmp(L->buffer, (int)CCE_RETRY);
+  siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 __attribute__((hot)) void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)

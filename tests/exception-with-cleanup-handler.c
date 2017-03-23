@@ -27,10 +27,10 @@
 */
 
 
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <ccexceptions.h>
 
 typedef struct handler1_t {
   cce_handler_t;

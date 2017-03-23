@@ -27,13 +27,13 @@
 */
 
 
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>	// for INT_MAX
 #include <assert.h>
 #include <errno.h>
 #include <string.h>
-#include <ccexceptions.h>
 
 int
 main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)

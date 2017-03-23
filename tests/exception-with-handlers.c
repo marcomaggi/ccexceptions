@@ -26,11 +26,11 @@
 
 */
 
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <errno.h>
-#include <ccexceptions.h>
 
 static void
 test_no_exception (void)

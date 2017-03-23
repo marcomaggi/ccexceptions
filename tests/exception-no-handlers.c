@@ -27,10 +27,10 @@
 */
 
 
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <ccexceptions.h>
 
 int
 main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[] CCE_UNUSED)

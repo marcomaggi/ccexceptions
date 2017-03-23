@@ -26,9 +26,9 @@
 */
 
 
+#include <ccexceptions.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <ccexceptions.h>
 
 
 /*** Exceptional condition A. ***/

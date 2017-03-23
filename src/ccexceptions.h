@@ -92,8 +92,6 @@ extern "C" {
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#define _GNU_SOURCE		1
-
 /* Enable latest POSIX features. */
 #define _POSIX_C_SOURCE		200809L
 
@@ -404,7 +402,7 @@ cce_decl const cce_h_errno_C_t * cce_h_errno_C_clear (void)
 
 struct cce_location_t {
   /* The buffer must be the first member of this struct. */
-  jmp_buf			buffer;
+  sigjmp_buf			buffer;
   const cce_condition_t *	condition;
   cce_handler_t *		first_handler;
 };
@@ -424,7 +422,7 @@ cce_condition (cce_location_t * L)
 }
 
 #define cce_location(HERE)	\
-  __builtin_expect((cce_location_init(HERE),setjmp((void *)(HERE))),0)
+  __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
 
 
 /** --------------------------------------------------------------------

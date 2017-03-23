@@ -27,12 +27,12 @@
 */
 
 
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <errno.h>
 #include <string.h>
-#include <ccexceptions.h>
 
 static const char *
 default_static_message (const cce_condition_t * C CCE_UNUSED)

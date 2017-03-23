@@ -12,6 +12,7 @@
   See the COPYING file.
 */
 
+#define _POSIX_C_SOURCE		199506L
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
