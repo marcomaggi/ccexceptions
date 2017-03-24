@@ -151,6 +151,42 @@ const cce_unimplemented_C_t * const cce_unimplemented_C = &cce_unimplemented_C_s
 
 
 /** --------------------------------------------------------------------
+ ** Invalid function argument.
+ ** ----------------------------------------------------------------- */
+
+static void		cce_invalid_argument_C_destructor     (cce_condition_t * C);
+static const char *	cce_invalid_argument_C_static_message (const cce_condition_t * C);
+
+static const cce_invalid_argument_D_t cce_invalid_argument_D_stru = {
+  .parent		= &cce_root_D_stru,
+  .free			= cce_invalid_argument_C_destructor,
+  .static_message	= cce_invalid_argument_C_static_message
+};
+
+const cce_invalid_argument_D_t * cce_invalid_argument_D = &cce_invalid_argument_D_stru;
+
+cce_invalid_argument_C_t *
+cce_invalid_argument_C (cce_location_t * L, const char * func, unsigned index)
+{
+  cce_invalid_argument_C_t *	C = cce_sys_malloc(L, sizeof(cce_invalid_argument_C_t));
+  C->descriptor = &cce_invalid_argument_D_stru;
+  C->funcname	= func;
+  C->index	= index;
+  return C;
+}
+void
+cce_invalid_argument_C_destructor (cce_condition_t * C CCE_UNUSED)
+{
+  free(C);
+}
+const char *
+cce_invalid_argument_C_static_message (const cce_condition_t * C CCE_UNUSED)
+{
+  return "invalid function argument";
+}
+
+
+/** --------------------------------------------------------------------
  ** Errno condition.
  ** ----------------------------------------------------------------- */
 

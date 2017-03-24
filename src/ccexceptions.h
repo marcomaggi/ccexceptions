@@ -307,6 +307,47 @@ cce_cast_to_unimplemented_C_from_condition (cce_condition_t * src)
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional condition objects: invalid function argument.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cce_invalid_argument_D_t {
+  cce_condition_descriptor_t;
+} cce_invalid_argument_D_t;
+
+typedef struct cce_invalid_argument_C_t {
+  cce_condition_t;
+  /* Pointer to  a statically  allocated ASCIIZ string  representing the
+     function name; usually generated with "__func__". */
+  const char *		funcname;
+  /* One-based index of the invalid argument. */
+  unsigned		index;
+} cce_invalid_argument_C_t;
+
+cce_decl const cce_invalid_argument_D_t * cce_invalid_argument_D;
+
+cce_decl cce_invalid_argument_C_t * cce_invalid_argument_C (cce_location_t * L, const char * func, unsigned index)
+  __attribute__((nonnull(1,2),returns_nonnull));
+
+__attribute__((pure,nonnull(1),always_inline))
+static inline bool
+cce_is_a_invalid_argument_C (const cce_condition_t * C)
+{
+  return cce_is_a_condition(C, cce_invalid_argument_D);
+}
+
+/* Output of: (my-c-insert-cast-function "cce" "condition" "invalid_argument_C") */
+__attribute__((const,always_inline))
+static inline cce_invalid_argument_C_t *
+cce_cast_to_invalid_argument_C_from_condition (cce_condition_t * src)
+{
+  return (cce_invalid_argument_C_t *)src;
+}
+#define cce_cast_to_invalid_argument_C(SRC)		\
+  _Generic((SRC), cce_condition_t *: cce_cast_to_invalid_argument_C_from_condition)(SRC)
+/* End of output. */
+
+
+/** --------------------------------------------------------------------
  ** Exceptional condition objects: errno exception.
  ** ----------------------------------------------------------------- */
 

@@ -62,6 +62,7 @@ check_PROGRAMS	= \
 	tests/conditions-raising		\
 	tests/conditions-hierarchy		\
 	tests/conditions-example		\
+	tests/conditions-tests			\
 	tests/system-handlers
 
 TESTS				= $(check_PROGRAMS)
@@ -107,6 +108,9 @@ tests_conditions_hierarchy_LDADD		= $(ccexceptions_tests_ldadd)
 
 tests_conditions_example_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_conditions_tests_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_system_handlers_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_system_handlers_LDADD			= $(ccexceptions_tests_ldadd)
