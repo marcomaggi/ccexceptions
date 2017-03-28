@@ -11,6 +11,10 @@ sudo: false
 
 language: c
 
+before_install:
+   - sudo apt-get -qq update
+   - sudo apt-get install gcc-5
+
 install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew reinstall libtool > /dev/null; fi
