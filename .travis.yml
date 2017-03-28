@@ -1,0 +1,28 @@
+# safelist
+branches:
+  only:
+  - master
+
+os:
+  - linux
+  - osx
+
+sudo: false
+
+language: c
+
+install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew reinstall libtool > /dev/null; fi
+
+before_script:
+  - sh ./autogen.sh
+
+script: ./configure && make && make check
+
+compiler:
+  - gcc
+
+notifications:
+email: true
+
