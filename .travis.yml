@@ -17,7 +17,8 @@ install:
 
 before_script:
   - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
-  - cd /tmp && tar -xvzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/usr && make && make install
+  - cd /tmp && tar -xvzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/tmp/mine && make && make install
+  - export PATH=$PATH:/tmp/mine
   - sh ./autogen.sh
 
 script: ./configure && make && make check
