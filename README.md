@@ -51,7 +51,7 @@ to inspect the available configuration options:
 $ ../configure --help
 ```
 
-  The script offers the following special options:
+The script offers the following special options:
 
 * `--enable-glibc` Enable GNU C Library features (default is yes).
 
@@ -114,17 +114,16 @@ $ ../configure --enable-maintainer-mode [options]
 $ make
 $ make check
 $ make install
-
 ```
 
 ## Usage
 
 Read the documentation.
 
-IMPORTANT To  use the  library we  must enable  the POSIX  features when
+**IMPORTANT** To use the library we  must enable the POSIX features when
 including   the   standard   header   files;  so   either   we   include
 `ccexceptions.h`  as   first  header,   or  we  include   the  following
-definitions before including *all* the header files:
+definitions before including **all** the header files:
 
 ```
    #define _POSIX_C_SOURCE 200809L
@@ -147,21 +146,21 @@ project's Github site.
 
 The latest release of this package can be downloaded from:
 
-       <https://bitbucket.org/marcomaggi/ccexceptions/downloads>
+[https://bitbucket.org/marcomaggi/ccexceptions/downloads](https://bitbucket.org/marcomaggi/ccexceptions/downloads)
 
 development takes place at:
 
-	      <http://github.com/marcomaggi/ccexceptions/>
+[http://github.com/marcomaggi/ccexceptions/](http://github.com/marcomaggi/ccexceptions/)
 
 and as backup at:
 
-	    <https://bitbucket.org/marcomaggi/ccexceptions/>
+[https://bitbucket.org/marcomaggi/ccexceptions/](https://bitbucket.org/marcomaggi/ccexceptions/)
 
 the documentation is available online:
 
-	  <http://marcomaggi.github.io/docs/ccexceptions.html>
+[http://marcomaggi.github.io/docs/ccexceptions.html](http://marcomaggi.github.io/docs/ccexceptions.html)
 
 the GNU Project software can be found here:
 
-			 <http://www.gnu.org/>
+[http://www.gnu.org/](http://www.gnu.org/)
 
