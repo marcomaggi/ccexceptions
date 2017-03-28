@@ -12,8 +12,8 @@ sudo: false
 language: c
 
 before_install:
-   - sudo apt-get -qq update
-   - sudo apt-get install gcc-5
+   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo apt-get -qq update; fi
+   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo apt-get install gcc-5; fi
 
 install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
