@@ -29,7 +29,7 @@ before_script:
 script:
   - export PATH=/tmp/mine/bin:$PATH
   - sh ./autogen.sh
-  - ./configure
+  - ./configure --enable-maintainer-mode
   - make
   - make check
 
