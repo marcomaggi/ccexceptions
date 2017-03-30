@@ -23,6 +23,8 @@ addons:
 before_script:
    - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
    - pushd /tmp && tar -xvzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/tmp/mine && make && make install && popd
+   - wget http://ftp.gnu.org/gnu/texinfo/texinfo-6.3.tar.gz -O /tmp/texinfo-6.3.tar.gz
+   - pushd /tmp && tar -xvzf texinfo-6.3.tar.gz && cd texinfo-6.3 && ./configure --prefix=/tmp/mine && make && make install && popd
 
 script:
   - export PATH=/tmp/mine/bin:$PATH
