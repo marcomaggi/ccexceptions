@@ -17,6 +17,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - gcc-5
+    - autoconf
 
 #before_install:
 #   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo apt-get -qq update; fi
@@ -26,11 +27,15 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew reinstall libtool > /dev/null; fi
 
-before_script:
-  - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
-  - pushd /tmp && tar -xvzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/tmp/mine && make && make install && popd
+# before_script:
+#   - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
+#   - pushd /tmp && tar -xvzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/tmp/mine && make && make install && popd
 
-script: export PATH=/tmp/mine/bin:$PATH; sh ./autogen.sh && ./configure && make && make check
+script:
+  - export PATH=/tmp/mine/bin:$PATH
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then LIBTOOLIZE=glibtoolize sh ./autogen.sh; else sh ./autogen.sh; fi
+  - ./configure
+  - make && make check
 
 compiler:
   - gcc
