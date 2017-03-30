@@ -30,8 +30,7 @@ script:
   - export PATH=/tmp/mine/bin:$PATH
   - sh ./autogen.sh
   - ./configure --enable-maintainer-mode
-  - make
-  - make check
+  - make -j4 all && make -j4 check
 
 notifications:
 email: true
