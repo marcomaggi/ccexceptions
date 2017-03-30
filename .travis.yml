@@ -34,7 +34,7 @@ install:
 script:
   - export PATH=/tmp/mine/bin:$PATH
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then LIBTOOLIZE=glibtoolize sh ./autogen.sh; else sh ./autogen.sh; fi
-  - ./configure
+  - ./configure CC=gcc-5
   - make && make check
 
 compiler:
