@@ -1,6 +1,6 @@
 # CCExceptions
 
-[![Build Status](https://travis-ci.org/ccexceptions/ccexceptions.svg?branch=master)](https://travis-ci.org/ccexceptions/ccexceptions)
+[![Build Status](https://travis-ci.org/marcomaggi/ccexceptions.svg?branch=master)](https://travis-ci.org/marcomaggi/ccexceptions)
 
 
 ## Introduction
