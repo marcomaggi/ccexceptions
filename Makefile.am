@@ -163,8 +163,7 @@ demos_listdir_LDADD		= $(ccexceptions_demos_ldadd)
 # to make the Coverity tools work.
 #
 
-
-CCEXCEPTIONS_COVERITY_TOKEN_FILE = /home/marco/.coverity-ccexceptions-token
+CCEXCEPTIONS_COVERITY_TOKEN_FILE = /home/marco-devel/.coverity-ccexceptions-token
 
 .PHONY: coverity-scan coverity-archive coverity-upload
 
