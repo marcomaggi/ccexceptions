@@ -155,13 +155,21 @@ demos_listdir_LDADD		= $(ccexceptions_demos_ldadd)
 # after "make  coverity-scan" we should  check that the last  lines of
 # the file "cov-int/build-log.txt" report a successful build.
 #
+# Notice that if your Linux kernel is  at version 4.8 or above we have
+# to first issue the command:
+#
+#    $ sudo /sbin/sysctl vsyscall=emulate
+#
+# to make the Coverity tools work.
+#
+
 
 CCEXCEPTIONS_COVERITY_TOKEN_FILE = /home/marco/.coverity-ccexceptions-token
 
 .PHONY: coverity-scan coverity-archive coverity-upload
 
 coverity-scan:
-	sudo sysctl vsyscall=emulate; cov-build --dir cov-int make -j 4
+	cov-build --dir cov-int make -j 4
 
 coverity-archive:
 	tar caf ccexceptions.xz cov-int
