@@ -11,7 +11,7 @@ fi
 
 ../configure \
     --config-cache				\
-    --cache-file=../config.cache		\
+    --cache-file=./config.cache			\
     --enable-maintainer-mode                    \
     --disable-static --enable-shared            \
     --prefix="${prefix}"			\

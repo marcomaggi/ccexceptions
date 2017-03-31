@@ -327,7 +327,7 @@ cce_decl void cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int
 typedef struct cce_handler_filedes_t	cce_handler_filedes_t;
 
 struct cce_handler_filedes_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   int		filedes;
 };
 
@@ -356,7 +356,7 @@ cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_fi
 typedef struct cce_handler_pipedes_t	cce_handler_pipedes_t;
 
 struct cce_handler_pipedes_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   int		pipedes[2];
 };
 
@@ -385,7 +385,7 @@ cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pi
 typedef struct cce_handler_tmpfile_t	cce_handler_tmpfile_t;
 
 struct cce_handler_tmpfile_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   char *	pathname;
 };
 
@@ -414,7 +414,7 @@ cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tm
 typedef struct cce_handler_tmpdir_t	cce_handler_tmpdir_t;
 
 struct cce_handler_tmpdir_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   char *	pathname;
 };
 
@@ -443,7 +443,7 @@ cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmp
 typedef struct cce_handler_dirstream_t	cce_handler_dirstream_t;
 
 struct cce_handler_dirstream_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   DIR *		dirstream;
 };
 

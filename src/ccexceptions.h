@@ -195,7 +195,7 @@ struct cce_condition_descriptor_t {
 };
 
 struct cce_condition_t {
-  const cce_condition_descriptor_t *		descriptor;
+  const cce_condition_descriptor_t *	descriptor;
 };
 
 cce_decl const cce_condition_descriptor_t * const	cce_root_D;
@@ -242,11 +242,11 @@ typedef struct cce_unknown_D_t		cce_unknown_D_t;
 typedef struct cce_unknown_C_t		cce_unknown_C_t;
 
 struct cce_unknown_D_t {
-  cce_condition_descriptor_t;
+  cce_condition_descriptor_t	condition_descriptor[1];
 };
 
 struct cce_unknown_C_t {
-  cce_condition_t;
+  cce_condition_t		condition_object[1];
 };
 
 cce_decl const cce_unknown_D_t * const	cce_unknown_D;
@@ -255,7 +255,7 @@ cce_decl const cce_unknown_C_t * const	cce_unknown_C;
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
 cce_is_a_unknown_C (const cce_condition_t * condition)
 {
-  return cce_is_a_condition(condition, cce_unknown_D);
+  return cce_is_a_condition(condition, cce_unknown_D->condition_descriptor);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "unknown_C") */
@@ -278,11 +278,11 @@ typedef struct cce_unimplemented_D_t	cce_unimplemented_D_t;
 typedef struct cce_unimplemented_C_t	cce_unimplemented_C_t;
 
 struct cce_unimplemented_D_t {
-  cce_condition_descriptor_t;
+  cce_condition_descriptor_t	condition_descriptor[1];
 };
 
 struct cce_unimplemented_C_t {
-  cce_condition_t;
+  cce_condition_t		condition_object[1];
 };
 
 cce_decl const cce_unimplemented_D_t * const	cce_unimplemented_D;
@@ -291,7 +291,7 @@ cce_decl const cce_unimplemented_C_t * const	cce_unimplemented_C;
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
 cce_is_a_unimplemented_C (const cce_condition_t * condition)
 {
-  return cce_is_a_condition(condition, cce_unimplemented_D);
+  return cce_is_a_condition(condition, cce_unimplemented_D->condition_descriptor);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "unimplemented_C") */
@@ -311,11 +311,11 @@ cce_cast_to_unimplemented_C_from_condition (cce_condition_t * src)
  ** ----------------------------------------------------------------- */
 
 typedef struct cce_invalid_argument_D_t {
-  cce_condition_descriptor_t;
+  cce_condition_descriptor_t	condition_descriptor[1];
 } cce_invalid_argument_D_t;
 
 typedef struct cce_invalid_argument_C_t {
-  cce_condition_t;
+  cce_condition_t		condition_object[1];
   /* Pointer to  a statically  allocated ASCIIZ string  representing the
      function name; usually generated with "__func__". */
   const char *		funcname;
@@ -332,7 +332,7 @@ __attribute__((pure,nonnull(1),always_inline))
 static inline bool
 cce_is_a_invalid_argument_C (const cce_condition_t * C)
 {
-  return cce_is_a_condition(C, cce_invalid_argument_D);
+  return cce_is_a_condition(C, cce_invalid_argument_D->condition_descriptor);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "invalid_argument_C") */
@@ -352,13 +352,13 @@ cce_cast_to_invalid_argument_C_from_condition (cce_condition_t * src)
  ** ----------------------------------------------------------------- */
 
 typedef struct cce_errno_D_t {
-  cce_condition_descriptor_t;
+  cce_condition_descriptor_t	condition_descriptor[1];
 } cce_errno_D_t;
 
 typedef struct cce_errno_C_t {
-  cce_condition_t;
-  int			errnum;
-  const char *		message;
+  cce_condition_t		condition_object[1];
+  int				errnum;
+  const char *			message;
 } cce_errno_C_t;
 
 cce_decl const cce_errno_D_t * const cce_errno_D;
@@ -369,7 +369,7 @@ cce_decl const cce_errno_C_t * cce_errno_C (int code)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_is_a_errno_C (const cce_condition_t * condition)
 {
-  return cce_is_a_condition(condition, cce_errno_D);
+  return cce_is_a_condition(condition, cce_errno_D->condition_descriptor);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "errno_C") */
@@ -400,13 +400,13 @@ cce_errno_C_clear (void)
  ** ----------------------------------------------------------------- */
 
 typedef struct cce_h_errno_D_t {
-  cce_condition_descriptor_t;
+  cce_condition_descriptor_t	condition_descriptor[1];
 } cce_h_errno_D_t;
 
 typedef struct cce_h_errno_C_t {
-  cce_condition_t;
-  int			errnum;
-  const char *		message;
+  cce_condition_t		condition_object[1];
+  int				errnum;
+  const char *			message;
 } cce_h_errno_C_t;
 
 cce_decl const cce_h_errno_D_t * const cce_h_errno_D;
@@ -417,7 +417,7 @@ cce_decl const cce_h_errno_C_t * cce_h_errno_C (int code)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_is_a_h_errno_C (const cce_condition_t * condition)
 {
-  return cce_is_a_condition(condition, cce_h_errno_D);
+  return cce_is_a_condition(condition, cce_h_errno_D->condition_descriptor);
 }
 
 /* Output of: (my-c-insert-cast-function "cce" "condition" "h_errno_C") */
@@ -487,7 +487,7 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
 typedef struct cce_handler_malloc_t	cce_handler_malloc_t;
 
 struct cce_handler_malloc_t {
-  cce_handler_t;
+  cce_handler_t	exception_handler[1];
   void *	pointer;
 };
 

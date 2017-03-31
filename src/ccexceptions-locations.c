@@ -33,19 +33,19 @@ void
 cce_location_init (cce_location_t * L)
 {
   L->first_handler	= NULL;
-  L->condition		= cce_unknown_C;
+  L->condition		= cce_unknown_C->condition_object;
 }
 void
 cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
 {
-  const cce_condition_t *	default_C = cce_unknown_C;
+  const cce_condition_t *	default_C = cce_unknown_C->condition_object;
   L->condition = (condition)? condition : default_C;
   siglongjmp(L->buffer, (int)CCE_ERROR);
 }
 void
 cce_retry (struct cce_location_t * L)
 {
-  L->condition = cce_unknown_C;
+  L->condition = cce_unknown_C->condition_object;
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 __attribute__((hot)) void
