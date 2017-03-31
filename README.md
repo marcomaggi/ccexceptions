@@ -1,7 +1,8 @@
 # CCExceptions
 
 [![Build Status](https://travis-ci.org/marcomaggi/ccexceptions.svg?branch=master)](https://travis-ci.org/marcomaggi/ccexceptions)
-[![Coverity passed](https://scan.coverity.com/projects/ccexceptions/badge.svg)](https://scan.coverity.com/projects/ccexceptions)
+[![Coverity passed](https://scan.coverity.com/projects/12270/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
+
 
 ## Introduction
 
