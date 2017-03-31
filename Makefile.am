@@ -135,4 +135,43 @@ ccexceptions_demos_ldadd	= libccexceptions.la
 demos_listdir_CPPFLAGS		= $(ccexceptions_demos_cppflags)
 demos_listdir_LDADD		= $(ccexceptions_demos_ldadd)
 
+#page
+#### Coverity support
+#
+# First run  "make clean",  then run "make  coverity" to  generate the
+# report.  Remember  to put  in the  PATH the  directory in  which the
+# Coverity tools are installed.
+#
+# The tool  will use  a temporary directory  "$(builddir)/cov-int"; we
+# must *not* change this pathname.
+#
+# To generate and submit a report we must do:
+#
+#    $ make clean
+#    $ make coverity-scan
+#    $ make coverity-archive
+#    $ make coverity-upload
+#
+# after "make  coverity-scan" we should  check that the last  lines of
+# the file "cov-int/build-log.txt" report a successful build.
+#
+
+CCEXCEPTIONS_COVERITY_TOKEN_FILE = /home/marco/.coverity-ccexceptions-token
+
+.PHONY: coverity-scan coverity-archive coverity-upload
+
+coverity-scan:
+	sudo sysctl vsyscall=emulate; cov-build --dir cov-int make -j 4
+
+coverity-archive:
+	tar caf ccexceptions.xz cov-int
+
+coverity-upload:
+	curl --form token=$$(<$(CCEXCEPTIONS_COVERITY_TOKEN_FILE)) \
+	     --form email='marco.maggi-ipsu@poste.it' \
+	     --form file='@ccexceptions.xz' \
+	     --form version="$(VERSION)" \
+	     --form description="A build description" \
+	     'https://scan.coverity.com/builds?project=marcomaggi%2Fccexceptions'
+
 ### end of file
