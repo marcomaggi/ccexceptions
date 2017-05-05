@@ -33,36 +33,47 @@ void
 cce_location_init (cce_location_t * L)
 {
   L->first_handler	= NULL;
-  L->condition		= cce_unknown_C->condition_object;
+  L->condition		= &(cce_unknown_C_ptr->root_C.condition_C);
 }
+
+__attribute__((hot))
 void
-cce_raise (struct cce_location_t * L, const cce_condition_t * condition)
+cce_raise (cce_location_t * L, const cce_condition_C_t * C)
 {
-  const cce_condition_t *	default_C = cce_unknown_C->condition_object;
-  L->condition = (condition)? condition : default_C;
+  if (L->condition) { cce_condition_C_final((cce_condition_C_t*)L->condition); }
+  L->condition = (C)? C : &(cce_unknown_C_ptr->root_C.condition_C);
   siglongjmp(L->buffer, (int)CCE_ERROR);
 }
+
+__attribute__((hot))
 void
-cce_retry (struct cce_location_t * L)
+cce_retry (cce_location_t * L)
 {
-  L->condition = cce_unknown_C->condition_object;
+  if (L->condition) { cce_condition_C_final((cce_condition_C_t*)L->condition); }
+  L->condition = &(cce_unknown_C_ptr->root_C.condition_C);
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
-__attribute__((hot)) void
+
+__attribute__((hot))
+void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = true;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
-__attribute__((hot)) void
+
+__attribute__((hot))
+void
 cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = false;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
-__attribute__((hot)) void
+
+__attribute__((hot))
+void
 cce_run_cleanup_handlers (cce_location_t * L)
 /* Traverse the linked  list of registered handlers and  run the cleanup
    ones.   This  is a  destructive  function:  once  the list  has  been
@@ -78,7 +89,9 @@ cce_run_cleanup_handlers (cce_location_t * L)
     }
   }
 }
-__attribute__((hot)) void
+
+__attribute__((hot))
+void
 cce_run_error_handlers (cce_location_t * L)
 /* Traverse the  linked list  of registered handlers  and run  the error
    ones.   This  is a  destructive  function:  once  the list  has  been

@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS		= -I meta/autotools
 AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL configure.sh
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= -I$(srcdir)/src -Wall -Wextra $(AX_CFLAGS)
+AM_CFLAGS		= -I$(srcdir)/src -Wall $(AX_CFLAGS)
 
 ## --------------------------------------------------------------------
 
@@ -51,7 +51,6 @@ libccexceptions_la_SOURCES= \
 check_PROGRAMS	= \
 	tests/version				\
 	tests/setjmp				\
-	tests/gcc-auto-cleanup			\
 	tests/no-exceptions			\
 	tests/exception-no-handlers		\
 	tests/exception-with-cleanup-handler	\
@@ -64,6 +63,11 @@ check_PROGRAMS	= \
 	tests/conditions-example		\
 	tests/conditions-tests			\
 	tests/system-handlers
+
+if WANT_GCC
+check_PROGRAMS	+= \
+	tests/gcc-auto-cleanup
+endif
 
 TESTS				= $(check_PROGRAMS)
 

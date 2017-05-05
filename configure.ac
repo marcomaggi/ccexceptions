@@ -80,6 +80,10 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
 AC_HEADER_STDBOOL
 
+dnl The  documentation of GNU  Autoconf states that AC_PROG_CC  sets the
+dnl variable "GCC" to "yes" if the selected compiler is GCC.
+AM_CONDITIONAL([WANT_GCC],[test "x$GCC" = xyes])
+
 AC_CACHE_SAVE
 
 dnl page

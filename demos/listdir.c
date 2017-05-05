@@ -59,8 +59,8 @@ list_dirs (const char * pathname)
   if (cce_location(L)) {
     cce_run_error_handlers(L);
     fprintf(stderr, "%s: error: %s\n", progname,
-	    cce_condition_static_message(cce_condition(L)));
-    cce_condition_free(cce_condition(L));
+	    cce_condition_C_static_message(cce_condition_C(L)));
+    cce_condition_C_final(cce_condition_C(L));
     return EXIT_FAILURE;
   } else {
     DIR *		dirstream;

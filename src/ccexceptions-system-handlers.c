@@ -43,7 +43,7 @@
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_malloc_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_malloc_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_malloc_t *	H = cce_cast_to_handler_malloc(_H);
   free(H->pointer);
@@ -73,7 +73,7 @@ cce_error_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, voi
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_filedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_filedes_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_filedes_t *	H = cce_cast_to_handler_filedes(_H);
   close(H->filedes);
@@ -103,7 +103,7 @@ cce_error_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, i
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_pipedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_pipedes_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_pipedes_t *	H = cce_cast_to_handler_pipedes(_H);
   close(H->pipedes[0]);
@@ -136,7 +136,7 @@ cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, i
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_tmpfile_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_tmpfile_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_tmpfile_t *	H = cce_cast_to_handler_tmpfile(_H);
   remove(H->pathname);
@@ -175,7 +175,7 @@ cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, c
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_tmpdir_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_tmpdir_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_tmpdir_t *	H = cce_cast_to_handler_tmpdir(_H);
   rmdir(H->pathname);
@@ -214,7 +214,7 @@ cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, con
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_dirstream_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_dirstream_function (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
 {
   cce_handler_dirstream_t *	H = cce_cast_to_handler_dirstream(_H);
   closedir(H->dirstream);

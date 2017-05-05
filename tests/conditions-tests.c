@@ -47,13 +47,13 @@ test_invalid_argument (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_is_a_invalid_argument_C(cce_condition(L)));
-    assert(0 == strcmp(__func__, cce_cast_to_invalid_argument_C(cce_condition(L))->funcname));
+    assert(cce_is_invalid_argument_C(cce_condition_C(L)));
+    assert(0 == strcmp(__func__, cce_invalid_argument_C(L)->funcname));
     cce_run_error_handlers(L);
-    cce_condition_free(cce_condition(L));
+    cce_condition_C_final(cce_condition_C(L));
     error_flag = true;
   } else {
-    cce_raise(L, cce_invalid_argument_C(L, __func__, 1));
+    cce_raise(L, cce_condition_C(cce_make_invalid_argument_C(L, __func__, 1)));
     cce_run_cleanup_handlers(L);
   }
   assert(true == error_flag);

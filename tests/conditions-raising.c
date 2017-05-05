@@ -45,18 +45,18 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_condition(L);
-	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_condition_C_t *	C = cce_condition_C(L);
+	fprintf(stderr, "log: %s\n", cce_condition_C_static_message(C));
 	cce_run_error_handlers(L);
-	cce_condition_free(C);
+	cce_condition_C_final(C);
       }
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_errno_C(0));
+      cce_raise(L, cce_condition_C(cce_make_errno_C(0)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition_equal(cce_errno_C(0), cce_condition(L)));
+    assert(cce_condition_C(cce_make_errno_C(0)) == cce_condition_C(L));
     assert(false == flag);
   }
 
@@ -67,18 +67,18 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_condition(L);
-	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_condition_C_t *	C = cce_condition_C(L);
+	fprintf(stderr, "log: %s\n", cce_condition_C_static_message(C));
 	cce_run_error_handlers(L);
-	cce_condition_free(C);
+	cce_condition_C_final(C);
       }
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_errno_C(EINVAL));
+      cce_raise(L, cce_condition_C(cce_make_errno_C(EINVAL)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition_equal(cce_errno_C(EINVAL), cce_condition(L)));
+    assert(cce_condition_C(cce_make_errno_C(EINVAL)) == cce_condition_C(L));
     assert(false == flag);
   }
 
@@ -89,18 +89,18 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_condition(L);
-	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_condition_C_t *	C = cce_condition_C(L);
+	fprintf(stderr, "log: %s\n", cce_condition_C_static_message(C));
 	cce_run_error_handlers(L);
-	cce_condition_free(C);
+	cce_condition_C_final(C);
       }
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_errno_C(INT_MAX));
+      cce_raise(L, cce_condition_C(cce_make_errno_C(INT_MAX)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition_equal(cce_errno_C(INT_MAX), cce_condition(L)));
+    assert(cce_condition_C(cce_make_errno_C(INT_MAX)) == cce_condition_C(L));
     assert(false == flag);
   }
 
@@ -111,18 +111,18 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       {
-	cce_condition_t *	C = cce_condition(L);
-	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
+	cce_condition_C_t *	C = cce_condition_C(L);
+	fprintf(stderr, "log: %s\n", cce_condition_C_static_message(C));
 	cce_run_error_handlers(L);
-	cce_condition_free(C);
+	cce_condition_C_final(C);
       }
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_errno_C(-1));
+      cce_raise(L, cce_condition_C(cce_make_errno_C(-1)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition_equal(cce_errno_C(-1), cce_condition(L)));
+    assert(cce_condition_C(cce_make_errno_C(-1)) == cce_condition_C(L));
     assert(false == flag);
   }
 
