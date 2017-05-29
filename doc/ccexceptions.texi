@@ -48,9 +48,9 @@
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library requiring
-@gcc{} extensions; it implements an interface to non--local exits, which is somewhat similar to
-exceptions handling.  The library targets @posix{} systems.
+This document describes version @value{VERSION} of @value{PACKAGE}, a C11 Standard language library;
+it implements an interface to non--local exits, which is somewhat similar to exceptions handling.
+The library targets @posix{} systems.
 
 The package is distributed under the terms of the @gnu{} General Public License (@gpl{}).
 
@@ -151,10 +151,10 @@ Indexes
 @chapter Overview of the package
 
 
-This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library requiring
-@gcc{} extensions; it implements an interface to non--local exits, which is somewhat similar to
-exceptions handling.  The library targets @posix{} systems but supports some @gnu{} C Library
-functions and some Linux functions.
+This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library; it
+implements an interface to non--local exits, which is somewhat similar to exceptions handling.  The
+library targets @posix{} systems but supports some @gnu{} C Library functions and some Linux
+functions.
 
 This tiny library will not solve the problem of error handling in the C language, it just brings a
 little order in the mess resulting from hand--coding the error handling logic.  @value{PACKAGE}'s

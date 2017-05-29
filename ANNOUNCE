@@ -5,10 +5,9 @@ Subject: [announce] CCExceptions revision 0.3d0
 			      ============
 
 
-This  package installs  a C11  language library  requiring GCC  language
-extensions;  it implements  an interface  to non-local  exits, which  is
-somewhat  similar to  exceptions  handling.  The  library targets  POSIX
-systems.
+This package installs a C11 language library; it implements an interface
+to non-local  exits, which is  somewhat similar to  exceptions handling.
+The library targets POSIX systems.
 
   The package  makes use  of the  GNU Autotools  and it  is tested  on a
 GNU+Linux system.  It is distributed under the GNU Lesser General Public
