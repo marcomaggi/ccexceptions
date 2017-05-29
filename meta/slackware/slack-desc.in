@@ -1,7 +1,7 @@
               |-----handy-ruler-----------------------------------------------|
 @PACKAGE_NAME@: @PACKAGE_NAME@ @PACKAGE_VERSION@
 @PACKAGE_NAME@:
-@PACKAGE_NAME@: A C language library implementing exceptions handling.
+@PACKAGE_NAME@: A C11 language library implementing exceptions handling.
 @PACKAGE_NAME@:
 @PACKAGE_NAME@:
 @PACKAGE_NAME@:
