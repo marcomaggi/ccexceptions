@@ -6,9 +6,9 @@
 
 ## Introduction
 
-This package installs  a C11 language library  requiring GCC extensions;
-it implements an interface to non-local exits, which is somewhat similar
-to exceptions handling.  The library targets POSIX systems.
+This package installs a C11 language library; it implements an interface
+to non-local  exits, which is  somewhat similar to  exceptions handling.
+The library targets POSIX systems.
 
 The  package makes  use of  the  GNU Autotools  and  it is  tested on  a
 GNU+Linux system.
@@ -127,7 +127,7 @@ including   the   standard   header   files;  so   either   we   include
 definitions before including **all** the header files:
 
 ```
-   #define _POSIX_C_SOURCE 200809L
+#define _POSIX_C_SOURCE 200809L
 ```
 
 
