@@ -123,7 +123,6 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * setjmp::                      Brief introduction to non-local exits.
-* extensions::                  Introduction to @code{plan9-extensions}.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
@@ -157,18 +156,19 @@ library targets @posix{} systems but supports some @gnu{} C Library functions an
 functions.
 
 This tiny library will not solve the problem of error handling in the C language, it just brings a
-little order in the mess resulting from hand--coding the error handling logic.  @value{PACKAGE}'s
-location mechanism has the following purposes:
+little order in the complexity resulting from hand--coding the error handling logic.
+@value{PACKAGE}'s location mechanism has the following purposes:
 
 @enumerate
 @item
-Implement non--local exits in a way that allows client code to be shorter and simpler to understand.
+Implement non--local exits in a way that allows client source code to be shorter and simpler to
+understand.
 
 @item
 Implement non--local exit handlers to perform synchronous clean--up operations.
 
 @item
-Implement a simple exceptional condition descriptors interface.
+Implement a simple exceptional condition descriptors architecture.
 @end enumerate
 
 @noindent
@@ -177,8 +177,8 @@ to, for example, hand--coded @code{goto} instructions that jump to labels).
 
 @value{PACKAGE} installs the main header file @file{ccexceptions.h} along with other headers with
 names in the pattern @file{ccexceptions-*.h}.  All the function names in the @api{} are prefixed
-with @code{cce_}; all the constant names are prefixed with @code{CCE_}; all the type names are
-prefixed with @code{cce_} and suffixed with @code{_t}.
+with @code{cce_}; all the preprocessor symbol names are prefixed with @code{CCE_}; all the type
+names are prefixed with @code{cce_} and suffixed with @code{_t}.
 
 @strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
 standard header files; so either we include @file{ccexceptions.h} as first header, or we include the
@@ -197,20 +197,17 @@ following definitions before including @strong{all} the header files:
 @section Linking code with the library
 
 
-This package installs a data file for @command{pkg-config}, so when searching for the installed
-library with the @gnu{} Autotools, we can:
+@subsubheading Using the @gnu{} Autotools
 
-@itemize
-@item
-Add the following macro use to @file{configure.ac}:
+This package installs a data file for @command{pkg-config}; when searching for the installed library
+with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
 
 @example
-PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.4])
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.5])
 @end example
 
 @noindent
 which will set the variables @code{CCEXCEPTIONS_LIBS} and @code{CCEXCEPTIONS_CFLAGS}.
-@end itemize
 
 Alternatively we can use the raw @gnu{} Autoconf macros:
 
@@ -222,7 +219,20 @@ AC_CHECK_HEADERS([ccexceptions.h],,
 @end example
 
 We need to remember that client code using @value{PACKAGE}'s library must be written using the C11
-language and the @gcc{} extensions enabled by @option{-fplan9-extensions}.
+language.
+
+@c ------------------------------------------------------------------------
+
+@subsubheading One--shot compilation, Unix command line
+
+For the one--shot compilation of a file named @file{demo.c}, we can do:
+
+@example
+gcc -std=c11 -Wall \
+   `pkg-config ccexceptions --cflags` \
+   `pkg-config ccexceptions --libs` \
+   -o demo demo.c
+@end example
 
 @c page
 @node version
@@ -311,9 +321,6 @@ the exception handler must detect if the allocation took place and execute relea
 example:
 
 @example
-#define DO_NOT_SAVE_SIGS        0
-#define JMP_ERROR_CODE          1
-
 jmp_buf         here;
 volatile void * P = NULL;
 
@@ -337,7 +344,6 @@ Let's see some logic example; we will assume the following preamble:
 #include <stdlib.h>
 #include <setjmp.h>
 
-#define DO_NOT_SAVE_SIGS        0
 #define JUMP_TO_ERROR           2
 #define JUMP_TO_RETRY           3
 @end example
@@ -452,113 +458,32 @@ assert(3 == flag);
 @end example
 
 @c page
-@node extensions
-@chapter Introduction to @code{plan9-extensions}
-
-
-The @url{http://www.gnu.org/software/gcc/, @gnu{} C language compiler} supports the
-@url{https://en.wikipedia.org/wiki/C11_(C_standard_revision), C11} standard, with some extensions,
-through the @option{-fplan9-extensions} option.  From a certain point of view, these extensions are
-just the default offered by the C++ language; but under the C language they are very useful.
-@value{PACKAGE} is meant to use such extensions.
-
-Here is an example:
-
-@example
-/* demo.c --
- *
- * Compile this with:
- *
- *  $ gcc -std=c11 -Wall -fplan9-extensions -o demo demo.c
- */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef struct @{
-  int   one;
-@} alpha_t;
-
-typedef struct @{
-  alpha_t;
-  int           two;
-@} beta_t;
-
-void
-print_alpha (alpha_t * self)
-@{
-  fprintf(stderr, "alpha: %d\n", self->one);
-@}
-void
-print_beta (beta_t * self)
-@{
-  fprintf(stderr, "beta: %d %d\n", self->one, self->two);
-@}
-
-int
-main (int argc, const char *const argv[])
-@{
-  beta_t        B = @{ .one = 1, .two = 2 @};
-  print_alpha(&B);
-  print_beta (&B);
-  exit(EXIT_SUCCESS);
-@}
-
-/* end of file */
-@end example
-
-@noindent
-we see that the definition of @code{beta_t} contains an unnamed field of type
-@code{alpha_t}:
-
-@example
-typedef struct @{
-  alpha_t;
-  int           two;
-@} beta_t;
-@end example
-
-@noindent
-and we can access its fields, nested in an instance of @code{beta_t}, transparently
-both in the initialiser:
-
-@example
-beta_t B = @{ .one = 1, .two = 2 @};
-@end example
-
-@noindent
-and from a pointer to @code{beta_t} in the function @cfunc{print_beta}:
-
-@example
-fprintf(stderr, "beta: %d %d\n", self->one, self->two);
-@end example
-
-Also, when a pointer to @code{beta_t} is used as operand for a function expecting a
-pointer to @code{alpha_t} as argument: the pointer conversion is performed
-automatically by the compiler, without the need to cast it explicitly.  So we can
-simply write:
-
-@example
-print_alpha(&B);
-@end example
-
-@noindent
-rather than:
-
-@example
-print_alpha((alpha_t *)&B);
-@end example
-
-@c page
 @node locations
 @chapter The locations @api{}
 
 
 Non--local exits are a way to transfer execution from one point to another in a program; they are
 implemented by the standard C library through the @cfunc{setjmp} and @cfunc{longjmp} functions.
-@value{PACKAGE} makes use of the @posix{} variants @cfunc{sigsetjmp} and @cfunc{siglongjmp}, and it
-does @strong{not} save the signals mask.  The main usage pattern for this module is the following:
+@value{PACKAGE} uses the @posix{} variants @cfunc{sigsetjmp} and @cfunc{siglongjmp}: it does
+@strong{not} save the signals mask.
+
+The main usage pattern for this module is the following:
+
+@example
+cce_location_t  L[1];
+
+if (CCE_ENTER == cce_location(L)) @{
+  /* do something useful here */
+  cce_run_cleanup_handlers(L);
+@} else @{
+  /* handle the error here */
+  cce_run_error_handlers(L);
+  cce_condition_C_final(cce_condition_C(L));
+@}
+@end example
+
+@noindent
+or alternatively the following:
 
 @example
 cce_location_t  L[1];
@@ -573,8 +498,38 @@ if (cce_location(L)) @{
 @}
 @end example
 
+We can use the slightly shorter versions:
+
+@example
+cce_location_t  L[1];
+
+if (CCE_ENTER == cce_location(L)) @{
+  /* do something useful here */
+  cce_run_cleanup_handlers(L);
+@} else @{
+  /* handle the error here */
+  cce_run_error_handlers_final(L);
+@}
+@end example
+
 @noindent
-it is usually useful to defined variables of type @objtype{cce_location_t} as one--element arrays.
+and:
+
+@example
+cce_location_t  L[1];
+
+if (cce_location(L)) @{
+  /* handle the error here */
+  cce_run_error_handlers_final(L);
+@} else @{
+  /* do something useful here */
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@noindent
+it is usually useful to define variables of type @objtype{cce_location_t} as one--element arrays.
 When using @value{PACKAGE} we should consider configuring our code editor to automatically insert
 this code template.
 
@@ -587,8 +542,8 @@ in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @ob
 
 Instances of this structure reference an instance of type @objtype{cce_condition_C_t}; it is set by
 @cfunc{cce_raise} and @cfunc{cce_retry}.  The client code is responsible for releasing resources
-associated to this value by retrieving a pointer to it with @cfunc{cce_condition} and
-releasing it with @cfunc{cce_condition_C_final}.
+associated to this value by retrieving a pointer to it with @cfunc{cce_condition_C} and releasing it
+with @cfunc{cce_condition_C_final}.
 
 Before terminating the use of instances of this type we must always call
 @cfunc{cce_run_error_handlers} or @cfunc{cce_run_cleanup_handlers}.  We must assume that the
@@ -628,7 +583,7 @@ Constant used by the library as non--local exit code.  It is the return value of
 
 
 @deftypefun void cce_raise (cce_location_t * @var{L}, const cce_condition_C_t * @var{C})
-Raise an exception associated to the location @var{L} and with exceptional condition object @var{C}.
+Raise an exception associated to the location @var{L}, with exceptional condition object @var{C}.
 This function performs the call to @cfunc{siglongjmp} with code @code{CCE_ERROR}.
 
 With a call to this function: the client code is put in charge of releasing resources associated to
@@ -667,8 +622,7 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* handle the error here */
-  cce_run_error_handlers(L);
-  cce_condition_C_final(cce_condition_C(L));
+  cce_run_error_handlers_final(L);
 @} else @{
   /* do something useful here */
   cce_run_cleanup_handlers(L);
@@ -685,8 +639,7 @@ outer (void)
   cce_location_t  L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers(L);
-    cce_condition_C_final(cce_condition_C(L));
+    cce_run_error_handlers_final(L);
   @} else @{
     inner(L);
     cce_run_cleanup_handlers(L);
@@ -708,8 +661,8 @@ inner (cce_location_t * there)
 @}
 @end example
 
-When attempting to evaluate a body of code multiple times with the retry faciliy, it is suggested to
-use @code{switch} statements to organise the logic of location mechanisms.  If we want to
+When attempting to evaluate a body of code multiple times with the retry facility, it is suggested
+to use @code{switch} statements to organise the logic of location mechanisms.  If we want to
 distinguish between the main body and the retry body, we do:
 
 @example
@@ -717,8 +670,7 @@ cce_location_t  L[1];
 
 switch (cce_location(L)) @{
 case CCE_ERROR:
-  cce_run_error_handlers(L);
-  cce_condition_C_final(cce_condition_C(L));
+  cce_run_error_handlers_final(L);
   break;
 
 case CCE_RETRY:
@@ -743,8 +695,7 @@ cce_location_t  L[1];
 
 switch (cce_location(L)) @{
 case CCE_ERROR:
-  cce_run_error_handlers(L);
-  cce_condition_C_final(cce_condition_C(L));
+  cce_run_error_handlers_final(L);
   break;
 
 case CCE_RETRY:
