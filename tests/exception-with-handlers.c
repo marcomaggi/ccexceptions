@@ -40,7 +40,7 @@ test_no_exception (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler1_t;
-  void handler1 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
   {
     handler1_t *	data = (handler1_t *)_data;
     *(data->flagp) = true;
@@ -50,7 +50,7 @@ test_no_exception (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler2_t;
-  void handler2 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
   {
     handler1_t *	data = (handler1_t *)_data;
     *(data->flagp) = true;
@@ -65,7 +65,7 @@ test_no_exception (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_C_final(cce_condition_C(L));
+    cce_condition_final(cce_condition(L));
     break;
 
   default:
@@ -85,7 +85,7 @@ test_with_error (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler1_t;
-  void handler1 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
   {
     handler1_t *	data = (handler1_t *)_data;
     *(data->flagp) = true;
@@ -95,7 +95,7 @@ test_with_error (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler2_t;
-  void handler2 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
   {
     handler1_t *	data = (handler1_t *)_data;
     *(data->flagp) = true;
@@ -110,7 +110,7 @@ test_with_error (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_C_final(cce_condition_C(L));
+    cce_condition_final(cce_condition(L));
     break;
 
   default:
@@ -133,7 +133,7 @@ test_with_retry (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler1_t;
-  void handler1 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
   {
     handler1_t *	H = (handler1_t *)_H;
     *(H->flagp) = true;
@@ -143,7 +143,7 @@ test_with_retry (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler2_t;
-  void handler2 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
   {
     handler1_t *	H = (handler1_t *)_H;
     *(H->flagp) = true;
@@ -158,7 +158,7 @@ test_with_retry (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_C_final(cce_condition_C(L));
+    cce_condition_final(cce_condition(L));
     break;
 
   case CCE_SUCCESS:
@@ -184,7 +184,7 @@ test_dynamically_allocated_handlers (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler1_t;
-  void handler1 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
+  void handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
   {
     handler1_t *	H = (handler1_t *)_H;
     *(H->flagp) = true;
@@ -200,7 +200,7 @@ test_dynamically_allocated_handlers (void)
       H->flagp = flagp;
       return H;
     } else {
-      cce_raise(there, cce_condition_C(cce_make_errno_C(errno)));
+      cce_raise(there, cce_condition(cce_condition_make_errno(errno)));
     }
   }
 
@@ -208,7 +208,7 @@ test_dynamically_allocated_handlers (void)
     cce_handler_t	exception_handler[1];
     bool *		flagp;
   } handler2_t;
-  void handler2 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _H)
+  void handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
   {
     handler1_t *	H = (handler1_t *)_H;
     *(H->flagp) = true;
@@ -224,7 +224,7 @@ test_dynamically_allocated_handlers (void)
       H->flagp = flagp;
       return H;
     } else {
-      cce_raise(there, cce_condition_C(cce_make_errno_C(errno)));
+      cce_raise(there, cce_condition(cce_condition_make_errno(errno)));
     }
   }
 
@@ -236,7 +236,7 @@ test_dynamically_allocated_handlers (void)
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
-    cce_condition_C_final(cce_condition_C(L));
+    cce_condition_final(cce_condition(L));
   } else {
     H1 = alloc_handler1(L, handler1, &flag1);
     H2 = alloc_handler2(L, handler1, &flag2);

@@ -161,36 +161,36 @@ cce_decl int		cce_version_interface_age	(void)
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_location_t		cce_location_t;
-typedef struct cce_handler_t		cce_handler_t;
+typedef struct cce_location_t			cce_location_t;
+typedef struct cce_handler_t			cce_handler_t;
 
-typedef struct cce_condition_D_t	cce_condition_D_t;
-typedef struct cce_condition_C_t	cce_condition_C_t;
+typedef struct cce_descriptor_t			cce_descriptor_t;
+typedef struct cce_condition_t			cce_condition_t;
 
-typedef struct cce_root_D_t		cce_root_D_t;
-typedef struct cce_root_C_t		cce_root_C_t;
+typedef struct cce_descriptor_root_t		cce_descriptor_root_t;
+typedef struct cce_condition_root_t		cce_condition_root_t;
 
-typedef struct cce_unknown_D_t		cce_unknown_D_t;
-typedef struct cce_unknown_C_t		cce_unknown_C_t;
+typedef struct cce_descriptor_unknown_t		cce_descriptor_unknown_t;
+typedef struct cce_condition_unknown_t		cce_condition_unknown_t;
 
-typedef struct cce_unimplemented_D_t	cce_unimplemented_D_t;
-typedef struct cce_unimplemented_C_t	cce_unimplemented_C_t;
+typedef struct cce_descriptor_unimplemented_t	cce_descriptor_unimplemented_t;
+typedef struct cce_condition_unimplemented_t	cce_condition_unimplemented_t;
 
-typedef struct cce_invalid_argument_D_t	cce_invalid_argument_D_t;
-typedef struct cce_invalid_argument_C_t	cce_invalid_argument_C_t;
+typedef struct cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_t;
+typedef struct cce_condition_invalid_argument_t	cce_condition_invalid_argument_t;
 
-typedef struct cce_errno_D_t		cce_errno_D_t;
-typedef struct cce_errno_C_t		cce_errno_C_t;
+typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
+typedef struct cce_condition_errno_t		cce_condition_errno_t;
 
-typedef struct cce_h_errno_D_t		cce_h_errno_D_t;
-typedef struct cce_h_errno_C_t		cce_h_errno_C_t;
+typedef struct cce_descriptor_h_errno_t		cce_descriptor_h_errno_t;
+typedef struct cce_condition_h_errno_t		cce_condition_h_errno_t;
 
 
 /** --------------------------------------------------------------------
  ** Error and cleanup handlers.
  ** ----------------------------------------------------------------- */
 
-typedef void cce_handler_fun_t (const cce_condition_C_t * L, cce_handler_t * H);
+typedef void cce_handler_fun_t (const cce_condition_t * L, cce_handler_t * H);
 
 struct cce_handler_t {
   bool				is_cleanup_handler;
@@ -220,43 +220,43 @@ cce_decl void cce_run_error_handlers		(cce_location_t * L)
  ** Exceptional condition descriptors.
  ** ----------------------------------------------------------------- */
 
-typedef void cce_condition_final_fun_t (cce_condition_C_t * C)
+typedef void cce_condition_final_fun_t (cce_condition_t * C)
   __attribute__((nonnull(1)));
 
-typedef const char * cce_condition_static_message_fun_t	(const cce_condition_C_t * C)
+typedef const char * cce_condition_static_message_fun_t	(const cce_condition_t * C)
   __attribute__((nonnull(1),returns_nonnull));
 
-struct cce_condition_D_t {
-  const cce_condition_D_t *		parent;
+struct cce_descriptor_t {
+  const cce_descriptor_t *		parent;
   cce_condition_final_fun_t *		final;
   cce_condition_static_message_fun_t *	static_message;
 };
 
-struct cce_condition_C_t {
-  const cce_condition_D_t *		condition_D;
+struct cce_condition_t {
+  const cce_descriptor_t *		condition_D;
 };
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_C_init (cce_condition_C_t * C, const cce_condition_D_t * D)
+cce_decl void cce_condition_init (cce_condition_t * C, const cce_descriptor_t * D)
   __attribute__((leaf,nonnull(1,2)));
 
-cce_decl void cce_condition_C_final (cce_condition_C_t * C)
+cce_decl void cce_condition_final (cce_condition_t * C)
   __attribute__((leaf,nonnull(1)));
 
-cce_decl bool cce_is_condition_C (const cce_condition_C_t * C, const cce_condition_D_t * D)
+cce_decl bool cce_condition_is_condition (const cce_condition_t * C, const cce_descriptor_t * D)
   __attribute__((leaf,nonnull(1,2)));
 
-cce_decl const char * cce_condition_C_static_message (cce_condition_C_t * C)
+cce_decl const char * cce_condition_static_message (cce_condition_t * C)
   __attribute__((leaf,nonnull(1)));
 
-#define cce_condition_init		cce_condition_C_init
-#define cce_condition_final		cce_condition_C_final
-#define cce_condition_static_message	cce_condition_C_static_message
+#define cce_condition_init		cce_condition_init
+#define cce_condition_final		cce_condition_final
+#define cce_condition_static_message	cce_condition_static_message
 
 /* ------------------------------------------------------------------ */
 
-cce_decl bool cce_condition_D_child_and_parent (const cce_condition_D_t * child, const cce_condition_D_t * parent)
+cce_decl bool cce_descriptor_child_and_parent (const cce_descriptor_t * child, const cce_descriptor_t * parent)
   __attribute__((leaf,nonnull(1,2)));
 
 
@@ -264,18 +264,18 @@ cce_decl bool cce_condition_D_child_and_parent (const cce_condition_D_t * child,
  ** Exceptional condition objects: root exception.
  ** ----------------------------------------------------------------- */
 
-struct cce_root_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_root_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_root_C_t {
-  cce_condition_C_t	condition_C;
+struct cce_condition_root_t {
+  cce_condition_t	condition_C;
 };
 
-cce_decl void cce_condition_D_set_root_parent (cce_condition_D_t * D)
+cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
   __attribute__((nonnull(1)));
 
-cce_decl bool cce_is_root_C (const cce_condition_C_t * C)
+cce_decl bool cce_condition_is_root (const cce_condition_t * C)
   __attribute__((pure,nonnull(1)));
 
 
@@ -283,95 +283,95 @@ cce_decl bool cce_is_root_C (const cce_condition_C_t * C)
  ** Exceptional condition objects: unknown exception.
  ** ----------------------------------------------------------------- */
 
-struct cce_unknown_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_unknown_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_unknown_C_t {
-  cce_root_C_t		root_C;
+struct cce_condition_unknown_t {
+  cce_condition_root_t		root_C;
 };
 
-cce_decl const cce_unknown_D_t * const	cce_unknown_D_ptr;
-cce_decl const cce_unknown_C_t * const	cce_unknown_C_ptr;
+cce_decl const cce_descriptor_unknown_t * const	cce_descriptor_unknown_ptr;
+cce_decl const cce_condition_unknown_t * const	cce_condition_unknown_ptr;
 
 __attribute__((const,always_inline))
-static inline const cce_condition_C_t *
-cce_make_unknown_C (void)
+static inline const cce_condition_t *
+cce_condition_make_unknown (void)
 {
-  return &(cce_unknown_C_ptr->root_C.condition_C);
+  return &(cce_condition_unknown_ptr->root_C.condition_C);
 }
 
 __attribute__((pure,nonnull(1),always_inline))
 static inline bool
-cce_is_unknown_C (const cce_condition_C_t * C)
+cce_condition_is_unknown (const cce_condition_t * C)
 {
-  return cce_is_condition_C(C, &(cce_unknown_D_ptr->condition_D));
+  return cce_condition_is_condition(C, &(cce_descriptor_unknown_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_unknown_C(S)						\
+#define cce_condition_unknown(S)						\
   _Generic((S),								\
-	   cce_unknown_C_t		*: (S),				\
-	   cce_location_t		*: (cce_unknown_C_t *)CCE_CLOC(S), \
-	   cce_condition_C_t		*: (cce_unknown_C_t *)(S), \
-	   cce_root_C_t			*: (cce_unknown_C_t *)(S), \
-	   const cce_condition_C_t	*: (cce_unknown_C_t *)(S), \
-	   const cce_root_C_t		*: (cce_unknown_C_t *)(S), \
-	   const cce_unknown_C_t	*: (cce_unknown_C_t *)(S))
+	   cce_condition_unknown_t		*: (S),				\
+	   cce_location_t		*: (cce_condition_unknown_t *)CCE_CLOC(S), \
+	   cce_condition_t		*: (cce_condition_unknown_t *)(S), \
+	   cce_condition_root_t			*: (cce_condition_unknown_t *)(S), \
+	   const cce_condition_t	*: (cce_condition_unknown_t *)(S), \
+	   const cce_condition_root_t		*: (cce_condition_unknown_t *)(S), \
+	   const cce_condition_unknown_t	*: (cce_condition_unknown_t *)(S))
 
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: unimplemented exception.
  ** ----------------------------------------------------------------- */
 
-struct cce_unimplemented_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_unimplemented_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_unimplemented_C_t {
-  cce_root_C_t		root_C;
+struct cce_condition_unimplemented_t {
+  cce_condition_root_t		root_C;
 };
 
-cce_decl const cce_unimplemented_D_t * const	cce_unimplemented_D_ptr;
-cce_decl const cce_unimplemented_C_t * const	cce_unimplemented_C_ptr;
+cce_decl const cce_descriptor_unimplemented_t * const	cce_descriptor_unimplemented_ptr;
+cce_decl const cce_condition_unimplemented_t * const	cce_condition_unimplemented_ptr;
 
 __attribute__((const,always_inline))
-static inline const cce_condition_C_t *
-cce_make_unimplemented_C (void)
+static inline const cce_condition_t *
+cce_condition_make_unimplemented (void)
 {
-  return &(cce_unimplemented_C_ptr->root_C.condition_C);
+  return &(cce_condition_unimplemented_ptr->root_C.condition_C);
 }
 
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
-cce_is_unimplemented_C (const cce_condition_C_t * C)
+cce_condition_is_unimplemented (const cce_condition_t * C)
 {
-  return cce_is_condition_C(C, &(cce_unimplemented_D_ptr->condition_D));
+  return cce_condition_is_condition(C, &(cce_descriptor_unimplemented_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_unimplemented_C(S)						\
+#define cce_condition_unimplemented(S)						\
   _Generic((S),								\
-	   cce_unimplemented_C_t	*: (S),				\
-	   cce_location_t		*: (cce_unimplemented_C_t *)CCE_CLOC(S), \
-	   cce_condition_C_t		*: (cce_unimplemented_C_t *)(S), \
-	   cce_root_C_t			*: (cce_unimplemented_C_t *)(S), \
-	   const cce_condition_C_t	*: (cce_unimplemented_C_t *)(S), \
-	   const cce_root_C_t		*: (cce_unimplemented_C_t *)(S), \
-	   const cce_unimplemented_C_t	*: (cce_unimplemented_C_t *)(S))
+	   cce_condition_unimplemented_t	*: (S),				\
+	   cce_location_t		*: (cce_condition_unimplemented_t *)CCE_CLOC(S), \
+	   cce_condition_t		*: (cce_condition_unimplemented_t *)(S), \
+	   cce_condition_root_t			*: (cce_condition_unimplemented_t *)(S), \
+	   const cce_condition_t	*: (cce_condition_unimplemented_t *)(S), \
+	   const cce_condition_root_t		*: (cce_condition_unimplemented_t *)(S), \
+	   const cce_condition_unimplemented_t	*: (cce_condition_unimplemented_t *)(S))
 
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: invalid function argument.
  ** ----------------------------------------------------------------- */
 
-struct cce_invalid_argument_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_invalid_argument_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_invalid_argument_C_t {
-  cce_root_C_t		root_C;
+struct cce_condition_invalid_argument_t {
+  cce_condition_root_t		root_C;
   /* Pointer to  a statically  allocated ASCIIZ string  representing the
      function name; usually generated with "__func__". */
   const char *		funcname;
@@ -379,117 +379,117 @@ struct cce_invalid_argument_C_t {
   unsigned		index;
 };
 
-cce_decl const cce_invalid_argument_D_t * cce_invalid_argument_D_ptr;
+cce_decl const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr;
 
-cce_decl cce_condition_C_t * cce_make_invalid_argument_C (cce_location_t * L, const char * func, unsigned index)
+cce_decl cce_condition_t * cce_condition_make_invalid_argument (cce_location_t * L, const char * func, unsigned index)
   __attribute__((nonnull(1,2),returns_nonnull));
 
 __attribute__((pure,nonnull(1),always_inline))
 static inline bool
-cce_is_invalid_argument_C (const cce_condition_C_t * C)
+cce_condition_is_invalid_argument (const cce_condition_t * C)
 {
-  return cce_is_condition_C(C, &(cce_invalid_argument_D_ptr->condition_D));
+  return cce_condition_is_condition(C, &(cce_descriptor_invalid_argument_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_invalid_argument_C(S)					\
+#define cce_condition_invalid_argument(S)					\
   _Generic((S),								\
-	   cce_invalid_argument_C_t	*: (S),				\
-	   cce_location_t		*: (cce_invalid_argument_C_t *)CCE_CLOC(S), \
-	   cce_condition_C_t		*: (cce_invalid_argument_C_t *)(S), \
-	   cce_root_C_t			*: (cce_invalid_argument_C_t *)(S), \
-	   const cce_condition_C_t	*: (cce_invalid_argument_C_t *)(S), \
-	   const cce_root_C_t		*: (cce_invalid_argument_C_t *)(S), \
-	   const cce_invalid_argument_C_t *: (cce_invalid_argument_C_t *)(S))
+	   cce_condition_invalid_argument_t	*: (S),				\
+	   cce_location_t		*: (cce_condition_invalid_argument_t *)CCE_CLOC(S), \
+	   cce_condition_t		*: (cce_condition_invalid_argument_t *)(S), \
+	   cce_condition_root_t			*: (cce_condition_invalid_argument_t *)(S), \
+	   const cce_condition_t	*: (cce_condition_invalid_argument_t *)(S), \
+	   const cce_condition_root_t		*: (cce_condition_invalid_argument_t *)(S), \
+	   const cce_condition_invalid_argument_t *: (cce_condition_invalid_argument_t *)(S))
 
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: errno exception.
  ** ----------------------------------------------------------------- */
 
-struct cce_errno_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_errno_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_errno_C_t {
-  cce_root_C_t		root_C;
+struct cce_condition_errno_t {
+  cce_condition_root_t		root_C;
   int			errnum;
   const char *		message;
 };
 
-cce_decl const cce_errno_D_t * const cce_errno_D_ptr;
+cce_decl const cce_descriptor_errno_t * const cce_descriptor_errno_ptr;
 
-cce_decl const cce_condition_C_t * cce_make_errno_C (int code)
+cce_decl const cce_condition_t * cce_condition_make_errno (int code)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((returns_nonnull,always_inline))
-static inline const cce_condition_C_t *
-cce_make_errno_C_clear (void)
+static inline const cce_condition_t *
+cce_condition_make_errno_clear (void)
 {
   int	errnum = errno;
   errno = 0;
-  return cce_make_errno_C(errnum);
+  return cce_condition_make_errno(errnum);
 }
 
 __attribute__((nonnull(1),always_inline)) static inline bool
-cce_is_errno_C (const cce_condition_C_t * C)
+cce_condition_is_errno (const cce_condition_t * C)
 {
-  return cce_is_condition_C(C, &(cce_errno_D_ptr->condition_D));
+  return cce_condition_is_condition(C, &(cce_descriptor_errno_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_errno_C(S)							\
+#define cce_condition_errno(S)							\
   _Generic((S),								\
-	   cce_errno_C_t		*: (S),				\
-	   cce_location_t		*: (cce_errno_C_t *)CCE_CLOC(S), \
-	   cce_condition_C_t		*: (cce_errno_C_t *)(S), \
-	   cce_root_C_t			*: (cce_errno_C_t *)(S), \
-	   const cce_condition_C_t	*: (cce_errno_C_t *)(S), \
-	   const cce_root_C_t		*: (cce_errno_C_t *)(S), \
-	   const cce_errno_C_t		*: (cce_errno_C_t *)(S))
+	   cce_condition_errno_t		*: (S),				\
+	   cce_location_t		*: (cce_condition_errno_t *)CCE_CLOC(S), \
+	   cce_condition_t		*: (cce_condition_errno_t *)(S), \
+	   cce_condition_root_t			*: (cce_condition_errno_t *)(S), \
+	   const cce_condition_t	*: (cce_condition_errno_t *)(S), \
+	   const cce_condition_root_t		*: (cce_condition_errno_t *)(S), \
+	   const cce_condition_errno_t		*: (cce_condition_errno_t *)(S))
 
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: h_errno exception.
  ** ----------------------------------------------------------------- */
 
-struct cce_h_errno_D_t {
-  cce_condition_D_t	condition_D;
+struct cce_descriptor_h_errno_t {
+  cce_descriptor_t	condition_D;
 };
 
-struct cce_h_errno_C_t {
-  cce_root_C_t		root_C;
+struct cce_condition_h_errno_t {
+  cce_condition_root_t		root_C;
   int			errnum;
   const char *		message;
 };
 
-cce_decl const cce_h_errno_D_t * const cce_h_errno_D_ptr;
+cce_decl const cce_descriptor_h_errno_t * const cce_descriptor_h_errno_ptr;
 
-cce_decl const cce_condition_C_t * cce_make_h_errno_C (int code)
+cce_decl const cce_condition_t * cce_condition_make_h_errno (int code)
   __attribute__((leaf,returns_nonnull));
 
-cce_decl const cce_condition_C_t * cce_make_h_errno_C_clear (void)
+cce_decl const cce_condition_t * cce_condition_make_h_errno_clear (void)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((nonnull(1),always_inline)) static inline bool
-cce_is_h_errno_C (const cce_condition_C_t * C)
+cce_condition_is_h_errno (const cce_condition_t * C)
 {
-  return cce_is_condition_C(C, &(cce_h_errno_D_ptr->condition_D));
+  return cce_condition_is_condition(C, &(cce_descriptor_h_errno_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_h_errno_C(S)						\
+#define cce_condition_h_errno(S)						\
   _Generic((S),								\
-	   cce_h_errno_C_t		*: (S),				\
-	   cce_location_t		*: (cce_h_errno_C_t *)CCE_CLOC(S), \
-	   cce_condition_C_t		*: (cce_h_errno_C_t *)(S), \
-	   cce_root_C_t			*: (cce_h_errno_C_t *)(S), \
-	   const cce_condition_C_t	*: (cce_h_errno_C_t *)(S), \
-	   const cce_root_C_t		*: (cce_h_errno_C_t *)(S), \
-	   const cce_h_errno_C_t	*: (cce_h_errno_C_t *)(S))
+	   cce_condition_h_errno_t		*: (S),				\
+	   cce_location_t		*: (cce_condition_h_errno_t *)CCE_CLOC(S), \
+	   cce_condition_t		*: (cce_condition_h_errno_t *)(S), \
+	   cce_condition_root_t			*: (cce_condition_h_errno_t *)(S), \
+	   const cce_condition_t	*: (cce_condition_h_errno_t *)(S), \
+	   const cce_condition_root_t		*: (cce_condition_h_errno_t *)(S), \
+	   const cce_condition_h_errno_t	*: (cce_condition_h_errno_t *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -499,7 +499,7 @@ cce_is_h_errno_C (const cce_condition_C_t * C)
 struct cce_location_t {
   /* The buffer must be the first member of this struct. */
   sigjmp_buf			buffer;
-  const cce_condition_C_t *	condition;
+  const cce_condition_t *	condition;
   cce_handler_t *		first_handler;
 };
 
@@ -509,7 +509,7 @@ cce_decl void cce_location_init	(cce_location_t * here)
 #define cce_location(HERE)						\
   __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
 
-cce_decl void cce_raise (cce_location_t * L, const cce_condition_C_t * C)
+cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * C)
   __attribute__((noreturn,nonnull(1)));
 
 cce_decl void cce_retry (cce_location_t * L)
@@ -525,7 +525,7 @@ static inline void
 cce_run_error_handlers_final (cce_location_t * L)
 {
   cce_run_error_handlers(L);
-  cce_condition_C_final((cce_condition_C_t *)(L->condition));
+  cce_condition_final((cce_condition_t *)(L->condition));
 }
 
 __attribute__((nonnull(1),always_inline))
@@ -533,7 +533,7 @@ static inline void
 cce_run_cleanup_handlers_final (cce_location_t * L)
 {
   cce_run_cleanup_handlers(L);
-  cce_condition_C_final((cce_condition_C_t *)(L->condition));
+  cce_condition_final((cce_condition_t *)(L->condition));
 }
 
 /* ------------------------------------------------------------------ */
@@ -603,10 +603,10 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_mal
  ** ----------------------------------------------------------------- */
 
 /* Cast a pointer to condition descriptor. */
-#define CCE_C001(S)	((cce_condition_D_t*)(S))
+#define CCE_C001(S)	((cce_descriptor_t*)(S))
 
 /* Cast a pointer to condition object. */
-#define CCE_C002(S)	((cce_condition_C_t*)(S))
+#define CCE_C002(S)	((cce_condition_t*)(S))
 
 /* Cast a pointer  to condition object and evaluate to  a pointer to its
    descriptor. */
@@ -620,59 +620,59 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_mal
    objects has  its parent struct  as first  field; every struct  in the
    hierarchy of  condition descriptors  has its  parent struct  as first
    field. */
-#define cce_condition_D(S)					\
+#define cce_descriptor(S)					\
   _Generic((S),							\
-	   cce_condition_D_t			*: (S),		\
-	   cce_root_D_t				*: CCE_C001(S), \
-	   cce_unknown_D_t			*: CCE_C001(S), \
-	   cce_unimplemented_D_t		*: CCE_C001(S), \
-	   cce_invalid_argument_D_t		*: CCE_C001(S), \
-	   cce_errno_D_t			*: CCE_C001(S), \
-	   cce_h_errno_D_t			*: CCE_C001(S), \
+	   cce_descriptor_t			*: (S),		\
+	   cce_descriptor_root_t				*: CCE_C001(S), \
+	   cce_descriptor_unknown_t			*: CCE_C001(S), \
+	   cce_descriptor_unimplemented_t		*: CCE_C001(S), \
+	   cce_descriptor_invalid_argument_t		*: CCE_C001(S), \
+	   cce_descriptor_errno_t			*: CCE_C001(S), \
+	   cce_descriptor_h_errno_t			*: CCE_C001(S), \
 								\
-	   const cce_condition_D_t		*: CCE_C001(S), \
-	   const cce_root_D_t			*: CCE_C001(S), \
-	   const cce_unknown_D_t		*: CCE_C001(S), \
-	   const cce_unimplemented_D_t		*: CCE_C001(S), \
-	   const cce_invalid_argument_D_t	*: CCE_C001(S), \
-	   const cce_errno_D_t			*: CCE_C001(S), \
-	   const cce_h_errno_D_t		*: CCE_C001(S), \
+	   const cce_descriptor_t		*: CCE_C001(S), \
+	   const cce_descriptor_root_t			*: CCE_C001(S), \
+	   const cce_descriptor_unknown_t		*: CCE_C001(S), \
+	   const cce_descriptor_unimplemented_t		*: CCE_C001(S), \
+	   const cce_descriptor_invalid_argument_t	*: CCE_C001(S), \
+	   const cce_descriptor_errno_t			*: CCE_C001(S), \
+	   const cce_descriptor_h_errno_t		*: CCE_C001(S), \
 								\
-	   cce_condition_C_t			*: CCE_C003(S),	\
-	   cce_root_C_t				*: CCE_C003(S),	\
-	   cce_unknown_C_t			*: CCE_C003(S),	\
-	   cce_unimplemented_C_t		*: CCE_C003(S),	\
-	   cce_invalid_argument_C_t		*: CCE_C003(S),	\
-	   cce_errno_C_t			*: CCE_C003(S),	\
-	   cce_h_errno_C_t			*: CCE_C003(S),	\
+	   cce_condition_t			*: CCE_C003(S),	\
+	   cce_condition_root_t				*: CCE_C003(S),	\
+	   cce_condition_unknown_t			*: CCE_C003(S),	\
+	   cce_condition_unimplemented_t		*: CCE_C003(S),	\
+	   cce_condition_invalid_argument_t		*: CCE_C003(S),	\
+	   cce_condition_errno_t			*: CCE_C003(S),	\
+	   cce_condition_h_errno_t			*: CCE_C003(S),	\
 								\
-	   const cce_condition_C_t		*: CCE_C003(S),	\
-	   const cce_root_C_t			*: CCE_C003(S),	\
-	   const cce_unknown_C_t		*: CCE_C003(S),	\
-	   const cce_unimplemented_C_t		*: CCE_C003(S),	\
-	   const cce_invalid_argument_C_t	*: CCE_C003(S),	\
-	   const cce_errno_C_t			*: CCE_C003(S),	\
-	   const cce_h_errno_C_t		*: CCE_C003(S))
+	   const cce_condition_t		*: CCE_C003(S),	\
+	   const cce_condition_root_t			*: CCE_C003(S),	\
+	   const cce_condition_unknown_t		*: CCE_C003(S),	\
+	   const cce_condition_unimplemented_t		*: CCE_C003(S),	\
+	   const cce_condition_invalid_argument_t	*: CCE_C003(S),	\
+	   const cce_condition_errno_t			*: CCE_C003(S),	\
+	   const cce_condition_h_errno_t		*: CCE_C003(S))
 
 /* ------------------------------------------------------------------ */
 
-#define cce_condition_C(S)					\
+#define cce_condition(S)					\
   _Generic((S),							\
-	   cce_condition_C_t			*: (S),		\
-	   cce_root_C_t				*: CCE_C002(S), \
-	   cce_unknown_C_t			*: CCE_C002(S), \
-	   cce_unimplemented_C_t		*: CCE_C002(S), \
-	   cce_invalid_argument_C_t		*: CCE_C002(S), \
-	   cce_errno_C_t			*: CCE_C002(S), \
-	   cce_h_errno_C_t			*: CCE_C002(S), \
+	   cce_condition_t			*: (S),		\
+	   cce_condition_root_t				*: CCE_C002(S), \
+	   cce_condition_unknown_t			*: CCE_C002(S), \
+	   cce_condition_unimplemented_t		*: CCE_C002(S), \
+	   cce_condition_invalid_argument_t		*: CCE_C002(S), \
+	   cce_condition_errno_t			*: CCE_C002(S), \
+	   cce_condition_h_errno_t			*: CCE_C002(S), \
 								\
-	   const cce_condition_C_t		*: CCE_C002(S), \
-	   const cce_root_C_t			*: CCE_C002(S), \
-	   const cce_unknown_C_t		*: CCE_C002(S), \
-	   const cce_unimplemented_C_t		*: CCE_C002(S), \
-	   const cce_invalid_argument_C_t	*: CCE_C002(S), \
-	   const cce_errno_C_t			*: CCE_C002(S), \
-	   const cce_h_errno_C_t		*: CCE_C002(S), \
+	   const cce_condition_t		*: CCE_C002(S), \
+	   const cce_condition_root_t			*: CCE_C002(S), \
+	   const cce_condition_unknown_t		*: CCE_C002(S), \
+	   const cce_condition_unimplemented_t		*: CCE_C002(S), \
+	   const cce_condition_invalid_argument_t	*: CCE_C002(S), \
+	   const cce_condition_errno_t			*: CCE_C002(S), \
+	   const cce_condition_h_errno_t		*: CCE_C002(S), \
 								\
 	   cce_location_t			*: CCE_C002(CCE_CLOC(S)))
 

@@ -37,7 +37,7 @@ typedef struct handler1_t {
   bool *		flagp;
 } handler1_t;
 static void
-handler1 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
 {
   handler1_t *	data = (handler1_t *)_data;
   *(data->flagp) = true;
@@ -48,7 +48,7 @@ typedef struct handler2_t {
   bool *		flagp;
 } handler2_t;
 static void
-handler2 (const cce_condition_C_t * C CCE_UNUSED, cce_handler_t * _data)
+handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
 {
   handler1_t *	data = (handler1_t *)_data;
   *(data->flagp) = true;
