@@ -516,7 +516,7 @@ alpha_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 alpha_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_condition(condition, my_condition_D(&alpha_D));
+  return cce_is_condition(condition, my_condition_D(&alpha_D));
 }
 
 
@@ -578,7 +578,7 @@ beta_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 beta_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_condition(condition, my_condition_D(&beta_D));
+  return cce_is_condition(condition, my_condition_D(&beta_D));
 }
 
 
@@ -640,7 +640,7 @@ gamma_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
 bool
 gamma_C_is_a (const cce_condition_t * condition)
 {
-  return cce_condition_is_condition(condition, my_condition_D(&gamma_D));
+  return cce_is_condition(condition, my_condition_D(&gamma_D));
 }
 
 

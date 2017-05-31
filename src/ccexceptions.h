@@ -244,15 +244,11 @@ cce_decl void cce_condition_init (cce_condition_t * C, const cce_descriptor_t * 
 cce_decl void cce_condition_final (cce_condition_t * C)
   __attribute__((leaf,nonnull(1)));
 
-cce_decl bool cce_condition_is_condition (const cce_condition_t * C, const cce_descriptor_t * D)
+cce_decl bool cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * D)
   __attribute__((leaf,nonnull(1,2)));
 
 cce_decl const char * cce_condition_static_message (cce_condition_t * C)
   __attribute__((leaf,nonnull(1)));
-
-#define cce_condition_init		cce_condition_init
-#define cce_condition_final		cce_condition_final
-#define cce_condition_static_message	cce_condition_static_message
 
 /* ------------------------------------------------------------------ */
 
@@ -305,7 +301,7 @@ __attribute__((pure,nonnull(1),always_inline))
 static inline bool
 cce_condition_is_unknown (const cce_condition_t * C)
 {
-  return cce_condition_is_condition(C, &(cce_descriptor_unknown_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_unknown_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
@@ -346,7 +342,7 @@ cce_condition_make_unimplemented (void)
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
 cce_condition_is_unimplemented (const cce_condition_t * C)
 {
-  return cce_condition_is_condition(C, &(cce_descriptor_unimplemented_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
@@ -388,7 +384,7 @@ __attribute__((pure,nonnull(1),always_inline))
 static inline bool
 cce_condition_is_invalid_argument (const cce_condition_t * C)
 {
-  return cce_condition_is_condition(C, &(cce_descriptor_invalid_argument_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_invalid_argument_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
@@ -435,7 +431,7 @@ cce_condition_make_errno_clear (void)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_condition_is_errno (const cce_condition_t * C)
 {
-  return cce_condition_is_condition(C, &(cce_descriptor_errno_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_errno_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
@@ -476,7 +472,7 @@ cce_decl const cce_condition_t * cce_condition_make_h_errno_clear (void)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_condition_is_h_errno (const cce_condition_t * C)
 {
-  return cce_condition_is_condition(C, &(cce_descriptor_h_errno_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_h_errno_ptr->condition_D));
 }
 
 /* ------------------------------------------------------------------ */
