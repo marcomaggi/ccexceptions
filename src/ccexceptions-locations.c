@@ -33,7 +33,7 @@ void
 cce_location_init (cce_location_t * L)
 {
   L->first_handler	= NULL;
-  L->condition		= &(cce_condition_unknown_ptr->root_C.condition_C);
+  L->condition		= &(cce_condition_unknown_ptr->root.condition);
 }
 
 __attribute__((hot))
@@ -41,7 +41,7 @@ void
 cce_raise (cce_location_t * L, const cce_condition_t * C)
 {
   if (L->condition) { cce_condition_final((cce_condition_t*)L->condition); }
-  L->condition = (C)? C : &(cce_condition_unknown_ptr->root_C.condition_C);
+  L->condition = (C)? C : &(cce_condition_unknown_ptr->root.condition);
   siglongjmp(L->buffer, (int)CCE_ERROR);
 }
 
@@ -50,7 +50,7 @@ void
 cce_retry (cce_location_t * L)
 {
   if (L->condition) { cce_condition_final((cce_condition_t*)L->condition); }
-  L->condition = &(cce_condition_unknown_ptr->root_C.condition_C);
+  L->condition = &(cce_condition_unknown_ptr->root.condition);
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 

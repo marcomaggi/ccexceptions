@@ -38,24 +38,24 @@
 void
 cce_condition_init (cce_condition_t * C, const cce_descriptor_t * D)
 {
-  C->condition_D = D;
+  C->descriptor = D;
 }
 void
 cce_condition_final (cce_condition_t * C)
 {
-  if (C->condition_D->final) {
-    C->condition_D->final(C);
+  if (C->descriptor->final) {
+    C->descriptor->final(C);
   }
 }
 const char *
 cce_condition_static_message (cce_condition_t * C)
 {
-  return C->condition_D->static_message(C);
+  return C->descriptor->static_message(C);
 }
 bool
 cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * descriptor)
 {
-  return cce_descriptor_child_and_parent(C->condition_D, descriptor);
+  return cce_descriptor_child_and_parent(C->descriptor, descriptor);
 }
 bool
 cce_descriptor_child_and_parent (const cce_descriptor_t * child, const cce_descriptor_t * parent)
@@ -82,7 +82,7 @@ cce_root_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
 /* This  condition descriptor  is  the  root of  the  tree of  condition
    descriptors. */
 static const cce_descriptor_root_t cce_descriptor_root_stru = {
-  .condition_D = {
+  .descriptor = {
     .parent		= NULL,
     .final		= NULL,
     .static_message	= cce_root_condition_static_message_fun
@@ -92,13 +92,13 @@ static const cce_descriptor_root_t cce_descriptor_root_stru = {
 void
 cce_descriptor_set_root_parent (cce_descriptor_t * D)
 {
-  D->parent = &(cce_descriptor_root_stru.condition_D);
+  D->parent = &(cce_descriptor_root_stru.descriptor);
 }
 
 bool
 cce_condition_is_root (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_root_stru.condition_D));
+  return cce_is_condition(C, &(cce_descriptor_root_stru.descriptor));
 }
 
 
@@ -116,8 +116,8 @@ cce_unknown_condition_static_message_fun (const cce_condition_t * C CCE_UNUSED)
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_unknown". */
 static const cce_descriptor_unknown_t cce_descriptor_unknown_stru = {
-  .condition_D = {
-    .parent		= &(cce_descriptor_root_stru.condition_D),
+  .descriptor = {
+    .parent		= &(cce_descriptor_root_stru.descriptor),
     .final		= NULL,
     .static_message	= cce_unknown_condition_static_message_fun
   }
@@ -128,9 +128,9 @@ const cce_descriptor_unknown_t * const cce_descriptor_unknown_ptr = &cce_descrip
 /* This is the single instance  of unknown exceptional condition.  It is
    used by "cce_raise()" and "cce_retry()". */
 static const cce_condition_unknown_t cce_condition_unknown_stru = {
-  .root_C = {
-    .condition_C = {
-      .condition_D = &(cce_descriptor_unknown_stru.condition_D)
+  .root = {
+    .condition = {
+      .descriptor = &(cce_descriptor_unknown_stru.descriptor)
     }
   }
 };
@@ -152,8 +152,8 @@ cce_unimplemented_condition_static_message_fun (const cce_condition_t * C CCE_UN
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_unimplemented". */
 static const cce_descriptor_unimplemented_t cce_descriptor_unimplemented_stru = {
-  .condition_D = {
-    .parent		= &(cce_descriptor_root_stru.condition_D),
+  .descriptor = {
+    .parent		= &(cce_descriptor_root_stru.descriptor),
     .final		= NULL,
     .static_message	= cce_unimplemented_condition_static_message_fun
   }
@@ -164,9 +164,9 @@ const cce_descriptor_unimplemented_t * const cce_descriptor_unimplemented_ptr = 
 /* This is  the single instance of  unimplemented exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static const cce_condition_unimplemented_t cce_condition_unimplemented_stru = {
-  .root_C = {
-    .condition_C = {
-      .condition_D = &(cce_descriptor_unimplemented_stru.condition_D)
+  .root = {
+    .condition = {
+      .descriptor = &(cce_descriptor_unimplemented_stru.descriptor)
     }
   }
 };
@@ -182,8 +182,8 @@ static void		cce_condition_invalid_argument_destructor     (cce_condition_t * C)
 static const char *	cce_condition_invalid_argument_static_message (const cce_condition_t * C);
 
 static const cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_stru = {
-  .condition_D = {
-    .parent		= &(cce_descriptor_root_stru.condition_D),
+  .descriptor = {
+    .parent		= &(cce_descriptor_root_stru.descriptor),
     .final		= cce_condition_invalid_argument_destructor,
     .static_message	= cce_condition_invalid_argument_static_message
   }
@@ -195,10 +195,10 @@ cce_condition_t *
 cce_condition_make_invalid_argument (cce_location_t * L, const char * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
-  C->root_C.condition_C.condition_D = &(cce_descriptor_invalid_argument_stru.condition_D);
+  C->root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
   C->funcname	= func;
   C->index	= index;
-  return &(C->root_C.condition_C);
+  return &(C->root.condition);
 }
 void
 cce_condition_invalid_argument_destructor (cce_condition_t * C CCE_UNUSED)
@@ -226,8 +226,8 @@ cce_condition_errno_static_message_fun (const cce_condition_t * C)
 /* This condition descriptor  represents "errno" exceptional conditions.
    It is a child of the root descriptor. */
 const cce_descriptor_errno_t cce_descriptor_errno_stru = {
-  .condition_D = {
-    .parent		= &(cce_descriptor_root_stru.condition_D),
+  .descriptor = {
+    .parent		= &(cce_descriptor_root_stru.descriptor),
     .final		= NULL,
     .static_message	= cce_condition_errno_static_message_fun
   }
@@ -236,7 +236,7 @@ const cce_descriptor_errno_t cce_descriptor_errno_stru = {
 const cce_descriptor_errno_t * const cce_descriptor_errno_ptr = (const cce_descriptor_errno_t *) &cce_descriptor_errno_stru;
 
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
-  { .root_C = { .condition_C = { .condition_D = &(cce_descriptor_errno_stru.condition_D) } }, .errnum = ERRNO, .message = MESSAGE }
+  { .root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } }, .errnum = ERRNO, .message = MESSAGE }
 
 #define ERRNO_CONDITIONS_NUM		149
 #define LAST_ERRNO_CONDITION		148
@@ -404,12 +404,12 @@ cce_condition_make_errno (int errnum)
 {
   for (int i = 0; i < ERRNO_CONDITIONS_NUM; ++i) {
     if (errnum == errno_conditions[i].errnum) {
-      return &(errno_conditions[i].root_C.condition_C);
+      return &(errno_conditions[i].root.condition);
     }
   }
   /* If  we  are  here  ERRNUM  is an  invalid  "errno"  value  for  the
      underlying platform. */
-  return &(errno_conditions[LAST_ERRNO_CONDITION].root_C.condition_C);
+  return &(errno_conditions[LAST_ERRNO_CONDITION].root.condition);
 }
 
 
@@ -427,8 +427,8 @@ cce_condition_h_errno_static_message_fun (const cce_condition_t * C)
 /* This condition descriptor  represents "h_errno" exceptional conditions.
    It is a child of the root descriptor. */
 const cce_descriptor_h_errno_t cce_descriptor_h_errno_stru = {
-  .condition_D = {
-    .parent		= &(cce_descriptor_root_stru.condition_D),
+  .descriptor = {
+    .parent		= &(cce_descriptor_root_stru.descriptor),
     .final		= NULL,
     .static_message	= cce_condition_h_errno_static_message_fun
   }
@@ -437,7 +437,7 @@ const cce_descriptor_h_errno_t cce_descriptor_h_errno_stru = {
 const cce_descriptor_h_errno_t * const cce_descriptor_h_errno_ptr = (const cce_descriptor_h_errno_t *) &cce_descriptor_h_errno_stru;
 
 #define CCE_DECLARE_H_ERRNO_CONDITION(H_ERRNO,MESSAGE)		\
-  { .root_C = { .condition_C = { .condition_D = &(cce_descriptor_h_errno_stru.condition_D) } }, .errnum = H_ERRNO, .message = MESSAGE }
+  { .root = { .condition = { .descriptor = &(cce_descriptor_h_errno_stru.descriptor) } }, .errnum = H_ERRNO, .message = MESSAGE }
 
 #define H_ERRNO_CONDITIONS_NUM		6
 #define LAST_H_ERRNO_CONDITION		5
@@ -457,12 +457,12 @@ cce_condition_make_h_errno (int errnum)
 {
   for (int i = 0; i < H_ERRNO_CONDITIONS_NUM; ++i) {
     if (errnum == h_errno_conditions[i].errnum) {
-      return &(h_errno_conditions[i].root_C.condition_C);
+      return &(h_errno_conditions[i].root.condition);
     }
   }
   /* If  we are  here  ERRNUM  is an  invalid  "h_errno"  value for  the
      underlying platform. */
-  return &(h_errno_conditions[LAST_H_ERRNO_CONDITION].root_C.condition_C);
+  return &(h_errno_conditions[LAST_H_ERRNO_CONDITION].root.condition);
 }
 
 const cce_condition_t *

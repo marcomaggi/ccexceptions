@@ -64,15 +64,15 @@ static const cce_descriptor_t gamma_D = {
 /* ------------------------------------------------------------------ */
 
 static const cce_condition_t alpha_C = {
-  .condition_D		= &alpha_D
+  .descriptor		= &alpha_D
 };
 
 static const cce_condition_t beta_C = {
-  .condition_D		= &beta_D
+  .descriptor		= &beta_D
 };
 
 static const cce_condition_t gamma_C = {
-  .condition_D		= &gamma_D
+  .descriptor		= &gamma_D
 };
 
 

@@ -198,10 +198,10 @@ struct cce_handler_t {
   cce_handler_t *		next_handler;
 };
 
-cce_decl void cce_register_cleanup_handler	(cce_location_t * L, cce_handler_t * H)
+cce_decl void cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
   __attribute__((leaf,nonnull(1,2)));
 
-cce_decl void cce_register_error_handler	(cce_location_t * L, cce_handler_t * H)
+cce_decl void cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
   __attribute__((leaf,nonnull(1,2)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
@@ -233,7 +233,7 @@ struct cce_descriptor_t {
 };
 
 struct cce_condition_t {
-  const cce_descriptor_t *		condition_D;
+  const cce_descriptor_t *		descriptor;
 };
 
 /* ------------------------------------------------------------------ */
@@ -261,11 +261,11 @@ cce_decl bool cce_descriptor_child_and_parent (const cce_descriptor_t * child, c
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_root_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_root_t {
-  cce_condition_t	condition_C;
+  cce_condition_t	condition;
 };
 
 cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
@@ -280,11 +280,11 @@ cce_decl bool cce_condition_is_root (const cce_condition_t * C)
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_unknown_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_unknown_t {
-  cce_condition_root_t		root_C;
+  cce_condition_root_t	root;
 };
 
 cce_decl const cce_descriptor_unknown_t * const	cce_descriptor_unknown_ptr;
@@ -294,25 +294,25 @@ __attribute__((const,always_inline))
 static inline const cce_condition_t *
 cce_condition_make_unknown (void)
 {
-  return &(cce_condition_unknown_ptr->root_C.condition_C);
+  return &(cce_condition_unknown_ptr->root.condition);
 }
 
 __attribute__((pure,nonnull(1),always_inline))
 static inline bool
 cce_condition_is_unknown (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_unknown_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_unknown_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
 
-#define cce_condition_unknown(S)						\
+#define cce_condition_unknown(S)					\
   _Generic((S),								\
-	   cce_condition_unknown_t		*: (S),				\
-	   cce_location_t		*: (cce_condition_unknown_t *)CCE_CLOC(S), \
-	   cce_condition_t		*: (cce_condition_unknown_t *)(S), \
+	   cce_condition_unknown_t		*: (S),			\
+	   cce_location_t			*: (cce_condition_unknown_t *)CCE_CLOC(S), \
+	   cce_condition_t			*: (cce_condition_unknown_t *)(S), \
 	   cce_condition_root_t			*: (cce_condition_unknown_t *)(S), \
-	   const cce_condition_t	*: (cce_condition_unknown_t *)(S), \
+	   const cce_condition_t		*: (cce_condition_unknown_t *)(S), \
 	   const cce_condition_root_t		*: (cce_condition_unknown_t *)(S), \
 	   const cce_condition_unknown_t	*: (cce_condition_unknown_t *)(S))
 
@@ -322,11 +322,11 @@ cce_condition_is_unknown (const cce_condition_t * C)
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_unimplemented_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_unimplemented_t {
-  cce_condition_root_t		root_C;
+  cce_condition_root_t	root;
 };
 
 cce_decl const cce_descriptor_unimplemented_t * const	cce_descriptor_unimplemented_ptr;
@@ -336,13 +336,13 @@ __attribute__((const,always_inline))
 static inline const cce_condition_t *
 cce_condition_make_unimplemented (void)
 {
-  return &(cce_condition_unimplemented_ptr->root_C.condition_C);
+  return &(cce_condition_unimplemented_ptr->root.condition);
 }
 
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
 cce_condition_is_unimplemented (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -363,11 +363,11 @@ cce_condition_is_unimplemented (const cce_condition_t * C)
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_invalid_argument_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_invalid_argument_t {
-  cce_condition_root_t		root_C;
+  cce_condition_root_t	root;
   /* Pointer to  a statically  allocated ASCIIZ string  representing the
      function name; usually generated with "__func__". */
   const char *		funcname;
@@ -384,7 +384,7 @@ __attribute__((pure,nonnull(1),always_inline))
 static inline bool
 cce_condition_is_invalid_argument (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_invalid_argument_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_invalid_argument_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -405,11 +405,11 @@ cce_condition_is_invalid_argument (const cce_condition_t * C)
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_errno_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_errno_t {
-  cce_condition_root_t		root_C;
+  cce_condition_root_t	root;
   int			errnum;
   const char *		message;
 };
@@ -431,7 +431,7 @@ cce_condition_make_errno_clear (void)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_condition_is_errno (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_errno_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_errno_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -452,11 +452,11 @@ cce_condition_is_errno (const cce_condition_t * C)
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_h_errno_t {
-  cce_descriptor_t	condition_D;
+  cce_descriptor_t	descriptor;
 };
 
 struct cce_condition_h_errno_t {
-  cce_condition_root_t		root_C;
+  cce_condition_root_t	root;
   int			errnum;
   const char *		message;
 };
@@ -472,7 +472,7 @@ cce_decl const cce_condition_t * cce_condition_make_h_errno_clear (void)
 __attribute__((nonnull(1),always_inline)) static inline bool
 cce_condition_is_h_errno (const cce_condition_t * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_h_errno_ptr->condition_D));
+  return cce_is_condition(C, &(cce_descriptor_h_errno_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -606,7 +606,7 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_mal
 
 /* Cast a pointer  to condition object and evaluate to  a pointer to its
    descriptor. */
-#define CCE_C003(S)	(CCE_C002(S)->condition_D)
+#define CCE_C003(S)	(CCE_C002(S)->descriptor)
 
 /* Given  a pointer  to condition  object of  any type  or a  pointer to
    condition  descriptor of  any  type: return  a  pointer to  condition
