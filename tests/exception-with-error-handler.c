@@ -62,8 +62,8 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -84,8 +84,8 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -109,8 +109,8 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:

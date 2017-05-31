@@ -757,7 +757,7 @@ in which the instance of @code{cce_handler_t} is the first field.
 The structure has the following public fields:
 
 @table @code
-@item cce_handler_fun_t * handler_function
+@item cce_handler_fun_t * function
 Pointer to the function implementing the handler.
 @end table
 @end deftp
@@ -813,8 +813,8 @@ from the context of @var{L}, so it can be finalised and its memory released.
 
 
 @deftypefun void cce_run_error_handlers (cce_location_t * @var{L})
-Run all the error handlers associated to the location @var{L}.  Each handler must return to its
-caller, taking care of itself regarding internal error handling and asynchronous resources
+Run all the cleanup and error handlers associated to the location @var{L}.  Each handler must return
+to its caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
 
 This is a destructive function: once the list has been traversed, it is not valid anymore.  When the
@@ -867,8 +867,7 @@ cce_raise(upper_L, cce_condition(L));
 @end deftypefun
 
 
-For convenience, in the following examples: we will use nested C function definitions, which are a
-@gnu{} C Compiler's extension.  We could define and call a list of cleanup handlers as follows:
+We could define and call a list of cleanup handlers as follows:
 
 @example
 void handler1 (const cce_condition_t * C, cce_handler_t * H) @{
@@ -881,16 +880,18 @@ void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
   do_some_cleanup();
 @}
 
-cce_location_t L[1];
-cce_handler_t  H1 = @{ .handler_function = handler1 @};
-cce_handler_t  H2 = @{ .handler_function = handler2 @};
-cce_handler_t  H3 = @{ .handler_function = handler3 @};
+@{
+  cce_location_t L[1];
+  cce_handler_t  H1 = @{ .function = handler1 @};
+  cce_handler_t  H2 = @{ .function = handler2 @};
+  cce_handler_t  H3 = @{ .function = handler3 @};
 
-cce_location_init(L);
-cce_register_cleanup_handler(L, &H1);
-cce_register_cleanup_handler(L, &H2);
-cce_register_cleanup_handler(L, &H3);
-cce_run_cleanup_handlers(L);
+  cce_location_init(L);
+  cce_register_cleanup_handler(L, &H1);
+  cce_register_cleanup_handler(L, &H2);
+  cce_register_cleanup_handler(L, &H3);
+  cce_run_cleanup_handlers(L);
+@}
 @end example
 
 @noindent
@@ -907,45 +908,56 @@ void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
   do_some_error_handling();
 @}
 
-cce_location_t L[1];
-cce_handler_t  H1 = @{ .handler_function = handler1 @};
-cce_handler_t  H2 = @{ .handler_function = handler2 @};
-cce_handler_t  H3 = @{ .handler_function = handler3 @};
+@{
+  cce_location_t L[1];
+  cce_handler_t  H1 = @{ .function = handler1 @};
+  cce_handler_t  H2 = @{ .function = handler2 @};
+  cce_handler_t  H3 = @{ .function = handler3 @};
 
-cce_location_init(L);
-cce_register_error_handler(L, &H1);
-cce_register_error_handler(L, &H2);
-cce_register_error_handler(L, &H3);
-cce_run_error_handlers(L);
+  cce_location_init(L);
+  cce_register_error_handler(L, &H1);
+  cce_register_error_handler(L, &H2);
+  cce_register_error_handler(L, &H3);
+  cce_run_error_handlers(L);
+@}
 @end example
 
 Let's say we need to allocate memory, and to release it whenever the dynamic extent of the local
 function terminates; we can organise the code as follows, using a cleanup handler:
 
 @example
-cce_location_t      L[1];
-cce_handler_t       H[1];
-void *              P;
+typedef struct handler_t @{
+  cce_handler_t handler;
+  void *        pointer;
+@} handler_t;
 
-void P_handler (const cce_condition_t * C, cce_handler_t * H)
+static void
+P_handler (const cce_condition_t * C, cce_handler_t * _H)
 @{
-  free(P);
+  handler_t * H = (handler_t *)_H;
+  free(H->pointer);
 @}
-H->handler_function = P_handler;
 
-if (cce_location(L)) @{
-  cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
-@} else @{
-  errno = 0;
-  P = malloc(4096);
-  if (P) @{
-    cce_register_cleanup_handler(L, H);
+@{
+  cce_location_t        L[1];
+  handler_t             H;
+  void *                P;
+
+  H.handler.function = P_handler;
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_final(L);
   @} else @{
-    cce_raise(L, cce_make_errno_C(errno));
+    errno = 0;
+    P = malloc(4096);
+    if (P) @{
+      cce_register_cleanup_handler(L, &H.handler);
+    @} else @{
+      cce_raise(L, cce_condition_make_errno(errno));
+    @}
+    do_something(L, P);
+    cce_run_cleanup_handlers(L);
   @}
-  do_something(L, P);
-  cce_run_cleanup_handlers(L);
 @}
 @end example
 
@@ -958,35 +970,37 @@ successful, return the memory to the caller; we can organise the code as follows
 handler in the constructor and a cleanup handler in the caller:
 
 @example
+typedef struct handler_t @{
+  cce_handler_t handler;
+  void *        pointer;
+@} handler_t;
+
+static void
+P_handler (const cce_condition_t * C, cce_handler_t * _H)
+@{
+  handler_t * H = (handler_t *)_H;
+  free(H->pointer);
+@}
+
 void *
 constructor (cce_location_t * there)
 @{
-  typedef struct handler_t @{
-    cce_handler_t  H[1];
-    void *         pointer;
-  @} handler_t;
-  cce_location_t    L[1];
-  handler_t         H[1];
+  cce_location_t    L;
+  handler_t         H;
   void *            P;
 
-  void P_handler (const cce_condition_t * C, cce_handler_t * _H)
-  @{
-    handler_t * H = (handler_t *)_H;
-    free(H->pointer);
-  @}
-  H->handler_function = P_handler;
+  H.handler.function = P_handler;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers(L);
-    cce_raise(there, cce_condition(L));
+    cce_run_error_handlers_raise(L, there);
   @} else @{
     errno = 0;
     P = malloc(4096);
     if (P) @{
-      H->pointer = P;
-      cce_register_error_handler(L, H);
+      H.pointer = P;
+      cce_register_error_handler(L, &H.handler);
     @} else @{
-      cce_raise(L, cce_make_errno_C(errno));
+      cce_raise(L, cce_condition_make_errno(errno));
     @}
     do_some_initialisation_in(P);
     cce_run_cleanup_handlers(L);
@@ -996,28 +1010,18 @@ constructor (cce_location_t * there)
 
 void caller (void)
 @{
-  typedef struct handler_t @{
-    cce_handler_t  H[1];
-    void *         pointer;
-  @} handler_t;
   cce_location_t    L[1];
-  handler_t         H[1];
+  handler_t         H;
   void *            P;
 
-  void P_handler (const cce_condition_t * C, cce_handler_t * _H)
-  @{
-    handler_t * H = (handler_t *)_H;
-    free(H->pointer);
-  @}
-  H->handler_function = P_handler;
+  H.handler.function = P_handler;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_run_error_handlers_final(L);
   @} else @{
     P = constructor(L);
-    H->pointer = P;
-    cce_register_cleanup_handler(L, H);
+    H.pointer = P;
+    cce_register_cleanup_handler(L, &H.handler);
     do_something_with(P);
     cce_run_cleanup_handlers(L);
   @}

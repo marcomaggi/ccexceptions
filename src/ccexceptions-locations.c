@@ -82,10 +82,10 @@ cce_run_cleanup_handlers (cce_location_t * L)
 {
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
-  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
+  for (cce_handler_t * H = next; H && H->function; H = next) {
     next = H->next_handler;
     if (true == H->is_cleanup_handler) {
-      H->handler_function(L->condition, H);
+      H->function(L->condition, H);
     }
   }
 }
@@ -100,9 +100,9 @@ cce_run_error_handlers (cce_location_t * L)
 {
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
-  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
+  for (cce_handler_t * H = next; H && H->function; H = next) {
     next = H->next_handler;
-    H->handler_function(L->condition, H);
+    H->function(L->condition, H);
   }
 }
 

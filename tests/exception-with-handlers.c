@@ -59,8 +59,8 @@ test_no_exception (void)
   cce_location_t	L[1];
   bool			flag1 = false;
   bool			flag2 = false;
-  handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-  handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+  handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+  handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -104,8 +104,8 @@ test_with_error (void)
   cce_location_t	L[1];
   bool			flag1 = false;
   bool			flag2 = false;
-  handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-  handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+  handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+  handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -152,8 +152,8 @@ test_with_retry (void)
   cce_location_t	L[1];
   bool			flag1 = false;
   bool			flag2 = false;
-  handler1_t		H1 = { .exception_handler[0] = { .handler_function = handler1 }, .flagp = &flag1 };
-  handler2_t		H2 = { .exception_handler[0] = { .handler_function = handler2 }, .flagp = &flag2 };
+  handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
+  handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -196,7 +196,7 @@ test_dynamically_allocated_handlers (void)
     errno = 0;
     H = malloc(sizeof(handler1_t));
     if (NULL != H) {
-      H->exception_handler[0].handler_function = handler;
+      H->exception_handler[0].function = handler;
       H->flagp = flagp;
       return H;
     } else {
@@ -220,7 +220,7 @@ test_dynamically_allocated_handlers (void)
     errno = 0;
     H = malloc(sizeof(handler2_t));
     if (NULL != H) {
-      H->exception_handler[0].handler_function = handler;
+      H->exception_handler[0].function = handler;
       H->flagp = flagp;
       return H;
     } else {

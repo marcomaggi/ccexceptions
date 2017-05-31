@@ -195,7 +195,7 @@ typedef void cce_handler_fun_t (const cce_condition_t * L, cce_handler_t * H);
 
 struct cce_handler_t {
   bool			is_cleanup_handler;
-  cce_handler_fun_t *	handler_function;
+  cce_handler_fun_t *	function;
   cce_handler_t *	next_handler;
 };
 

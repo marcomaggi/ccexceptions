@@ -52,9 +52,9 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     }
 
     cce_location_t	L[1];
-    cce_handler_t	H1 = { .handler_function = handler1 };
-    cce_handler_t	H2 = { .handler_function = handler2 };
-    cce_handler_t	H3 = { .handler_function = handler3 };
+    cce_handler_t	H1 = { .function = handler1 };
+    cce_handler_t	H2 = { .function = handler2 };
+    cce_handler_t	H3 = { .function = handler3 };
 
     cce_location_init(L);
     cce_register_cleanup_handler(L, &H1);
@@ -84,9 +84,9 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     }
 
     cce_location_t	L[1];
-    cce_handler_t	H1 = { .handler_function = handler1 };
-    cce_handler_t	H2 = { .handler_function = handler2 };
-    cce_handler_t	H3 = { .handler_function = handler3 };
+    cce_handler_t	H1 = { .function = handler1 };
+    cce_handler_t	H2 = { .function = handler2 };
+    cce_handler_t	H3 = { .function = handler3 };
 
     cce_location_init(L);
     cce_register_error_handler(L, &H1);
@@ -110,7 +110,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       free(P);
       flag = true;
     }
-    H->handler_function = P_handler;
+    H->function = P_handler;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -141,7 +141,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       free(P);
       flag = true;
     }
-    H.handler_function = P_handler;
+    H.function = P_handler;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -175,7 +175,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      H->handler_function = P_handler;
+      H->function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -210,7 +210,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 	free(P);
 	flag = true;
       }
-      H->handler_function = P_handler;
+      H->function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -241,7 +241,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      H->handler_function = P_handler;
+      H->function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
@@ -275,7 +275,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       void P_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H CCE_UNUSED) {
 	free(P);
       }
-      H->handler_function = P_handler;
+      H->function = P_handler;
 
       switch (cce_location(L)) {
       case CCE_ERROR:
