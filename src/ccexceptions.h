@@ -130,7 +130,8 @@ typedef enum {
 
   /* This  code  represents  the   return  value  of  the  "setjmp()"
      evaluation after a "cce_throw()" call. */
-  CCE_ERROR,
+  CCE_ERROR		= 1,
+  CCE_EXCEPT		= 1,
 
   /* This  code  represents  the   return  value  of  the  "setjmp()"
      evaluation after a "cce_retry()" call. */
