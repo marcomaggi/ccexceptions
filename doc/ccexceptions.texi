@@ -1264,7 +1264,7 @@ allocated with @cfunc{malloc}, the final function can just be:
 
 @example
 void
-my_stuff_C_final (my_stuff_C_t * C)
+my_cnd_stuff_final (my_cnd_stuff_t * C)
 @{
   free(C);
 @}
@@ -1272,7 +1272,7 @@ my_stuff_C_final (my_stuff_C_t * C)
 @end deftypefn
 
 
-@deftypefn {Function Prototype} void cce_condition_static_message_fun_t (const cce_condition_t * @var{C})
+@deftypefn {Function Prototype} {const char *} cce_condition_static_message_fun_t (const cce_condition_t * @var{C})
 Applied to a pointer to condition object: return a statically allocated @asciiz{} string describing
 the exceptional condition @var{C}.  A static message must always be defined; another client--defined
 function can build a dynamic and more descriptive message.
@@ -1280,8 +1280,8 @@ function can build a dynamic and more descriptive message.
 For example, an instance of this function can be:
 
 @example
-void
-my_stuff_C_static_message (const my_stuff_C_t * C)
+const char *
+my_cnd_stuff_static_message (const my_cnd_stuff_t * C)
 @{
   return "error doing stuff";
 @}
@@ -1311,14 +1311,14 @@ condition.
 @end deftp
 
 
-@deftypefun bool cce_condition_D_child_and_parent (const cce_descriptor_t * @var{child}, const cce_descriptor_t * @var{parent})
-Establish if two condition descriptors are child and parent.  Return @true{} if @var{child} is equal
-to @var{parent} or @var{parent} is in the hierarchy of @var{child}'s parents; otherwise return
-@false{}.
+@deftypefun bool cce_descriptor_child_and_ancestor (const cce_descriptor_t * @var{child}, const cce_descriptor_t * @var{ancestor})
+Establish if two condition descriptors are child and ancestor.  Return @true{} if @var{child} is
+equal to @var{ancestor} or @var{ancestor} is in the hierarchy of @var{child}'s ancestors; otherwise
+return @false{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_descriptor_t *} cce_condition_D (@var{X})
+@deftypefn {Generic Macro} {cce_descriptor_t *} cce_descriptor (@var{X})
 This generic macro dispatches its expansion according to its argument's type:
 
 @itemize
@@ -1344,17 +1344,16 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_t
-Type of structure representing an exceptional condition object.  Public fields:
+Type of structure representing an exceptional condition object.  It has the following public fields:
 
 @table @code
-@item const cce_descriptor_t * condition_D
+@item const cce_descriptor_t * condition
 Pointer to the condition descriptor associated to this condition object.
 @end table
 @end deftp
 
 
 @deftypefun void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
-@deftypefunx void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
 pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
 This function is usually called from a type--specific initialisation function.
@@ -1362,22 +1361,19 @@ This function is usually called from a type--specific initialisation function.
 
 
 @deftypefun void cce_condition_final (cce_condition_t * @var{C})
-@deftypefunx void cce_condition_final (cce_condition_t * @var{C})
 Apply to @var{C} the @code{final} function referenced by its descriptor's functions table.
 @end deftypefun
 
 
 @deftypefun {const char *} cce_condition_static_message (const cce_condition_t * @var{C})
-@deftypefunx {const char *} cce_condition_static_message (const cce_condition_t * @var{C})
 Apply to @var{C} the @code{static_message} function referenced by its descriptor's functions
 table.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_C (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
-@deftypefunx bool cce_is_condition (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefun bool cce_is_condition (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
 Establish if a condition object is of a selected type.  Return @true{} if @var{C} is an instance of
-type @var{D}, or an instance of a type that is parent of @var{D}; otherwise return @false{}.
+type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @false{}.
 @end deftypefun
 
 
@@ -1400,8 +1396,8 @@ on values of suitable types; we can apply this macro to pointers to all the type
 This macro allows us to compare pointers without raising a warning:
 
 @example
-cce_errno_C_t     * A = ...;
-cce_condition_t * B = ...;
+cce_condition_errno_t * A = ...;
+cce_condition_t *       B = ...;
 
 /* This raises a warning: */
 A == B;
@@ -1469,19 +1465,24 @@ lower_function (cce_location_t * upper_L)
 @end example
 
 If we need to branch according to a condition object's type, we can do it as follows using wrappers
-for @cfunc{cce_is_condition_C}:
+for @cfunc{cce_is_condition}:
 
 @example
 cce_location_t      L[1];
 
 if (cce_location(L)) @{
-  if (cce_is_unknown_C(cce_condition(L))) @{
-    do_something();
-  @} else if (cce_is_errno_C(cce_condition(L))) @{
-    do_something();
-  @} else @{
-    do_something();
-  @}
+  if (cce_condition_is_unknown(cce_condition(L)))
+    @{
+      do_something();
+    @}
+  else if (cce_condition_is_errno(cce_condition(L)))
+    @{
+      do_something();
+    @}
+  else
+    @{
+      do_something();
+    @}
   cce_run_error_handlers(L);
   cce_condition_final(cce_condition(L));
 @} else @{

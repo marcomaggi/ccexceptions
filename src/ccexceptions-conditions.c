@@ -55,13 +55,13 @@ cce_condition_static_message (cce_condition_t * C)
 bool
 cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * descriptor)
 {
-  return cce_descriptor_child_and_parent(C->descriptor, descriptor);
+  return cce_descriptor_child_and_ancestor(C->descriptor, descriptor);
 }
 bool
-cce_descriptor_child_and_parent (const cce_descriptor_t * child, const cce_descriptor_t * parent)
+cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_descriptor_t * ancestor)
 {
   for (; child; child = child->parent) {
-    if (child == parent) {
+    if (child == ancestor) {
       return true;
     }
   }

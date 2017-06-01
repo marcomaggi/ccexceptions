@@ -259,7 +259,7 @@ cce_decl const char * cce_condition_static_message (cce_condition_t * C)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl bool cce_descriptor_child_and_parent (const cce_descriptor_t * child, const cce_descriptor_t * parent)
+cce_decl bool cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_descriptor_t * ancestor)
   __attribute__((leaf,nonnull(1,2)));
 
 

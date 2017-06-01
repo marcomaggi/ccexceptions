@@ -147,7 +147,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
     assert(true == flag);
   }
 
-  /* Branching upon condition types with "cce_descriptor_child_and_parent()". */
+  /* Branching upon condition types with "cce_descriptor_child_and_ancestor()". */
   {
     cce_location_t	L[1];
     bool		flag = false;
@@ -156,11 +156,11 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       cce_condition_t *	C  = cce_condition(L);
       const cce_descriptor_t *	CD = cce_descriptor(C);
 
-      if (cce_descriptor_child_and_parent(CD, cce_descriptor(cce_descriptor_unknown_ptr)))
+      if (cce_descriptor_child_and_ancestor(CD, cce_descriptor(cce_descriptor_unknown_ptr)))
 	{
 	  flag = false;
 	}
-      else if (cce_descriptor_child_and_parent(CD, cce_descriptor(cce_descriptor_errno_ptr)))
+      else if (cce_descriptor_child_and_ancestor(CD, cce_descriptor(cce_descriptor_errno_ptr)))
 	{
 	  flag = true;
 	}
