@@ -43,27 +43,26 @@
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_malloc_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_malloc_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_malloc_t *	H = cce_cast_to_handler_malloc(_H);
   free(H->pointer);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
 {
-  H->exception_handler->function = cce_handler_malloc_function;
-  H->pointer		= pointer;
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_malloc_function;
+  H->pointer	= pointer;
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
 {
-  H->exception_handler->function = cce_handler_malloc_function;
-  H->pointer		= pointer;
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_malloc_function;
+  H->pointer	= pointer;
+  cce_register_error_handler(L, H);
 }
 
 
@@ -73,27 +72,26 @@ cce_error_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, voi
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_filedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_filedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_filedes_t *	H = cce_cast_to_handler_filedes(_H);
   close(H->filedes);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+cce_cleanup_handler_filedes_init (cce_location_t * L, cce_handler_t * H, int filedes)
 {
-  H->exception_handler->function = cce_handler_filedes_function;
-  H->filedes		= filedes;
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_filedes_function;
+  H->filedes	= filedes;
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+cce_error_handler_filedes_init (cce_location_t * L, cce_handler_t * H, int filedes)
 {
-  H->exception_handler->function = cce_handler_filedes_function;
-  H->filedes		= filedes;
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_filedes_function;
+  H->filedes	= filedes;
+  cce_register_error_handler(L, H);
 }
 
 
@@ -103,30 +101,29 @@ cce_error_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, i
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_pipedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_pipedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_pipedes_t *	H = cce_cast_to_handler_pipedes(_H);
   close(H->pipedes[0]);
   close(H->pipedes[1]);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+cce_cleanup_handler_pipedes_init (cce_location_t * L, cce_handler_t * H, int pipedes[2])
 {
-  H->exception_handler->function = cce_handler_pipedes_function;
-  H->pipedes[0]		= pipedes[0];
-  H->pipedes[1]		= pipedes[1];
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_pipedes_function;
+  H->pipedes[0]	= pipedes[0];
+  H->pipedes[1]	= pipedes[1];
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_t * H, int pipedes[2])
 {
-  H->exception_handler->function = cce_handler_pipedes_function;
-  H->pipedes[0]		= pipedes[0];
-  H->pipedes[1]		= pipedes[1];
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_pipedes_function;
+  H->pipedes[0]	= pipedes[0];
+  H->pipedes[1]	= pipedes[1];
+  cce_register_error_handler(L, H);
 }
 
 
@@ -136,36 +133,35 @@ cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, i
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_tmpfile_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_tmpfile_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_tmpfile_t *	H = cce_cast_to_handler_tmpfile(_H);
   remove(H->pathname);
   free(H->pathname);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
 {
   size_t	len = 1+strlen(pathname);
   char *	ptr = cce_sys_malloc(L, len);
   strncpy(ptr, pathname, len);
   ptr[len] = '\n';
-  H->exception_handler->function = cce_handler_tmpfile_function;
-  H->pathname		= ptr;
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_tmpfile_function;
+  H->pathname	= ptr;
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
 {
   size_t	len = 1+strlen(pathname);
   char *	ptr = cce_sys_malloc(L, len);
   strncpy(ptr, pathname, len);
   ptr[len] = '\n';
-  H->exception_handler->function = cce_handler_tmpfile_function;
-  H->pathname		= ptr;
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_tmpfile_function;
+  H->pathname	= ptr;
+  cce_register_error_handler(L, H);
 }
 
 
@@ -175,36 +171,35 @@ cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, c
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_tmpdir_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_tmpdir_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_tmpdir_t *	H = cce_cast_to_handler_tmpdir(_H);
   rmdir(H->pathname);
   free(H->pathname);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
 {
   size_t	len = 1+strlen(pathname);
   char *	ptr = cce_sys_malloc(L, len);
   strncpy(ptr, pathname, len);
   ptr[len] = '\n';
-  H->exception_handler->function = cce_handler_tmpdir_function;
-  H->pathname		= ptr;
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_tmpdir_function;
+  H->pathname	= ptr;
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
 {
   size_t	len = 1+strlen(pathname);
   char *	ptr = cce_sys_malloc(L, len);
   strncpy(ptr, pathname, len);
   ptr[len] = '\n';
-  H->exception_handler->function = cce_handler_tmpdir_function;
-  H->pathname		= ptr;
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_tmpdir_function;
+  H->pathname	= ptr;
+  cce_register_error_handler(L, H);
 }
 
 
@@ -214,27 +209,27 @@ cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, con
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_dirstream_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+cce_handler_dirstream_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
-  cce_handler_dirstream_t *	H = cce_cast_to_handler_dirstream(_H);
-  closedir(H->dirstream);
+  DIR *		dirstream = H->pointer;
+  closedir(dirstream);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
-cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
+cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handler_t * H, DIR * dirstream)
 {
-  H->exception_handler->function = cce_handler_dirstream_function;
-  H->dirstream = dirstream;
-  cce_register_cleanup_handler(L, H->exception_handler);
+  H->function	= cce_handler_dirstream_function;
+  H->pointer	= dirstream;
+  cce_register_cleanup_handler(L, H);
 }
 
 void
-cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
+cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_t * H, DIR * dirstream)
 {
-  H->exception_handler->function = cce_handler_dirstream_function;
-  H->dirstream = dirstream;
-  cce_register_error_handler(L, H->exception_handler);
+  H->function	= cce_handler_dirstream_function;
+  H->pointer	= dirstream;
+  cce_register_error_handler(L, H);
 }
 
 /* end of file */

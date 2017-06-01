@@ -42,11 +42,11 @@ test_handler_malloc (void)
 {
   /* No error.  Cleanup call. */
   {
-    cce_location_t		L[1];
-    cce_handler_malloc_t	H[1];
-    void *			P;
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    void *		P;
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -63,11 +63,11 @@ test_handler_malloc (void)
   }
   /* Error. */
   {
-    cce_location_t		L[1];
-    cce_handler_malloc_t	H[1];
-    void *			P;
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    void *		P;
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -91,10 +91,10 @@ test_handler_filedes (void)
 {
   /* No error.  Cleanup call. */
   {
-    cce_location_t		L[1];
-    cce_handler_filedes_t	H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -112,10 +112,10 @@ test_handler_filedes (void)
   }
   /* Error. */
   {
-    cce_location_t		L[1];
-    cce_handler_filedes_t	H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -140,10 +140,10 @@ test_handler_pipedes (void)
 {
   /* No error.  Cleanup call. */
   {
-    cce_location_t		L[1];
-    cce_handler_pipedes_t	H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -161,10 +161,10 @@ test_handler_pipedes (void)
   }
   /* Error. */
   {
-    cce_location_t		L[1];
-    cce_handler_pipedes_t	H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -189,11 +189,11 @@ test_handler_tmpfile (void)
 {
   /* No error.  Cleanup call. */
   {
-    cce_location_t		L[1];
-    cce_handler_filedes_t	filedes_H[1];
-    cce_handler_tmpfile_t	tmpfile_H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	filedes_H[1];
+    cce_handler_t	tmpfile_H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -211,11 +211,11 @@ test_handler_tmpfile (void)
   }
   /* Error. */
   {
-    cce_location_t		L[1];
-    cce_handler_filedes_t	filedes_H[1];
-    cce_handler_tmpfile_t	tmpfile_H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	filedes_H[1];
+    cce_handler_t	tmpfile_H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -240,10 +240,10 @@ test_handler_tmpdir (void)
 {
   /* No error.  Cleanup call. */
   {
-    cce_location_t		L[1];
-    cce_handler_tmpdir_t	tmpdir_H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	tmpdir_H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
@@ -260,10 +260,10 @@ test_handler_tmpdir (void)
   }
   /* Error. */
   {
-    cce_location_t		L[1];
-    cce_handler_tmpdir_t	tmpdir_H[1];
-    volatile bool		done_flag  = false;
-    volatile bool		error_flag = false;
+    cce_location_t	L[1];
+    cce_handler_t	tmpdir_H[1];
+    volatile bool	done_flag  = false;
+    volatile bool	error_flag = false;
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);

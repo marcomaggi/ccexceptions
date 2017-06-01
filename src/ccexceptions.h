@@ -195,9 +195,14 @@ typedef void cce_handler_fun_t (const cce_condition_t * L, cce_handler_t * H);
 
 struct cce_handler_t {
   bool			is_cleanup_handler;
-  void *		pointer;
   cce_handler_fun_t *	function;
   cce_handler_t *	next_handler;
+  union {
+    void *		pointer;
+    char *		pathname;
+    int			filedes;
+    int			pipedes[2];
+  };
 };
 
 cce_decl void cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
@@ -571,28 +576,10 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
  ** Predefined POSIX exception handler: malloc pointer.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_malloc_t	cce_handler_malloc_t;
-
-struct cce_handler_malloc_t {
-  cce_handler_t	exception_handler[1];
-  void *	pointer;
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_malloc") */
-__attribute__((const,always_inline))
-static inline cce_handler_malloc_t *
-cce_cast_to_handler_malloc_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_malloc_t *)src;
-}
-#define cce_cast_to_handler_malloc(SRC)					\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_malloc_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+cce_decl void cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
   __attribute__((nonnull(1,2,3)));
 
-cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_malloc_t * H, void * pointer)
+cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
   __attribute__((nonnull(1,2,3)));
 
 

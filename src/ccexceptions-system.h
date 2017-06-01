@@ -324,28 +324,10 @@ cce_decl void cce_sys_waitpid (cce_location_t * L, pid_t pid, int * wstatus, int
  ** Predefined POSIX exception handler: file descriptor.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_filedes_t	cce_handler_filedes_t;
-
-struct cce_handler_filedes_t {
-  cce_handler_t	exception_handler[1];
-  int		filedes;
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_filedes") */
-__attribute__((const,always_inline))
-static inline cce_handler_filedes_t *
-cce_cast_to_handler_filedes_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_filedes_t *)src;
-}
-#define cce_cast_to_handler_filedes(SRC)				\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_filedes_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+cce_decl void cce_cleanup_handler_filedes_init (cce_location_t * L, cce_handler_t * H, int filedes)
   __attribute__((nonnull(1,2)));
 
-cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_filedes_t * H, int filedes)
+cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_t * H, int filedes)
   __attribute__((nonnull(1,2)));
 
 
@@ -353,28 +335,10 @@ cce_decl void cce_error_handler_filedes_init (cce_location_t * L, cce_handler_fi
  ** Predefined POSIX exception handler: pipe descriptors.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_pipedes_t	cce_handler_pipedes_t;
-
-struct cce_handler_pipedes_t {
-  cce_handler_t	exception_handler[1];
-  int		pipedes[2];
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_pipedes") */
-__attribute__((const,always_inline))
-static inline cce_handler_pipedes_t *
-cce_cast_to_handler_pipedes_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_pipedes_t *)src;
-}
-#define cce_cast_to_handler_pipedes(SRC)				\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_pipedes_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+cce_decl void cce_cleanup_handler_pipedes_init (cce_location_t * L, cce_handler_t * H, int pipedes[2])
   __attribute__((nonnull(1,2,3)));
 
-cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pipedes_t * H, int pipedes[2])
+cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_t * H, int pipedes[2])
   __attribute__((nonnull(1,2,3)));
 
 
@@ -382,28 +346,10 @@ cce_decl void cce_error_handler_pipedes_init (cce_location_t * L, cce_handler_pi
  ** Predefined POSIX exception handler: removal of temporary file.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_tmpfile_t	cce_handler_tmpfile_t;
-
-struct cce_handler_tmpfile_t {
-  cce_handler_t	exception_handler[1];
-  char *	pathname;
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_tmpfile") */
-__attribute__((const,always_inline))
-static inline cce_handler_tmpfile_t *
-cce_cast_to_handler_tmpfile_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_tmpfile_t *)src;
-}
-#define cce_cast_to_handler_tmpfile(SRC)				\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_tmpfile_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+cce_decl void cce_cleanup_handler_tmpfile_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
   __attribute__((nonnull(1,2,3)));
 
-cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tmpfile_t * H, const char * pathname)
+cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
   __attribute__((nonnull(1,2,3)));
 
 
@@ -411,28 +357,10 @@ cce_decl void cce_error_handler_tmpfile_init (cce_location_t * L, cce_handler_tm
  ** Predefined POSIX exception handler: removal of temporary directory.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_tmpdir_t	cce_handler_tmpdir_t;
-
-struct cce_handler_tmpdir_t {
-  cce_handler_t	exception_handler[1];
-  char *	pathname;
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_tmpdir") */
-__attribute__((const,always_inline))
-static inline cce_handler_tmpdir_t *
-cce_cast_to_handler_tmpdir_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_tmpdir_t *)src;
-}
-#define cce_cast_to_handler_tmpdir(SRC)				\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_tmpdir_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+cce_decl void cce_cleanup_handler_tmpdir_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
   __attribute__((nonnull(1,2,3)));
 
-cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmpdir_t * H, const char * pathname)
+cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_t * H, const char * pathname)
   __attribute__((nonnull(1,2,3)));
 
 
@@ -440,28 +368,10 @@ cce_decl void cce_error_handler_tmpdir_init (cce_location_t * L, cce_handler_tmp
  ** Predefined POSIX exception handler: directory streams.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_handler_dirstream_t	cce_handler_dirstream_t;
-
-struct cce_handler_dirstream_t {
-  cce_handler_t	exception_handler[1];
-  DIR *		dirstream;
-};
-
-/* Output of: (my-c-insert-cast-function "cce" "handler" "handler_dirstream") */
-__attribute__((const,always_inline))
-static inline cce_handler_dirstream_t *
-cce_cast_to_handler_dirstream_from_handler (cce_handler_t * src)
-{
-  return (cce_handler_dirstream_t *)src;
-}
-#define cce_cast_to_handler_dirstream(SRC)				\
-  _Generic((SRC), cce_handler_t *: cce_cast_to_handler_dirstream_from_handler)(SRC)
-/* End of output. */
-
-cce_decl void cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
+cce_decl void cce_cleanup_handler_dirstream_init (cce_location_t * L, cce_handler_t * H, DIR * dirstream)
   __attribute__((nonnull(1,2,3)));
 
-cce_decl void cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_dirstream_t * H, DIR * dirstream)
+cce_decl void cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_t * H, DIR * dirstream)
   __attribute__((nonnull(1,2,3)));
 
 

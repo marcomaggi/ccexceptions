@@ -759,9 +759,23 @@ The structure has the following public fields:
 @table @code
 @item cce_handler_fun_t * function
 Pointer to the function implementing the handler.
+@end table
 
+@noindent
+the following fields are members of an anonymous union:
+
+@table @code
 @item void * pointer
 Pointer available to the client code.
+
+@item char * pathname
+Pointer available to the client code.
+
+@item int filedes
+An integer meant to be used for file descriptors.
+
+@item int pipedes[2]
+Integers meant to be used for pipe descriptors.
 @end table
 @end deftp
 
@@ -925,9 +939,10 @@ void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
 @}
 @end example
 
-Let's say we need to allocate memory, and to release it whenever the dynamic extent of the local
-function terminates; to better show the mechanism: we do not use the field @code{pointer} of
-@objtype{cce_handler_t}; we can organise the code as follows, using a cleanup handler:
+Let's say we need to allocate memory with @cfunc{malloc}, and to release it with @cfunc{free}
+whenever the dynamic extent of the local function terminates; we can use built--in functions for
+this, @ref{syshandlers malloc}.  To show the mechanism, in the following example: we implement a
+handler explicitly.
 
 @example
 typedef struct handler_t @{
@@ -2902,8 +2917,8 @@ Wrapper for @cfunc{waitpid}.
 We can handle memory that must be released with the standard function @cfunc{free} as follows:
 
 @example
-cce_location_t              L[1];
-cce_handler_malloc_t        H[1];
+cce_location_t  L[1];
+cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
@@ -2918,24 +2933,11 @@ if (cce_location(L)) @{
 The following symbols are defined in the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_handler_malloc_t
-Type of data structures representing exceptional condition handlers for memory that must be released
-with @cfunc{free}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
-anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_malloc_t * @var{H}, void * @var{P})
+@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_malloc_t *} cce_cast_to_handler_malloc (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_malloc_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
 
 @c page
 @node syshandlers filedes
@@ -2946,14 +2948,14 @@ We can handle file descriptors that must be released with the standard function 
 follows:
 
 @example
-cce_location_t              L[1];
-cce_handler_filedes_t       H[1];
+cce_location_t  L[1];
+cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
   cce_condition_final(cce_condition(L));
 @} else @{
-  int   fd = cce_sys_open("name.ext", O_CREAT, S_IRWXU);
+  int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRWXU);
   cce_cleanup_handler_filedes_init(L, H, fd);
   cce_run_cleanup_handlers(L);
 @}
@@ -2962,25 +2964,12 @@ if (cce_location(L)) @{
 The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
-@deftp {Struct Typedef} cce_handler_filedes_t
-Type of data structures representing exceptional condition handlers for file descriptors that must
-be released with @cfunc{close}.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the
-first field is anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
-@deftypefunx void cce_error_handler_filedes_init (cce_location_t * @var{L}, cce_handler_filedes_t * @var{H}, int @var{fd})
+@deftypefun void cce_cleanup_handler_filedes_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, int @var{fd})
+@deftypefunx void cce_error_handler_filedes_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, int @var{fd})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the file descriptor @var{fd} using the standard function @cfunc{close}; errors in
 @cfunc{close} are @strong{ignored}.
 @end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_filedes_t *} cce_cast_to_handler_filedes (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_filedes_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
 
 @c page
 @node syshandlers pipedes
@@ -3008,25 +2997,12 @@ if (cce_location(L)) @{
 The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
-@deftp {Struct Typedef} cce_handler_pipedes_t
-Type of data structures representing exceptional condition handlers for file descriptors created by
-@cfunc{pipe} that must be released with @cfunc{close}.  It is ``derived'' from
-@objtype{cce_handler_t}, meaning that the first field is anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
-@deftypefunx void cce_error_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_pipedes_t * @var{H}, int @var{pipedes}[2])
+@deftypefun void cce_cleanup_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, int @var{pipedes}[2])
+@deftypefunx void cce_error_handler_pipedes_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, int @var{pipedes}[2])
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the file descriptors in @var{pipedes} using the standard function @cfunc{close}; errors in
 @cfunc{close} are @strong{ignored}.
 @end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_pipedes_t *} cce_cast_to_handler_pipedes (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_pipedes_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
 
 @c page
 @node syshandlers tmpfile
@@ -3036,8 +3012,8 @@ the @code{_Generic} keyword, so it allows compile--time type checking.
 We can remove temporary files with the standard function @cfunc{remove} as follows:
 
 @example
-cce_location_t              L[1];
-cce_handler_tmpfile_t       H[1];
+cce_location_t  L[1];
+cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
@@ -3059,15 +3035,8 @@ Remember that a good way to create temporary files is to use the @posix{} standa
 The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
-@deftp {Struct Typedef} cce_handler_tmpfile_t
-Type of data structures representing exceptional condition handlers for the removal of temporary
-files.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is anonymous of
-type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_tmpfile_init (cce_location_t * @var{L}, cce_handler_tmpfile_t * @var{H}, const char * @var{pathname})
-@deftypefunx void cce_error_handler_tmpfile_init (cce_location_t * @var{L}, cce_handler_tmpfile_t * @var{H}, const char * @var{pathname})
+@deftypefun void cce_cleanup_handler_tmpfile_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, const char * @var{pathname})
+@deftypefunx void cce_error_handler_tmpfile_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, const char * @var{pathname})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 remove the file whose pathname is @var{pathname} using the standard function @cfunc{remove}; errors
 in @cfunc{remove} are @strong{ignored}.
@@ -3079,12 +3048,6 @@ If an error occurs while configuring the handler: and exception is raised by per
 exit to @var{L}.
 @end deftypefun
 
-
-@deftypefn {Preprocessor Macro} {cce_handler_tmpfile_t *} cce_cast_to_handler_tmpfile (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_tmpfile_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
-
 @c page
 @node syshandlers tmpdir
 @section Handler for temporary files
@@ -3094,8 +3057,8 @@ We can remove @strong{empty} temporary directories with the standard function @c
 follows:
 
 @example
-cce_location_t          L[1];
-cce_handler_tmpdir_t    tmpdir_H[1];
+cce_location_t  L[1];
+cce_handler_t   tmpdir_H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
@@ -3115,15 +3078,8 @@ implemented by the @gnu{} C Library.
 The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
-@deftp {Struct Typedef} cce_handler_tmpdir_t
-Type of data structures representing exceptional condition handlers for the removal of temporary
-directories.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
-anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_tmpdir_init (cce_location_t * @var{L}, cce_handler_tmpdir_t * @var{H}, const char * @var{pathname})
-@deftypefunx void cce_error_handler_tmpdir_init (cce_location_t * @var{L}, cce_handler_tmpdir_t * @var{H}, const char * @var{pathname})
+@deftypefun void cce_cleanup_handler_tmpdir_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, const char * @var{pathname})
+@deftypefunx void cce_error_handler_tmpdir_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, const char * @var{pathname})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 remove the directory whose pathname is @var{pathname} using the standard function @cfunc{rmdir};
 errors in @cfunc{rmdir} are @strong{ignored}.  The directory is removed only if it is empty.
@@ -3134,12 +3090,6 @@ The string referenced by @var{pathname} is duplicated and stored in the structur
 If an error occurs while configuring the handler: and exception is raised by performing a non--local
 exit to @var{L}.
 @end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_tmpdir_t *} cce_cast_to_handler_tmpdir (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_tmpdir_t}.  This macro is built upon
-the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
 
 @c page
 @node syshandlers dirstream
@@ -3179,25 +3129,12 @@ we can use the source code of this handler as template to implement a more compl
 The following symbols are defined in the header file @file{ccexceptions-system.h}.
 
 
-@deftp {Struct Typedef} cce_handler_dirstream_t
-Type of data structures representing exceptional condition handlers for the finalisation of
-directory streams.  It is ``derived'' from @objtype{cce_handler_t}, meaning that the first field is
-anonymous of type @objtype{cce_handler_t}.
-@end deftp
-
-
-@deftypefun void cce_cleanup_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_dirstream_t * @var{H}, DIR * @var{dirstream})
-@deftypefunx void cce_error_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_dirstream_t * @var{H}, DIR * @var{dirstream})
+@deftypefun void cce_cleanup_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, DIR * @var{dirstream})
+@deftypefunx void cce_error_handler_dirstream_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, DIR * @var{dirstream})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 finalise the directory stream using the standard function @cfunc{closedir}; errors in
 @cfunc{closedir} are @strong{ignored}.
 @end deftypefun
-
-
-@deftypefn {Preprocessor Macro} {cce_handler_dirstream_t *} cce_cast_to_handler_dirstream (cce_handler_t * @var{H})
-Cast the pointer @var{H} to a pointer to @objtype{cce_handler_dirstream_t}.  This macro is built
-upon the @code{_Generic} keyword, so it allows compile--time type checking.
-@end deftypefn
 
 @c page
 @node helpers

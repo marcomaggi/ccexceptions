@@ -53,8 +53,8 @@ main (int argc, const char *const argv[])
 int
 list_dirs (const char * pathname)
 {
-  cce_location_t		L[1];
-  cce_handler_dirstream_t	dirstream_H[1];
+  cce_location_t	L[1];
+  cce_handler_t		dirstream_H[1];
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
