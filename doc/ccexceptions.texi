@@ -1106,8 +1106,8 @@ From the point of view of our ability to react to an exception at run--time: a f
 the one in which the conditional exception types are organised in a tree hierarchy.  It allows us to
 select the level of granularity we desire in the branching logic.
 
-The tree hierarchy implemented by @value{PACKAGE} is built on top of concept of single inheritance;
-multiple inheritance would be more general, but also more complex.
+The tree hierarchy implemented by @value{PACKAGE} uses single inheritance; multiple inheritance
+would be more general, but also more complex.
 
 @c ------------------------------------------------------------------------
 
@@ -1118,69 +1118,67 @@ a C language structure.  Type descriptors are usually statically allocated and m
 hard--coded initialisation.  Condition object instances are either dynamically allocated and
 initialised or statically allocated with hard--coded initialisation.
 
-Every type descriptor data structure encloses a data structure of type @objtype{cce_condition_D_t},
-which must be its first field.  The instances of @objtype{cce_condition_D_t} hold the pointers that
+Every type descriptor data structure encloses a data structure of type @objtype{cce_descriptor_t},
+which must be its first field.  The instances of @objtype{cce_descriptor_t} hold the pointers that
 define the tree hierarchy; every type descriptor can be referenced by multiple condition objects: it
 can represent the type of multiple objects; every type descriptor has a single parent and can have
-zero, one or more children.  Each pointer to @objtype{cce_condition_D_t} is a unique run--time value
+zero, one or more children.  Each pointer to @objtype{cce_descriptor_t} is a unique run--time value
 identifying the type of condition objects.
 
 Every exceptional condition object data structure encloses a data structure of type
 @objtype{cce_condition_t}, which must be its first field.  The condition object holds a pointer to
 the associated type descriptor.
 
-Notice the naming convention: the suffix @samp{_D_t} stands for ``exceptional condition descriptor
-type''; the suffix @samp{_C_t} stands for ``exceptional condition object type''.
-
-The root of the tree is represented by the type descriptor @objtype{cce_root_D_t} and condition
-objects of type @objtype{cce_root_D_t} have type @objtype{cce_root_C_t}.  We can think of the root
+The root of the tree is represented by the type descriptor @objtype{cce_descriptor_root_t} and
+condition objects of descriptor have type @objtype{cce_condition_root_t}.  We can think of the root
 structure types as follows:
 
 @example
-typedef struct cce_root_D_t     cce_root_D_t;
-typedef struct cce_root_C_t     cce_root_C_t;
+typedef struct cce_condition_root_t     cce_descriptor_root_t;
+typedef struct cce_condition_root_t     cce_condition_root_t;
 
-struct cce_root_D_t @{
-  cce_condition_D_t     condition_D;
+struct cce_descriptor_root_t @{
+  cce_descriptor_t	descriptor;
 @};
 
-struct cce_root_C_t @{
-  cce_condition_t     condition_C;
+struct cce_condition_root_t @{
+  cce_condition_t	condition;
 @};
 
 /* Pointer to the predefined root type descriptor. */
-extern const cce_root_D_t * const cce_root_D_ptr;
+extern const cce_condition_root_t * const cce_condition_root_ptr;
 @end example
 
-We define a new condition object type, child of the root type, as follows:
+We define a new condition object type, child of the root type, as follows (more code is needed for
+full initialisation of data structures):
 
 @example
-typedef struct my_error_D_t     my_error_D_t;
-typedef struct my_error_C_t     my_error_C_t;
+typedef struct my_descriptor_error_t  my_descriptor_error_t;
+typedef struct my_condition_error_t   my_condition_error_t;
 
-struct my_error_D_t @{
-  cce_condition_D_t     condition_D;
+struct my_descriptor_error_t @{
+  cce_descriptor_t     descriptor;
   /* Put some custom fields here. */
 @};
 
 struct my_error_C_t @{
-  cce_root_C_t          root_C;
+  cce_condition_root_t  root;
   /* Put some custom fields here. */
 @};
 
-my_error_D_t my_error_D;
+my_descriptor_error_t my_error_descriptor;
 
 void
 initialisation_function (void)
 @{
-  cce_condition_D_set_root_parent(&(my_error_D.condition_D));
+  cce_descriptor_set_root_parent(&my_descriptor_error.condition);
 @}
 @end example
 
 @noindent
-the field of type @objtype{cce_condition_D_t} is the first in its data structure; the field of type
-@objtype{cce_root_C_t} is the first in its data structure.  The initialisation function links the
-new type descriptor to the root type descriptor.
+the field of type @objtype{cce_descriptor_t} is the first in its data structure; the field of type
+@objtype{cce_condition_root_t} is the first in its data structure.  The initialisation function
+links the new type descriptor to the root type descriptor.
 
 In the following picture: the type descriptor @samp{alpha} is a child of the root descriptor; the
 type descriptor @samp{beta} is a child of the type descriptor @samp{alpha}.  We can say that: a
@@ -1206,29 +1204,29 @@ is also of type @samp{alpha} and of type root.
 The data types that represent such hierarchy look as follows:
 
 @example
-typedef struct my_alpha_D_t     my_alpha_D_t;
-typedef struct my_alpha_C_t     my_alpha_C_t;
-typedef struct my_beta_D_t      my_beta_D_t;
-typedef struct my_beta_C_t      my_beta_C_t;
+typedef struct my_descriptor_alpha_t my_descriptor_alpha_t;
+typedef struct my_descriptor_beta_t  my_descriptor_beta_t;
+typedef struct my_condition_alpha_t  my_condition_alpha_t;
+typedef struct my_condition_beta_t   my_condition_beta_t;
 
 /*** Descriptors types. ***/
 
-struct my_alpha_D_t @{
-  cce_condition_D_t     condition_D;
+struct my_descriptor_alpha_t @{
+  cce_descriptor_t     condition;
 @};
 
-struct my_beta_D_t @{
-  cce_condition_D_t     condition_D;
+struct my_descriptor_beta_t @{
+  cce_descriptor_t     condition;
 @};
 
 /*** Object types. ***/
 
-struct my_alpha_C_t @{
-  cce_root_C_t          root_C;
+struct my_condition_alpha_t @{
+  cce_condition_root_t  root;
 @};
 
-struct my_beta_C_t @{
-  my_alpha_C_t          my_alpha_C;
+struct my_condition_beta_t @{
+  my_condition_alpha_t  alpha;
 @};
 @end example
 
@@ -1236,18 +1234,18 @@ struct my_beta_C_t @{
 we can statically allocate and initialise the type descriptors as follows:
 
 @example
-my_alpha_D_t    my_alpha_D = @{
+my_descriptor_alpha_t my_descriptor_alpha = @{
   .parent = NULL
 @};
 
-my_beta_D_t     my_beta_D = @{
-  .parent = &(my_alpha_D.condition_D)
+my_descriptor_beta_t  my_descriptor_beta = @{
+  .parent = &my_descriptor_alpha.condition
 @};
 
 void
 initialisation_function (void)
 @{
-  cce_condition_D_set_root_parent(&(my_alpha_D.condition_D));
+  cce_condition_set_root_parent(&my_descriptor_alpha.condition));
 @}
 @end example
 
@@ -1291,12 +1289,12 @@ my_stuff_C_static_message (const my_stuff_C_t * C)
 @end deftypefn
 
 
-@deftp {Struct Typedef} cce_condition_D_t
+@deftp {Struct Typedef} cce_descriptor_t
 Type of structures holding a table of function pointers to handle exceptional condition objects.  It
 has the following fields:
 
 @table @code
-@item const cce_condition_D_t * parent
+@item const cce_descriptor_t * parent
 Pointer to the condition descriptor that is parent of this one in the tree hierarchy.  This pointer
 is set to @cnull{} only for the root condition descriptor, @xref{conditions root, Predefined root
 condition descriptor}.
@@ -1313,23 +1311,23 @@ condition.
 @end deftp
 
 
-@deftypefun bool cce_condition_D_child_and_parent (const cce_condition_D_t * @var{child}, const cce_condition_D_t * @var{parent})
+@deftypefun bool cce_condition_D_child_and_parent (const cce_descriptor_t * @var{child}, const cce_descriptor_t * @var{parent})
 Establish if two condition descriptors are child and parent.  Return @true{} if @var{child} is equal
 to @var{parent} or @var{parent} is in the hierarchy of @var{child}'s parents; otherwise return
 @false{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_D_t *} cce_condition_D (@var{X})
+@deftypefn {Generic Macro} {cce_descriptor_t *} cce_condition_D (@var{X})
 This generic macro dispatches its expansion according to its argument's type:
 
 @itemize
 @item
 Given a pointer to condition object: retrieve the pointer to its descriptor and cast it to a pointer
-to @objtype{cce_condition_D_t}.
+to @objtype{cce_descriptor_t}.
 
 @item
-Given a pointer to condition descriptor: cast it to a pointer to @objtype{cce_condition_D_t}.
+Given a pointer to condition descriptor: cast it to a pointer to @objtype{cce_descriptor_t}.
 @end itemize
 
 This generic macro performs compile--time type--checking so that the cast operation is applied only
@@ -1349,14 +1347,14 @@ All the following definitions are accessible from the header file @file{ccexcept
 Type of structure representing an exceptional condition object.  Public fields:
 
 @table @code
-@item const cce_condition_D_t * condition_D
+@item const cce_descriptor_t * condition_D
 Pointer to the condition descriptor associated to this condition object.
 @end table
 @end deftp
 
 
-@deftypefun void cce_condition_init (cce_condition_t * @var{C}, const cce_condition_D_t * @var{D})
-@deftypefunx void cce_condition_init (cce_condition_t * @var{C}, const cce_condition_D_t * @var{D})
+@deftypefun void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefunx void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
 pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
 This function is usually called from a type--specific initialisation function.
@@ -1376,8 +1374,8 @@ table.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_C (const cce_condition_t * @var{C}, const cce_condition_D_t * @var{D})
-@deftypefunx bool cce_is_condition (const cce_condition_t * @var{C}, const cce_condition_D_t * @var{D})
+@deftypefun bool cce_is_condition_C (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefunx bool cce_is_condition (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
 Establish if a condition object is of a selected type.  Return @true{} if @var{C} is an instance of
 type @var{D}, or an instance of a type that is parent of @var{D}; otherwise return @false{}.
 @end deftypefun
@@ -1514,7 +1512,7 @@ This descriptor has a single instance built into the library.
 @end deftp
 
 
-@deftypefun void cce_condition_D_set_root_parent (cce_condition_D_t * @var{D})
+@deftypefun void cce_condition_D_set_root_parent (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the unique root condition descriptor.
 @end deftypefun
 
@@ -1532,7 +1530,7 @@ must write initialisation code as follows:
 typedef struct my_error_D_t     my_error_D_t;
 
 struct my_error_D_t @{
-  cce_condition_D_t     condition_D;
+  cce_descriptor_t     condition_D;
 @};
 
 static const char *
@@ -1770,7 +1768,7 @@ In a correctly built condition objects hierarchy: there is only one instance of 
 referenced by @code{cce_errno_D}; all the instances of
 @code{cce_errno_C_t} reference the same descriptor.
 
-As single public field it has an unnamed field of type @code{cce_condition_D_t}; the
+As single public field it has an unnamed field of type @code{cce_descriptor_t}; the
 sub--fields of this unnamed field can be accessed transparently by code using a pointer to
 @objtype{cce_errno_D_t}.  For an @code{errno} condition descriptor the @code{parent} sub--field is
 the root descriptor referenced by @code{cce_root_D}.
@@ -1850,7 +1848,7 @@ In a correctly built condition objects hierarchy: there is only one instance of 
 referenced by @code{cce_h_errno_D}; all the instances of @code{cce_h_errno_C_t} reference the same
 descriptor.
 
-As single public field it has an unnamed field of type @code{cce_condition_D_t}; the
+As single public field it has an unnamed field of type @code{cce_descriptor_t}; the
 sub--fields of this unnamed field can be accessed transparently by code using a pointer to
 @objtype{cce_h_errno_D_t}.  For an @code{h_errno} condition descriptor the @code{parent} sub--field
 is the root descriptor referenced by @code{cce_root_D}.
@@ -1951,7 +1949,7 @@ do it as follows:
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct alpha_D_t @{
-  cce_condition_D_t;
+  cce_descriptor_t;
 @} alpha_D_t;
 
 /* Exceptional condition object type. */
@@ -2028,7 +2026,7 @@ alpha_C_is_a (const cce_condition_t * condition)
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct beta_D_t @{
-  cce_condition_D_t;
+  cce_descriptor_t;
 @} beta_D_t;
 
 /* Exceptional condition object type. */
@@ -2105,7 +2103,7 @@ beta_C_is_a (const cce_condition_t * condition)
    seen  as a  table of  virtual methods,  which are  overridden by  the
    subtypes. */
 typedef struct gamma_D_t @{
-  cce_condition_D_t;
+  cce_descriptor_t;
 @} gamma_D_t;
 
 /* Exceptional condition object type. */
