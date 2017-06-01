@@ -24,26 +24,36 @@
 
 bool	flag = false;
 
+/* ------------------------------------------------------------------ */
+
+static void
+handler1 (bool * flagp)
+{
+  flag = *flagp;
+}
 static void
 func1 (void)
 {
-  void handler (bool * flagp) {
-    flag = *flagp;
-  }
-  bool flag1 __attribute__((cleanup(handler))) = true;
+  bool flag1 __attribute__((cleanup(handler1))) = true;
   return;
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+handler2 (bool * flagp)
+{
+  flag = *flagp;
+}
 static void
 func2 (jmp_buf bufferp)
 {
-  void handler (bool * flagp) {
-    flag = *flagp;
-  }
-  bool flag1 __attribute__((cleanup(handler))) = true;
+  bool flag1 __attribute__((cleanup(handler2))) = true;
   /* By long-jumping we exclude the cleanup. */
   longjmp(bufferp, 2);
 }
+
+/* ------------------------------------------------------------------ */
 
 int
 main (int argc __attribute__((unused)), const char *const argv[] __attribute__((unused)))
