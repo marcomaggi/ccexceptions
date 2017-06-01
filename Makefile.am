@@ -62,7 +62,8 @@ check_PROGRAMS	= \
 	tests/conditions-hierarchy		\
 	tests/conditions-example		\
 	tests/conditions-tests			\
-	tests/system-handlers
+	tests/system-handlers			\
+	tests/sizeof
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -118,6 +119,9 @@ tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_system_handlers_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_system_handlers_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
+tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
