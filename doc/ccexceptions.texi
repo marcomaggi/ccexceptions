@@ -759,6 +759,9 @@ The structure has the following public fields:
 @table @code
 @item cce_handler_fun_t * function
 Pointer to the function implementing the handler.
+
+@item void * pointer
+Pointer available to the client code.
 @end table
 @end deftp
 
@@ -923,7 +926,8 @@ void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
 @end example
 
 Let's say we need to allocate memory, and to release it whenever the dynamic extent of the local
-function terminates; we can organise the code as follows, using a cleanup handler:
+function terminates; to better show the mechanism: we do not use the field @code{pointer} of
+@objtype{cce_handler_t}; we can organise the code as follows, using a cleanup handler:
 
 @example
 typedef struct handler_t @{
@@ -966,7 +970,8 @@ whether @cfunc{do_something} raises an exception or not: the cleanup handler is 
 memory is released.
 
 Let's say we are writing a constructor and we need to allocate memory, do something and, if
-successful, return the memory to the caller; we can organise the code as follows, using an error
+successful, return the memory to the caller; to better show the mechanism: we do not use the field
+@code{pointer} of @objtype{cce_handler_t}; we can organise the code as follows, using an error
 handler in the constructor and a cleanup handler in the caller:
 
 @example
@@ -1061,11 +1066,11 @@ The purpose of @value{PACKAGE}'s condition objects module is to allow us to writ
 @example
 if (cce_location(L)) @{
   // handle the exceptional condition
-  if (my_is_alpha_C(cce_condition(L)))
+  if (my_condition_is_alpha(cce_condition(L)))
     @{
       // react to exception "alpha"
     @}
-  else if (my_is_beta_C(cce_condition(L)))
+  else if (my_condition_is_beta(cce_condition(L)))
     @{
       // react to exception "beta"
     @}
