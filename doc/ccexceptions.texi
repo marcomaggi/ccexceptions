@@ -1507,31 +1507,31 @@ property.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_root_D_t
+@deftp {Struct Typedef} cce_descriptor_root_t
 Type of the exceptional condition descriptor representing the root of the conditions hierarchy tree.
 This descriptor has a single instance built into the library.
 @end deftp
 
 
-@deftypefun void cce_condition_D_set_root_parent (cce_descriptor_t * @var{D})
+@deftypefun void cce_descriptor_set_root_parent (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the unique root condition descriptor.
 @end deftypefun
 
 
-@deftypefun bool cce_is_root_C (const cce_condition_t * @var{C})
+@deftypefun bool cce_condition_is_root (const cce_condition_t * @var{C})
 Return @true{} if the condition object @var{C} is derived from the root condition type; otherwise
 return @false{}.  With a correctly built conditions hierarchy: this function always returns @true{}.
 @end deftypefun
 
 
-To define an exceptional condition type @code{my_error_D_t} whose parent is the root condition, we
-must write initialisation code as follows:
+To define an exceptional condition type @code{my_descriptor_error_t} whose parent is the root
+condition, we must write initialisation code as follows:
 
 @example
-typedef struct my_error_D_t     my_error_D_t;
+typedef struct my_descr_error_t  my_descr_error_t;
 
-struct my_error_D_t @{
-  cce_descriptor_t     condition_D;
+struct my_descr_error_t @{
+  cce_descriptor_t     descriptor;
 @};
 
 static const char *
@@ -1540,18 +1540,16 @@ my_error_static_message (const cce_condition_t * C CCE_UNUSED)
   return "my error message";
 @}
 
-my_error_D_t my_error_D_stru = @{
-  .condition_D = @{
-    .parent             = NULL,
-    .final              = NULL,
-    .static_message     = my_error_static_message
-  @}
+my_descr_error_t my_descr_error_stru = @{
+  .descriptor.parent          = NULL,
+  .descriptor.final           = NULL,
+  .descriptor.static_message  = my_error_static_message
 @};
 
 void
 condition_descriptors_initialisation (void)
 @{
-  cce_condition_D_set_root_parent(my_error_D_stru.condition_D);
+  cce_descriptor_set_root_parent(&my_descr_error.descriptor);
 @}
 @end example
 
