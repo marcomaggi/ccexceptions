@@ -2965,8 +2965,8 @@ We can handle file descriptors that must be released with the standard function 
 follows:
 
 @example
-cce_location_t              L[1];
-cce_handler_pipedes_t       H[1];
+cce_location_t  L[1];
+cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
@@ -3029,7 +3029,7 @@ in @cfunc{remove} are @strong{ignored}.
 The string referenced by @var{pathname} is duplicated and stored in the structure referenced by
 @var{H}.
 
-If an error occurs while configuring the handler: and exception is raised by performing a non--local
+If an error occurs while configuring the handler: an exception is raised by performing a non--local
 exit to @var{L}.
 @end deftypefun
 
@@ -3072,7 +3072,7 @@ errors in @cfunc{rmdir} are @strong{ignored}.  The directory is removed only if 
 The string referenced by @var{pathname} is duplicated and stored in the structure referenced by
 @var{H}.
 
-If an error occurs while configuring the handler: and exception is raised by performing a non--local
+If an error occurs while configuring the handler: an exception is raised by performing a non--local
 exit to @var{L}.
 @end deftypefun
 
@@ -3081,13 +3081,13 @@ exit to @var{L}.
 @section Handler for directory streams
 
 
-Using a directory stream opened with @cfunc{cce_sys_opendir} and to be closed by @cfunc{closedir},
-we can read the contents of a directory as follows:
+We can read the contents of a directory opening a directory stream with @cfunc{cce_sys_opendir} and
+closing it with @cfunc{closedir}:
 
 @example
-cce_location_t          L[1];
-cce_handler_dirstream_t dirstream_H[1];
-const char *            pathname = "./";
+cce_location_t  L[1];
+cce_handler_t   dirstream_H[1];
+const char *    pathname = "./";
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
