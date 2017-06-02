@@ -394,13 +394,11 @@ cce_condition_is_invalid_argument (const cce_condition_t * C)
 
 #define cce_condition_invalid_argument(S)				\
   _Generic((S),								\
-	   cce_condition_invalid_argument_t	*: (S),			\
-	   cce_location_t			*: (cce_condition_invalid_argument_t *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_invalid_argument_t *)(S), \
-	   cce_condition_root_t			*: (cce_condition_invalid_argument_t *)(S), \
-	   const cce_condition_t		*: (cce_condition_invalid_argument_t *)(S), \
-	   const cce_condition_root_t		*: (cce_condition_invalid_argument_t *)(S), \
-	   const cce_condition_invalid_argument_t *: (cce_condition_invalid_argument_t *)(S))
+	   cce_location_t			*: (const cce_condition_invalid_argument_t *)CCE_CLOC(S), \
+	   cce_condition_t			*: (const cce_condition_invalid_argument_t *)(S), \
+	   cce_condition_invalid_argument_t	*: (const cce_condition_invalid_argument_t *)(S), \
+	   const cce_condition_t		*: (const cce_condition_invalid_argument_t *)(S), \
+	   const cce_condition_invalid_argument_t *: (const cce_condition_invalid_argument_t *)(S))
 
 
 /** --------------------------------------------------------------------

@@ -1706,11 +1706,11 @@ do_something (unsigned N)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_run_error_handlers_final(L);
   @} else @{
     if (0 == N) @{
-      cce_raise(L, cce_invalid_argument_C(L, __func__, 1));
+      cce_raise(L,
+          cce_condition_make_invalid_argument(L, __func__, 1));
     @}
     cce_run_cleanup_handlers(L);
   @}
@@ -1720,12 +1720,13 @@ do_something (unsigned N)
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_invalid_argument_D_t
-Structure type representing the descriptor of the condition objects.
+@deftp {Struct Typedef} cce_descriptor_invalid_argument_t
+Structure type representing the descriptor of the condition objects.  This descriptor has the
+@emph{root} descriptor as parent.
 @end deftp
 
 
-@deftp {Struct Typedef} cce_invalid_argument_C_t
+@deftp {Struct Typedef} cce_condition_invalid_argument_t
 Structure type representing the condition object.  It has the following public fields:
 
 @table @code
@@ -1739,29 +1740,34 @@ One--based index of the offending argument.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const cce_invalid_argument_D_t * const} cce_invalid_argument_D
-Pointer to a statically allocated structure representing the condition descriptor.  The parent of
-this descriptor is the root descriptor referenced by @code{cce_root_D}.
-@end deftypevr
-
-
-@deftypefun {cce_invalid_argument_C_t *} cce_invalid_argument_C (cce_location_t * @var{L}, const char * @var{func}, unsigned @var{index})
-Build and return a new condition object.
+@deftypefun {cce_condition_invalid_argument_t *} cce_condition_make_invalid_argument (cce_location_t * @var{L}, const char * @var{func}, unsigned @var{index})
+Build and return a new condition object.  If building the object fails: raise an exception to the
+location @var{L}.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_is_invalid_argument_C (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_condition_is_invalid_argument (const cce_condition_t * @var{C})
 Return @true{} if @var{C} is a condition object of the specified type; otherwise return @false{}.
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_invalid_argument_C_t *} cce_invalid_argument_C (cce_condition_t * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
-condition object: cast it to a pointer to @objtype{cce_invalid_argument_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only to values of suitable types;
-we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
-sense.
+@deftypefn {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (const cce_condition_invalid_argument_t * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
+pointer to @objtype{cce_condition_invalid_argument_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
 @end deftypefn
+
+
+@deftypevr {Dynamic Constant} {const cce_descriptor_invalid_argument_t * const} cce_descriptor_invalid_argument
+Pointer to a statically allocated structure representing the condition descriptor.
+@end deftypevr
 
 @c page
 @node conditions errno
