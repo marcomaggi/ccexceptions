@@ -625,6 +625,14 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t *
 	   const cce_descriptor_errno_t			*: CCE_C001(S), \
 	   const cce_descriptor_h_errno_t		*: CCE_C001(S), \
 									\
+	   const cce_descriptor_t			* const: CCE_C001(S), \
+	   const cce_descriptor_root_t			* const: CCE_C001(S), \
+	   const cce_descriptor_unknown_t		* const: CCE_C001(S), \
+	   const cce_descriptor_unimplemented_t		* const: CCE_C001(S), \
+	   const cce_descriptor_invalid_argument_t	* const: CCE_C001(S), \
+	   const cce_descriptor_errno_t			* const: CCE_C001(S), \
+	   const cce_descriptor_h_errno_t		* const: CCE_C001(S), \
+									\
 	   cce_condition_t				*: CCE_C003(S),	\
 	   cce_condition_root_t				*: CCE_C003(S),	\
 	   cce_condition_unknown_t			*: CCE_C003(S),	\
