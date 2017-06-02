@@ -661,6 +661,7 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t *
 	   const cce_condition_errno_t			*: CCE_C002(S), \
 	   const cce_condition_h_errno_t		*: CCE_C002(S), \
 									\
+	   cce_location_t[1]				 : CCE_C002(CCE_CLOC(S)), \
 	   cce_location_t				*: CCE_C002(CCE_CLOC(S)))
 
 
