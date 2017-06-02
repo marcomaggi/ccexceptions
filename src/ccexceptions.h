@@ -234,7 +234,7 @@ typedef void cce_condition_final_fun_t (cce_condition_t * C)
   __attribute__((nonnull(1)));
 
 typedef const char * cce_condition_static_message_fun_t	(const cce_condition_t * C)
-  __attribute__((nonnull(1),returns_nonnull));
+  __attribute__((nonnull(1)));
 
 struct cce_descriptor_t {
   const cce_descriptor_t *		parent;
@@ -639,7 +639,14 @@ cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t *
 	   const cce_condition_unimplemented_t		*: CCE_C003(S),	\
 	   const cce_condition_invalid_argument_t	*: CCE_C003(S),	\
 	   const cce_condition_errno_t			*: CCE_C003(S),	\
-	   const cce_condition_h_errno_t		*: CCE_C003(S))
+	   const cce_condition_h_errno_t		*: CCE_C003(S), \
+									\
+	   const cce_condition_root_t		* const: CCE_C003(S),	\
+	   const cce_condition_unknown_t	* const: CCE_C003(S),	\
+	   const cce_condition_unimplemented_t	* const: CCE_C003(S),	\
+	   const cce_condition_errno_t		* const: CCE_C003(S),	\
+	   const cce_condition_h_errno_t	* const: CCE_C003(S))
+
 
 /* ------------------------------------------------------------------ */
 

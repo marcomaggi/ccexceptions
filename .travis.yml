@@ -116,7 +116,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
@@ -128,7 +128,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
@@ -140,7 +140,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
