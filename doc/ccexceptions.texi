@@ -1774,34 +1774,23 @@ Pointer to a statically allocated structure representing the condition descripto
 @section Predefined @code{errno} conditions
 
 
+The @dfn{errno exceptional--condition object} has the purpose of describing an exceptional condition
+caused by a system function setting @code{errno}.
+
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_errno_D_t
-Structure type representing the descriptor for @code{errno} condition objects.
-
-In a correctly built condition objects hierarchy: there is only one instance of this type, the one
-referenced by @code{cce_errno_D}; all the instances of
-@code{cce_errno_C_t} reference the same descriptor.
-
-As single public field it has an unnamed field of type @code{cce_descriptor_t}; the
-sub--fields of this unnamed field can be accessed transparently by code using a pointer to
-@objtype{cce_errno_D_t}.  For an @code{errno} condition descriptor the @code{parent} sub--field is
-the root descriptor referenced by @code{cce_root_D}.
+@deftp {Struct Typedef} cce_descriptor_errno_t
+Structure type representing the descriptor for @emph{errno} condition objects.  This descriptor has
+the @emph{root} descriptor as parent.
 @end deftp
 
 
-@deftp {Struct Typedef} cce_errno_C_t
-Structure type representing an @code{errno} exceptional condition object, signalled by a system
+@deftp {Struct Typedef} cce_condition_errno_t
+Structure type representing an @emph{errno} exceptional condition object, signalled by a system
 function by setting @code{errno} to a non--zero value.  It has the following public fields:
 
 @table @code
-@item cce_condition_t
-An unnamed field holding everything required to make an instance of @code{cce_errno_C_t}
-also an instance of @code{cce_condition_t}.  For all the @code{errno} condition objects: the
-condition descriptor referenced by the @code{descriptor} sub--field is the structure referenced by
-@code{cce_errno_D}.
-
 @item int errnum
 The value of @code{errno}.
 
@@ -1811,16 +1800,7 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const cce_errno_D_t * const} cce_errno_D_ptr
-Pointer to a statically allocated structure representing the condition descriptor of all the values
-returned by @cfunc{cce_errno_C}.
-
-By comparing this value to the @code{descriptor} field of a @objtype{cce_condition_t} structure, we
-can determine if such structure is an @code{errno} condition object.
-@end deftypevr
-
-
-@deftypefun {const cce_errno_C_t *} cce_make_errno_C (int @var{errnum})
+@deftypefun {const cce_condition_errno_t *} cce_condition_make_errno (int @var{errnum})
 Given the @code{errno} code @var{errnum}, return the pointer to the condition object associated to
 it.
 
@@ -1830,24 +1810,35 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefun {const cce_errno_C_t *} cce_make_errno_C_clear (void)
-Consume the current value of @code{errno} and return the return value of @cfunc{cce_make_errno_C}
-applied to it.  Before returning: @code{errno} is reset to zero.
+@deftypefun {const cce_condition_errno_t *} cce_condition_make_errno_clear (void)
+Consume the current value of @code{errno} and return the return value of
+@cfunc{cce_condition_make_errno} applied to it.  Before returning: @code{errno} is reset to zero.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_is_errno_C (const cce_condition_t * @var{C})
-Return @true{} if @var{C} has @code{cce_errno_D} as descriptor; otherwise return @false{}.
+@deftypefn {Inline Function} bool cce_condition_is_errno (const cce_condition_t * @var{C})
+Return @true{} if @var{C} is a condition object of type @emph{errno}; otherwise return @false{}.
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_errno_C_t *} cce_errno_C (cce_condition_t * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
-condition object: cast it to a pointer to @objtype{cce_errno_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only to values of suitable types;
-we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
-sense.
+@deftypefn {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_errno_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (const cce_condition_errno_t * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
+pointer to @objtype{cce_condition_errno_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
 @end deftypefn
+
+
+@deftypevr {Dynamic Constant} {const cce_descriptor_errno_t * const} cce_descriptor_errno_ptr
+Pointer to a statically allocated structure representing the condition descriptor of all the
+@emph{errno} condition objects.
+@end deftypevr
 
 @c page
 @node conditions h_errno

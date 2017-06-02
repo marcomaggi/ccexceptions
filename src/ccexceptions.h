@@ -439,13 +439,11 @@ cce_condition_is_errno (const cce_condition_t * C)
 
 #define cce_condition_errno(S)						\
   _Generic((S),								\
-	   cce_condition_errno_t		*: (S),			\
-	   cce_location_t			*: (cce_condition_errno_t *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_errno_t *)(S), \
-	   cce_condition_root_t			*: (cce_condition_errno_t *)(S), \
-	   const cce_condition_t		*: (cce_condition_errno_t *)(S), \
-	   const cce_condition_root_t		*: (cce_condition_errno_t *)(S), \
-	   const cce_condition_errno_t		*: (cce_condition_errno_t *)(S))
+	   cce_location_t			*: (const cce_condition_errno_t *)CCE_CLOC(S), \
+	   cce_condition_t			*: (const cce_condition_errno_t *)(S), \
+	   cce_condition_errno_t		*: (const cce_condition_errno_t *)(S), \
+	   const cce_condition_t		*: (const cce_condition_errno_t *)(S), \
+	   const cce_condition_errno_t		*: (const cce_condition_errno_t *)(S))
 
 
 /** --------------------------------------------------------------------
