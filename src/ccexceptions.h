@@ -323,6 +323,7 @@ cce_condition_is_unknown (const cce_condition_t * C)
 #define cce_condition_unknown(S)					\
   _Generic((S),								\
 	   cce_location_t			*: (const cce_condition_unknown_t *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (const cce_condition_unknown_t *)CCE_CLOC(S), \
 	   cce_condition_t			*: (const cce_condition_unknown_t *)(S), \
 	   cce_condition_unknown_t		*: (const cce_condition_unknown_t *)(S), \
 	   const cce_condition_t		*: (const cce_condition_unknown_t *)(S), \
@@ -361,6 +362,7 @@ cce_condition_is_unimplemented (const cce_condition_t * C)
 
 #define cce_condition_unimplemented(S)					\
   _Generic((S),								\
+	   cce_location_t[1]			 : (const cce_condition_unimplemented_t *)CCE_CLOC(S), \
 	   cce_location_t			*: (const cce_condition_unimplemented_t *)CCE_CLOC(S), \
 	   cce_condition_t			*: (const cce_condition_unimplemented_t *)(S), \
 	   cce_condition_unimplemented_t	*: (const cce_condition_unimplemented_t *)(S), \
@@ -401,6 +403,7 @@ cce_condition_is_invalid_argument (const cce_condition_t * C)
 
 #define cce_condition_invalid_argument(S)				\
   _Generic((S),								\
+	   cce_location_t[1]			 : (const cce_condition_invalid_argument_t *)CCE_CLOC(S), \
 	   cce_location_t			*: (const cce_condition_invalid_argument_t *)CCE_CLOC(S), \
 	   cce_condition_t			*: (const cce_condition_invalid_argument_t *)(S), \
 	   cce_condition_invalid_argument_t	*: (const cce_condition_invalid_argument_t *)(S), \
@@ -446,6 +449,7 @@ cce_condition_is_errno (const cce_condition_t * C)
 
 #define cce_condition_errno(S)						\
   _Generic((S),								\
+	   cce_location_t[1]			 : (const cce_condition_errno_t *)CCE_CLOC(S), \
 	   cce_location_t			*: (const cce_condition_errno_t *)CCE_CLOC(S), \
 	   cce_condition_t			*: (const cce_condition_errno_t *)(S), \
 	   cce_condition_errno_t		*: (const cce_condition_errno_t *)(S), \
@@ -486,6 +490,7 @@ cce_condition_is_h_errno (const cce_condition_t * C)
 #define cce_condition_h_errno(S)					\
   _Generic((S),								\
 	   cce_location_t			*: (const cce_condition_h_errno_t *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (const cce_condition_h_errno_t *)CCE_CLOC(S), \
 	   cce_condition_t			*: (const cce_condition_h_errno_t *)(S), \
 	   cce_condition_h_errno_t		*: (const cce_condition_h_errno_t *)(S), \
 	   const cce_condition_t		*: (const cce_condition_h_errno_t *)(S), \
