@@ -69,7 +69,7 @@ test_no_exception (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_condition_delete(cce_condition(L));
     break;
 
   default:
@@ -118,7 +118,7 @@ test_with_error (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_condition_delete(cce_condition(L));
     break;
 
   default:
@@ -170,7 +170,7 @@ test_with_retry (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_condition_delete(cce_condition(L));
     break;
 
   case CCE_SUCCESS:
@@ -232,7 +232,7 @@ test_dynamically_allocated_handlers (void)
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_condition_delete(cce_condition(L));
   } else {
     H1 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag1);
     H2 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag2);

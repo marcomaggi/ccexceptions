@@ -139,7 +139,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 	  flag = false;
 	}
       cce_run_error_handlers(L);
-      cce_condition_final(C);
+      cce_condition_delete(C);
     } else {
       cce_raise(L, cce_condition(cce_condition_make_errno(EINVAL)));
       cce_run_cleanup_handlers(L);
@@ -169,7 +169,7 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
 	  flag = false;
 	}
       cce_run_error_handlers(L);
-      cce_condition_final(C);
+      cce_condition_delete(C);
     } else {
       cce_raise(L, cce_condition(cce_condition_make_errno(EINVAL)));
       cce_run_cleanup_handlers(L);

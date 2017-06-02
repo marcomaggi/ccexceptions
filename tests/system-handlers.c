@@ -50,7 +50,7 @@ test_handler_malloc (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       P = cce_sys_malloc(L, 4096);
@@ -71,7 +71,7 @@ test_handler_malloc (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       P = cce_sys_malloc(L, 4096);
@@ -98,7 +98,7 @@ test_handler_filedes (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRWXU);
@@ -119,7 +119,7 @@ test_handler_filedes (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRWXU);
@@ -147,7 +147,7 @@ test_handler_pipedes (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int	pipedes[2];
@@ -168,7 +168,7 @@ test_handler_pipedes (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int	pipedes[2];
@@ -197,7 +197,7 @@ test_handler_tmpfile (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRUSR|S_IWUSR);
@@ -219,7 +219,7 @@ test_handler_tmpfile (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRUSR|S_IWUSR);
@@ -247,7 +247,7 @@ test_handler_tmpdir (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       cce_sys_mkdir(L, "name.d", 0);
@@ -267,7 +267,7 @@ test_handler_tmpdir (void)
 
     if (cce_location(L)) {
       cce_run_error_handlers(L);
-      cce_condition_final(cce_condition(L));
+      cce_condition_delete(cce_condition(L));
       error_flag = true;
     } else {
       cce_sys_mkdir(L, "name.d", 0);

@@ -478,7 +478,7 @@ if (CCE_ENTER == cce_location(L)) @{
 @} else @{
   /* handle the exception here */
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @}
 @end example
 
@@ -491,7 +491,7 @@ cce_location_t  L[1];
 if (cce_location(L)) @{
   /* handle the exception here */
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   /* do something useful here */
   cce_run_cleanup_handlers(L);
@@ -543,7 +543,7 @@ in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @ob
 Instances of this structure reference an instance of type @objtype{cce_condition_t}; it is set by
 @cfunc{cce_raise} and @cfunc{cce_retry}.  The client code is responsible for releasing resources
 associated to this value by retrieving a pointer to it with @cfunc{cce_condition} and releasing it
-with @cfunc{cce_condition_final}.
+with @cfunc{cce_condition_delete}.
 
 Before terminating the use of instances of this type we must always call
 @cfunc{cce_run_error_handlers} or @cfunc{cce_run_cleanup_handlers}.  We must assume that the
@@ -590,7 +590,7 @@ This function performs the call to @cfunc{siglongjmp} with code @code{CCE_EXCEPT
 With a call to this function: the client code is put in charge of releasing resources associated to
 @var{C}.  If @var{C} is @cnull{}: an internal, statically allocated, exceptional condition object is
 selected to represent an ``unknown exceptional condition''; we can transparently apply the function
-@cfunc{cce_condition_final} to this object.
+@cfunc{cce_condition_delete} to this object.
 @end deftypefun
 
 
@@ -600,7 +600,7 @@ evaluation.  This function performs the call to @cfunc{siglongjmp} with code @co
 
 This function selects an internal, statically allocated, exceptional condition object to represent
 an ``unknown exceptional condition''; we can transparently apply the function
-@cfunc{cce_condition_final} to this object.
+@cfunc{cce_condition_delete} to this object.
 @end deftypefun
 
 
@@ -611,7 +611,7 @@ Return the condition object associated to the location @var{L}; this value is @s
 If we apply this function to a location without calling @cfunc{cce_raise} or @cfunc{cce_retry}: the
 returned pointer references an internal, statically allocated, exceptional condition object
 representing an ``unknown exceptional condition''; we can transparently apply the function
-@cfunc{cce_condition_final} to this object.
+@cfunc{cce_condition_delete} to this object.
 @end deftypefn
 
 
@@ -840,7 +840,7 @@ from the context of @var{L}, so it can be finalised and its memory released.
 
 @strong{NOTE} It must assume that an error handler might access the exceptional condition object
 associated to @var{L}, so this function should always be called @strong{before} applying
-@cfunc{cce_condition_final} to the return value of @cfunc{cce_condition}.
+@cfunc{cce_condition_delete} to the return value of @cfunc{cce_condition}.
 @end deftypefun
 
 
@@ -849,7 +849,7 @@ Equivalent to calling:
 
 @example
 cce_run_error_handlers(L);
-cce_condition_final(cce_condition(L));
+cce_condition_delete(cce_condition(L));
 @end example
 @end deftypefun
 
@@ -859,7 +859,7 @@ Equivalent to calling:
 
 @example
 cce_run_cleanup_handlers(L);
-cce_condition_final(cce_condition(L));
+cce_condition_delete(cce_condition(L));
 @end example
 @end deftypefun
 
@@ -1258,13 +1258,18 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftypefn {Function Prototype} void cce_condition_final_fun_t (cce_condition_t * @var{C})
-Applied to a pointer to condition object: release all the dynamic resources associated to @var{C}.
-It can release the structure referenced by @var{C}, if it is appropriate.  If the structure is
-allocated with @cfunc{malloc}, the final function can just be:
+Release all the dynamic resources associated to the fields of the condition object referenced by
+@var{C}; leave untouched the condition object itself.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} void cce_condition_delete_fun_t (cce_condition_t * @var{C})
+Release the memory block referenced by @var{C}, if appropriate.  If the structure is allocated with
+@cfunc{malloc}, the @code{delete} function can just be:
 
 @example
 void
-my_cnd_stuff_final (my_cnd_stuff_t * C)
+my_condition_delete_stuff (my_condition_stuff_t * C)
 @{
   free(C);
 @}
@@ -1273,15 +1278,15 @@ my_cnd_stuff_final (my_cnd_stuff_t * C)
 
 
 @deftypefn {Function Prototype} {const char *} cce_condition_static_message_fun_t (const cce_condition_t * @var{C})
-Applied to a pointer to condition object: return a statically allocated @asciiz{} string describing
-the exceptional condition @var{C}.  A static message must always be defined; another client--defined
-function can build a dynamic and more descriptive message.
+Return a statically allocated @asciiz{} string describing the exceptional condition @var{C}.  A
+static message must always be defined; another client--defined function can build a dynamic and more
+descriptive message.
 
 For example, an instance of this function can be:
 
 @example
 const char *
-my_cnd_stuff_static_message (const my_cnd_stuff_t * C)
+my_condition_static_message_stuff (const my_condition_stuff_t * C)
 @{
   return "error doing stuff";
 @}
@@ -1299,13 +1304,17 @@ Pointer to the condition descriptor that is parent of this one in the tree hiera
 is set to @cnull{} only for the root condition descriptor, @xref{conditions root, Predefined root
 condition descriptor}.
 
+@item cce_condition_final_fun_t * delete
+Pointer to function releasing the condition object's memory block itself.  This pointer can be
+@cnull{}, meaning that: the condition object is statically allocated.
+
 @item cce_condition_final_fun_t * final
-Pointer to function which releases all the dynamic resources associated to the object.  This pointer
-can be @cnull{}, meaning that: there are no dynamic resources in the condition object and the data
-structure itself is statically allocated.
+Pointer to function releasing all the dynamic resources associated to the fields in the condition
+object.  This pointer can be @cnull{}, meaning that: there are no dynamic resources in the condition
+object fields.
 
 @item cce_condition_static_message_fun_t * static_message
-Pointer to function which returns a statically allocated @asciiz{} string describing the exceptional
+Pointer to function returning a statically allocated @asciiz{} string describing the exceptional
 condition.
 @end table
 @end deftp
@@ -1356,12 +1365,23 @@ Pointer to the condition descriptor associated to this condition object.
 @deftypefun void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
 pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
-This function is usually called from a type--specific initialisation function.
+This function is usually called from a type--specific constructor function.
 @end deftypefun
 
 
 @deftypefun void cce_condition_final (cce_condition_t * @var{C})
-Apply to @var{C} the @code{final} function referenced by its descriptor's functions table.
+@strong{Usually we do not need to call this function directly; rather, we should use
+@cfunc{cce_condition_delete}.}
+
+Traverse, from leave to root, the hierarchy of descriptors for the condition object in @var{C} and
+apply to @var{C} the @code{final} functions referenced by the descriptors' functions tables.  The
+finalisation functions are applied from leave to root.
+@end deftypefun
+
+
+@deftypefun void cce_condition_delete (cce_condition_t * @var{C})
+Apply @cfunc{cce_condition_final} to @var{C}; then apply to @var{C} the @code{delete} function
+referenced by the descriptor's functions table.
 @end deftypefun
 
 
@@ -1417,7 +1437,7 @@ if (cce_location(L)) @{
   fprintf(stderr, "log: %s\n", \
       cce_condition_static_message(cce_condition(L)));
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   do_something();
   if (an_error_occurred()) @{
@@ -1439,7 +1459,7 @@ upper_function (void)
     fprintf(stderr, "log: %s\n", \
         cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers(L);
-    cce_condition_final(cce_condition(L));
+    cce_condition_delete(cce_condition(L));
   @} else @{
     lower_function(L);
     cce_run_cleanup_handlers(L);
@@ -1484,7 +1504,7 @@ if (cce_location(L)) @{
       do_something();
     @}
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   do_something();
   if (an_exception_occurred()) @{
@@ -1920,354 +1940,26 @@ Pointer to a statically allocated structure representing the condition descripto
 Let's say we want to define the following condition descriptors hierarchy:
 
 @example
- ------       ---       ---       ---
-| root | <-- | A | <-- | B | <-- | C |
- ------       ---       ---       ---
+ ------       -------       ------       -------
+| root | <-- | alpha | <-- | beta | <-- | gamma |
+ ------       -------       ------       -------
 @end example
 
 @noindent
-where the condition objects of type @samp{A}, @samp{B} and @samp{C} have custom data structures.  We
-do it as follows:
+where the condition objects of type @emph{alpha}, @emph{beta} and @emph{gamma} have custom data
+structures.  As client code example: we show a possible implementation.
 
-@smallexample
-/* demo.c --
- *
- * Compile this with:
- *
- *  $ gcc -std=c11 -Wall -fplan9-extensions -lccexceptions \
- *      -o demo demo.c
- */
+We start with this preamble:
 
+@example
+#include <ccexceptions.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <ccexceptions.h>
+@end example
 
-/*** Exceptional condition A. ***/
+The exceptional condition @emph{alpha} has @emph{root} as parent type; we define it as follows:
 
-/* Exceptional condition  descriptor type.   The anonymous field  can be
-   seen  as a  table of  virtual methods,  which are  overridden by  the
-   subtypes. */
-typedef struct alpha_D_t @{
-  cce_descriptor_t;
-@} alpha_D_t;
-
-/* Exceptional condition object type. */
-typedef struct alpha_C_t @{
-  cce_condition_t;
-  int                   alpha;
-@} alpha_C_t;
-
-cce_condition_t *       alpha_C_init  (alpha_C_t * cnd, int alpha);
-void                    alpha_C_final (alpha_C_t * cnd);
-cce_condition_t *       alpha_C_constructor (int code);
-static void             alpha_C_destructor  (cce_condition_t * cnd);
-static const char *     alpha_C_static_message (const cce_condition_t * cnd);
-bool			alpha_C_is_a (const cce_condition_t * condition);
-
-/* Instance of condition descriptor.   The "parent" field is initialised
-   to  NULL  here   and  reinitialised  to  "cce_root_D"   later  by  an
-   initialisation function. */
-static alpha_D_t alpha_D = @{
-  .parent               = NULL,
-  .final                 = alpha_C_destructor,
-  .static_message       = alpha_C_static_message
-@};
-
-cce_condition_t *
-alpha_C_init (alpha_C_t * cnd, int alpha)
-/* Initialise an already allocated condition object. */
-@{
-  cce_condition_init(cnd, &alpha_D);
-  cnd->alpha = alpha;
-  return cnd;
-@}
-
-void
-alpha_C_final (alpha_C_t * cnd CCE_UNUSED)
-/* Finalise a condition object; do not release memory. */
-@{
-  return;
-@}
-
-cce_condition_t *
-alpha_C_constructor (int alpha)
-/* Allocate and initialise an instance of condition object. */
-@{
-  alpha_C_t *   cnd;
-  cnd = malloc(sizeof(alpha_C_t));
-  assert(cnd);
-  return alpha_C_init(cnd, alpha);
-@}
-
-static void
-alpha_C_destructor (cce_condition_t * cnd)
-/* Finalise and release memory of an instance of condition object. */
-@{
-  alpha_C_final((alpha_C_t *)cnd);
-  free(cnd);
-@}
-
-static const char *
-alpha_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
-@{
-  return "exceptional condition A";
-@}
-
-bool
-alpha_C_is_a (const cce_condition_t * condition)
-@{
-  return cce_is_condition_C(condition, &alpha_D);
-@}
-
-/*** Exceptional condition B. ***/
-
-/* Exceptional condition  descriptor type.   The anonymous field  can be
-   seen  as a  table of  virtual methods,  which are  overridden by  the
-   subtypes. */
-typedef struct beta_D_t @{
-  cce_descriptor_t;
-@} beta_D_t;
-
-/* Exceptional condition object type. */
-typedef struct beta_C_t @{
-  alpha_C_t;
-  int                   beta;
-@} beta_C_t;
-
-cce_condition_t *       beta_C_init  (beta_C_t * cnd, int alpha, int beta);
-void                    beta_C_final (beta_C_t * cnd);
-cce_condition_t *       beta_C_constructor (int alpha, int beta);
-static void             beta_C_destructor  (cce_condition_t * cnd);
-static const char *     beta_C_static_message (const cce_condition_t * cnd);
-bool			beta_C_is_a (const cce_condition_t * condition);
-
-/* Instance of condition descriptor. */
-static beta_D_t beta_D = @{
-  .parent               = &alpha_D,
-  .final                 = beta_C_destructor,
-  .static_message       = beta_C_static_message
-@};
-
-cce_condition_t *
-beta_C_init (beta_C_t * cnd, int alpha, int beta)
-/* Initialise an already allocated condition object. */
-@{
-  alpha_C_init(cnd, alpha);
-  cce_condition_init(cnd, &beta_D);
-  cnd->beta = beta;
-  return cnd;
-@}
-
-void
-beta_C_final (beta_C_t * cnd)
-/* Finalise a condition object; do not release memory. */
-@{
-  alpha_C_final((alpha_C_t *)cnd);
-@}
-
-cce_condition_t *
-beta_C_constructor (int alpha, int beta)
-/* Allocate and initialise an instance of condition object. */
-@{
-  beta_C_t *    cnd;
-
-  cnd = malloc(sizeof(beta_C_t));
-  assert(cnd);
-  return beta_C_init(cnd, alpha, beta);
-@}
-
-static void
-beta_C_destructor (cce_condition_t * cnd)
-/* Finalise and release memory of an instance of condition object. */
-@{
-  beta_C_final((beta_C_t *)cnd);
-  free(cnd);
-@}
-
-static const char *
-beta_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
-@{
-  return "exceptional condition B";
-@}
-
-bool
-beta_C_is_a (const cce_condition_t * condition)
-@{
-  return cce_is_condition_C(condition, &beta_D);
-@}
-
-/*** Exceptional condition C. ***/
-
-/* Exceptional condition  descriptor type.   The anonymous field  can be
-   seen  as a  table of  virtual methods,  which are  overridden by  the
-   subtypes. */
-typedef struct gamma_D_t @{
-  cce_descriptor_t;
-@} gamma_D_t;
-
-/* Exceptional condition object type. */
-typedef struct gamma_C_t @{
-  beta_C_t;
-  int                   gamma;
-@} gamma_C_t;
-
-cce_condition_t *       gamma_C_init  (gamma_C_t * cnd, int alpha, int beta, int gamma);
-void                    gamma_C_final (gamma_C_t * cnd);
-cce_condition_t *       gamma_C_constructor (int alpha, int beta, int gamma);
-static void             gamma_C_destructor  (cce_condition_t * cnd);
-static const char *     gamma_C_static_message (const cce_condition_t * cnd);
-bool			gamma_C_is_a (const cce_condition_t * condition);
-
-/* Instance of condition descriptor. */
-static gamma_D_t gamma_D = @{
-  .parent               = &beta_D,
-  .final                = gamma_C_destructor,
-  .static_message       = gamma_C_static_message
-@};
-
-cce_condition_t *
-gamma_C_init (gamma_C_t * cnd, int alpha, int beta, int gamma)
-/* Initialise an already allocated condition object. */
-@{
-  beta_C_init(cnd, alpha, beta);
-  cce_condition_init(cnd, &gamma_D);
-  cnd->gamma = gamma;
-  return cnd;
-@}
-
-void
-gamma_C_final (gamma_C_t * cnd)
-/* Finalise a condition object; do not release memory. */
-@{
-  beta_C_final((beta_C_t *)cnd);
-@}
-
-cce_condition_t *
-gamma_C_constructor (int alpha, int beta, int gamma)
-/* Allocate and initialise an instance of condition object. */
-@{
-  gamma_C_t *   cnd;
-
-  cnd = malloc(sizeof(gamma_C_t));
-  assert(cnd);
-  return gamma_C_init(cnd, alpha, beta, gamma);
-@}
-
-static void
-gamma_C_destructor (cce_condition_t * cnd)
-/* Finalise and release memory of an instance of condition object. */
-@{
-  gamma_C_final((gamma_C_t *)cnd);
-  free(cnd);
-@}
-
-static const char *
-gamma_C_static_message (const cce_condition_t * cnd CCE_UNUSED)
-@{
-  return "exceptional condition C";
-@}
-
-bool
-gamma_C_is_a (const cce_condition_t * condition)
-@{
-  return cce_is_condition_C(condition, &gamma_D);
-@}
-
-int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
-@{
-  /* Dynamic initialisation. */
-  alpha_D.parent        = cce_root_D;
-
-  /* Raising condition object of type C. */
-  @{
-    cce_location_t      L[1];
-    int                 flag;
-
-    if (cce_location(L)) @{
-      cce_condition_t * C = cce_condition(L);
-
-      if (gamma_C_is_a(C)) @{
-        gamma_C_t *     K = (gamma_C_t *)C;
-        flag = K->gamma;
-      @} else if (beta_C_is_a(C)) @{
-        beta_C_t *      K = (beta_C_t *)C;
-        flag = K->beta;
-      @} else if (alpha_C_is_a(C)) @{
-        alpha_C_t *     K = (alpha_C_t *)C;
-        flag = K->alpha;
-      @} else @{
-        flag = 0;
-      @}
-      cce_run_error_handlers(L);
-      cce_condition_final(C);
-    @} else @{
-      cce_raise(L, gamma_C_constructor(1, 2, 3));
-      cce_run_cleanup_handlers(L);
-    @}
-    assert(3 == flag);
-  @}
-
-  /* Raising condition object of type B. */
-  @{
-    cce_location_t      L[1];
-    int                 flag;
-
-    if (cce_location(L)) @{
-      cce_condition_t * C = cce_condition(L);
-
-      if (gamma_C_is_a(C)) @{
-        gamma_C_t *     K = (gamma_C_t *)C;
-        flag = K->gamma;
-      @} else if (beta_C_is_a(C)) @{
-        beta_C_t *      K = (beta_C_t *)C;
-        flag = K->beta;
-      @} else if (alpha_C_is_a(C)) @{
-        alpha_C_t *     K = (alpha_C_t *)C;
-        flag = K->alpha;
-      @} else @{
-        flag = 0;
-      @}
-      cce_run_error_handlers(L);
-      cce_condition_final(C);
-    @} else @{
-      cce_raise(L, beta_C_constructor(1, 2));
-      cce_run_cleanup_handlers(L);
-    @}
-    assert(2 == flag);
-  @}
-
-  /* Raising condition object of type A. */
-  @{
-    cce_location_t      L[1];
-    int                 flag;
-
-    if (cce_location(L)) @{
-      cce_condition_t * C = cce_condition(L);
-
-      if (gamma_C_is_a(C)) @{
-        gamma_C_t *     K = (gamma_C_t *)C;
-        flag = K->gamma;
-      @} else if (beta_C_is_a(C)) @{
-        beta_C_t *      K = (beta_C_t *)C;
-        flag = K->beta;
-      @} else if (alpha_C_is_a(C)) @{
-        alpha_C_t *     K = (alpha_C_t *)C;
-        flag = K->alpha;
-      @} else @{
-        flag = 0;
-      @}
-      cce_run_error_handlers(L);
-      cce_condition_final(C);
-    @} else @{
-      cce_raise(L, alpha_C_constructor(1));
-      cce_run_cleanup_handlers(L);
-    @}
-    assert(1 == flag);
-  @}
-
-  exit(EXIT_SUCCESS);
-@}
+@smallexample
 @end smallexample
 
 @c page
@@ -2919,7 +2611,7 @@ cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   void *        P = cce_sys_malloc(L, 4096);
   cce_cleanup_handler_malloc_init(L, H, P);
@@ -2950,7 +2642,7 @@ cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRWXU);
   cce_cleanup_handler_filedes_init(L, H, fd);
@@ -2982,7 +2674,7 @@ cce_handler_pipedes_t       H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   int   pipedes[2]
   cce_sys_pipe(L, pipedes);
@@ -3014,7 +2706,7 @@ cce_handler_t   H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   int   fd = cce_sys_open(L, "name.ext", O_CREAT|O_EXCL,
                           S_IRUSR|S_IWUSR);
@@ -3059,7 +2751,7 @@ cce_handler_t   tmpdir_H[1];
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   cce_sys_mkdir(L, "name.d", 0);
   cce_cleanup_handler_tmpdir_init(L, tmpdir_H, "name.ext");
@@ -3103,7 +2795,7 @@ const char *            pathname = "./";
 
 if (cce_location(L)) @{
   cce_run_error_handlers(L);
-  cce_condition_final(cce_condition(L));
+  cce_condition_delete(cce_condition(L));
 @} else @{
   DIR *               dirstream;
   struct dirent *     direntry;

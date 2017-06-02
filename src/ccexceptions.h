@@ -227,6 +227,9 @@ cce_decl void cce_run_error_handlers (cce_location_t * L)
  ** Exceptional condition descriptors.
  ** ----------------------------------------------------------------- */
 
+typedef void cce_condition_delete_fun_t (cce_condition_t * C)
+  __attribute__((nonnull(1)));
+
 typedef void cce_condition_final_fun_t (cce_condition_t * C)
   __attribute__((nonnull(1)));
 
@@ -235,6 +238,7 @@ typedef const char * cce_condition_static_message_fun_t	(const cce_condition_t *
 
 struct cce_descriptor_t {
   const cce_descriptor_t *		parent;
+  cce_condition_delete_fun_t *		delete;
   cce_condition_final_fun_t *		final;
   cce_condition_static_message_fun_t *	static_message;
 };
@@ -249,6 +253,9 @@ cce_decl void cce_condition_init (cce_condition_t * C, const cce_descriptor_t * 
   __attribute__((leaf,nonnull(1,2)));
 
 cce_decl void cce_condition_final (cce_condition_t * C)
+  __attribute__((leaf,nonnull(1)));
+
+cce_decl void cce_condition_delete (cce_condition_t * C)
   __attribute__((leaf,nonnull(1)));
 
 cce_decl bool cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * D)
@@ -518,7 +525,7 @@ static inline void
 cce_run_error_handlers_final (cce_location_t * L)
 {
   cce_run_error_handlers(L);
-  cce_condition_final((cce_condition_t *)(L->condition));
+  cce_condition_delete((cce_condition_t *)(L->condition));
 }
 
 __attribute__((nonnull(1),always_inline))
@@ -526,7 +533,7 @@ static inline void
 cce_run_cleanup_handlers_final (cce_location_t * L)
 {
   cce_run_cleanup_handlers(L);
-  cce_condition_final((cce_condition_t *)(L->condition));
+  cce_condition_delete((cce_condition_t *)(L->condition));
 }
 
 /* ------------------------------------------------------------------ */
