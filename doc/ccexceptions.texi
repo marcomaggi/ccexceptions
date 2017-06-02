@@ -128,7 +128,6 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * conditions::                  Exceptional condition descriptors.
 * syscalls::                    System call adapters.
 * syshandlers::                 Predefined exception handlers.
-* helpers::                     Helper functions and macros.
 
 Appendices
 
@@ -2265,19 +2264,20 @@ Now we can use the code as in the following example:
 
 @value{PACKAGE} defines function wrappers for the most common @posix{}, @gnu{} C Library and Linux
 system calls.  Each wrapper accepts a pointer to @objtype{cce_location_t} as argument and, in case
-of error, will perform a non--local exit by jumping to the selected location.
+of error, it will perform a non--local exit by jumping to the selected location.
 
 The wrapper functions accept the same arguments of the system call and return the same return value
 of the system call (if it completes successfully).
 
 All the wrappers reset @code{errno} to zero before performing the system call and reset it to zero
 before returning.  In case of error: the raised exceptional condition objects are of type
-@objtype{cce_errno_C_t}.
+@objtype{cce_condition_errno_t}.
 
 The library assumes to run on a @posix{} system, so the @posix{} system calls are available by
 default.  The @gnu{} C Library and Linux calls are available only if the package was configured
 with, respectively, @option{--enable-glibc} and @option{--enable-linux}.  If a system call is not
-available: the associated wrapper will raise an exception of type @objtype{cce_unimplemented_C_t}.
+available: the associated wrapper will raise an exception of type
+@objtype{cce_condition_unimplemented_t}.
 
 @menu
 * syscalls alloc::              Memory allocation.
@@ -3120,36 +3120,6 @@ Register @var{H} as cleanup or error handler in the context of @var{L}.  The han
 finalise the directory stream using the standard function @cfunc{closedir}; errors in
 @cfunc{closedir} are @strong{ignored}.
 @end deftypefun
-
-@c page
-@node helpers
-@chapter Helper functions and macros
-
-
-@deffn {Preprocessor Macro} CCE_PC (@var{TYPE}, @var{X}, @var{Y})
-Pointer--type cast helper.  It expands into:
-
-@example
-@var{TYPE} * @var{X} = (@var{TYPE} *) (@var{Y})
-@end example
-
-So, for example, instead of writing:
-
-@example
-cce_location_t    L[1];
-cce_condition_t * C = cce_condition(L);
-cce_errno_C_t   * K = (cce_errno_C_t *) C;
-@end example
-
-@noindent
-we can write:
-
-@example
-cce_location_t    L[1];
-cce_condition_t * C = cce_condition(L);
-CCE_PC(cce_errno_C_t, K, C);
-@end example
-@end deffn
 
 @c page
 @c ------------------------------------------------------------
