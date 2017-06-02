@@ -53,7 +53,7 @@ test_invalid_argument (void)
     cce_condition_delete(cce_condition(L));
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_make_invalid_argument(L, __func__, 1)));
+    cce_raise(L, cce_condition(cce_condition_new_invalid_argument(L, __func__, 1)));
     cce_run_cleanup_handlers(L);
   }
   assert(true == error_flag);

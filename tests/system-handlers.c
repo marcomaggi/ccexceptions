@@ -76,7 +76,7 @@ test_handler_malloc (void)
     } else {
       P = cce_sys_malloc(L, 4096);
       cce_cleanup_handler_malloc_init(L, H, P);
-      cce_raise(L, cce_condition_make_unknown());
+      cce_raise(L, cce_condition_new_unknown());
       cce_run_cleanup_handlers(L);
       done_flag = true;
     }
@@ -124,7 +124,7 @@ test_handler_filedes (void)
     } else {
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRWXU);
       cce_cleanup_handler_filedes_init(L, H, fd);
-      cce_raise(L, cce_condition_make_unknown());
+      cce_raise(L, cce_condition_new_unknown());
       cce_run_cleanup_handlers(L);
       done_flag = true;
     }
@@ -174,7 +174,7 @@ test_handler_pipedes (void)
       int	pipedes[2];
       cce_sys_pipe(L, pipedes);
       cce_cleanup_handler_pipedes_init(L, H, pipedes);
-      cce_raise(L, cce_condition_make_unknown());
+      cce_raise(L, cce_condition_new_unknown());
       cce_run_cleanup_handlers(L);
       done_flag = true;
     }
@@ -225,7 +225,7 @@ test_handler_tmpfile (void)
       int   fd = cce_sys_open(L, "name.ext", O_CREAT, S_IRUSR|S_IWUSR);
       cce_cleanup_handler_filedes_init(L, filedes_H, fd);
       cce_cleanup_handler_tmpfile_init(L, tmpfile_H, "name.ext");
-      cce_raise(L, cce_condition_make_unknown());
+      cce_raise(L, cce_condition_new_unknown());
       cce_run_cleanup_handlers(L);
       done_flag = true;
     }
@@ -272,7 +272,7 @@ test_handler_tmpdir (void)
     } else {
       cce_sys_mkdir(L, "name.d", 0);
       cce_cleanup_handler_tmpdir_init(L, tmpdir_H, "name.d");
-      cce_raise(L, cce_condition_make_unknown());
+      cce_raise(L, cce_condition_new_unknown());
       cce_run_cleanup_handlers(L);
       done_flag = true;
     }

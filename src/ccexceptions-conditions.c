@@ -198,7 +198,7 @@ static const cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_s
 const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr = &cce_descriptor_invalid_argument_stru;
 
 cce_condition_t *
-cce_condition_make_invalid_argument (cce_location_t * L, const char * func, unsigned index)
+cce_condition_new_invalid_argument (cce_location_t * L, const char * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
   C->root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
@@ -405,7 +405,7 @@ errno_conditions[ERRNO_CONDITIONS_NUM] = {
 };
 
 const cce_condition_t *
-cce_condition_make_errno (int errnum)
+cce_condition_new_errno (int errnum)
 {
   for (int i = 0; i < ERRNO_CONDITIONS_NUM; ++i) {
     if (errnum == errno_conditions[i].errnum) {
@@ -457,7 +457,7 @@ h_errno_conditions[H_ERRNO_CONDITIONS_NUM] = {
 };
 
 const cce_condition_t *
-cce_condition_make_h_errno (int errnum)
+cce_condition_new_h_errno (int errnum)
 {
   for (int i = 0; i < H_ERRNO_CONDITIONS_NUM; ++i) {
     if (errnum == h_errno_conditions[i].errnum) {
@@ -470,7 +470,7 @@ cce_condition_make_h_errno (int errnum)
 }
 
 const cce_condition_t *
-cce_condition_make_h_errno_clear (void)
+cce_condition_new_h_errno_clear (void)
 /* This function  requires access to  "h_errno", which in  turn requires
    the inclusion  of more  system header files  that are  seldom needed.
    This function  is here as  normal function,  rather than in  the main
@@ -479,7 +479,7 @@ cce_condition_make_h_errno_clear (void)
 {
   int	errnum = h_errno;
   h_errno = 0;
-  return cce_condition_make_h_errno(errnum);
+  return cce_condition_new_h_errno(errnum);
 }
 
 /* end of file */

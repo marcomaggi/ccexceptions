@@ -215,7 +215,7 @@ test_dynamically_allocated_alloc_handler (cce_location_t * there, cce_handler_fu
     H->flagp		= flagp;
     return H;
   } else {
-    cce_raise(there, cce_condition(cce_condition_make_errno(errno)));
+    cce_raise(there, cce_condition(cce_condition_new_errno(errno)));
   }
 }
 

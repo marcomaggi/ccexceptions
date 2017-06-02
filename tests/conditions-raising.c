@@ -53,10 +53,10 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_condition(cce_condition_make_errno(0)));
+      cce_raise(L, cce_condition(cce_condition_new_errno(0)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition(cce_condition_make_errno(0)) == cce_condition(L));
+    assert(cce_condition(cce_condition_new_errno(0)) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -75,10 +75,10 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_condition(cce_condition_make_errno(EINVAL)));
+      cce_raise(L, cce_condition(cce_condition_new_errno(EINVAL)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition(cce_condition_make_errno(EINVAL)) == cce_condition(L));
+    assert(cce_condition(cce_condition_new_errno(EINVAL)) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -97,10 +97,10 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_condition(cce_condition_make_errno(INT_MAX)));
+      cce_raise(L, cce_condition(cce_condition_new_errno(INT_MAX)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition(cce_condition_make_errno(INT_MAX)) == cce_condition(L));
+    assert(cce_condition(cce_condition_new_errno(INT_MAX)) == cce_condition(L));
     assert(false == flag);
   }
 
@@ -119,10 +119,10 @@ main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
       flag = false;
     } else {
       flag = true;
-      cce_raise(L, cce_condition(cce_condition_make_errno(-1)));
+      cce_raise(L, cce_condition(cce_condition_new_errno(-1)));
       cce_run_cleanup_handlers(L);
     }
-    assert(cce_condition(cce_condition_make_errno(-1)) == cce_condition(L));
+    assert(cce_condition(cce_condition_new_errno(-1)) == cce_condition(L));
     assert(false == flag);
   }
 

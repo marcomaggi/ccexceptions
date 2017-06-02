@@ -972,7 +972,7 @@ P_handler (const cce_condition_t * C, cce_handler_t * _H)
     if (P) @{
       cce_register_cleanup_handler(L, &H.handler);
     @} else @{
-      cce_raise(L, cce_condition_make_errno(errno));
+      cce_raise(L, cce_condition_new_errno(errno));
     @}
     do_something(L, P);
     cce_run_cleanup_handlers(L);
@@ -1020,7 +1020,7 @@ constructor (cce_location_t * there)
       H.pointer = P;
       cce_register_error_handler(L, &H.handler);
     @} else @{
-      cce_raise(L, cce_condition_make_errno(errno));
+      cce_raise(L, cce_condition_new_errno(errno));
     @}
     do_some_initialisation_in(P);
     cce_run_cleanup_handlers(L);
@@ -1563,6 +1563,7 @@ my_error_static_message (const cce_condition_t * C CCE_UNUSED)
 
 my_descr_error_t my_descr_error_stru = @{
   .descriptor.parent          = NULL,
+  .descriptor.delete          = NULL,
   .descriptor.final           = NULL,
   .descriptor.static_message  = my_error_static_message
 @};
@@ -1611,7 +1612,7 @@ Structure type representing an @emph{unknown} condition object.
 @end deftp
 
 
-@deftypefun {const cce_condition_t *} cce_condition_make_unknown (void)
+@deftypefun {const cce_condition_t *} cce_condition_new_unknown (void)
 Return a pointer to the statically allocated structure representing the single @emph{unknown}
 condition object.
 @end deftypefun
@@ -1674,7 +1675,7 @@ Structure type representing an @emph{unimplemented} condition object.
 @end deftp
 
 
-@deftypefun {const cce_condition_t *} cce_condition_make_unimplemented (void)
+@deftypefun {const cce_condition_t *} cce_condition_new_unimplemented (void)
 Return a pointer to the statically allocated structure representing the single @emph{unimplemented}
 condition object.
 @end deftypefun
@@ -1730,7 +1731,7 @@ do_something (unsigned N)
   @} else @{
     if (0 == N) @{
       cce_raise(L,
-          cce_condition_make_invalid_argument(L, __func__, 1));
+          cce_condition_new_invalid_argument(L, __func__, 1));
     @}
     cce_run_cleanup_handlers(L);
   @}
@@ -1760,7 +1761,7 @@ One--based index of the offending argument.
 @end deftp
 
 
-@deftypefun {cce_condition_invalid_argument_t *} cce_condition_make_invalid_argument (cce_location_t * @var{L}, const char * @var{func}, unsigned @var{index})
+@deftypefun {cce_condition_invalid_argument_t *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, const char * @var{func}, unsigned @var{index})
 Build and return a new condition object.  If building the object fails: raise an exception to the
 location @var{L}.
 @end deftypefun
@@ -1820,7 +1821,7 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypefun {const cce_condition_errno_t *} cce_condition_make_errno (int @var{errnum})
+@deftypefun {const cce_condition_errno_t *} cce_condition_new_errno (int @var{errnum})
 Given the @code{errno} code @var{errnum}, return the pointer to the condition object associated to
 it.
 
@@ -1830,9 +1831,9 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefun {const cce_condition_errno_t *} cce_condition_make_errno_clear (void)
+@deftypefun {const cce_condition_errno_t *} cce_condition_new_errno_clear (void)
 Consume the current value of @code{errno} and return the return value of
-@cfunc{cce_condition_make_errno} applied to it.  Before returning: @code{errno} is reset to zero.
+@cfunc{cce_condition_new_errno} applied to it.  Before returning: @code{errno} is reset to zero.
 @end deftypefun
 
 
@@ -1891,7 +1892,7 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypefun {const cce_condition_h_errno_t *} cce_condition_make_h_errno (int @var{errnum})
+@deftypefun {const cce_condition_h_errno_t *} cce_condition_new_h_errno (int @var{errnum})
 Given the @code{h_errno} code @var{errnum}, return the pointer to the condition object associated to
 it.
 
@@ -1901,9 +1902,9 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefun {const cce_condition_h_errno_t *} cce_condition_make_h_errno_clear (void)
+@deftypefun {const cce_condition_h_errno_t *} cce_condition_new_h_errno_clear (void)
 Consume the current value of @code{h_errno} and return the return value of
-@cfunc{cce_condition_make_h_errno} applied to it.  Before returning: @code{h_errno} is reset to
+@cfunc{cce_condition_new_h_errno} applied to it.  Before returning: @code{h_errno} is reset to
 zero.
 @end deftypefun
 

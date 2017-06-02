@@ -306,7 +306,7 @@ cce_decl const cce_condition_unknown_t  * const	cce_condition_unknown_ptr;
 
 __attribute__((const,always_inline))
 static inline const cce_condition_t *
-cce_condition_make_unknown (void)
+cce_condition_new_unknown (void)
 {
   return (const cce_condition_t *) cce_condition_unknown_ptr;
 }
@@ -346,7 +346,7 @@ cce_decl const cce_condition_unimplemented_t  * const	cce_condition_unimplemente
 
 __attribute__((const,always_inline))
 static inline const cce_condition_t *
-cce_condition_make_unimplemented (void)
+cce_condition_new_unimplemented (void)
 {
   return (const cce_condition_t *) cce_condition_unimplemented_ptr;
 }
@@ -387,7 +387,7 @@ struct cce_condition_invalid_argument_t {
 
 cce_decl const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr;
 
-cce_decl cce_condition_t * cce_condition_make_invalid_argument (cce_location_t * L, const char * func, unsigned index)
+cce_decl cce_condition_t * cce_condition_new_invalid_argument (cce_location_t * L, const char * func, unsigned index)
   __attribute__((nonnull(1,2),returns_nonnull));
 
 __attribute__((pure,nonnull(1),always_inline))
@@ -424,16 +424,16 @@ struct cce_condition_errno_t {
 
 cce_decl const cce_descriptor_errno_t * const cce_descriptor_errno_ptr;
 
-cce_decl const cce_condition_t * cce_condition_make_errno (int code)
+cce_decl const cce_condition_t * cce_condition_new_errno (int code)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((returns_nonnull,always_inline))
 static inline const cce_condition_t *
-cce_condition_make_errno_clear (void)
+cce_condition_new_errno_clear (void)
 {
   int	errnum = errno;
   errno = 0;
-  return cce_condition_make_errno(errnum);
+  return cce_condition_new_errno(errnum);
 }
 
 __attribute__((nonnull(1),always_inline)) static inline bool
@@ -469,10 +469,10 @@ struct cce_condition_h_errno_t {
 
 cce_decl const cce_descriptor_h_errno_t * const cce_descriptor_h_errno_ptr;
 
-cce_decl const cce_condition_t * cce_condition_make_h_errno (int code)
+cce_decl const cce_condition_t * cce_condition_new_h_errno (int code)
   __attribute__((leaf,returns_nonnull));
 
-cce_decl const cce_condition_t * cce_condition_make_h_errno_clear (void)
+cce_decl const cce_condition_t * cce_condition_new_h_errno_clear (void)
   __attribute__((leaf,returns_nonnull));
 
 __attribute__((nonnull(1),always_inline)) static inline bool
