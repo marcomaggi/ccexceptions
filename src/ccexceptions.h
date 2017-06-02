@@ -301,7 +301,7 @@ __attribute__((const,always_inline))
 static inline const cce_condition_t *
 cce_condition_make_unknown (void)
 {
-  return (cce_condition_t *) cce_condition_unknown_ptr;
+  return (const cce_condition_t *) cce_condition_unknown_ptr;
 }
 
 __attribute__((pure,nonnull(1),always_inline))
@@ -315,11 +315,11 @@ cce_condition_is_unknown (const cce_condition_t * C)
 
 #define cce_condition_unknown(S)					\
   _Generic((S),								\
-	   cce_condition_unknown_t		*: (S),			\
-	   cce_location_t			*: (cce_condition_unknown_t *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_unknown_t *)(S), \
-	   const cce_condition_t		*: (cce_condition_unknown_t *)(S), \
-	   const cce_condition_unknown_t	*: (cce_condition_unknown_t *)(S))
+	   cce_location_t			*: (const cce_condition_unknown_t *)CCE_CLOC(S), \
+	   cce_condition_t			*: (const cce_condition_unknown_t *)(S), \
+	   cce_condition_unknown_t		*: (const cce_condition_unknown_t *)(S), \
+	   const cce_condition_t		*: (const cce_condition_unknown_t *)(S), \
+	   const cce_condition_unknown_t	*: (const cce_condition_unknown_t *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -341,7 +341,7 @@ __attribute__((const,always_inline))
 static inline const cce_condition_t *
 cce_condition_make_unimplemented (void)
 {
-  return &(cce_condition_unimplemented_ptr->root.condition);
+  return (const cce_condition_t *) cce_condition_unimplemented_ptr;
 }
 
 __attribute__((pure,nonnull(1),always_inline)) static inline bool
@@ -354,13 +354,11 @@ cce_condition_is_unimplemented (const cce_condition_t * C)
 
 #define cce_condition_unimplemented(S)					\
   _Generic((S),								\
-	   cce_condition_unimplemented_t	*: (S),			\
-	   cce_location_t			*: (cce_condition_unimplemented_t *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_unimplemented_t *)(S), \
-	   cce_condition_root_t			*: (cce_condition_unimplemented_t *)(S), \
-	   const cce_condition_t		*: (cce_condition_unimplemented_t *)(S), \
-	   const cce_condition_root_t		*: (cce_condition_unimplemented_t *)(S), \
-	   const cce_condition_unimplemented_t	*: (cce_condition_unimplemented_t *)(S))
+	   cce_location_t			*: (const cce_condition_unimplemented_t *)CCE_CLOC(S), \
+	   cce_condition_t			*: (const cce_condition_unimplemented_t *)(S), \
+	   cce_condition_unimplemented_t	*: (const cce_condition_unimplemented_t *)(S), \
+	   const cce_condition_t		*: (const cce_condition_unimplemented_t *)(S), \
+	   const cce_condition_unimplemented_t	*: (const cce_condition_unimplemented_t *)(S))
 
 
 /** --------------------------------------------------------------------
