@@ -1499,7 +1499,7 @@ if (cce_location(L)) @{
 @section Predefined root condition descriptor
 
 
-The @dfn{root exceptional condition descriptor} has the only purpose of being the root of the
+The @dfn{root exceptional--condition descriptor} has the only purpose of being the root of the
 condition descriptors tree; there should be no condition objects having this descriptor.  The root
 descriptor has @code{parent} field set to @cnull{}; this should be the only descriptor with such a
 property.
@@ -1562,12 +1562,12 @@ conditions system.
 @section Predefined unknown condition object
 
 
-The @dfn{unknown exceptional condition object} has the purpose of describing an exceptional
+The @dfn{unknown exceptional--condition object} has the purpose of describing an exceptional
 condition with unknown cause; it should be used only by:
 
 @itemize
 @item
-The function @cfunc{cce_raise} when no condition object argument is used.
+The function @cfunc{cce_raise} when the condition object argument is set to @cnull{}.
 
 @item
 The function @cfunc{cce_retry}.
@@ -1579,56 +1579,59 @@ into the library as statically allocated structure.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_unknown_D_t
+@deftp {Struct Typedef} cce_descriptor_unknown_t
 Structure type representing the descriptor for unknown condition objects.
 @end deftp
 
 
-@deftp {Struct Typedef} cce_unknown_C_t
+@deftp {Struct Typedef} cce_condition_unknown_t
 Structure type representing an unknown condition object.
 @end deftp
 
 
-@deftypefun {const cce_condition_t *} cce_make_unknown_C (void)
+@deftypefun {const cce_condition_t *} cce_condition_make_unknown (void)
 Return a pointer to the statically allocated structure representing the unknown condition descriptor
 for the single unknown condition object.
 @end deftypefun
 
 
-@deftypevr {Dynamic Constant} {const cce_unknown_D_t * const} cce_unknown_D_ptr
-Pointer to a statically allocated structure representing the unknown condition descriptor for the
-single unknown condition object.  The parent of this descriptor is the root descriptor referenced by
-@code{cce_root_D_ptr}.  By comparing this value to the @code{condition_D} field of a
-@objtype{cce_condition_t} structure we can determine if the condition struct is an unknown
-condition object.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {const cce_unknown_C_t * const} cce_unknown_C_ptr
-Pointer to a statically allocated structure representing the unknown condition object.  This should
-be the single condition object having @code{cce_unknown_D_ptr} as pointer to descriptor.
-@end deftypevr
-
-
-@deftypefn {Inline Function} bool cce_is_unknown_C (const cce_condition_t * @var{C})
-Return @true{} if @var{C} has @code{cce_unknown_D} as descriptor; otherwise return @false{}.
+@deftypefn {Inline Function} bool cce_condition_is_unknown (const cce_condition_t * @var{C})
+Return @true{} if @var{C} is an unknown condition object; otherwise return @false{}.
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_unknown_C_t *} cce_unknown_C (cce_condition_t * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
-condition object: cast it to a pointer to @objtype{cce_unknown_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only on values of suitable types;
-we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
-sense.
+@deftypefn {Generic Macro} {cce_condition_unknown_t *} cce_condition_unknown (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t *} cce_condition_unknown (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t *} cce_condition_unknown (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t *} cce_condition_unknown (const cce_condition_unknown_t * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
+pointer to @objtype{cce_condition_unknown_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
 @end deftypefn
+
+
+@c @deftypevr {Dynamic Constant} {const cce_descriptor_unknown_t * const} cce_descriptor_unknown_ptr
+@c Pointer to a statically allocated structure representing the unknown condition descriptor for the
+@c single unknown condition object.  The parent of this descriptor is the root descriptor,
+@c @ref{conditions root}.
+@c @end deftypevr
+
+
+@c @deftypevr {Dynamic Constant} {const cce_condition_unknown_t * const} cce_condition_unknown_ptr
+@c Pointer to a statically allocated structure representing the unknown condition object.  This should
+@c be the single condition object having @code{cce_descriptor_unknown_ptr} as pointer to descriptor.
+@c @end deftypevr
 
 @c page
 @node conditions unimplemented
 @section Predefined unimplemented condition object
 
 
-The @dfn{unimplemented exceptional condition object} has the purpose of describing an exceptional
+The @dfn{unimplemented exceptional--condition object} has the purpose of describing an exceptional
 condition caused by attempting to use an unimplemented feature.  For example: attempting to call a
 system function wrapper for which the underlying function is not available on the current platform.
 
@@ -1671,7 +1674,7 @@ Return @true{} if @var{C} has @code{cce_unimplemented_D} as descriptor; otherwis
 @deftypefn {Generic Macro} {cce_unimplemented_C_t *} cce_unimplemented_C (cce_condition_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
 condition object: cast it to a pointer to @objtype{cce_unimplemented_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only on values of suitable types;
+compile--time type--checking so that the cast operation is applied only to values of suitable types;
 we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
 sense.
 @end deftypefn
@@ -1681,10 +1684,10 @@ sense.
 @section Predefined invalid argument conditions
 
 
-The @dfn{invalid argument exceptional condition object} has the purpose of describing an exceptional
-condition caused by a wrong function argument.  This condition object is meant to be used to
-describe unexpected exceptions: we do not really expect the argument to be invalid, but we want a
-fall--back just in case.
+The @dfn{invalid argument exceptional--condition object} has the purpose of describing an
+exceptional condition caused by a wrong function argument.  This condition object is meant to be
+used to describe unexpected exceptions: we do not really expect the argument to be invalid, but we
+want a fall--back just in case.
 
 The function is meant to be used as follows:
 
@@ -1747,7 +1750,7 @@ Return @true{} if @var{C} is a condition object of the specified type; otherwise
 @deftypefn {Generic Macro} {cce_invalid_argument_C_t *} cce_invalid_argument_C (cce_condition_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
 condition object: cast it to a pointer to @objtype{cce_invalid_argument_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only on values of suitable types;
+compile--time type--checking so that the cast operation is applied only to values of suitable types;
 we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
 sense.
 @end deftypefn
@@ -1827,7 +1830,7 @@ Return @true{} if @var{C} has @code{cce_errno_D} as descriptor; otherwise return
 @deftypefn {Generic Macro} {cce_errno_C_t *} cce_errno_C (cce_condition_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
 condition object: cast it to a pointer to @objtype{cce_errno_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only on values of suitable types;
+compile--time type--checking so that the cast operation is applied only to values of suitable types;
 we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
 sense.
 @end deftypefn
@@ -1907,7 +1910,7 @@ Return @true{} if @var{C} has @code{cce_h_errno_D} as descriptor; otherwise retu
 @deftypefn {Generic Macro} {cce_h_errno_C_t *} cce_h_errno_C (cce_condition_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Given a pointer to
 condition object: cast it to a pointer to @objtype{cce_h_errno_C_t}.  This macro performs
-compile--time type--checking so that the cast operation is applied only on values of suitable types;
+compile--time type--checking so that the cast operation is applied only to values of suitable types;
 we can apply this macro to pointers of all the types defined by @value{PACKAGE} for which it makes
 sense.
 @end deftypefn
