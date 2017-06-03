@@ -87,7 +87,7 @@ against the test suite with:
 $ make installcheck
 ```
 
-From a repository checkout or snapshot  (the ones from the Github site):
+From a repository checkout or snapshot  (the ones from the GitHub site):
 we  must install  the GNU  Autotools  (GNU Automake,  GNU Autoconf,  GNU
 Libtool), then  we must first run  the script "autogen.sh" from  the top
 source directory, to generate the needed files:
@@ -139,8 +139,10 @@ because of the great GNU software tools that he uses all the time.
 
 ## Bugs
 
-Bug reports are  appreciated, register them at the Issue  Tracker at the
-project's Github site.
+Bug  and vulnerability  reports are  appreciated, all  the vulnerability
+reports  are  public; register  them  using  the  Issue Tracker  at  the
+project's GitHub  site.  For  contributions and  patches please  use the
+Pull Requests feature at the project's GitHub site.
 
 
 ## Resources
@@ -164,4 +166,64 @@ the documentation is available online:
 the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
+
+
+## Badges and static analysis
+
+### CII Best Practices
+
+The  Linux  Foundation's  Core   Infrastructure  Initiative  (CII)  Best
+Practices badge is a way for Free/Libre and Open Source Software (FLOSS)
+projects to show that they follow  best practices.  We can find the self
+certification at:
+
+[https://bestpractices.coreinfrastructure.org/projects/XXX/](https://bestpractices.coreinfrastructure.org/projects/XXX/)
+
+
+### Travis CI
+
+Travis CI is  a hosted, distributed continuous  integration service used
+to build and test software projects  hosted at GitHub.  We can find this
+project's dashboard at:
+
+[https://travis-ci.org/marcomaggi/ccexceptions](https://travis-ci.org/marcomaggi/ccexceptions)
+
+Usage of this  service is configured through the  file `.travis.yml` and
+additional scripts are under the directory `meta/travis-ci`.
+
+
+### Coverity Scan
+
+Coverity Scan is  a service providing the results of  static analysis on
+open source coding projects.  We can find this project's dashboard at:
+
+[https://scan.coverity.com/projects/marcomaggi-ccexceptions](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
+
+Usage of this  service is implemented with make rules;  see the relevant
+section in the file `Makefile.am`.  To access the service a unique token
+is needed: this token is private and is owned by the current maintainer.
+
+
+### Clang's Static Analyzer
+
+The Clang Static Analyzer is a source code analysis tool that finds bugs
+in C, C++, and Objective-C programs.  It is distributed along with Clang
+and we can find it at:
+
+[http://clang-analyzer.llvm.org/](http://clang-analyzer.llvm.org/)
+
+Usage of this  service is implemented with make rules;  see the relevant
+section in the file `Makefile.am`.
+
+
+### Codecov
+
+Codecov is a service providing code  coverage reports.  We can find this
+project's dashboard at:
+
+[https://codecov.io/gh/marcomaggi/ccexceptions](https://codecov.io/gh/marcomaggi/ccexceptions)
+
+Usage of  this service is  implemented through direct  interface between
+GitHub and Codecov  sites; it configured through  the file `codecov.yml`
+and appropriate entries in Travis CI's matrix of builds.
 
