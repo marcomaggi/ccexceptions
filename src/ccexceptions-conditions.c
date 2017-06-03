@@ -27,7 +27,11 @@
 */
 
 #include "ccexceptions-internals.h"
-#include <netdb.h>	// for h_errno
+#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
+#  include <netdb.h>	// for h_errno
+#else
+static int h_errno = 0;
+#endif
 #include <limits.h>	// for INT_MAX
 
 

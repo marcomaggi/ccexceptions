@@ -77,7 +77,7 @@ AM_PROG_AS
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
+AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h netdb.h])
 AC_HEADER_STDBOOL
 
 dnl The  documentation of GNU  Autoconf states that AC_PROG_CC  sets the
@@ -92,6 +92,13 @@ dnl page
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
+AC_CHECK_FUNCS([open openat close read pread write pwrite lseek readv writev])
+AC_CHECK_FUNCS([select dup dup2 pipe mkfifo])
+AC_CHECK_FUNCS([mmap munmap msync mprotect])
+AC_CHECK_FUNCS([getcwd chdir fchdir opendir fdopendir readdir closedir stat fstat lstat mkdir rmdir link linkat symlink symlinkat readlink readlinkat realpath unlink unlinkat remove rename chown fchown lchown fchownat chmod fchmod fchmodat access faccessat utime utimes lutimes futimes truncate ftruncate])
+AC_CHECK_FUNCS([mkstemp])
+AC_CHECK_FUNCS([bind getsockname inet_aton inet_network gethostbyname gethostbyname2 gethostbyaddr socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
+AC_CHECK_FUNCS([system fork execv execve execvp waitpid])
 
 AM_COND_IF([WANT_GLIBC],[
   dnl AC_CHECK_HEADERS([search.h])
@@ -128,10 +135,14 @@ AC_DEFUN([CCE_VALUEOF_TEST],
      [cce_cv_valueof_$1],
      [AC_COMPUTE_INT([cce_cv_valueof_$1],
         [$2],
-        [#include <errno.h>],
+        [#include <errno.h>
+#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
+#  include <netdb.h>	// for h_errno
+#endif
+],
         [cce_cv_valueof_$1="-1"])])
     VALUEOF_$1="$cce_cv_valueof_$1"
-    AC_DEFINE_UNQUOTED([VALUEOF_$1],$VALUEOF_$1,[value of errno constant $1])])
+    AC_DEFINE_UNQUOTED([VALUEOF_$1],$VALUEOF_$1,[value of constant $1])])
 
 AC_DEFUN([CCE_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
 AC_DEFUN([CCE_H_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
