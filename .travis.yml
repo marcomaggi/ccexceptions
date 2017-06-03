@@ -62,7 +62,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
         make all;
         make check;
 
@@ -80,7 +80,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
         make all;
         make check;
 
@@ -98,7 +98,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
         make all;
         make check;
 
@@ -158,7 +158,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode --enable-glibc --enable-linux CFLAGS='-O0 --coverage';
         make all;
         make check;
       after_success:
