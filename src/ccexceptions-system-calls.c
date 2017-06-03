@@ -95,7 +95,7 @@ cce_sys_mlock (cce_location_t * L, const void * addr, size_t len)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -110,7 +110,7 @@ cce_sys_munlock (cce_location_t * L, const void * addr, size_t len)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -125,7 +125,7 @@ cce_sys_mlockall (cce_location_t * L, int flags)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -140,7 +140,7 @@ cce_sys_munlockall (cce_location_t * L)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -423,7 +423,7 @@ cce_sys_mremap (cce_location_t * L, void * address, size_t length, size_t new_le
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -438,7 +438,7 @@ cce_sys_madvise (cce_location_t * L, void * address, size_t length, int advice)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
@@ -947,7 +947,7 @@ cce_sys_mkdtemp (cce_location_t * L, char * template)
     cce_raise(L, cce_condition_new_errno_clear());
   }
 #else
-  cce_raise(L, cce_condition_unimplemented);
+  cce_raise(L, cce_condition_new_unimplemented());
 #endif
 }
 
