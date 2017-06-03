@@ -14,6 +14,8 @@ fi
     --cache-file=./config.cache			\
     --enable-maintainer-mode                    \
     --disable-static --enable-shared            \
+    --enable-glibc				\
+    --enable-linux				\
     --prefix="${prefix}"			\
     --libdir="${libdir}"                        \
     CFLAGS='-Wextra -pedantic -O3'		\

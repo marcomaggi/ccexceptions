@@ -43,12 +43,12 @@ LT_INIT
 dnl page
 #### configuration
 
-CCE_ENABLE_OPTION([GLIBC],[glibc],[yes],
+CCE_ENABLE_OPTION([GLIBC],[glibc],[no],
   [whether GNU C Library features are enabled],
   [enable GNU C Library features])
 AM_CONDITIONAL([WANT_GLIBC],[test "x$cce_enable_GLIBC" = xyes])
 
-CCE_ENABLE_OPTION([LINUX],[linux],[yes],
+CCE_ENABLE_OPTION([LINUX],[linux],[no],
   [whether Linux features are enabled],
   [enable Linux features])
 AM_CONDITIONAL([WANT_LINUX],[test "x$cce_enable_LINUX" = xyes])
