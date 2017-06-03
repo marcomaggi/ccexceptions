@@ -42,9 +42,6 @@ extern "C" {
 #endif
 #include "ccexceptions.h"
 
-#include <sys/stat.h>
-#include <sys/mman.h>
-
 
 /** --------------------------------------------------------------------
  ** Done.

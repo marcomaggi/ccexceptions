@@ -31,7 +31,7 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#include "ccexceptions.h"
+#include "ccexceptions-internals.h"
 #include "ccexceptions-system.h"
 #include "ccexceptions-networking.h"
 #include <string.h>
@@ -74,8 +74,12 @@ __attribute__((nonnull(1,2)))
 static void
 cce_handler_filedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
+#ifdef HAVE_CLOSE
   close(H->filedes);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
+#else
+#  warning no close system function
+#endif
 }
 
 void
@@ -103,9 +107,11 @@ __attribute__((nonnull(1,2)))
 static void
 cce_handler_pipedes_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
+#ifdef HAVE_CLOSE
   close(H->pipedes[0]);
   close(H->pipedes[1]);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
+#endif
 }
 
 void
@@ -135,9 +141,11 @@ __attribute__((nonnull(1,2)))
 static void
 cce_handler_tmpfile_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
+#ifdef HAVE_REMOVE
   remove(H->pathname);
   free(H->pathname);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
+#endif
 }
 
 void
@@ -173,9 +181,11 @@ __attribute__((nonnull(1,2)))
 static void
 cce_handler_tmpdir_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
+#ifdef HAVE_RMDIR
   rmdir(H->pathname);
   free(H->pathname);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
+#endif
 }
 
 void
@@ -211,9 +221,11 @@ __attribute__((nonnull(1,2)))
 static void
 cce_handler_dirstream_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
 {
+#ifdef HAVE_CLOSEDIR
   DIR *		dirstream = H->pointer;
   closedir(dirstream);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }
+#endif
 }
 
 void

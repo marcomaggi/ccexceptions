@@ -26,8 +26,8 @@
 
 */
 
-#ifndef CCEXCEPTIONS_MEMORY_H
-#define CCEXCEPTIONS_MEMORY_H 1
+#ifndef CCEXCEPTIONS_SYSTEM_H
+#define CCEXCEPTIONS_SYSTEM_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +39,7 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
+
 #include <dirent.h>
 #include <utime.h>
 #include <fcntl.h>
@@ -383,6 +384,6 @@ cce_decl void cce_error_handler_dirstream_init (cce_location_t * L, cce_handler_
 } // extern "C"
 #endif
 
-#endif /* CCEXCEPTIONS_MEMORY_H */
+#endif /* CCEXCEPTIONS_SYSTEM_H */
 
 /* end of file */

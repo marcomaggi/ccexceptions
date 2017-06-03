@@ -39,7 +39,6 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
-//#include <net/if.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>

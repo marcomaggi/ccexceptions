@@ -77,7 +77,8 @@ AM_PROG_AS
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h netdb.h])
+AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
+AC_CHECK_HEADERS([dirent.h utime.h fcntl.h sys/select.h sys/stat.h sys/time.h sys/types.h sys/uio.h netdb.h sys/wait.h])
 AC_HEADER_STDBOOL
 
 dnl The  documentation of GNU  Autoconf states that AC_PROG_CC  sets the
