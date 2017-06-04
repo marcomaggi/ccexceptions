@@ -29,17 +29,11 @@
 #include "ccexceptions-internals.h"
 
 #if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
-#warning including netdb
 #  include <netdb.h>	// for h_errno
-#else
-#warning not including netdb
 #endif
 
 #if ((! (defined HAVE_DECL_H_ERRNO)) || (0 == HAVE_DECL_H_ERRNO))
-#warning defining custom h_errno
 static int h_errno = 0;
-#else
-#warning using predefined h_errno
 #endif
 
 #include <limits.h>	// for INT_MAX
