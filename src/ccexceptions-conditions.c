@@ -453,10 +453,10 @@ const cce_descriptor_h_errno_t * const cce_descriptor_h_errno_ptr = (const cce_d
 static const cce_condition_h_errno_t
 h_errno_conditions[H_ERRNO_CONDITIONS_NUM] = {
   /* 000 */ CCE_DECLARE_H_ERRNO_CONDITION(0,			"(h_errno=0) Success"),
-  /* 001 */ CCE_DECLARE_H_ERRNO_CONDITION(HOST_NOT_FOUND,	"(h_errno=HOST_NOT_FOUND) No such host is known in the database"),
-  /* 002 */ CCE_DECLARE_H_ERRNO_CONDITION(TRY_AGAIN,		"(h_errno=TRY_AGAIN) The name server could not be contacted"),
-  /* 003 */ CCE_DECLARE_H_ERRNO_CONDITION(NO_RECOVERY,		"(h_errno=NO_RECOVERY) A non-recoverable error occurred"),
-  /* 004 */ CCE_DECLARE_H_ERRNO_CONDITION(NO_ADDRESS,		"(h_errno=NO_ADDRESS) No Internet address found"),
+  /* 001 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_HOST_NOT_FOUND, "(h_errno=HOST_NOT_FOUND) No such host is known in the database"),
+  /* 002 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_TRY_AGAIN,	"(h_errno=TRY_AGAIN) The name server could not be contacted"),
+  /* 003 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_NO_RECOVERY,	"(h_errno=NO_RECOVERY) A non-recoverable error occurred"),
+  /* 004 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_NO_ADDRESS,	"(h_errno=NO_ADDRESS) No Internet address found"),
   /* 005 */ CCE_DECLARE_H_ERRNO_CONDITION(INT_MAX,		"Unknown h_errno code")
 };
 
