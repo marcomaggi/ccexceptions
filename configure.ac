@@ -101,6 +101,12 @@ AC_CHECK_FUNCS([mkstemp])
 AC_CHECK_FUNCS([bind getsockname inet_aton inet_network gethostbyname gethostbyname2 gethostbyaddr socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
 AC_CHECK_FUNCS([system fork execv execve execvp waitpid])
 
+AC_CHECK_DECLS([h_errno],,,[
+#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
+#  include <netdb.h>	// for h_errno
+#endif
+])
+
 AM_COND_IF([WANT_GLIBC],[
   dnl AC_CHECK_HEADERS([search.h])
   AC_CHECK_FUNCS([mkdtemp mremap madvise])
