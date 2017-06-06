@@ -61,7 +61,7 @@ test_invalid_argument (void)
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (void)
 {
   if (1) { test_invalid_argument(); }
 
