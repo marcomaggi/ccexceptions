@@ -56,7 +56,6 @@ check_PROGRAMS	= \
 	tests/exception-with-cleanup-handler	\
 	tests/exception-with-error-handler	\
 	tests/exception-with-handlers		\
-	tests/exception-with-gcc-auto-cleanup	\
 	tests/handlers-routines			\
 	tests/conditions-raising		\
 	tests/conditions-hierarchy		\
@@ -67,7 +66,8 @@ check_PROGRAMS	= \
 
 if WANT_GCC
 check_PROGRAMS	+= \
-	tests/gcc-auto-cleanup
+	tests/gcc-auto-cleanup			\
+	tests/exception-with-gcc-auto-cleanup
 endif
 
 TESTS				= $(check_PROGRAMS)
