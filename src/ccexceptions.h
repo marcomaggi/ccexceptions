@@ -80,8 +80,8 @@ extern "C" {
 #  define cce_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define cce_decl		__attribute__((visibility ("default")))
-#    define cce_private_decl	__attribute__((visibility ("hidden")))
+#    define cce_decl		__attribute__((visibility ("default"))) extern
+#    define cce_private_decl	__attribute__((visibility ("hidden")))  extern
 #  else
 #    define cce_decl		extern
 #    define cce_private_decl	extern
