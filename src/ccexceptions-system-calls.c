@@ -1082,7 +1082,7 @@ cce_sys_utimes (cce_location_t * L, const char * pathname, const struct timeval 
 void
 cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval TVP[2])
 {
-#ifdef HAVE_LUTIMES
+#if ((defined HAVE_LUTIMES) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
   int	rv;
   errno = 0;
   rv = lutimes(pathname, TVP);
@@ -1097,7 +1097,7 @@ cce_sys_lutimes (cce_location_t * L, const char * pathname, const struct timeval
 void
 cce_sys_futimes (cce_location_t * L, int filedes, const struct timeval TVP[2])
 {
-#ifdef HAVE_FUTIMES
+#if ((defined HAVE_FUTIMES) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
   int	rv;
   errno = 0;
   rv = futimes(filedes, TVP);
@@ -1222,7 +1222,7 @@ cce_sys_getsockname (cce_location_t * L, int socket, struct sockaddr * addr, soc
 void
 cce_sys_inet_aton (cce_location_t * L, const char * name, struct in_addr * addr)
 {
-#ifdef HAVE_INET_ATON
+#if ((defined HAVE_INET_ATON) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
   int	rv;
   errno = 0;
   rv = inet_aton(name, addr);
@@ -1237,7 +1237,7 @@ cce_sys_inet_aton (cce_location_t * L, const char * name, struct in_addr * addr)
 in_addr_t
 cce_sys_inet_network (cce_location_t * L, const char * name)
 {
-#ifdef HAVE_INET_NETWORK
+#if ((defined HAVE_INET_NETWORK) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
   in_addr_t	rv;
   errno = 0;
   rv = inet_network(name);
@@ -1273,7 +1273,7 @@ cce_sys_gethostbyname (cce_location_t * L, const char * name)
 struct hostent *
 cce_sys_gethostbyname2 (cce_location_t * L, const char * name, int af)
 {
-#ifdef HAVE_GETHOSTBYNAME2
+#if ((defined HAVE_GETHOSTBYNAME2) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
   struct hostent *	rv;
   h_errno = 0;
   rv = gethostbyname2(name, af);

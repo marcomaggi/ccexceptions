@@ -43,6 +43,29 @@ LT_INIT
 dnl page
 #### configuration
 
+case "$target_os" in
+  *linux*)
+    ccexceptions_OS_LINUX=yes
+    AC_MSG_NOTICE([detected OS: linux])
+    ;;
+  *bsd*)
+    ccexceptions_OS_BSD=yes
+    AC_MSG_NOTICE([detected OS: BSD])
+    ;;
+  *cygwin*)
+    ccexceptions_OS_CYGWIN=yes
+    AC_MSG_NOTICE([detected OS: CYGWIN])
+    ;;
+  *darwin*)
+    ccexceptions_OS_DARWIN=yes
+    AC_MSG_NOTICE([detected OS: DARWIN])
+    ;;
+esac
+AM_CONDITIONAL([ON_LINUX], [test "x$ccexceptions_OS_LINUX"  = xyes])
+AM_CONDITIONAL([ON_BSD],   [test "x$ccexceptions_OS_BSD"    = xyes])
+AM_CONDITIONAL([ON_CYGWIN],[test "x$ccexceptions_OS_CYGWIN" = xyes])
+AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
+
 CCE_ENABLE_OPTION([GLIBC],[glibc],[no],
   [whether GNU C Library features are enabled],
   [enable GNU C Library features])
@@ -52,6 +75,8 @@ CCE_ENABLE_OPTION([LINUX],[linux],[no],
   [whether Linux features are enabled],
   [enable Linux features])
 AM_CONDITIONAL([WANT_LINUX],[test "x$cce_enable_LINUX" = xyes])
+
+AM_COND_IF([ON_DARWIN],[AC_DEFINE([CCEXCEPTIONS_ON_DARWIN],[1],[defined to 1 when compiling on Darwin])])
 
 dnl page
 #### libraries interface version
