@@ -130,7 +130,7 @@ matrix:
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
         ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
-        make check;
+        RV=0; if ! make check ; then RV=$?; cat test-suite.log ; fi; exit $RV;
 
     # Plain build under OS X, XCode 8.3, CLang automatically selected by
     # Travis CI.
@@ -142,7 +142,7 @@ matrix:
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
         ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
-        make check;
+        RV=0; if ! make check ; then RV=$?; cat test-suite.log ; fi; exit $RV;
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
