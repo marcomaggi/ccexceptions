@@ -46,7 +46,8 @@ env:
 
 matrix:
   allow_failures:
-    - osx_image: xcode7.3
+    - os: linux
+      compiler: clang
 
   fast_finish: true
 
