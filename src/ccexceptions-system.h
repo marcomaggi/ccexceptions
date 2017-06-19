@@ -128,7 +128,7 @@ cce_decl size_t cce_sys_writev (cce_location_t * L, int filedes, const struct io
 
 cce_decl int cce_sys_select (cce_location_t * L, int nfds, fd_set * read_fds, fd_set * write_fds, fd_set * except_fds,
 			     struct timeval * timeout)
-  __attribute__((nonnull(1,3,4,5)));
+  __attribute__((nonnull(1)));
 
 cce_decl int cce_sys_dup (cce_location_t * L, int old)
   __attribute__((nonnull(1)));
