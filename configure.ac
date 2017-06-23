@@ -90,8 +90,6 @@ dnl page
 #### basic system inspection
 
 AC_LANG([C])
-AM_COND_IF([WANT_GLIBC],
-  [AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])])
 AC_PROG_CC_C99
 
 AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
@@ -115,25 +113,31 @@ AC_CACHE_SAVE
 dnl page
 #### checks for library functions
 
+dnl This constant is redefined in the main header file.  We define it here so
+dnl that it is there in the tests below.
+AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Request enabling latest POSIX features.])
+
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
 AC_CHECK_FUNCS([open openat close read pread write pwrite lseek readv writev])
 AC_CHECK_FUNCS([select dup dup2 pipe mkfifo])
 AC_CHECK_FUNCS([mmap munmap msync mprotect])
-AC_CHECK_FUNCS([getcwd chdir fchdir opendir fdopendir readdir closedir stat fstat lstat mkdir rmdir link linkat symlink symlinkat readlink readlinkat realpath unlink unlinkat remove rename chown fchown lchown fchownat chmod fchmod fchmodat access faccessat utime utimes lutimes futimes truncate ftruncate])
+AC_CHECK_FUNCS([getcwd chdir fchdir opendir fdopendir readdir closedir stat fstat lstat mkdir rmdir link linkat symlink symlinkat readlink readlinkat realpath unlink unlinkat remove rename chown fchown lchown fchownat chmod fchmod fchmodat access faccessat utime utimes truncate ftruncate])
 AC_CHECK_FUNCS([mkstemp])
-AC_CHECK_FUNCS([bind getsockname inet_aton inet_network socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
+AC_CHECK_FUNCS([bind getsockname inet_network socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
 AC_CHECK_FUNCS([system fork execv execve execvp waitpid])
 
+
 AM_COND_IF([WANT_GLIBC],[
+  AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
   dnl AC_CHECK_HEADERS([search.h])
-  AC_CHECK_FUNCS([mkdtemp mremap madvise])
+  AC_CHECK_FUNCS([mkdtemp mremap madvise inet_aton])
   dnl AC_CHECK_FUNCS([gethostbyname_r gethostbyname2_r gethostbyaddr_r])
 ])
 
-dnl AM_COND_IF([WANT_LINUX],
-dnl   [AC_CHECK_FUNCS([])])
+AM_COND_IF([WANT_LINUX],
+  [AC_CHECK_FUNCS([lutimes futimes])])
 
 AC_CACHE_SAVE
 

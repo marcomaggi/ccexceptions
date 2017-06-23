@@ -106,7 +106,8 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 /* Enable latest POSIX features. */
-#define _POSIX_C_SOURCE		2008009L
+#undef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE		200809L
 
 #include <stdio.h>
 #include <stdlib.h>
