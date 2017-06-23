@@ -28,14 +28,6 @@
 
 #include "ccexceptions-internals.h"
 
-#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
-#  include <netdb.h>	// for h_errno
-#endif
-
-#if ((! (defined HAVE_DECL_H_ERRNO)) || (0 == HAVE_DECL_H_ERRNO))
-static int h_errno = 0;
-#endif
-
 #include <limits.h>	// for INT_MAX
 
 
@@ -423,71 +415,6 @@ cce_condition_new_errno (int errnum)
   /* If  we  are  here  ERRNUM  is an  invalid  "errno"  value  for  the
      underlying platform. */
   return &(errno_conditions[LAST_ERRNO_CONDITION].root.condition);
-}
-
-
-/** --------------------------------------------------------------------
- ** H_Errno condition.
- ** ----------------------------------------------------------------- */
-
-static const char *
-cce_condition_h_errno_static_message_fun (const cce_condition_t * C)
-{
-  const cce_condition_h_errno_t *	EC = (const cce_condition_h_errno_t *)C;
-  return EC->message;
-}
-
-/* This condition descriptor  represents "h_errno" exceptional conditions.
-   It is a child of the root descriptor. */
-const cce_descriptor_h_errno_t cce_descriptor_h_errno_stru = {
-  .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
-  .descriptor.delete		= NULL,
-  .descriptor.final		= NULL,
-  .descriptor.static_message	= cce_condition_h_errno_static_message_fun
-};
-
-const cce_descriptor_h_errno_t * const cce_descriptor_h_errno_ptr = (const cce_descriptor_h_errno_t *) &cce_descriptor_h_errno_stru;
-
-#define CCE_DECLARE_H_ERRNO_CONDITION(H_ERRNO,MESSAGE)		\
-  { .root = { .condition = { .descriptor = &(cce_descriptor_h_errno_stru.descriptor) } }, .errnum = H_ERRNO, .message = MESSAGE }
-
-#define H_ERRNO_CONDITIONS_NUM		6
-#define LAST_H_ERRNO_CONDITION		5
-
-static const cce_condition_h_errno_t
-h_errno_conditions[H_ERRNO_CONDITIONS_NUM] = {
-  /* 000 */ CCE_DECLARE_H_ERRNO_CONDITION(0,			"(h_errno=0) Success"),
-  /* 001 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_HOST_NOT_FOUND, "(h_errno=HOST_NOT_FOUND) No such host is known in the database"),
-  /* 002 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_TRY_AGAIN,	"(h_errno=TRY_AGAIN) The name server could not be contacted"),
-  /* 003 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_NO_RECOVERY,	"(h_errno=NO_RECOVERY) A non-recoverable error occurred"),
-  /* 004 */ CCE_DECLARE_H_ERRNO_CONDITION(VALUEOF_NO_ADDRESS,	"(h_errno=NO_ADDRESS) No Internet address found"),
-  /* 005 */ CCE_DECLARE_H_ERRNO_CONDITION(INT_MAX,		"Unknown h_errno code")
-};
-
-const cce_condition_t *
-cce_condition_new_h_errno (int errnum)
-{
-  for (int i = 0; i < H_ERRNO_CONDITIONS_NUM; ++i) {
-    if (errnum == h_errno_conditions[i].errnum) {
-      return &(h_errno_conditions[i].root.condition);
-    }
-  }
-  /* If  we are  here  ERRNUM  is an  invalid  "h_errno"  value for  the
-     underlying platform. */
-  return &(h_errno_conditions[LAST_H_ERRNO_CONDITION].root.condition);
-}
-
-const cce_condition_t *
-cce_condition_new_h_errno_clear (void)
-/* This function  requires access to  "h_errno", which in  turn requires
-   the inclusion  of more  system header files  that are  seldom needed.
-   This function  is here as  normal function,  rather than in  the main
-   header as  inline function, to  avoid including such header  files in
-   the main header.  */
-{
-  int	errnum = h_errno;
-  h_errno = 0;
-  return cce_condition_new_h_errno(errnum);
 }
 
 /* end of file */

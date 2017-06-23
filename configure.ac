@@ -123,14 +123,8 @@ AC_CHECK_FUNCS([select dup dup2 pipe mkfifo])
 AC_CHECK_FUNCS([mmap munmap msync mprotect])
 AC_CHECK_FUNCS([getcwd chdir fchdir opendir fdopendir readdir closedir stat fstat lstat mkdir rmdir link linkat symlink symlinkat readlink readlinkat realpath unlink unlinkat remove rename chown fchown lchown fchownat chmod fchmod fchmodat access faccessat utime utimes lutimes futimes truncate ftruncate])
 AC_CHECK_FUNCS([mkstemp])
-AC_CHECK_FUNCS([bind getsockname inet_aton inet_network gethostbyname gethostbyname2 gethostbyaddr socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
+AC_CHECK_FUNCS([bind getsockname inet_aton inet_network socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
 AC_CHECK_FUNCS([system fork execv execve execvp waitpid])
-
-AC_CHECK_DECLS([h_errno],,,[
-#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
-#  include <netdb.h>	// for h_errno
-#endif
-])
 
 AM_COND_IF([WANT_GLIBC],[
   dnl AC_CHECK_HEADERS([search.h])
@@ -168,16 +162,12 @@ AC_DEFUN([CCE_VALUEOF_TEST],
      [AC_COMPUTE_INT([cce_cv_valueof_$1],
         [$2],
         [#include <errno.h>
-#if ((defined HAVE_NETDB_H) && (1 == HAVE_NETDB_H))
-#  include <netdb.h>	// for h_errno
-#endif
 ],
         [cce_cv_valueof_$1="-1"])])
     VALUEOF_$1="$cce_cv_valueof_$1"
     AC_DEFINE_UNQUOTED([VALUEOF_$1],$VALUEOF_$1,[value of constant $1])])
 
 AC_DEFUN([CCE_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
-AC_DEFUN([CCE_H_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
 
 CCE_ERRNO_TEST([EPERM])
 CCE_ERRNO_TEST([ENOENT])
@@ -325,11 +315,6 @@ CCE_ERRNO_TEST([EDIED])
 CCE_ERRNO_TEST([ENOLINK])
 CCE_ERRNO_TEST([ERFKILL])
 CCE_ERRNO_TEST([EHWPOISON])
-
-CCE_H_ERRNO_TEST([HOST_NOT_FOUND])
-CCE_H_ERRNO_TEST([TRY_AGAIN])
-CCE_H_ERRNO_TEST([NO_RECOVERY])
-CCE_H_ERRNO_TEST([NO_ADDRESS])
 
 dnl page
 #### finish

@@ -1253,59 +1253,6 @@ cce_sys_inet_network (cce_location_t * L, const char * name)
 
 /* ------------------------------------------------------------------ */
 
-struct hostent *
-cce_sys_gethostbyname (cce_location_t * L, const char * name)
-{
-#ifdef HAVE_GETHOSTBYNAME
-  struct hostent *	rv;
-  h_errno = 0;
-  rv = gethostbyname(name);
-  if (rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_condition_new_h_errno_clear());
-  }
-#else
-  cce_raise(L, cce_condition_new_unimplemented());
-#endif
-}
-
-struct hostent *
-cce_sys_gethostbyname2 (cce_location_t * L, const char * name, int af)
-{
-#if ((defined HAVE_GETHOSTBYNAME2) && (! (defined CCEXCEPTIONS_ON_DARWIN)))
-  struct hostent *	rv;
-  h_errno = 0;
-  rv = gethostbyname2(name, af);
-  if (rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_condition_new_h_errno_clear());
-  }
-#else
-  cce_raise(L, cce_condition_new_unimplemented());
-#endif
-}
-
-struct hostent *
-cce_sys_gethostbyaddr (cce_location_t * L, const void * addr, socklen_t length, int format)
-{
-#ifdef HAVE_GETHOSTBYADDR
-  struct hostent *	rv;
-  h_errno = 0;
-  rv = gethostbyaddr(addr, length, format);
-  if (rv) {
-    return rv;
-  } else {
-    cce_raise(L, cce_condition_new_h_errno_clear());
-  }
-#else
-  cce_raise(L, cce_condition_new_unimplemented());
-#endif
-}
-
-/* ------------------------------------------------------------------ */
-
 int
 cce_sys_socket (cce_location_t * L, int namespace, int style, int protocol)
 {

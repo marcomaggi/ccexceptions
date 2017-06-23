@@ -1066,7 +1066,6 @@ run--time according to the type of raised structure.
                                 object.
 * conditions invalid arg::      Predefined invalid argument conditions.
 * conditions errno::            Predefined @code{errno} conditions.
-* conditions h_errno::          Predefined @code{h_errno} conditions.
 * conditions custom::           Defining custom condition objects.
 @end menu
 
@@ -1858,78 +1857,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @deftypevr {Dynamic Constant} {const cce_descriptor_errno_t * const} cce_descriptor_errno_ptr
 Pointer to a statically allocated structure representing the condition descriptor of all the
 @emph{errno} condition objects.
-@end deftypevr
-
-@c page
-@node conditions h_errno
-@section Predefined @code{h_errno} conditions
-
-
-The @dfn{h_errno exceptional--condition object} has the purpose of describing an exceptional
-condition caused by a system function setting @code{h_errno}.
-
-All the following definitions are accessible from the header file @file{ccexceptions-networking.h}.
-
-
-@deftp {Struct Typedef} cce_descriptor_h_errno_t
-Structure type representing the descriptor for @emph{h_errno} condition objects.  This descriptor
-has the @emph{root} descriptor as parent.
-@end deftp
-
-
-@deftp {Struct Typedef} cce_condition_h_errno_t
-Structure type representing an @emph{h_errno} exceptional condition object, signalled by a system
-function by setting @code{h_errno} to a non--zero value.  It has the following public fields:
-
-@table @code
-@item int errnum
-The value of @code{h_errno}.
-
-@item const char * message
-A statically allocated string describing the error.
-@end table
-@end deftp
-
-
-@deftypefun {const cce_condition_h_errno_t *} cce_condition_new_h_errno (int @var{errnum})
-Given the @code{h_errno} code @var{errnum}, return the pointer to the condition object associated to
-it.
-
-If @var{errnum} is zero: return a pointer to condition object representing a successful operation.
-If @var{errnum} is not a valid @code{h_errno} code for the underlying platform: return a pointer to
-condition object representing an invalid code.
-@end deftypefun
-
-
-@deftypefun {const cce_condition_h_errno_t *} cce_condition_new_h_errno_clear (void)
-Consume the current value of @code{h_errno} and return the return value of
-@cfunc{cce_condition_new_h_errno} applied to it.  Before returning: @code{h_errno} is reset to
-zero.
-@end deftypefun
-
-
-@deftypefn {Inline Function} bool cce_condition_is_h_errno (const cce_condition_t * @var{C})
-Return @true{} if @var{C} is a condition object of type @emph{h_errno}; otherwise return @false{}.
-@end deftypefn
-
-
-@deftypefn {Generic Macro} {const cce_condition_h_errno_t *} cce_condition_h_errno (cce_location_t * @var{L})
-@deftypefnx {Generic Macro} {const cce_condition_h_errno_t *} cce_condition_h_errno (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_h_errno_t *} cce_condition_h_errno (cce_condition_h_errno_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_h_errno_t *} cce_condition_h_errno (const cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_h_errno_t *} cce_condition_h_errno (const cce_condition_h_errno_t * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
-pointer to @objtype{cce_condition_h_errno_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
-@deftypevr {Dynamic Constant} {const cce_descriptor_h_errno_t * const} cce_descriptor_h_errno_ptr
-Pointer to a statically allocated structure representing the condition descriptor of all the
-@emph{h_errno} condition objects.
 @end deftypevr
 
 @c page
@@ -2761,21 +2688,6 @@ Wrapper for @cfunc{inet_aton}.
 
 @deftypefun in_addr_t cce_sys_inet_network (cce_location_t * @var{L}, const char * @var{name})
 Wrapper for @cfunc{inet_network}.
-@end deftypefun
-
-
-@deftypefun {struct hostent *} cce_sys_gethostbyname (cce_location_t * @var{L}, const char * @var{name})
-Wrapper for @cfunc{gethostbyname}.
-@end deftypefun
-
-
-@deftypefun {struct hostent *} cce_sys_gethostbyname2 (cce_location_t * @var{L}, const char * @var{name}, int @var{af})
-Wrapper for @cfunc{gethostbyname2}.
-@end deftypefun
-
-
-@deftypefun {struct hostent *} cce_sys_gethostbyaddr (cce_location_t * @var{L}, const void * @var{addr}, socklen_t @var{length}, int @var{format})
-Wrapper for @cfunc{gethostbyaddr}.
 @end deftypefun
 
 
