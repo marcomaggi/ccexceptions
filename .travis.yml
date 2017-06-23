@@ -45,9 +45,9 @@ env:
     - MAKEFLAGS="-j 2"
 
 matrix:
-  allow_failures:
-    - os: linux
-      compiler: clang
+  #allow_failures:
+  #  - os: linux
+  #    compiler: clang
 
   fast_finish: true
 
