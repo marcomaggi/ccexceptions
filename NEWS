@@ -1,0 +1,16 @@
+-*- utf-8-unix -*-
+
+Notes for revision 0.6.0-devel.0
+--------------------------------
+
+* Removed all the system adapter functions  that are now in a standalone
+  package: CCSys.
+
+
+### end of file
+# Local Variables:
+# mode: text
+# fill-column: 72
+# paragraph-start: "*"
+# ispell-local-dictionary: "en_GB"
+# End:
