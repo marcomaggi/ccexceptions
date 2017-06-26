@@ -10,13 +10,13 @@ else libdir=${prefix}/lib
 fi
 
 ../configure \
-    --config-cache				\
-    --cache-file=./config.cache			\
-    --enable-maintainer-mode                    \
-    --disable-static --enable-shared            \
-    --prefix="${prefix}"			\
-    --libdir="${libdir}"                        \
-    CFLAGS='-Wextra -pedantic -O3'		\
+    --config-cache					\
+    --cache-file=./config.cache				\
+    --enable-maintainer-mode				\
+    --disable-static --enable-shared			\
+    --prefix="${prefix}"				\
+    --libdir="${libdir}"				\
+    CFLAGS='-Wextra -pedantic -O3 -fstack-protector'	\
     "$@"
 
 ### end of file
