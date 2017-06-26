@@ -29,10 +29,7 @@ ccexceptions_CURRENT	= @ccexceptions_VERSION_INTERFACE_CURRENT@
 ccexceptions_REVISION	= @ccexceptions_VERSION_INTERFACE_REVISION@
 ccexceptions_AGE	= @ccexceptions_VERSION_INTERFACE_AGE@
 
-include_HEADERS		= \
-	src/ccexceptions.h		\
-	src/ccexceptions-system.h	\
-	src/ccexceptions-networking.h
+include_HEADERS		= src/ccexceptions.h
 
 lib_LTLIBRARIES		= libccexceptions.la
 libccexceptions_la_LDFLAGS= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
@@ -41,8 +38,7 @@ libccexceptions_la_SOURCES= \
 	src/ccexceptions-internals.h		\
 	src/ccexceptions-locations.c		\
 	src/ccexceptions-conditions.c		\
-	src/ccexceptions-system-calls.c		\
-	src/ccexceptions-system-handlers.c	\
+	src/ccexceptions-system.c		\
 	src/ccexceptions-version.c
 
 #page
@@ -61,7 +57,6 @@ check_PROGRAMS	= \
 	tests/conditions-hierarchy		\
 	tests/conditions-example		\
 	tests/conditions-tests			\
-	tests/system-handlers			\
 	tests/sizeof
 
 if WANT_GCC
@@ -117,9 +112,6 @@ tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
 tests_conditions_tests_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
 
-tests_system_handlers_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_system_handlers_LDADD			= $(ccexceptions_tests_ldadd)
-
 tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
 
@@ -127,21 +119,6 @@ tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
-
-#page
-#### demo programs
-
-EXTRA_DIST	+= \
-	demos/listdir.c
-
-noinst_PROGRAMS	= \
-	demos/listdir
-
-ccexceptions_demos_cppflags	= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS)
-ccexceptions_demos_ldadd	= libccexceptions.la
-
-demos_listdir_CPPFLAGS		= $(ccexceptions_demos_cppflags)
-demos_listdir_LDADD		= $(ccexceptions_demos_ldadd)
 
 #page
 #### Coverity support

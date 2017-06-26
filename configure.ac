@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCExceptions],[0.5.0-devel.2],
+AC_INIT([CCExceptions],[0.6.0-devel.0],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
@@ -43,48 +43,36 @@ LT_INIT
 dnl page
 #### configuration
 
-case "$target_os" in
-  *linux*)
-    ccexceptions_OS_LINUX=yes
-    AC_MSG_NOTICE([detected OS: linux])
-    ;;
-  *bsd*)
-    ccexceptions_OS_BSD=yes
-    AC_MSG_NOTICE([detected OS: BSD])
-    ;;
-  *cygwin*)
-    ccexceptions_OS_CYGWIN=yes
-    AC_MSG_NOTICE([detected OS: CYGWIN])
-    ;;
-  *darwin*)
-    ccexceptions_OS_DARWIN=yes
-    AC_MSG_NOTICE([detected OS: DARWIN])
-    ;;
-esac
-AM_CONDITIONAL([ON_LINUX], [test "x$ccexceptions_OS_LINUX"  = xyes])
-AM_CONDITIONAL([ON_BSD],   [test "x$ccexceptions_OS_BSD"    = xyes])
-AM_CONDITIONAL([ON_CYGWIN],[test "x$ccexceptions_OS_CYGWIN" = xyes])
-AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
-
-CCE_ENABLE_OPTION([GLIBC],[glibc],[no],
-  [whether GNU C Library features are enabled],
-  [enable GNU C Library features])
-AM_CONDITIONAL([WANT_GLIBC],[test "x$cce_enable_GLIBC" = xyes])
-
-CCE_ENABLE_OPTION([LINUX],[linux],[no],
-  [whether Linux features are enabled],
-  [enable Linux features])
-AM_CONDITIONAL([WANT_LINUX],[test "x$cce_enable_LINUX" = xyes])
-
-AM_COND_IF([ON_DARWIN],[AC_DEFINE([CCEXCEPTIONS_ON_DARWIN],[1],[defined to 1 when compiling on Darwin])])
+dnl case "$target_os" in
+dnl   *linux*)
+dnl     ccexceptions_OS_LINUX=yes
+dnl     AC_MSG_NOTICE([detected OS: linux])
+dnl     ;;
+dnl   *bsd*)
+dnl     ccexceptions_OS_BSD=yes
+dnl     AC_MSG_NOTICE([detected OS: BSD])
+dnl     ;;
+dnl   *cygwin*)
+dnl     ccexceptions_OS_CYGWIN=yes
+dnl     AC_MSG_NOTICE([detected OS: CYGWIN])
+dnl     ;;
+dnl   *darwin*)
+dnl     ccexceptions_OS_DARWIN=yes
+dnl     AC_MSG_NOTICE([detected OS: DARWIN])
+dnl     ;;
+dnl esac
+dnl AM_CONDITIONAL([ON_LINUX], [test "x$ccexceptions_OS_LINUX"  = xyes])
+dnl AM_CONDITIONAL([ON_BSD],   [test "x$ccexceptions_OS_BSD"    = xyes])
+dnl AM_CONDITIONAL([ON_CYGWIN],[test "x$ccexceptions_OS_CYGWIN" = xyes])
+dnl AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
 
 dnl page
 #### libraries interface version
 
 dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.5])
+AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.6])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],5,0,0)
+MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],6,0,0)
 
 dnl page
 #### basic system inspection
@@ -101,7 +89,6 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
 AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
-AC_CHECK_HEADERS([dirent.h utime.h fcntl.h sys/select.h sys/stat.h sys/time.h sys/types.h sys/uio.h netdb.h sys/wait.h])
 AC_HEADER_STDBOOL
 
 dnl The  documentation of GNU  Autoconf states that AC_PROG_CC  sets the
@@ -116,28 +103,6 @@ dnl page
 dnl This constant is redefined in the main header file.  We define it here so
 dnl that it is there in the tests below.
 AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Request enabling latest POSIX features.])
-
-AC_FUNC_MALLOC
-
-AC_CHECK_FUNCS([mlock munlock mlockall munlockall])
-AC_CHECK_FUNCS([open openat close read pread write pwrite lseek readv writev])
-AC_CHECK_FUNCS([select dup dup2 pipe mkfifo])
-AC_CHECK_FUNCS([mmap munmap msync mprotect])
-AC_CHECK_FUNCS([getcwd chdir fchdir opendir fdopendir readdir closedir stat fstat lstat mkdir rmdir link linkat symlink symlinkat readlink readlinkat realpath unlink unlinkat remove rename chown fchown lchown fchownat chmod fchmod fchmodat access faccessat utime utimes truncate ftruncate])
-AC_CHECK_FUNCS([mkstemp])
-AC_CHECK_FUNCS([bind getsockname inet_network socket shutdown socketpair connect listen accept getpeername send recv sendto recvfrom getsockopt setsockopt])
-AC_CHECK_FUNCS([system fork execv execve execvp waitpid])
-
-
-AM_COND_IF([WANT_GLIBC],[
-  AC_DEFINE([_GNU_SOURCE],[1],[enable everything GNU])
-  dnl AC_CHECK_HEADERS([search.h])
-  AC_CHECK_FUNCS([mkdtemp mremap madvise inet_aton])
-  dnl AC_CHECK_FUNCS([gethostbyname_r gethostbyname2_r gethostbyaddr_r])
-])
-
-AM_COND_IF([WANT_LINUX],
-  [AC_CHECK_FUNCS([lutimes futimes])])
 
 AC_CACHE_SAVE
 

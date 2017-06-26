@@ -61,8 +61,6 @@ extern "C" {
 #  define __builtin_expect(...)	/* empty */
 #endif
 
-/* I found  the following chunk on  the Net.  (Marco Maggi;  Sun Feb 26,
-   2012) */
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
