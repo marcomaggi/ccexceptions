@@ -69,6 +69,9 @@ dnl AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
 dnl page
 #### libraries interface version
 
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d0.0])
+AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
+
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.6])
 
@@ -291,6 +294,7 @@ dnl page
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
    [meta/scripts/ccexceptions.pc]
+   [meta/slackstuff/config]
    [meta/slackware/slack-desc])
 AC_OUTPUT
 

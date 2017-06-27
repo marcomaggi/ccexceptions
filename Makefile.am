@@ -2,7 +2,9 @@
 
 ACLOCAL_AMFLAGS		= -I meta/autotools
 AUTOMAKE_OPTIONS	= foreign
-EXTRA_DIST		= INSTALL configure.sh
+EXTRA_DIST		= INSTALL configure.sh		\
+			  meta/slackstuff/config	\
+			  meta/slackware/slack-desc
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= -I$(srcdir)/src -Wall $(AX_CFLAGS)
 
