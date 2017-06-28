@@ -52,7 +52,7 @@ This document describes version @value{VERSION} of @value{PACKAGE}, a C11 Standa
 it implements an interface to non--local exits, which is somewhat similar to exceptions handling.
 The library targets @posix{} systems.
 
-The package is distributed under the terms of the @gnu{} General Public License (@gpl{}).
+The package is distributed under the terms of the @gnu{} Lesser General Public License (@gpl{}).
 
 The latest release can be downloaded from:
 
@@ -131,7 +131,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 
 Appendices
 
-* Package License::             GNU General Public License.
+* Package License::             GNU Lesser General Public License.
 * Documentation License::       GNU Free Documentation License.
 * references::                  Bibliography and references.
 
