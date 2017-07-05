@@ -128,6 +128,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * conditions::                  Exceptional condition descriptors.
 * syscalls::                    System call adapters.
 * syshandlers::                 Predefined exception handlers.
+* helpers::                     Helpers.
 
 Appendices
 
@@ -2263,6 +2264,36 @@ The following symbols are defined in the header file @file{ccexceptions.h}.
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
+
+@c page
+@node helpers
+@chapter Helpers
+
+
+@deffn {Preprocessor Macro} CCE_PC (@var{TYPE}, @var{X}, @var{Y})
+Pointer--type cast helper.  It expands into:
+
+@example
+@var{TYPE} * @var{X} = (@var{TYPE} *) (@var{Y})
+@end example
+
+So, for example, instead of writing:
+
+@example
+cce_location_t    L[1];
+cce_condition_t * C = cce_condition(L);
+ccevents_timeval_invalid_t * K = (ccevents_timeval_invalid_t *) C;
+@end example
+
+@noindent
+we can write:
+
+@example
+cce_location_t    L[1];
+cce_condition_t * C = cce_condition(L);
+CCE_PC(ccevents_timeval_invalid_t, K, C);
+@end example
+@end deffn
 
 @c page
 @c ------------------------------------------------------------
