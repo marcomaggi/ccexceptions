@@ -2189,12 +2189,12 @@ Now we can use the code as in the following example:
 @chapter System call adapters
 
 
-@value{PACKAGE} defines function wrappers for the most common @posix{}, @gnu{} C Library and Linux
-system calls.  Each wrapper accepts a pointer to @objtype{cce_location_t} as argument and, in case
-of error, it will perform a non--local exit by jumping to the selected location.
+@value{PACKAGE} defines function wrappers for some basic @posix{} system calls.  Each wrapper
+accepts a pointer to @objtype{cce_location_t} as argument and, in case of error, it will perform a
+non--local exit by jumping to the selected location.
 
-The wrapper functions accept the same arguments of the system call and return the same return value
-of the system call (if it completes successfully).
+The wrapper functions accept the same arguments of the system calls and return the same return value
+of the system calls (if they complete successfully).
 
 All the wrappers reset @code{errno} to zero before performing the system call and reset it to zero
 before returning.  In case of error: the raised exceptional condition objects are of type
