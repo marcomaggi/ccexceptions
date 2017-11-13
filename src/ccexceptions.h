@@ -48,7 +48,7 @@ extern "C" {
    int unused_variable CCE_UNUSED;
 */
 #ifdef __GNUC__
-#  define CCE_UNUSED		__attribute__((unused))
+#  define CCE_UNUSED		__attribute__((__unused__))
 #else
 #  define CCE_UNUSED		/* empty */
 #endif
@@ -64,13 +64,13 @@ extern "C" {
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
-#      define cce_decl		__attribute__((dllexport)) extern
+#      define cce_decl		__attribute__((__dllexport__)) extern
 #    else
 #      define cce_decl		__declspec(dllexport) extern
 #    endif
 #  else
 #    ifdef __GNUC__
-#      define cce_decl		__attribute__((dllimport)) extern
+#      define cce_decl		__attribute__((__dllimport__)) extern
 #    else
 #      define cce_decl		__declspec(dllimport) extern
 #    endif
@@ -78,8 +78,8 @@ extern "C" {
 #  define cce_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define cce_decl		__attribute__((visibility ("default"))) extern
-#    define cce_private_decl	__attribute__((visibility ("hidden")))  extern
+#    define cce_decl		__attribute__((__visibility__("default"))) extern
+#    define cce_private_decl	__attribute__((__visibility__("hidden")))  extern
 #  else
 #    define cce_decl		extern
 #    define cce_private_decl	extern
@@ -148,13 +148,13 @@ typedef enum {
  ** ----------------------------------------------------------------- */
 
 cce_decl const char *	cce_version_string		(void)
-  __attribute__((leaf,pure));
+  __attribute__((__leaf__,__pure__));
 cce_decl int		cce_version_interface_current	(void)
-  __attribute__((leaf,pure));
+  __attribute__((__leaf__,__pure__));
 cce_decl int		cce_version_interface_revision	(void)
-  __attribute__((leaf,pure));
+  __attribute__((__leaf__,__pure__));
 cce_decl int		cce_version_interface_age	(void)
-  __attribute__((leaf,pure));
+  __attribute__((__leaf__,__pure__));
 
 
 /** --------------------------------------------------------------------
@@ -202,21 +202,21 @@ struct cce_handler_t {
 };
 
 cce_decl void cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
-  __attribute__((leaf,nonnull(1,2)));
+  __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
-  __attribute__((leaf,nonnull(1,2)));
+  __attribute__((__leaf__,__nonnull__(1,2)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    cleanup  handlers  might  modify  data  in  the  current  compilation
    unit. */
 cce_decl void cce_run_cleanup_handlers (cce_location_t * L)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    error handlers might modify data in the current compilation unit. */
 cce_decl void cce_run_error_handlers (cce_location_t * L)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -224,13 +224,13 @@ cce_decl void cce_run_error_handlers (cce_location_t * L)
  ** ----------------------------------------------------------------- */
 
 typedef void cce_condition_delete_fun_t (cce_condition_t * C)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 typedef void cce_condition_final_fun_t (cce_condition_t * C)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 typedef const char * cce_condition_static_message_fun_t	(const cce_condition_t * C)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 struct cce_descriptor_t {
   const cce_descriptor_t *		parent;
@@ -246,24 +246,24 @@ struct cce_condition_t {
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init (cce_condition_t * C, const cce_descriptor_t * D)
-  __attribute__((leaf,nonnull(1,2)));
+  __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_condition_final (cce_condition_t * C)
-  __attribute__((leaf,nonnull(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl void cce_condition_delete (cce_condition_t * C)
-  __attribute__((leaf,nonnull(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl bool cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * D)
-  __attribute__((leaf,nonnull(1,2)));
+  __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl const char * cce_condition_static_message (cce_condition_t * C)
-  __attribute__((leaf,nonnull(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl bool cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_descriptor_t * ancestor)
-  __attribute__((leaf,nonnull(1,2)));
+  __attribute__((__leaf__,__nonnull__(1,2)));
 
 
 /** --------------------------------------------------------------------
@@ -279,10 +279,10 @@ struct cce_condition_root_t {
 };
 
 cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
-  __attribute__((nonnull(1)));
+  __attribute__((__nonnull__(1)));
 
 cce_decl bool cce_condition_is_root (const cce_condition_t * C)
-  __attribute__((pure,nonnull(1)));
+  __attribute__((__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -300,14 +300,14 @@ struct cce_condition_unknown_t {
 cce_decl const cce_descriptor_unknown_t * const	cce_descriptor_unknown_ptr;
 cce_decl const cce_condition_unknown_t  * const	cce_condition_unknown_ptr;
 
-__attribute__((const,always_inline))
+__attribute__((__always_inline__,__const__))
 static inline const cce_condition_t *
 cce_condition_new_unknown (void)
 {
   return (const cce_condition_t *) cce_condition_unknown_ptr;
 }
 
-__attribute__((pure,nonnull(1),always_inline))
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_unknown (const cce_condition_t * C)
 {
@@ -341,14 +341,14 @@ struct cce_condition_unimplemented_t {
 cce_decl const cce_descriptor_unimplemented_t * const	cce_descriptor_unimplemented_ptr;
 cce_decl const cce_condition_unimplemented_t  * const	cce_condition_unimplemented_ptr;
 
-__attribute__((const,always_inline))
+__attribute__((__const__,__always_inline__))
 static inline const cce_condition_t *
 cce_condition_new_unimplemented (void)
 {
   return (const cce_condition_t *) cce_condition_unimplemented_ptr;
 }
 
-__attribute__((pure,nonnull(1),always_inline)) static inline bool
+__attribute__((__pure__,__nonnull__(1),__always_inline__)) static inline bool
 cce_condition_is_unimplemented (const cce_condition_t * C)
 {
   return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->descriptor));
@@ -386,9 +386,9 @@ struct cce_condition_invalid_argument_t {
 cce_decl const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr;
 
 cce_decl cce_condition_t * cce_condition_new_invalid_argument (cce_location_t * L, const char * func, unsigned index)
-  __attribute__((nonnull(1,2),returns_nonnull));
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-__attribute__((pure,nonnull(1),always_inline))
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_invalid_argument (const cce_condition_t * C)
 {
@@ -424,9 +424,9 @@ struct cce_condition_errno_t {
 cce_decl const cce_descriptor_errno_t * const cce_descriptor_errno_ptr;
 
 cce_decl const cce_condition_t * cce_condition_new_errno (int code)
-  __attribute__((leaf,returns_nonnull));
+  __attribute__((__leaf__,__returns_nonnull__));
 
-__attribute__((returns_nonnull,always_inline))
+__attribute__((__returns_nonnull__,__always_inline__))
 static inline const cce_condition_t *
 cce_condition_new_errno_clear (void)
 {
@@ -435,7 +435,7 @@ cce_condition_new_errno_clear (void)
   return cce_condition_new_errno(errnum);
 }
 
-__attribute__((nonnull(1),always_inline)) static inline bool
+__attribute__((__nonnull__(1),__always_inline__)) static inline bool
 cce_condition_is_errno (const cce_condition_t * C)
 {
   return cce_is_condition(C, &(cce_descriptor_errno_ptr->descriptor));
@@ -465,23 +465,23 @@ struct cce_location_t {
 };
 
 cce_decl void cce_location_init	(cce_location_t * here)
-  __attribute__((leaf,nonnull(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 #define cce_location(HERE)						\
   __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
 
 cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * C)
-  __attribute__((noreturn,nonnull(1)));
+  __attribute__((__noreturn__,__nonnull__(1)));
 
 cce_decl void cce_retry (cce_location_t * L)
-  __attribute__((noreturn,nonnull(1)));
+  __attribute__((__noreturn__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
  ** Post definitions.
  ** ----------------------------------------------------------------- */
 
-__attribute__((nonnull(1),always_inline))
+__attribute__((__nonnull__(1),__always_inline__))
 static inline void
 cce_run_error_handlers_final (cce_location_t * L)
 {
@@ -489,7 +489,7 @@ cce_run_error_handlers_final (cce_location_t * L)
   cce_condition_delete((cce_condition_t *)(L->condition));
 }
 
-__attribute__((nonnull(1),always_inline))
+__attribute__((__nonnull__(1),__always_inline__))
 static inline void
 cce_run_cleanup_handlers_final (cce_location_t * L)
 {
@@ -499,7 +499,7 @@ cce_run_cleanup_handlers_final (cce_location_t * L)
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((nonnull(1,2),always_inline))
+__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
 static inline void
 cce_run_error_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
 {
@@ -507,7 +507,7 @@ cce_run_error_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
   cce_raise(upper_L, L->condition);
 }
 
-__attribute__((nonnull(1,2),always_inline))
+__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
 static inline void
 cce_run_cleanup_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
 {
@@ -521,13 +521,13 @@ cce_run_cleanup_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
  ** ----------------------------------------------------------------- */
 
 cce_decl void * cce_sys_malloc (cce_location_t * L, size_t size)
-  __attribute__((nonnull(1),returns_nonnull));
+  __attribute__((__nonnull__(1),__returns_nonnull__));
 
 cce_decl void * cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
-  __attribute__((nonnull(1),returns_nonnull));
+  __attribute__((__nonnull__(1),__returns_nonnull__));
 
 cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
-  __attribute__((nonnull(1),returns_nonnull));
+  __attribute__((__nonnull__(1),__returns_nonnull__));
 
 
 /** --------------------------------------------------------------------
@@ -535,10 +535,10 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
  ** ----------------------------------------------------------------- */
 
 cce_decl void cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
-  __attribute__((nonnull(1,2,3)));
+  __attribute__((__nonnull__(1,2,3)));
 
 cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
-  __attribute__((nonnull(1,2,3)));
+  __attribute__((__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------

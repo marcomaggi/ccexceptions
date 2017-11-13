@@ -30,6 +30,11 @@ the documentation is available online:
 	  <http://marcomaggi.github.io/docs/ccexceptions.html>
 
 
+Notes for revision 0.6.0-devel.1
+--------------------------------
+
+* Review of function attributes in the public header file.
+
 Notes for revision 0.6.0-devel.0
 --------------------------------
 
