@@ -190,7 +190,7 @@ static char const *	cce_condition_invalid_argument_static_message (cce_condition
 
 static cce_descriptor_invalid_argument_t const cce_descriptor_invalid_argument_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
-  .descriptor.delete	= cce_condition_invalid_argument_destructor,
+  .descriptor.delete		= cce_condition_invalid_argument_destructor,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_invalid_argument_static_message
 };
@@ -233,7 +233,7 @@ cce_condition_errno_static_message_fun (cce_condition_t const * C)
    It is a child of the root descriptor. */
 cce_descriptor_errno_t const cce_descriptor_errno_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
-  .descriptor.delete	= NULL,
+  .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_errno_static_message_fun
 };
