@@ -1302,7 +1302,7 @@ Type of structures holding a table of function pointers to handle exceptional co
 has the following fields:
 
 @table @code
-@item const cce_descriptor_t * parent
+@item cce_descriptor_t const * parent
 Pointer to the condition descriptor that is parent of this one in the tree hierarchy.  This pointer
 is set to @cnull{} only for the root condition descriptor, @xref{conditions root, Predefined root
 condition descriptor}.
@@ -1323,7 +1323,7 @@ condition.
 @end deftp
 
 
-@deftypefun bool cce_descriptor_child_and_ancestor (const cce_descriptor_t * @var{child}, const cce_descriptor_t * @var{ancestor})
+@deftypefun bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * @var{child}, cce_descriptor_t const * @var{ancestor})
 Establish if two condition descriptors are child and ancestor.  Return @true{} if @var{child} is
 equal to @var{ancestor} or @var{ancestor} is in the hierarchy of @var{child}'s ancestors; otherwise
 return @false{}.
@@ -1359,13 +1359,13 @@ All the following definitions are accessible from the header file @file{ccexcept
 Type of structure representing an exceptional condition object.  It has the following public fields:
 
 @table @code
-@item const cce_descriptor_t * condition
+@item cce_descriptor_t const * condition
 Pointer to the condition descriptor associated to this condition object.
 @end table
 @end deftp
 
 
-@deftypefun void cce_condition_init (cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefun void cce_condition_init (cce_condition_t * @var{C}, cce_descriptor_t const * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
 pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
 This function is usually called from a type--specific constructor function.
@@ -1394,7 +1394,7 @@ table.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, cce_descriptor_t const * @var{D})
 Establish if a condition object is of a selected type.  Return @true{} if @var{C} is an instance of
 type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @false{}.
 @end deftypefun

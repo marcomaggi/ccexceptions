@@ -235,19 +235,19 @@ typedef char const * cce_condition_static_message_fun_t	(cce_condition_t const *
   __attribute__((__nonnull__(1)));
 
 struct cce_descriptor_t {
-  const cce_descriptor_t *		parent;
+  cce_descriptor_t const *		parent;
   cce_condition_delete_fun_t *		delete;
   cce_condition_final_fun_t *		final;
   cce_condition_static_message_fun_t *	static_message;
 };
 
 struct cce_condition_t {
-  const cce_descriptor_t *		descriptor;
+  cce_descriptor_t const *		descriptor;
 };
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init (cce_condition_t * C, const cce_descriptor_t * D)
+cce_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_condition_final (cce_condition_t * C)
@@ -256,7 +256,7 @@ cce_decl void cce_condition_final (cce_condition_t * C)
 cce_decl void cce_condition_delete (cce_condition_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl bool cce_is_condition (cce_condition_t const * C, const cce_descriptor_t * D)
+cce_decl bool cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl char const * cce_condition_static_message (cce_condition_t * C)
@@ -264,7 +264,7 @@ cce_decl char const * cce_condition_static_message (cce_condition_t * C)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl bool cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_descriptor_t * ancestor)
+cce_decl bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 
@@ -574,14 +574,14 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_descriptor_invalid_argument_t		*: CCE_C001(S), \
 	   cce_descriptor_errno_t			*: CCE_C001(S), \
 									\
-	   const cce_descriptor_t			*: CCE_C001(S), \
+	   cce_descriptor_t const			*: CCE_C001(S), \
 	   const cce_descriptor_root_t			*: CCE_C001(S), \
 	   const cce_descriptor_unknown_t		*: CCE_C001(S), \
 	   const cce_descriptor_unimplemented_t		*: CCE_C001(S), \
 	   const cce_descriptor_invalid_argument_t	*: CCE_C001(S), \
 	   const cce_descriptor_errno_t			*: CCE_C001(S), \
 									\
-	   const cce_descriptor_t			* const: CCE_C001(S), \
+	   cce_descriptor_t const			* const: CCE_C001(S), \
 	   const cce_descriptor_root_t			* const: CCE_C001(S), \
 	   const cce_descriptor_unknown_t		* const: CCE_C001(S), \
 	   const cce_descriptor_unimplemented_t		* const: CCE_C001(S), \

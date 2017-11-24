@@ -49,13 +49,13 @@ static cce_descriptor_t alpha_D = {
   .static_message	= default_static_message
 };
 
-static const cce_descriptor_t beta_D = {
+static cce_descriptor_t const beta_D = {
   .parent		= &alpha_D,
   .final		= NULL,
   .static_message	= default_static_message
 };
 
-static const cce_descriptor_t gamma_D = {
+static cce_descriptor_t const gamma_D = {
   .parent		= &beta_D,
   .final		= NULL,
   .static_message	= default_static_message
@@ -154,7 +154,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 
     if (cce_location(L)) {
       cce_condition_t *	C  = cce_condition(L);
-      const cce_descriptor_t *	CD = cce_descriptor(C);
+      cce_descriptor_t const *	CD = cce_descriptor(C);
 
       if (cce_descriptor_child_and_ancestor(CD, cce_descriptor(cce_descriptor_unknown_ptr)))
 	{

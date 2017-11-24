@@ -36,15 +36,15 @@
  ** ----------------------------------------------------------------- */
 
 void
-cce_condition_init (cce_condition_t * C, const cce_descriptor_t * D)
+cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
 {
   C->descriptor = D;
 }
 void
 cce_condition_final (cce_condition_t * C)
 {
-  const cce_descriptor_t * D = C->descriptor;
-  for (const cce_descriptor_t * iter = D; iter; iter = iter->parent) {
+  cce_descriptor_t const * D = C->descriptor;
+  for (cce_descriptor_t const * iter = D; iter; iter = iter->parent) {
     if (iter->final) {
       iter->final(C);
     }
@@ -67,12 +67,12 @@ cce_condition_static_message (cce_condition_t * C)
   return C->descriptor->static_message(C);
 }
 bool
-cce_is_condition (cce_condition_t const * C, const cce_descriptor_t * descriptor)
+cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * descriptor)
 {
   return cce_descriptor_child_and_ancestor(C->descriptor, descriptor);
 }
 bool
-cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_descriptor_t * ancestor)
+cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
 {
   for (; child; child = child->parent) {
     if (child == ancestor) {
