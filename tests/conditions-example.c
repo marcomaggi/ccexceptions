@@ -50,11 +50,11 @@ typedef struct condition_alpha_t {
 
 cce_condition_t * condition_new_alpha (cce_location_t * L, int alpha);
 void condition_init_alpha (condition_alpha_t * C, int alpha);
-bool condition_is_alpha (const cce_condition_t * condition);
+bool condition_is_alpha (cce_condition_t const * condition);
 
 static void condition_delete_alpha (cce_condition_t * C);
 static void condition_final_alpha (cce_condition_t * C);
-static const char * condition_static_message_alpha (const cce_condition_t * C);
+static char const * condition_static_message_alpha (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -98,14 +98,14 @@ condition_final_alpha (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 }
 
-static const char *
-condition_static_message_alpha (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_alpha (cce_condition_t const * C CCE_UNUSED)
 {
   return "exceptional condition A";
 }
 
 bool
-condition_is_alpha (const cce_condition_t * condition)
+condition_is_alpha (cce_condition_t const * condition)
 {
   return cce_is_condition(condition, &descriptor_alpha.descriptor);
 }
@@ -116,7 +116,7 @@ condition_is_alpha (const cce_condition_t * condition)
 	   condition_alpha_t		*: (condition_alpha_t *)(S),	\
 	   condition_beta_t		*: (condition_alpha_t *)(S),	\
 	   condition_gamma_t		*: (condition_alpha_t *)(S),	\
-	   const cce_condition_t	*: (condition_alpha_t *)(S),	\
+	   cce_condition_t const	*: (condition_alpha_t *)(S),	\
 	   const condition_alpha_t	*: (condition_alpha_t *)(S),	\
 	   const condition_beta_t	*: (condition_alpha_t *)(S),	\
 	   const condition_gamma_t	*: (condition_alpha_t *)(S))
@@ -137,11 +137,11 @@ typedef struct condition_beta_t {
 
 cce_condition_t * condition_new_beta (cce_location_t * L, int alpha, int beta);
 void condition_init_beta (condition_beta_t * C, int alpha, int beta);
-bool condition_is_beta (const cce_condition_t * condition);
+bool condition_is_beta (cce_condition_t const * condition);
 
 static void condition_delete_beta  (cce_condition_t * C);
 static void condition_final_beta (cce_condition_t * C);
-static const char * condition_static_message_beta (const cce_condition_t * C);
+static char const * condition_static_message_beta (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -186,14 +186,14 @@ condition_final_beta (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 }
 
-static const char *
-condition_static_message_beta (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_beta (cce_condition_t const * C CCE_UNUSED)
 {
   return "exceptional condition A";
 }
 
 bool
-condition_is_beta (const cce_condition_t * condition)
+condition_is_beta (cce_condition_t const * condition)
 {
   return cce_is_condition(condition, &descriptor_beta.descriptor);
 }
@@ -204,7 +204,7 @@ condition_is_beta (const cce_condition_t * condition)
 	   condition_alpha_t		*: (condition_beta_t *)(S),	\
 	   condition_beta_t		*: (condition_beta_t *)(S),	\
 	   condition_gamma_t		*: (condition_beta_t *)(S),	\
-	   const cce_condition_t	*: (condition_beta_t *)(S),	\
+	   cce_condition_t const	*: (condition_beta_t *)(S),	\
 	   const condition_alpha_t	*: (condition_beta_t *)(S),	\
 	   const condition_beta_t	*: (condition_beta_t *)(S),	\
 	   const condition_gamma_t	*: (condition_beta_t *)(S))
@@ -225,11 +225,11 @@ typedef struct condition_gamma_t {
 
 cce_condition_t * condition_new_gamma (cce_location_t * L, int alpha, int beta, int gamma);
 void condition_init_gamma (condition_gamma_t * C, int alpha, int beta, int gamma);
-bool condition_is_gamma (const cce_condition_t * condition);
+bool condition_is_gamma (cce_condition_t const * condition);
 
 static void condition_delete_gamma  (cce_condition_t * C);
 static void condition_final_gamma (cce_condition_t * C);
-static const char * condition_static_message_gamma (const cce_condition_t * C);
+static char const * condition_static_message_gamma (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -274,14 +274,14 @@ condition_final_gamma (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 }
 
-static const char *
-condition_static_message_gamma (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_gamma (cce_condition_t const * C CCE_UNUSED)
 {
   return "exceptional condition A";
 }
 
 bool
-condition_is_gamma (const cce_condition_t * condition)
+condition_is_gamma (cce_condition_t const * condition)
 {
   return cce_is_condition(condition, &descriptor_gamma.descriptor);
 }
@@ -292,14 +292,14 @@ condition_is_gamma (const cce_condition_t * condition)
 	   condition_alpha_t		*: (condition_gamma_t *)(S),	\
 	   condition_beta_t		*: (condition_gamma_t *)(S),	\
 	   condition_gamma_t		*: (condition_gamma_t *)(S),	\
-	   const cce_condition_t	*: (condition_gamma_t *)(S),	\
+	   cce_condition_t const	*: (condition_gamma_t *)(S),	\
 	   const condition_alpha_t	*: (condition_gamma_t *)(S),	\
 	   const condition_beta_t	*: (condition_gamma_t *)(S),	\
 	   const condition_gamma_t	*: (condition_gamma_t *)(S))
 
 
 static void
-test_it (const cce_condition_t * C, const int expected_flag)
+test_it (cce_condition_t const * C, const int expected_flag)
 {
   cce_location_t	L[1];
   int			flag;

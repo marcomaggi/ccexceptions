@@ -84,7 +84,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
 
 __attribute__((nonnull(1,2)))
 static void
-cce_handler_malloc_function (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   free(H->pointer);
   if (0) { fprintf(stderr, "%s: done\n", __func__); }

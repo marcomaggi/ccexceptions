@@ -44,14 +44,14 @@ typedef struct test_no_exception_handler2_t {
 } test_no_exception_handler2_t;
 
 static void
-test_no_exception_handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_no_exception_handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_no_exception_handler1_t *	data = (test_no_exception_handler1_t *)_data;
   *(data->flagp) = true;
 }
 
 static void
-test_no_exception_handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_no_exception_handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_no_exception_handler2_t *	data = (test_no_exception_handler2_t *)_data;
   *(data->flagp) = true;
@@ -93,14 +93,14 @@ typedef struct test_with_error_handler2_t {
 } test_with_error_handler2_t;
 
 static void
-test_with_error_handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_with_error_handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_with_error_handler1_t *	data = (test_with_error_handler1_t *)_data;
   *(data->flagp) = true;
 }
 
 static void
-test_with_error_handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_with_error_handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_with_error_handler2_t *	data = (test_with_error_handler2_t *)_data;
   *(data->flagp) = true;
@@ -145,14 +145,14 @@ typedef struct test_with_retry_handler2_t {
 } test_with_retry_handler2_t;
 
 static void
-test_with_retry_handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_with_retry_handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_with_retry_handler1_t *	data = (test_with_retry_handler1_t *)_data;
   *(data->flagp) = true;
 }
 
 static void
-test_with_retry_handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _data)
+test_with_retry_handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 {
   test_with_retry_handler2_t *	data = (test_with_retry_handler2_t *)_data;
   *(data->flagp) = true;
@@ -195,7 +195,7 @@ typedef struct test_dynamically_allocated_handler_t {
 } test_dynamically_allocated_handler_t;
 
 static void
-test_dynamically_allocated_cleanup_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+test_dynamically_allocated_cleanup_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_dynamically_allocated_handler_t * H = (test_dynamically_allocated_handler_t *) _H;
   free(H->handler.pointer);
@@ -249,7 +249,7 @@ test_dynamically_allocated_handlers (void)
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   if (1) test_no_exception();
   if (1) test_with_error();

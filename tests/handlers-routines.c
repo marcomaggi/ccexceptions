@@ -34,19 +34,19 @@
 
 
 static void
-handler1 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   bool *	flagp = H->pointer;
   *flagp = true;
 }
 static void
-handler2 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   bool *	flagp = H->pointer;
   *flagp = true;
 }
 static void
-handler3 (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+handler3 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   bool *	flagp = H->pointer;
   *flagp = true;
@@ -106,7 +106,7 @@ typedef struct test_amse_t {
   bool *	flagp;
 } test_amse_t;
 static void
-test_amse_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+test_amse_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_amse_t *	H = (test_amse_t *)_H;
   void *	P = H->handler.pointer;
@@ -150,7 +150,7 @@ typedef struct test_amee_t {
   bool *	flagp;
 } test_amee_t;
 static void
-test_amee_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+test_amee_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_amee_t *	H = (test_amee_t *)_H;
   void *	P = H->handler.pointer;
@@ -193,7 +193,7 @@ test_allocating_memory_exceptional_execution (void)
 
 
 static void
-test_csse_constructor_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+test_csse_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   void **	PP = H->pointer;
   void *	P  = *PP;
@@ -236,7 +236,7 @@ typedef struct test_csse_t {
 } test_csse_t;
 
 static void
-test_csse_caller_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+test_csse_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_csse_t *	H  = (test_csse_t *)_H;
   void **	PP = H->handler.pointer;
@@ -280,7 +280,7 @@ test_constructor_scheme_success_execution (void)
 
 
 static void
-test_csee_constructor_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * H)
+test_csee_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   void **	PP = H->pointer;
   void *	P  = *PP;
@@ -323,7 +323,7 @@ typedef struct test_csee_t {
 } test_csee_t;
 
 static void
-test_csee_caller_handler (const cce_condition_t * C CCE_UNUSED, cce_handler_t * _H)
+test_csee_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_csee_t *	H  = (test_csee_t *)_H;
   void **	PP = H->handler.pointer;
@@ -363,7 +363,7 @@ test_constructor_scheme_exceptional_execution (void)
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   test_just_run_cleanup_handlers();
   test_just_run_error_handlers();

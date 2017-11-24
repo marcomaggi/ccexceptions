@@ -17,7 +17,7 @@
 #include <stdlib.h>
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   printf("version number string: %s\n", cce_version_string());
   printf("libtool version number: %d:%d:%d\n",

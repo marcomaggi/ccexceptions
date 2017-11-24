@@ -56,7 +56,7 @@ func2 (jmp_buf bufferp)
 /* ------------------------------------------------------------------ */
 
 int
-main (int argc __attribute__((unused)), const char *const argv[] __attribute__((unused)))
+main (int argc __attribute__((unused)), char const *const argv[] __attribute__((unused)))
 {
   /* Simple cleanup. */
   {

@@ -36,7 +36,7 @@
 #include <string.h>
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   /* Raising a no-error error. */
   {

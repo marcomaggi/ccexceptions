@@ -174,7 +174,7 @@ test_with_retry (void)
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   test_no_exception();
   test_with_error();

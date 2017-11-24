@@ -61,13 +61,13 @@ cce_condition_delete (cce_condition_t * C)
     }
   }
 }
-const char *
+char const *
 cce_condition_static_message (cce_condition_t * C)
 {
   return C->descriptor->static_message(C);
 }
 bool
-cce_is_condition (const cce_condition_t * C, const cce_descriptor_t * descriptor)
+cce_is_condition (cce_condition_t const * C, const cce_descriptor_t * descriptor)
 {
   return cce_descriptor_child_and_ancestor(C->descriptor, descriptor);
 }
@@ -87,8 +87,8 @@ cce_descriptor_child_and_ancestor (const cce_descriptor_t * child, const cce_des
  ** Root condition.
  ** ----------------------------------------------------------------- */
 
-static const char *
-cce_condition_root_static_message_fun (const cce_condition_t * C CCE_UNUSED)
+static char const *
+cce_condition_root_static_message_fun (cce_condition_t const * C CCE_UNUSED)
 {
   return "Root exceptional condition";
 }
@@ -109,7 +109,7 @@ cce_descriptor_set_root_parent (cce_descriptor_t * D)
 }
 
 bool
-cce_condition_is_root (const cce_condition_t * C)
+cce_condition_is_root (cce_condition_t const * C)
 {
   return cce_is_condition(C, &(cce_descriptor_root_stru.descriptor));
 }
@@ -119,8 +119,8 @@ cce_condition_is_root (const cce_condition_t * C)
  ** Unknown condition.
  ** ----------------------------------------------------------------- */
 
-static const char *
-cce_condition_unknown_static_message_fun (const cce_condition_t * C CCE_UNUSED)
+static char const *
+cce_condition_unknown_static_message_fun (cce_condition_t const * C CCE_UNUSED)
 {
   return "Unknown exceptional condition";
 }
@@ -150,8 +150,8 @@ const cce_condition_unknown_t * const cce_condition_unknown_ptr = &cce_condition
  ** Unimplemented condition.
  ** ----------------------------------------------------------------- */
 
-static const char *
-cce_condition_unimplemented_static_message_fun (const cce_condition_t * C CCE_UNUSED)
+static char const *
+cce_condition_unimplemented_static_message_fun (cce_condition_t const * C CCE_UNUSED)
 {
   return "Unimplemented exceptional condition";
 }
@@ -186,7 +186,7 @@ const cce_condition_unimplemented_t * const cce_condition_unimplemented_ptr = &c
  ** ----------------------------------------------------------------- */
 
 static void		cce_condition_invalid_argument_destructor     (cce_condition_t * C);
-static const char *	cce_condition_invalid_argument_static_message (const cce_condition_t * C);
+static char const *	cce_condition_invalid_argument_static_message (cce_condition_t const * C);
 
 static const cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
@@ -198,7 +198,7 @@ static const cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_s
 const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr = &cce_descriptor_invalid_argument_stru;
 
 cce_condition_t *
-cce_condition_new_invalid_argument (cce_location_t * L, const char * func, unsigned index)
+cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
   C->root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
@@ -211,8 +211,8 @@ cce_condition_invalid_argument_destructor (cce_condition_t * C CCE_UNUSED)
 {
   free(C);
 }
-const char *
-cce_condition_invalid_argument_static_message (const cce_condition_t * C CCE_UNUSED)
+char const *
+cce_condition_invalid_argument_static_message (cce_condition_t const * C CCE_UNUSED)
 {
   return "invalid function argument";
 }
@@ -222,8 +222,8 @@ cce_condition_invalid_argument_static_message (const cce_condition_t * C CCE_UNU
  ** Errno condition.
  ** ----------------------------------------------------------------- */
 
-static const char *
-cce_condition_errno_static_message_fun (const cce_condition_t * C)
+static char const *
+cce_condition_errno_static_message_fun (cce_condition_t const * C)
 {
   const cce_condition_errno_t *	EC = (const cce_condition_errno_t *)C;
   return EC->message;
@@ -404,7 +404,7 @@ errno_conditions[ERRNO_CONDITIONS_NUM] = {
   /* 148 */ CCE_DECLARE_ERRNO_CONDITION(INT_MAX,		"Unknown errno code")
 };
 
-const cce_condition_t *
+cce_condition_t const *
 cce_condition_new_errno (int errnum)
 {
   for (int i = 0; i < ERRNO_CONDITIONS_NUM; ++i) {

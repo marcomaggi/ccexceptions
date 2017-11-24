@@ -244,7 +244,7 @@ The installed libraries follow version numbering as established by the
 system, libtool, Shared library support for @gnu{}}.
 
 
-@deftypefun {const char *} cce_version_string (void)
+@deftypefun {char const *} cce_version_string (void)
 Return a pointer to a statically allocated @asciiz{} string representing
 the interface version number.
 @end deftypefun
@@ -587,7 +587,7 @@ Constant used by the library as non--local exit code.  It is the return value of
 @end deftypevr
 
 
-@deftypefun void cce_raise (cce_location_t * @var{L}, const cce_condition_t * @var{C})
+@deftypefun void cce_raise (cce_location_t * @var{L}, cce_condition_t const * @var{C})
 Raise an exception associated to the location @var{L}, with exceptional condition object @var{C}.
 This function performs the call to @cfunc{siglongjmp} with code @code{CCE_EXCEPT}.
 
@@ -784,7 +784,7 @@ Integers meant to be used for pipe descriptors.
 @end deftp
 
 
-@deftypefn {Function Typedef} void cce_handler_fun_t (const cce_condition_t * @var{C}, cce_handler_t * @var{H})
+@deftypefn {Function Typedef} void cce_handler_fun_t (cce_condition_t const * @var{C}, cce_handler_t * @var{H})
 Type of handler functions meant to release some asynchronous resource.  The argument @var{C}
 references the object representing the exceptional condition; the handler must leave it untouched,
 it must @strong{not} mutate or release it.  The argument @var{H} references the handler context.
@@ -891,13 +891,13 @@ cce_raise(upper_L, cce_condition(L));
 We could define and call a list of cleanup handlers as follows:
 
 @example
-void handler1 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler1 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_cleanup();
 @}
-void handler2 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler2 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_cleanup();
 @}
-void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_cleanup();
 @}
 
@@ -919,13 +919,13 @@ void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
 and we could define and call a list of error handlers as follows:
 
 @example
-void handler1 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler1 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_error_handling();
 @}
-void handler2 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler2 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_error_handling();
 @}
-void handler3 (const cce_condition_t * C, cce_handler_t * H) @{
+void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
   do_some_error_handling();
 @}
 
@@ -955,7 +955,7 @@ typedef struct handler_t @{
 @} handler_t;
 
 static void
-P_handler (const cce_condition_t * C, cce_handler_t * _H)
+P_handler (cce_condition_t const * C, cce_handler_t * _H)
 @{
   handler_t * H = (handler_t *)_H;
   free(H->pointer);
@@ -1000,7 +1000,7 @@ typedef struct handler_t @{
 @} handler_t;
 
 static void
-P_handler (const cce_condition_t * C, cce_handler_t * _H)
+P_handler (cce_condition_t const * C, cce_handler_t * _H)
 @{
   handler_t * H = (handler_t *)_H;
   free(H->pointer);
@@ -1280,7 +1280,7 @@ my_condition_delete_stuff (my_condition_stuff_t * C)
 @end deftypefn
 
 
-@deftypefn {Function Prototype} {const char *} cce_condition_static_message_fun_t (const cce_condition_t * @var{C})
+@deftypefn {Function Prototype} {char const *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
 Return a statically allocated @asciiz{} string describing the exceptional condition @var{C}.  A
 static message must always be defined; another client--defined function can build a dynamic and more
 descriptive message.
@@ -1288,7 +1288,7 @@ descriptive message.
 For example, an instance of this function can be:
 
 @example
-const char *
+char const *
 my_condition_static_message_stuff (const my_condition_stuff_t * C)
 @{
   return "error doing stuff";
@@ -1388,13 +1388,13 @@ referenced by the descriptor's functions table.
 @end deftypefun
 
 
-@deftypefun {const char *} cce_condition_static_message (const cce_condition_t * @var{C})
+@deftypefun {char const *} cce_condition_static_message (cce_condition_t const * @var{C})
 Apply to @var{C} the @code{static_message} function referenced by its descriptor's functions
 table.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition (const cce_condition_t * @var{C}, const cce_descriptor_t * @var{D})
+@deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, const cce_descriptor_t * @var{D})
 Establish if a condition object is of a selected type.  Return @true{} if @var{C} is an instance of
 type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @false{}.
 @end deftypefun
@@ -1541,7 +1541,7 @@ Configure the descriptor @var{D} so that its parent is the unique @emph{root} co
 @end deftypefun
 
 
-@deftypefun bool cce_condition_is_root (const cce_condition_t * @var{C})
+@deftypefun bool cce_condition_is_root (cce_condition_t const * @var{C})
 Return @true{} if the condition object @var{C} is derived from the @emph{root} condition type;
 otherwise return @false{}.  With a correctly built conditions hierarchy: this function always
 returns @true{}.
@@ -1558,8 +1558,8 @@ struct my_descr_error_t @{
   cce_descriptor_t     descriptor;
 @};
 
-static const char *
-my_error_static_message (const cce_condition_t * C CCE_UNUSED)
+static char const *
+my_error_static_message (cce_condition_t const * C CCE_UNUSED)
 @{
   return "my error message";
 @}
@@ -1615,13 +1615,13 @@ Structure type representing an @emph{unknown} condition object.
 @end deftp
 
 
-@deftypefun {const cce_condition_t *} cce_condition_new_unknown (void)
+@deftypefun {cce_condition_t const *} cce_condition_new_unknown (void)
 Return a pointer to the statically allocated structure representing the single @emph{unknown}
 condition object.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_unknown (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_condition_is_unknown (cce_condition_t const * @var{C})
 Return @true{} if @var{C} is an @emph{unknown} condition object; otherwise return @false{}.
 @end deftypefn
 
@@ -1629,7 +1629,7 @@ Return @true{} if @var{C} is an @emph{unknown} condition object; otherwise retur
 @deftypefn {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_location_t * @var{L})
 @deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_t const * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (const cce_condition_unknown_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_unknown_t}.
@@ -1678,20 +1678,20 @@ Structure type representing an @emph{unimplemented} condition object.
 @end deftp
 
 
-@deftypefun {const cce_condition_t *} cce_condition_new_unimplemented (void)
+@deftypefun {cce_condition_t const *} cce_condition_new_unimplemented (void)
 Return a pointer to the statically allocated structure representing the single @emph{unimplemented}
 condition object.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_unimplemented (const cce_condition_t * @var{C})
+@deftypefun bool cce_is_condition_unimplemented (cce_condition_t const * @var{C})
 Return @true{} if @var{C} is an @emph{unimplemented} condition object; otherwise return @false{}.
 @end deftypefun
 
 
 @deftypefn {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_location_t * @var{L})
 @deftypefnx {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
 @objtype{cce_condition_unimplemented_t}.
 
@@ -1754,7 +1754,7 @@ Structure type representing the descriptor of the condition objects.  This descr
 Structure type representing the condition object.  It has the following public fields:
 
 @table @code
-@item const char * funcname
+@item char const * funcname
 Pointer to a statically allocated @asciiz{} string representing the name of the function that raised
 the exception.  It is usually generated with @code{__func__}.
 
@@ -1764,13 +1764,13 @@ One--based index of the offending argument.
 @end deftp
 
 
-@deftypefun {cce_condition_invalid_argument_t *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, const char * @var{func}, unsigned @var{index})
+@deftypefun {cce_condition_invalid_argument_t *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, char const * @var{func}, unsigned @var{index})
 Build and return a new condition object.  If building the object fails: raise an exception to the
 location @var{L}.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_invalid_argument (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
 Return @true{} if @var{C} is a condition object of the specified type; otherwise return @false{}.
 @end deftypefn
 
@@ -1778,7 +1778,7 @@ Return @true{} if @var{C} is a condition object of the specified type; otherwise
 @deftypefn {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_location_t * @var{L})
 @deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_t const * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (const cce_condition_invalid_argument_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_invalid_argument_t}.
@@ -1818,7 +1818,7 @@ function by setting @code{errno} to a non--zero value.  It has the following pub
 @item int errnum
 The value of @code{errno}.
 
-@item const char * message
+@item char const * message
 A statically allocated string describing the error.
 @end table
 @end deftp
@@ -1840,7 +1840,7 @@ Consume the current value of @code{errno} and return the return value of
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_errno (const cce_condition_t * @var{C})
+@deftypefn {Inline Function} bool cce_condition_is_errno (cce_condition_t const * @var{C})
 Return @true{} if @var{C} is a condition object of type @emph{errno}; otherwise return @false{}.
 @end deftypefn
 
@@ -1848,7 +1848,7 @@ Return @true{} if @var{C} is a condition object of type @emph{errno}; otherwise 
 @deftypefn {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_location_t * @var{L})
 @deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_errno_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (const cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_t const * @var{C})
 @deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (const cce_condition_errno_t * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_errno_t}.
@@ -1903,11 +1903,11 @@ typedef struct condition_alpha_t @{
 
 cce_condition_t * condition_new_alpha (cce_location_t * L, int alpha);
 void condition_init_alpha (condition_alpha_t * C, int alpha);
-bool condition_is_alpha (const cce_condition_t * condition);
+bool condition_is_alpha (cce_condition_t const * condition);
 
 static void condition_delete_alpha (cce_condition_t * C);
 static void condition_final_alpha (cce_condition_t * C);
-static const char * condition_static_message_alpha (const cce_condition_t * C);
+static char const * condition_static_message_alpha (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -1951,14 +1951,14 @@ condition_final_alpha (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 @}
 
-static const char *
-condition_static_message_alpha (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_alpha (cce_condition_t const * C CCE_UNUSED)
 @{
   return "exceptional condition A";
 @}
 
 bool
-condition_is_alpha (const cce_condition_t * condition)
+condition_is_alpha (cce_condition_t const * condition)
 @{
   return cce_is_condition(condition, &descriptor_alpha.descriptor);
 @}
@@ -1969,7 +1969,7 @@ condition_is_alpha (const cce_condition_t * condition)
            condition_alpha_t            *: (condition_alpha_t *)(S),    \
            condition_beta_t             *: (condition_alpha_t *)(S),    \
            condition_gamma_t            *: (condition_alpha_t *)(S),    \
-           const cce_condition_t        *: (condition_alpha_t *)(S),    \
+           cce_condition_t const        *: (condition_alpha_t *)(S),    \
            const condition_alpha_t      *: (condition_alpha_t *)(S),    \
            const condition_beta_t       *: (condition_alpha_t *)(S),    \
            const condition_gamma_t      *: (condition_alpha_t *)(S))
@@ -1997,11 +1997,11 @@ typedef struct condition_beta_t @{
 
 cce_condition_t * condition_new_beta (cce_location_t * L, int alpha, int beta);
 void condition_init_beta (condition_beta_t * C, int alpha, int beta);
-bool condition_is_beta (const cce_condition_t * condition);
+bool condition_is_beta (cce_condition_t const * condition);
 
 static void condition_delete_beta  (cce_condition_t * C);
 static void condition_final_beta (cce_condition_t * C);
-static const char * condition_static_message_beta (const cce_condition_t * C);
+static char const * condition_static_message_beta (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -2046,14 +2046,14 @@ condition_final_beta (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 @}
 
-static const char *
-condition_static_message_beta (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_beta (cce_condition_t const * C CCE_UNUSED)
 @{
   return "exceptional condition A";
 @}
 
 bool
-condition_is_beta (const cce_condition_t * condition)
+condition_is_beta (cce_condition_t const * condition)
 @{
   return cce_is_condition(condition, &descriptor_beta.descriptor);
 @}
@@ -2064,7 +2064,7 @@ condition_is_beta (const cce_condition_t * condition)
            condition_alpha_t            *: (condition_beta_t *)(S),     \
            condition_beta_t             *: (condition_beta_t *)(S),     \
            condition_gamma_t            *: (condition_beta_t *)(S),     \
-           const cce_condition_t        *: (condition_beta_t *)(S),     \
+           cce_condition_t const        *: (condition_beta_t *)(S),     \
            const condition_alpha_t      *: (condition_beta_t *)(S),     \
            const condition_beta_t       *: (condition_beta_t *)(S),     \
            const condition_gamma_t      *: (condition_beta_t *)(S))
@@ -2086,11 +2086,11 @@ typedef struct condition_gamma_t @{
 
 cce_condition_t * condition_new_gamma (cce_location_t * L, int alpha, int beta, int gamma);
 void condition_init_gamma (condition_gamma_t * C, int alpha, int beta, int gamma);
-bool condition_is_gamma (const cce_condition_t * condition);
+bool condition_is_gamma (cce_condition_t const * condition);
 
 static void condition_delete_gamma  (cce_condition_t * C);
 static void condition_final_gamma (cce_condition_t * C);
-static const char * condition_static_message_gamma (const cce_condition_t * C);
+static char const * condition_static_message_gamma (cce_condition_t const * C);
 
 /* Instance of condition descriptor.   The "parent" field is initialised
    to  NULL   here  and  reinitialised   to  the  "root"  later   by  an
@@ -2135,14 +2135,14 @@ condition_final_gamma (cce_condition_t * C CCE_UNUSED)
   fprintf(stderr, "%s\n", __func__);
 @}
 
-static const char *
-condition_static_message_gamma (const cce_condition_t * C CCE_UNUSED)
+static char const *
+condition_static_message_gamma (cce_condition_t const * C CCE_UNUSED)
 @{
   return "exceptional condition A";
 @}
 
 bool
-condition_is_gamma (const cce_condition_t * condition)
+condition_is_gamma (cce_condition_t const * condition)
 @{
   return cce_is_condition(condition, &descriptor_gamma.descriptor);
 @}
@@ -2153,7 +2153,7 @@ condition_is_gamma (const cce_condition_t * condition)
            condition_alpha_t            *: (condition_gamma_t *)(S),    \
            condition_beta_t             *: (condition_gamma_t *)(S),    \
            condition_gamma_t            *: (condition_gamma_t *)(S),    \
-           const cce_condition_t        *: (condition_gamma_t *)(S),    \
+           cce_condition_t const        *: (condition_gamma_t *)(S),    \
            const condition_alpha_t      *: (condition_gamma_t *)(S),    \
            const condition_beta_t       *: (condition_gamma_t *)(S),    \
            const condition_gamma_t      *: (condition_gamma_t *)(S))

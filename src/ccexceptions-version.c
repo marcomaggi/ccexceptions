@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -32,7 +32,7 @@
 #include "ccexceptions-internals.h"
 
 
-const char *
+char const *
 cce_version_string (void)
 {
   return ccexceptions_VERSION_INTERFACE_STRING;

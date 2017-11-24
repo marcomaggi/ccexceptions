@@ -33,7 +33,7 @@
 #include <assert.h>
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   cce_location_t	L[1];
   bool			flag = false;

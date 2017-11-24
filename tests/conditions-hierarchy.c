@@ -34,8 +34,8 @@
 #include <errno.h>
 #include <string.h>
 
-static const char *
-default_static_message (const cce_condition_t * C CCE_UNUSED)
+static char const *
+default_static_message (cce_condition_t const * C CCE_UNUSED)
 {
   return "default message";
 }
@@ -63,21 +63,21 @@ static const cce_descriptor_t gamma_D = {
 
 /* ------------------------------------------------------------------ */
 
-static const cce_condition_t alpha_C = {
+static cce_condition_t const alpha_C = {
   .descriptor		= &alpha_D
 };
 
-static const cce_condition_t beta_C = {
+static cce_condition_t const beta_C = {
   .descriptor		= &beta_D
 };
 
-static const cce_condition_t gamma_C = {
+static cce_condition_t const gamma_C = {
   .descriptor		= &gamma_D
 };
 
 
 int
-main (int argc CCE_UNUSED, const char *const argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   /* Dynamic initialisation. */
   cce_descriptor_set_root_parent(&alpha_D);

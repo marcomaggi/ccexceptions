@@ -33,7 +33,7 @@
 #include <assert.h>
 
 int
-main (int argc CCE_UNUSED, const char *const CCE_UNUSED argv[] CCE_UNUSED)
+main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
 {
   /* "if" statement */
   {
