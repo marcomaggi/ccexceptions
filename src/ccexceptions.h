@@ -336,8 +336,10 @@ cce_condition_is_unknown (cce_condition_t const * C)
 	   cce_location_t[1]			 : (cce_condition_unknown_t const *)CCE_CLOC(S), \
 	   cce_condition_t			*: (cce_condition_unknown_t const *)(S), \
 	   cce_condition_unknown_t		*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_unknown_t const	*: (cce_condition_unknown_t const *)(S))
+	   cce_condition_t		const	*: (cce_condition_unknown_t const *)(S), \
+	   cce_condition_unknown_t	const	*: (cce_condition_unknown_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_unknown_t const *)(S), \
+	   cce_condition_unknown_t	const	* const: (cce_condition_unknown_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -377,8 +379,10 @@ cce_condition_is_break (cce_condition_t const * C)
 	   cce_location_t[1]			 : (cce_condition_break_t const *)CCE_CLOC(S), \
 	   cce_condition_t			*: (cce_condition_break_t const *)(S), \
 	   cce_condition_break_t		*: (cce_condition_break_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_break_t const *)(S), \
-	   cce_condition_break_t const		*: (cce_condition_break_t const *)(S))
+	   cce_condition_t		const	*: (cce_condition_break_t const *)(S), \
+	   cce_condition_break_t	const	*: (cce_condition_break_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_break_t const *)(S), \
+	   cce_condition_break_t	const	* const: (cce_condition_break_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -418,8 +422,10 @@ cce_condition_is_error (cce_condition_t const * C)
 	   cce_location_t[1]			 : (cce_condition_error_t const *)CCE_CLOC(S), \
 	   cce_condition_t			*: (cce_condition_error_t const *)(S), \
 	   cce_condition_error_t		*: (cce_condition_error_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_error_t const *)(S), \
-	   cce_condition_error_t const		*: (cce_condition_error_t const *)(S))
+	   cce_condition_t		const	*: (cce_condition_error_t const *)(S), \
+	   cce_condition_error_t	const	*: (cce_condition_error_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_error_t const *)(S), \
+	   cce_condition_error_t	const	* const: (cce_condition_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -455,12 +461,14 @@ cce_condition_is_runtime_error (cce_condition_t const * C)
 
 #define cce_condition_runtime_error(S)					\
   _Generic((S),								\
-	   cce_location_t			*: (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_runtime_error_t	*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_runtime_error_t const	*: (cce_condition_runtime_error_t const *)(S))
+	   cce_location_t				*: (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_runtime_error_t const *)(S), \
+	   cce_condition_runtime_error_t		*: (cce_condition_runtime_error_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_runtime_error_t const *)(S), \
+	   cce_condition_runtime_error_t	const	*: (cce_condition_runtime_error_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_runtime_error_t const *)(S), \
+	   cce_condition_runtime_error_t	const	* const: (cce_condition_runtime_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -500,8 +508,10 @@ cce_condition_is_logic_error (cce_condition_t const * C)
 	   cce_location_t[1]			 : (cce_condition_logic_error_t const *)CCE_CLOC(S), \
 	   cce_condition_t			*: (cce_condition_logic_error_t const *)(S), \
 	   cce_condition_logic_error_t		*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_logic_error_t const	*: (cce_condition_logic_error_t const *)(S))
+	   cce_condition_t		const	*: (cce_condition_logic_error_t const *)(S), \
+	   cce_condition_logic_error_t	const	*: (cce_condition_logic_error_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_logic_error_t const *)(S), \
+	   cce_condition_logic_error_t	const	* const: (cce_condition_logic_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -536,12 +546,14 @@ cce_condition_is_unimplemented (cce_condition_t const * C)
 
 #define cce_condition_unimplemented(S)					\
   _Generic((S),								\
-	   cce_location_t[1]			 : (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
-	   cce_location_t			*: (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_unimplemented_t	*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_unimplemented_t const	*: (cce_condition_unimplemented_t const *)(S))
+	   cce_location_t				*: (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_unimplemented_t const *)(S), \
+	   cce_condition_unimplemented_t		*: (cce_condition_unimplemented_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_unimplemented_t const *)(S), \
+	   cce_condition_unimplemented_t	const	*: (cce_condition_unimplemented_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_unimplemented_t const *)(S), \
+	   cce_condition_unimplemented_t	const	* const: (cce_condition_unimplemented_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -577,12 +589,14 @@ cce_condition_is_invalid_argument (cce_condition_t const * C)
 
 #define cce_condition_invalid_argument(S)				\
   _Generic((S),								\
-	   cce_location_t[1]			 : (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
-	   cce_location_t			*: (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_invalid_argument_t	*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_invalid_argument_t const *: (cce_condition_invalid_argument_t const *)(S))
+	   cce_location_t				*: (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_invalid_argument_t const *)(S), \
+	   cce_condition_invalid_argument_t		*: (cce_condition_invalid_argument_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_invalid_argument_t const *)(S), \
+	   cce_condition_invalid_argument_t	const	*: (cce_condition_invalid_argument_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_invalid_argument_t const *)(S), \
+	   cce_condition_invalid_argument_t	const	* const: (cce_condition_invalid_argument_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -623,12 +637,14 @@ cce_condition_is_errno (cce_condition_t const * C)
 
 #define cce_condition_errno(S)						\
   _Generic((S),								\
-	   cce_location_t[1]			 : (cce_condition_errno_t const *)CCE_CLOC(S), \
 	   cce_location_t			*: (cce_condition_errno_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (cce_condition_errno_t const *)CCE_CLOC(S), \
 	   cce_condition_t			*: (cce_condition_errno_t const *)(S), \
 	   cce_condition_errno_t		*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_t const		*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_errno_t const		*: (cce_condition_errno_t const *)(S))
+	   cce_condition_t		const	*: (cce_condition_errno_t const *)(S), \
+	   cce_condition_errno_t	const	*: (cce_condition_errno_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_errno_t const *)(S), \
+	   cce_condition_errno_t	const	* const: (cce_condition_errno_t const *)(S))
 
 
 /** --------------------------------------------------------------------
