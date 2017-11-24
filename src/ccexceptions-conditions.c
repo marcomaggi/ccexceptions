@@ -147,6 +147,37 @@ cce_condition_unknown_t const * const cce_condition_unknown_ptr = &cce_condition
 
 
 /** --------------------------------------------------------------------
+ ** Break condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+{
+  return "Break exceptional condition";
+}
+
+/* This condition descriptor represents  an break exceptional condition.
+   This  descriptor has  only one  instance statically  allocated below:
+   "cce_condition_break". */
+static cce_descriptor_break_t const cce_descriptor_break_stru = {
+  .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_break_static_message_fun
+};
+
+cce_descriptor_break_t const * const cce_descriptor_break_ptr = &cce_descriptor_break_stru;
+
+/* This is  the single instance  of break exceptional condition.   It is
+   used by "cce_raise()" and "cce_retry()". */
+static cce_condition_break_t const cce_condition_break_stru = {
+  .root.condition.descriptor = &(cce_descriptor_break_stru.descriptor)
+};
+
+cce_condition_break_t const * const cce_condition_break_ptr = &cce_condition_break_stru;
+
+
+/** --------------------------------------------------------------------
  ** Unspecified error condition.
  ** ----------------------------------------------------------------- */
 

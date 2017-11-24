@@ -85,6 +85,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
   cce_descriptor_set_root_parent(&alpha_D);
 
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_unknown())));
+  assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_break())));
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_error())));
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_runtime_error())));
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_logic_error())));
@@ -98,6 +99,9 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
   assert(false == cce_is_condition(&alpha_C, cce_descriptor(cce_descriptor_unknown_ptr)));
   assert(false == cce_is_condition(&beta_C,  cce_descriptor(cce_descriptor_unknown_ptr)));
   assert(false == cce_is_condition(&gamma_C, cce_descriptor(cce_descriptor_unknown_ptr)));
+
+  assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()), cce_descriptor(cce_descriptor_break_ptr)));
+  assert(true  == cce_is_condition(cce_condition(cce_condition_new_break()),   cce_descriptor(cce_descriptor_break_ptr)));
 
   assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()), cce_descriptor(cce_descriptor_error_ptr)));
   assert(true  == cce_is_condition(cce_condition_new_error(),                  cce_descriptor(cce_descriptor_error_ptr)));

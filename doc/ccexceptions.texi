@@ -1067,6 +1067,7 @@ run--time according to the type of raised structure.
 * conditions objects::          Condition object type.
 * conditions root::             Predefined root condition descriptor.
 * conditions unknown::          Predefined unknown condition object.
+* conditions break::            Predefined break condition object.
 * conditions error::            Predefined error condition object.
 * conditions run-time error::   Predefined run-time error condition object.
 * conditions logic error::      Predefined logic error condition object.
@@ -1651,6 +1652,68 @@ the single @emph{unknown} condition object.  The parent of this descriptor is th
 
 @deftypevr {Dynamic Constant} {cce_condition_unknown_t const * const} cce_condition_unknown_ptr
 Pointer to a statically allocated structure representing the @emph{unknown} condition object.
+@end deftypevr
+
+@c page
+@node conditions break
+@section Predefined break condition object
+
+
+The @dfn{break exceptional--condition object} has the purpose of describing an exceptional condition
+used to break out of a loop or a function call; this condition object type does @strong{not}
+represent an error of any kind.
+
+There should be only one @emph{break} condition object: the one predefined by @value{PACKAGE} and
+built into the library as statically allocated structure.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_break_t
+Structure type representing the descriptor for @emph{break} condition objects.  This descriptor has
+the @emph{root} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_break_t
+Structure type representing an @emph{break} condition object.
+@end deftp
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_break (void)
+Return a pointer to the statically allocated structure representing the single @emph{break}
+condition object.
+@end deftypefun
+
+
+@deftypefn {Inline Function} bool cce_condition_is_break (cce_condition_t const * @var{C})
+Return @true{} if @var{C} is an @emph{break} condition object; otherwise return @false{}.
+@end deftypefn
+
+
+@deftypefn {Generic Macro}  {cce_condition_break_t const *} cce_condition_break (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_break_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t const * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_break_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
+pointer to @objtype{cce_condition_break_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_break_t const * const} cce_descriptor_break_ptr
+Pointer to a statically allocated structure representing the @emph{break} condition descriptor for
+the single @emph{break} condition object.  The parent of this descriptor is the root descriptor,
+@ref{conditions root}.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_break_t const * const} cce_condition_break_ptr
+Pointer to a statically allocated structure representing the @emph{break} condition object.
 @end deftypevr
 
 @c page

@@ -173,6 +173,9 @@ typedef struct cce_condition_root_t		cce_condition_root_t;
 typedef struct cce_descriptor_unknown_t		cce_descriptor_unknown_t;
 typedef struct cce_condition_unknown_t		cce_condition_unknown_t;
 
+typedef struct cce_descriptor_break_t		cce_descriptor_break_t;
+typedef struct cce_condition_break_t		cce_condition_break_t;
+
 typedef struct cce_descriptor_unimplemented_t	cce_descriptor_unimplemented_t;
 typedef struct cce_condition_unimplemented_t	cce_condition_unimplemented_t;
 
@@ -335,6 +338,47 @@ cce_condition_is_unknown (cce_condition_t const * C)
 	   cce_condition_unknown_t		*: (cce_condition_unknown_t const *)(S), \
 	   cce_condition_t const		*: (cce_condition_unknown_t const *)(S), \
 	   cce_condition_unknown_t const	*: (cce_condition_unknown_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: break exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_break_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_break_t {
+  cce_condition_root_t	root;
+};
+
+cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
+cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_break (void)
+{
+  return (cce_condition_t const *) cce_condition_break_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_break (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_break_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_break(S)					\
+  _Generic((S),								\
+	   cce_location_t			*: (cce_condition_break_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (cce_condition_break_t const *)CCE_CLOC(S), \
+	   cce_condition_t			*: (cce_condition_break_t const *)(S), \
+	   cce_condition_break_t		*: (cce_condition_break_t const *)(S), \
+	   cce_condition_t const		*: (cce_condition_break_t const *)(S), \
+	   cce_condition_break_t const		*: (cce_condition_break_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -702,6 +746,7 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_descriptor_t				*: (S),		\
 	   cce_descriptor_root_t			*: CCE_C001(S), \
 	   cce_descriptor_unknown_t			*: CCE_C001(S), \
+	   cce_descriptor_break_t			*: CCE_C001(S), \
 	   cce_descriptor_unimplemented_t		*: CCE_C001(S), \
 	   cce_descriptor_error_t			*: CCE_C001(S), \
 	   cce_descriptor_runtime_error_t		*: CCE_C001(S), \
@@ -709,29 +754,32 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_descriptor_invalid_argument_t		*: CCE_C001(S), \
 	   cce_descriptor_errno_t			*: CCE_C001(S), \
 									\
-	   cce_descriptor_t const			*: CCE_C001(S), \
-	   cce_descriptor_root_t const			*: CCE_C001(S), \
-	   cce_descriptor_unknown_t const		*: CCE_C001(S), \
-	   cce_descriptor_unimplemented_t const		*: CCE_C001(S), \
-	   cce_descriptor_error_t const			*: CCE_C001(S), \
-	   cce_descriptor_runtime_error_t const		*: CCE_C001(S), \
-	   cce_descriptor_logic_error_t const		*: CCE_C001(S), \
-	   cce_descriptor_invalid_argument_t const	*: CCE_C001(S), \
-	   cce_descriptor_errno_t const			*: CCE_C001(S), \
+	   cce_descriptor_t			const   *: CCE_C001(S), \
+	   cce_descriptor_root_t		const	*: CCE_C001(S), \
+	   cce_descriptor_unknown_t		const	*: CCE_C001(S), \
+	   cce_descriptor_break_t		const	*: CCE_C001(S), \
+	   cce_descriptor_unimplemented_t	const	*: CCE_C001(S), \
+	   cce_descriptor_error_t		const	*: CCE_C001(S), \
+	   cce_descriptor_runtime_error_t	const	*: CCE_C001(S), \
+	   cce_descriptor_logic_error_t		const	*: CCE_C001(S), \
+	   cce_descriptor_invalid_argument_t	const	*: CCE_C001(S), \
+	   cce_descriptor_errno_t		const	*: CCE_C001(S), \
 									\
-	   cce_descriptor_t const			* const: CCE_C001(S), \
-	   cce_descriptor_root_t const			* const: CCE_C001(S), \
-	   cce_descriptor_unknown_t const		* const: CCE_C001(S), \
-	   cce_descriptor_unimplemented_t const		* const: CCE_C001(S), \
-	   cce_descriptor_error_t const			* const: CCE_C001(S), \
-	   cce_descriptor_runtime_error_t const		* const: CCE_C001(S), \
-	   cce_descriptor_logic_error_t const		* const: CCE_C001(S), \
-	   cce_descriptor_invalid_argument_t const	* const: CCE_C001(S), \
-	   cce_descriptor_errno_t const			* const: CCE_C001(S), \
+	   cce_descriptor_t			const	* const: CCE_C001(S), \
+	   cce_descriptor_root_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_unknown_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_break_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_unimplemented_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_error_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_runtime_error_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_logic_error_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_invalid_argument_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_errno_t		const	* const: CCE_C001(S), \
 									\
 	   cce_condition_t				*: CCE_C003(S),	\
 	   cce_condition_root_t				*: CCE_C003(S),	\
 	   cce_condition_unknown_t			*: CCE_C003(S),	\
+	   cce_condition_break_t			*: CCE_C003(S),	\
 	   cce_condition_unimplemented_t		*: CCE_C003(S),	\
 	   cce_condition_error_t			*: CCE_C003(S),	\
 	   cce_condition_runtime_error_t		*: CCE_C003(S),	\
@@ -739,24 +787,26 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_condition_invalid_argument_t		*: CCE_C003(S),	\
 	   cce_condition_errno_t			*: CCE_C003(S),	\
 									\
-	   cce_condition_t const			*: CCE_C003(S),	\
-	   cce_condition_root_t const			*: CCE_C003(S),	\
-	   cce_condition_unknown_t const		*: CCE_C003(S),	\
-	   cce_condition_unimplemented_t const		*: CCE_C003(S),	\
-	   cce_condition_error_t const			*: CCE_C003(S),	\
-	   cce_condition_runtime_error_t const		*: CCE_C003(S),	\
-	   cce_condition_logic_error_t const		*: CCE_C003(S),	\
-	   cce_condition_invalid_argument_t const	*: CCE_C003(S),	\
-	   cce_condition_errno_t const			*: CCE_C003(S),	\
+	   cce_condition_t			const	*: CCE_C003(S),	\
+	   cce_condition_root_t			const	*: CCE_C003(S),	\
+	   cce_condition_unknown_t		const	*: CCE_C003(S),	\
+	   cce_condition_break_t		const	*: CCE_C003(S),	\
+	   cce_condition_unimplemented_t	const	*: CCE_C003(S),	\
+	   cce_condition_error_t		const	*: CCE_C003(S),	\
+	   cce_condition_runtime_error_t	const	*: CCE_C003(S),	\
+	   cce_condition_logic_error_t		const	*: CCE_C003(S),	\
+	   cce_condition_invalid_argument_t	const	*: CCE_C003(S),	\
+	   cce_condition_errno_t		const	*: CCE_C003(S),	\
 									\
-	   cce_condition_root_t const			* const: CCE_C003(S),	\
-	   cce_condition_unknown_t const		* const: CCE_C003(S),	\
-	   cce_condition_unimplemented_t const		* const: CCE_C003(S),	\
-	   cce_condition_error_t const			* const: CCE_C003(S),	\
-	   cce_condition_runtime_error_t const		* const: CCE_C003(S),	\
-	   cce_condition_logic_error_t const		* const: CCE_C003(S),	\
-	   cce_condition_invalid_argument_t const	* const: CCE_C003(S),	\
-	   cce_condition_errno_t const			* const: CCE_C003(S))
+	   cce_condition_root_t			const	* const: CCE_C003(S),	\
+	   cce_condition_unknown_t		const	* const: CCE_C003(S),	\
+	   cce_condition_break_t		const	* const: CCE_C003(S),	\
+	   cce_condition_unimplemented_t	const	* const: CCE_C003(S),	\
+	   cce_condition_error_t		const	* const: CCE_C003(S),	\
+	   cce_condition_runtime_error_t	const	* const: CCE_C003(S),	\
+	   cce_condition_logic_error_t		const	* const: CCE_C003(S),	\
+	   cce_condition_invalid_argument_t	const	* const: CCE_C003(S),	\
+	   cce_condition_errno_t		const	* const: CCE_C003(S))
 
 
 /* ------------------------------------------------------------------ */
@@ -766,6 +816,7 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_condition_t				*: (S),		\
 	   cce_condition_root_t				*: CCE_C002(S), \
 	   cce_condition_unknown_t			*: CCE_C002(S), \
+	   cce_condition_break_t			*: CCE_C002(S), \
 	   cce_condition_unimplemented_t		*: CCE_C002(S), \
 	   cce_condition_error_t			*: CCE_C002(S), \
 	   cce_condition_runtime_error_t		*: CCE_C002(S), \
@@ -773,25 +824,28 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 	   cce_condition_invalid_argument_t		*: CCE_C002(S), \
 	   cce_condition_errno_t			*: CCE_C002(S), \
 									\
-	   cce_condition_t const			* const: CCE_C002(S), \
-	   cce_condition_root_t const			* const: CCE_C002(S), \
-	   cce_condition_unknown_t const		* const: CCE_C002(S), \
-	   cce_condition_unimplemented_t const		* const: CCE_C002(S), \
-	   cce_condition_error_t const			* const: CCE_C002(S), \
-	   cce_condition_runtime_error_t const		* const: CCE_C002(S), \
-	   cce_condition_logic_error_t const		* const: CCE_C002(S), \
-	   cce_condition_invalid_argument_t const	* const: CCE_C002(S), \
-	   cce_condition_errno_t const			* const: CCE_C002(S), \
+	   cce_condition_t			const	* const: CCE_C002(S), \
+	   cce_condition_root_t			const	* const: CCE_C002(S), \
+	   cce_condition_unknown_t		const	* const: CCE_C002(S), \
+	   cce_condition_break_t		const	* const: CCE_C002(S), \
+	   cce_condition_unimplemented_t	const	* const: CCE_C002(S), \
+	   cce_condition_error_t		const	* const: CCE_C002(S), \
+	   cce_condition_runtime_error_t	const	* const: CCE_C002(S), \
+	   cce_condition_logic_error_t		const	* const: CCE_C002(S), \
+	   cce_condition_invalid_argument_t	const	* const: CCE_C002(S), \
+	   cce_condition_errno_t		const	* const: CCE_C002(S), \
 									\
-	   cce_condition_t const			*: CCE_C002(S), \
-	   cce_condition_root_t const			*: CCE_C002(S), \
-	   cce_condition_unknown_t const		*: CCE_C002(S), \
-	   cce_condition_unimplemented_t const		*: CCE_C002(S), \
-	   cce_condition_error_t const			*: CCE_C002(S), \
-	   cce_condition_runtime_error_t const		*: CCE_C002(S), \
-	   cce_condition_logic_error_t const		*: CCE_C002(S), \
-	   cce_condition_invalid_argument_t const	*: CCE_C002(S), \
-	   cce_condition_errno_t const			*: CCE_C002(S), \
+	   cce_condition_t			const	*: CCE_C002(S), \
+	   cce_condition_root_t			const	*: CCE_C002(S), \
+	   cce_condition_unknown_t		const	*: CCE_C002(S), \
+	   cce_condition_break_t		const	*: CCE_C002(S), \
+	   cce_condition_unimplemented_t	const	*: CCE_C002(S), \
+	   cce_condition_error_t		const	*: CCE_C002(S), \
+	   cce_condition_runtime_error_t	const	*: CCE_C002(S), \
+	   cce_condition_logic_error_t		const	*: CCE_C002(S), \
+	   cce_condition_invalid_argument_t	const	*: CCE_C002(S), \
+	   cce_condition_errno_t		const	*: CCE_C002(S), \
+	   \
 	   cce_location_t[1]				 : CCE_C002(CCE_CLOC(S)), \
 	   cce_location_t				*: CCE_C002(CCE_CLOC(S)))
 
