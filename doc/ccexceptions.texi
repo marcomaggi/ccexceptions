@@ -551,6 +551,11 @@ release the condition object.
 @end deftp
 
 
+@deftp {Pointer Typedef} cce_destination_t
+Pointer to @objtype{cce_location_t}.
+@end deftp
+
+
 @deftypefun void cce_location_init (cce_location_t * @var{L})
 Initialise the location @var{L}, but do @strong{not} call @cfunc{sigsetjmp}.  We are not meant to
 call this function directly; rather we should use the macro @cfunc{cce_location}.

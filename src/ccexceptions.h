@@ -182,6 +182,8 @@ typedef struct cce_condition_invalid_argument_t	cce_condition_invalid_argument_t
 typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
 typedef struct cce_condition_errno_t		cce_condition_errno_t;
 
+typedef cce_location_t *			cce_destination_t;
+
 
 /** --------------------------------------------------------------------
  ** Error and cleanup handlers.
@@ -201,21 +203,21 @@ struct cce_handler_t {
   };
 };
 
-cce_decl void cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
+cce_decl void cce_register_cleanup_handler (cce_destination_t L, cce_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
+cce_decl void cce_register_error_handler (cce_destination_t L, cce_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    cleanup  handlers  might  modify  data  in  the  current  compilation
    unit. */
-cce_decl void cce_run_cleanup_handlers (cce_location_t * L)
+cce_decl void cce_run_cleanup_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    error handlers might modify data in the current compilation unit. */
-cce_decl void cce_run_error_handlers (cce_location_t * L)
+cce_decl void cce_run_error_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
 
@@ -385,7 +387,7 @@ struct cce_condition_invalid_argument_t {
 
 cce_decl const cce_descriptor_invalid_argument_t * cce_descriptor_invalid_argument_ptr;
 
-cce_decl cce_condition_t * cce_condition_new_invalid_argument (cce_location_t * L, const char * func, unsigned index)
+cce_decl cce_condition_t * cce_condition_new_invalid_argument (cce_destination_t L, const char * func, unsigned index)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
@@ -464,16 +466,16 @@ struct cce_location_t {
   cce_handler_t *		first_handler;
 };
 
-cce_decl void cce_location_init	(cce_location_t * here)
+cce_decl void cce_location_init	(cce_destination_t here)
   __attribute__((__leaf__,__nonnull__(1)));
 
 #define cce_location(HERE)						\
   __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
 
-cce_decl void cce_raise (cce_location_t * L, const cce_condition_t * C)
+cce_decl void cce_raise (cce_destination_t L, const cce_condition_t * C)
   __attribute__((__noreturn__,__nonnull__(1)));
 
-cce_decl void cce_retry (cce_location_t * L)
+cce_decl void cce_retry (cce_destination_t L)
   __attribute__((__noreturn__,__nonnull__(1)));
 
 
@@ -483,7 +485,7 @@ cce_decl void cce_retry (cce_location_t * L)
 
 __attribute__((__nonnull__(1),__always_inline__))
 static inline void
-cce_run_error_handlers_final (cce_location_t * L)
+cce_run_error_handlers_final (cce_destination_t L)
 {
   cce_run_error_handlers(L);
   cce_condition_delete((cce_condition_t *)(L->condition));
@@ -491,7 +493,7 @@ cce_run_error_handlers_final (cce_location_t * L)
 
 __attribute__((__nonnull__(1),__always_inline__))
 static inline void
-cce_run_cleanup_handlers_final (cce_location_t * L)
+cce_run_cleanup_handlers_final (cce_destination_t L)
 {
   cce_run_cleanup_handlers(L);
   cce_condition_delete((cce_condition_t *)(L->condition));
@@ -501,7 +503,7 @@ cce_run_cleanup_handlers_final (cce_location_t * L)
 
 __attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
 static inline void
-cce_run_error_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
+cce_run_error_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
 {
   cce_run_error_handlers(L);
   cce_raise(upper_L, L->condition);
@@ -509,7 +511,7 @@ cce_run_error_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
 
 __attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
 static inline void
-cce_run_cleanup_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
+cce_run_cleanup_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
 {
   cce_run_cleanup_handlers(L);
   cce_raise(upper_L, L->condition);
@@ -520,13 +522,13 @@ cce_run_cleanup_handlers_raise (cce_location_t * L, cce_location_t * upper_L)
  ** System call wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
 
-cce_decl void * cce_sys_malloc (cce_location_t * L, size_t size)
+cce_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-cce_decl void * cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
+cce_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
+cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 
@@ -534,10 +536,10 @@ cce_decl void * cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize
  ** Predefined POSIX exception handler: malloc pointer.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
+cce_decl void cce_cleanup_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
-cce_decl void cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
+cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
 
