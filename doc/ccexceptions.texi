@@ -1067,8 +1067,10 @@ run--time according to the type of raised structure.
 * conditions objects::          Condition object type.
 * conditions root::             Predefined root condition descriptor.
 * conditions unknown::          Predefined unknown condition object.
-* conditions unimplemented::    Predefined unimplemented condition
-                                object.
+* conditions error::            Predefined error condition object.
+* conditions run-time error::   Predefined run-time error condition object.
+* conditions logic error::      Predefined logic error condition object.
+* conditions unimplemented::    Predefined unimplemented condition object.
 * conditions invalid arg::      Predefined invalid argument conditions.
 * conditions errno::            Predefined @code{errno} conditions.
 * conditions custom::           Defining custom condition objects.
@@ -1652,6 +1654,181 @@ Pointer to a statically allocated structure representing the @emph{unknown} cond
 @end deftypevr
 
 @c page
+@node conditions error
+@section Predefined error condition object
+
+
+The @dfn{error exceptional--condition object} has the purpose of describing an exceptional condition
+caused by an unspecified error; this condition type is meant to be the base of more specialised
+condition types.
+
+There should be only one @emph{error} condition object: the one predefined by @value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_error_t
+Structure type representing the descriptor for @emph{error} condition objects.  This descriptor has
+the @emph{root} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_error_t
+Structure type representing a @emph{error} condition object.
+@end deftp
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_error (void)
+Return a pointer to the statically allocated structure representing the single @emph{error}
+condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_error (cce_condition_t const * @var{C})
+Return @true{} if @var{C} is a @emph{error} condition object; otherwise return @false{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_error_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_error_t const * const} cce_descriptor_error_ptr
+Pointer to a statically allocated structure representing the @emph{error} condition
+descriptor for the single @emph{error} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_error_t const * const} cce_condition_error_ptr
+Pointer to a statically allocated structure representing the @emph{error} condition object.
+@end deftypevr
+
+@c page
+@node conditions run-time error
+@section Predefined run--time error condition object
+
+
+The @dfn{run--time exceptional--condition object} has the purpose of describing an exceptional
+condition caused by a run--time error; these are mostly synchronisation errors like failures to open
+a file or allocate memory.
+
+There should be only one @emph{run--time} condition object: the one predefined by @value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_runtime_error_t
+Structure type representing the descriptor for @emph{run--time} condition objects.  This descriptor
+has the @emph{error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_runtime_error_t
+Structure type representing a @emph{run--time} condition object.
+@end deftp
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_runtime_error (void)
+Return a pointer to the statically allocated structure representing the single @emph{run--time}
+condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_runtime_error (cce_condition_t const * @var{C})
+Return @true{} if @var{C} is a @emph{run--time} condition object; otherwise return @false{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_runtime_error_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_runtime_error_t const * const} cce_descriptor_runtime_error_ptr
+Pointer to a statically allocated structure representing the @emph{run--time} condition
+descriptor for the single @emph{run--time} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_runtime_error_t const * const} cce_condition_runtime_error_ptr
+Pointer to a statically allocated structure representing the @emph{run--time} condition object.
+@end deftypevr
+
+@c page
+@node conditions logic error
+@section Predefined logic error condition object
+
+
+The @dfn{logic exceptional--condition object} has the purpose of describing an exceptional condition
+caused by an implementation logic error; these are programming errors that should not be present in
+a correct program.  Examples of logic errors are: applying a function to an invalid operand; using
+the @syntax{switch} syntax on an @syntax{enum} value without handling all the possible cases.
+
+There should be only one @emph{logic} condition object: the one predefined by @value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_logic_error_t
+Structure type representing the descriptor for @emph{logic} condition objects.  This descriptor has
+the @emph{error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_logic_error_t
+Structure type representing a @emph{logic} condition object.
+@end deftp
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_logic_error (void)
+Return a pointer to the statically allocated structure representing the single @emph{logic}
+condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_logic_error (cce_condition_t const * @var{C})
+Return @true{} if @var{C} is a @emph{logic} condition object; otherwise return @false{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_logic_error_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_logic_error_t const * const} cce_descriptor_logic_error_ptr
+Pointer to a statically allocated structure representing the @emph{logic} condition
+descriptor for the single @emph{logic} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_logic_error_t const * const} cce_condition_logic_error_ptr
+Pointer to a statically allocated structure representing the @emph{logic} condition object.
+@end deftypevr
+
+@c page
 @node conditions unimplemented
 @section Predefined unimplemented condition object
 
@@ -1669,7 +1846,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_descriptor_unimplemented_t
 Structure type representing the descriptor for @emph{unimplemented} condition objects.  This
-descriptor has the @emph{root} descriptor as parent.
+descriptor has the @emph{logic error} descriptor as parent.
 @end deftp
 
 
@@ -1746,7 +1923,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_descriptor_invalid_argument_t
 Structure type representing the descriptor of the condition objects.  This descriptor has the
-@emph{root} descriptor as parent.
+@emph{logic error} descriptor as parent.
 @end deftp
 
 
@@ -1806,7 +1983,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_descriptor_errno_t
 Structure type representing the descriptor for @emph{errno} condition objects.  This descriptor has
-the @emph{root} descriptor as parent.
+the @emph{run--time error} descriptor as parent.
 @end deftp
 
 

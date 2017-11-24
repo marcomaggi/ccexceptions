@@ -79,20 +79,46 @@ static cce_condition_t const gamma_C = {
 int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
+  cce_location_t	L[1];
+
   /* Dynamic initialisation. */
   cce_descriptor_set_root_parent(&alpha_D);
 
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_unknown())));
+  assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_error())));
+  assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_runtime_error())));
+  assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_logic_error())));
+  assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_invalid_argument(L, __func__, 1))));
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_errno(EINVAL))));
   assert(true  == cce_condition_is_root(&alpha_C));
   assert(true  == cce_condition_is_root(&beta_C));
   assert(true  == cce_condition_is_root(&gamma_C));
 
   assert(true  == cce_is_condition(cce_condition(cce_condition_new_unknown()),     cce_descriptor(cce_descriptor_unknown_ptr)));
-  assert(false == cce_is_condition(cce_condition(cce_condition_new_errno(EINVAL)),	cce_descriptor(cce_descriptor_unknown_ptr)));
   assert(false == cce_is_condition(&alpha_C, cce_descriptor(cce_descriptor_unknown_ptr)));
   assert(false == cce_is_condition(&beta_C,  cce_descriptor(cce_descriptor_unknown_ptr)));
   assert(false == cce_is_condition(&gamma_C, cce_descriptor(cce_descriptor_unknown_ptr)));
+
+  assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()), cce_descriptor(cce_descriptor_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_error(),                  cce_descriptor(cce_descriptor_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_runtime_error(),          cce_descriptor(cce_descriptor_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_logic_error(),            cce_descriptor(cce_descriptor_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_errno(EINVAL),            cce_descriptor(cce_descriptor_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_invalid_argument(L, __func__, 1), cce_descriptor(cce_descriptor_error_ptr)));
+
+  assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()), cce_descriptor(cce_descriptor_runtime_error_ptr)));
+  assert(false == cce_is_condition(cce_condition_new_error(),                  cce_descriptor(cce_descriptor_runtime_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_runtime_error(),          cce_descriptor(cce_descriptor_runtime_error_ptr)));
+  assert(false == cce_is_condition(cce_condition_new_logic_error(),            cce_descriptor(cce_descriptor_runtime_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_errno(EINVAL),            cce_descriptor(cce_descriptor_runtime_error_ptr)));
+  assert(false  == cce_is_condition(cce_condition_new_invalid_argument(L, __func__, 1), cce_descriptor(cce_descriptor_runtime_error_ptr)));
+
+  assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()), cce_descriptor(cce_descriptor_logic_error_ptr)));
+  assert(false == cce_is_condition(cce_condition_new_error(),                  cce_descriptor(cce_descriptor_logic_error_ptr)));
+  assert(false == cce_is_condition(cce_condition_new_runtime_error(),          cce_descriptor(cce_descriptor_logic_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_logic_error(),            cce_descriptor(cce_descriptor_logic_error_ptr)));
+  assert(false == cce_is_condition(cce_condition_new_errno(EINVAL),            cce_descriptor(cce_descriptor_logic_error_ptr)));
+  assert(true  == cce_is_condition(cce_condition_new_invalid_argument(L, __func__, 1), cce_descriptor(cce_descriptor_logic_error_ptr)));
 
   assert(false == cce_is_condition(cce_condition(cce_condition_new_unknown()),     cce_descriptor(cce_descriptor_errno_ptr)));
   assert(true  == cce_is_condition(cce_condition(cce_condition_new_errno(EINVAL)),	cce_descriptor(cce_descriptor_errno_ptr)));

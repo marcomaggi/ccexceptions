@@ -337,6 +337,10 @@
 @code{\NAME\}
 @end macro
 
+@macro syntax{NAME}
+@code{\NAME\}
+@end macro
+
 @c page
 @c ------------------------------------------------------------
 @c Macros for references to external documents.
