@@ -244,7 +244,7 @@ The installed libraries follow version numbering as established by the
 system, libtool, Shared library support for @gnu{}}.
 
 
-@deftypefun {char const *} cce_version_string (void)
+@deftypefun {const char *} cce_version_string (void)
 Return a pointer to a statically allocated @asciiz{} string representing
 the interface version number.
 @end deftypefun
@@ -1149,7 +1149,7 @@ struct cce_condition_root_t @{
 @};
 
 /* Pointer to the predefined root type descriptor. */
-extern const cce_condition_root_t * const cce_condition_root_ptr;
+extern cce_condition_root_t const * const cce_condition_root_ptr;
 @end example
 
 We define a new condition object type, child of the root type, as follows (more code is needed for
@@ -1280,7 +1280,7 @@ my_condition_delete_stuff (my_condition_stuff_t * C)
 @end deftypefn
 
 
-@deftypefn {Function Prototype} {char const *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
+@deftypefn {Function Prototype} {const char *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
 Return a statically allocated @asciiz{} string describing the exceptional condition @var{C}.  A
 static message must always be defined; another client--defined function can build a dynamic and more
 descriptive message.
@@ -1289,7 +1289,7 @@ For example, an instance of this function can be:
 
 @example
 char const *
-my_condition_static_message_stuff (const my_condition_stuff_t * C)
+my_condition_static_message_stuff (my_condition_stuff_t const * C)
 @{
   return "error doing stuff";
 @}
@@ -1388,7 +1388,7 @@ referenced by the descriptor's functions table.
 @end deftypefun
 
 
-@deftypefun {char const *} cce_condition_static_message (cce_condition_t const * @var{C})
+@deftypefun {const char *} cce_condition_static_message (cce_condition_t const * @var{C})
 Apply to @var{C} the @code{static_message} function referenced by its descriptor's functions
 table.
 @end deftypefun
@@ -1626,11 +1626,11 @@ Return @true{} if @var{C} is an @emph{unknown} condition object; otherwise retur
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_location_t * @var{L})
-@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unknown_t *} cce_condition_unknown (const cce_condition_unknown_t * @var{C})
+@deftypefn {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t const * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_unknown_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_unknown_t}.
 
@@ -1640,14 +1640,14 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {const cce_descriptor_unknown_t * const} cce_descriptor_unknown_ptr
+@deftypevr {Dynamic Constant} {cce_descriptor_unknown_t const * const} cce_descriptor_unknown_ptr
 Pointer to a statically allocated structure representing the @emph{unknown} condition descriptor for
 the single @emph{unknown} condition object.  The parent of this descriptor is the root descriptor,
 @ref{conditions root}.
 @end deftypevr
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_unknown_t * const} cce_condition_unknown_ptr
+@deftypevr {Dynamic Constant} {cce_condition_unknown_t const * const} cce_condition_unknown_ptr
 Pointer to a statically allocated structure representing the @emph{unknown} condition object.
 @end deftypevr
 
@@ -1689,9 +1689,9 @@ Return @true{} if @var{C} is an @emph{unimplemented} condition object; otherwise
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_location_t * @var{L})
-@deftypefnx {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_unimplemented_t *} cce_condition_unimplemented (cce_condition_t const * @var{C})
+@deftypefn {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
 @objtype{cce_condition_unimplemented_t}.
 
@@ -1701,13 +1701,13 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {const cce_descriptor_unimplemented_t * const} cce_descriptor_unimplemented_ptr
+@deftypevr {Dynamic Constant} {cce_descriptor_unimplemented_t const * const} cce_descriptor_unimplemented_ptr
 Pointer to a statically allocated structure representing the @emph{unimplemented} condition
 descriptor for the single @emph{unimplemented} condition object.
 @end deftypevr
 
 
-@deftypevr {Dynamic Constant} {const cce_condition_unimplemented_t * const} cce_condition_unimplemented_ptr
+@deftypevr {Dynamic Constant} {cce_condition_unimplemented_t const * const} cce_condition_unimplemented_ptr
 Pointer to a statically allocated structure representing the @emph{unimplemented} condition object.
 @end deftypevr
 
@@ -1775,11 +1775,11 @@ Return @true{} if @var{C} is a condition object of the specified type; otherwise
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_location_t * @var{L})
-@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_invalid_argument_t *} cce_condition_invalid_argument (const cce_condition_invalid_argument_t * @var{C})
+@deftypefn {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t const * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_invalid_argument_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_invalid_argument_t}.
 
@@ -1789,7 +1789,7 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {const cce_descriptor_invalid_argument_t * const} cce_descriptor_invalid_argument
+@deftypevr {Dynamic Constant} {cce_descriptor_invalid_argument_t const * const} cce_descriptor_invalid_argument
 Pointer to a statically allocated structure representing the condition descriptor.
 @end deftypevr
 
@@ -1824,7 +1824,7 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypefun {const cce_condition_errno_t *} cce_condition_new_errno (int @var{errnum})
+@deftypefun {cce_condition_errno_t const *} cce_condition_new_errno (int @var{errnum})
 Given the @code{errno} code @var{errnum}, return the pointer to the condition object associated to
 it.
 
@@ -1834,7 +1834,7 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefun {const cce_condition_errno_t *} cce_condition_new_errno_clear (void)
+@deftypefun {cce_condition_errno_t const *} cce_condition_new_errno_clear (void)
 Consume the current value of @code{errno} and return the return value of
 @cfunc{cce_condition_new_errno} applied to it.  Before returning: @code{errno} is reset to zero.
 @end deftypefun
@@ -1845,11 +1845,11 @@ Return @true{} if @var{C} is a condition object of type @emph{errno}; otherwise 
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_location_t * @var{L})
-@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_errno_t * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {const cce_condition_errno_t *} cce_condition_errno (const cce_condition_errno_t * @var{C})
+@deftypefn {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_errno_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t const * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_errno_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
 pointer to @objtype{cce_condition_errno_t}.
 
@@ -1859,7 +1859,7 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {const cce_descriptor_errno_t * const} cce_descriptor_errno_ptr
+@deftypevr {Dynamic Constant} {cce_descriptor_errno_t const * const} cce_descriptor_errno_ptr
 Pointer to a statically allocated structure representing the condition descriptor of all the
 @emph{errno} condition objects.
 @end deftypevr
