@@ -34,6 +34,10 @@ int
 main (void)
 {
   printf("machine word size: %lu\n", sizeof(void *));
+  printf("sizeof(int): %lu\n", sizeof(int));
+  printf("sizeof(long): %lu\n", sizeof(long));
+  printf("sizeof(void *): %lu\n", sizeof(void *));
+  printf("sizeof(uintptr_t): %lu\n", sizeof(uintptr_t));
 
   printf("size of cce_location_t: %lu, number of words: %lu\n",
 	 sizeof(cce_location_t), sizeof(cce_location_t)/sizeof(void *));
