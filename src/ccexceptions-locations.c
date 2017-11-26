@@ -72,6 +72,24 @@ cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
   L->first_handler	= H;
 }
 
+void
+cce_forget_handler (cce_destination_t L, cce_handler_t * H)
+{
+  if (H) {
+    if (L->first_handler == H) {
+      L->first_handler = H->next_handler;
+      H->next_handler  = NULL;
+    } else {
+      for (cce_handler_t * iter = L->first_handler; iter; iter = iter->next_handler) {
+	if (iter->next_handler == H) {
+	  iter->next_handler = H->next_handler;
+	  H->next_handler    = NULL;
+	}
+      }
+    }
+  }
+}
+
 __attribute__((hot))
 void
 cce_run_cleanup_handlers (cce_location_t * L)

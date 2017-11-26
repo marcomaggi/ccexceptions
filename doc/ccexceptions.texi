@@ -822,6 +822,12 @@ successful execution path.
 @end deftypefun
 
 
+@deftypefun void cce_forget_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
+Remove the handler @var{H} from the context of the location @var{L}.  If @var{H} is not registered
+in @var{L}: nothing happens.
+@end deftypefun
+
+
 @deftypefun void cce_run_cleanup_handlers (cce_location_t * @var{L})
 Run all the cleanup handlers associated to the location @var{L}.  Each handler must return to its
 caller, taking care of itself regarding internal error handling and asynchronous resources

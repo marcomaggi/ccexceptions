@@ -221,6 +221,9 @@ cce_decl void cce_register_cleanup_handler (cce_destination_t L, cce_handler_t *
 cce_decl void cce_register_error_handler (cce_destination_t L, cce_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
+cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
 /* We do *not*  set the "leaf" attribute for this  function, because the
    cleanup  handlers  might  modify  data  in  the  current  compilation
    unit. */

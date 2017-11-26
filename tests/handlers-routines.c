@@ -362,6 +362,129 @@ test_constructor_scheme_exceptional_execution (void)
 }
 
 
+static void
+handler_removal_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+{
+  bool	* flag = H->pointer;
+  *flag = true;
+}
+
+void
+test_handler_removal_1_0 (void)
+/* No handler removal in this function: it just tests the code logic. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		H1, H2, H3;
+  bool			flag1 = false, flag2 = false, flag3 = false;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    H1.function = handler_removal_function;
+    H2.function = handler_removal_function;
+    H3.function = handler_removal_function;
+    H1.pointer  = &flag1;
+    H2.pointer  = &flag2;
+    H3.pointer  = &flag3;
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_cleanup_handler(L, &H2);
+    cce_register_cleanup_handler(L, &H3);
+    cce_run_cleanup_handlers(L);
+  }
+
+  assert(true == flag1);
+  assert(true == flag2);
+  assert(true == flag3);
+}
+
+void
+test_handler_removal_1_1 (void)
+/* Remove the first handler. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		H1, H2, H3;
+  bool			flag1 = false, flag2 = false, flag3 = false;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    H1.function = handler_removal_function;
+    H2.function = handler_removal_function;
+    H3.function = handler_removal_function;
+    H1.pointer  = &flag1;
+    H2.pointer  = &flag2;
+    H3.pointer  = &flag3;
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_cleanup_handler(L, &H2);
+    cce_register_cleanup_handler(L, &H3);
+    cce_forget_handler(L, &H1);
+    cce_run_cleanup_handlers(L);
+  }
+
+  assert(false == flag1);
+  assert(true  == flag2);
+  assert(true  == flag3);
+}
+
+void
+test_handler_removal_1_2 (void)
+/* Remove the second handler. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		H1, H2, H3;
+  bool			flag1 = false, flag2 = false, flag3 = false;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    H1.function = handler_removal_function;
+    H2.function = handler_removal_function;
+    H3.function = handler_removal_function;
+    H1.pointer  = &flag1;
+    H2.pointer  = &flag2;
+    H3.pointer  = &flag3;
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_cleanup_handler(L, &H2);
+    cce_register_cleanup_handler(L, &H3);
+    cce_forget_handler(L, &H2);
+    cce_run_cleanup_handlers(L);
+  }
+
+  assert(true  == flag1);
+  assert(false == flag2);
+  assert(true  == flag3);
+}
+
+void
+test_handler_removal_1_3 (void)
+/* Remove the third handler. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		H1, H2, H3;
+  bool			flag1 = false, flag2 = false, flag3 = false;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    H1.function = handler_removal_function;
+    H2.function = handler_removal_function;
+    H3.function = handler_removal_function;
+    H1.pointer  = &flag1;
+    H2.pointer  = &flag2;
+    H3.pointer  = &flag3;
+    cce_register_cleanup_handler(L, &H1);
+    cce_register_cleanup_handler(L, &H2);
+    cce_register_cleanup_handler(L, &H3);
+    cce_forget_handler(L, &H3);
+    cce_run_cleanup_handlers(L);
+  }
+
+  assert(true  == flag1);
+  assert(true  == flag2);
+  assert(false == flag3);
+}
+
+
 int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
@@ -371,6 +494,11 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
   test_allocating_memory_exceptional_execution();
   test_constructor_scheme_success_execution();
   test_constructor_scheme_exceptional_execution();
+
+  test_handler_removal_1_0();
+  test_handler_removal_1_1();
+  test_handler_removal_1_2();
+  test_handler_removal_1_3();
 
   exit(EXIT_SUCCESS);
 }
