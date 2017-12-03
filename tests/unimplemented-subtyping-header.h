@@ -43,10 +43,10 @@ struct my_condition_unimplemented_subtype_t {
 
 extern my_descriptor_unimplemented_subtype_t const * const	my_descriptor_unimplemented_subtype_ptr;
 
-extern void my_condition_unimplemented_subtype_init  (my_condition_unimplemented_subtype_t * C, int the_data)
+extern void my_condition_init_unimplemented_subtype (my_condition_unimplemented_subtype_t * C, int the_data)
   __attribute__((__nonnull__(1)));
 
-extern cce_condition_t const * my_condition_unimplemented_subtype_new (cce_destination_t L, int the_data)
+extern cce_condition_t const * my_condition_new_unimplemented_subtype (cce_destination_t L, int the_data)
   __attribute__((__nonnull__(1)));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))

@@ -28,9 +28,9 @@
  ** ----------------------------------------------------------------- */
 
 static void
-my_condition_unimplemented_subtype_final (cce_condition_t * _C)
-/* Here we  finalise only  the fields  of "my_condition_unimplemented_subtype_t"
-   leaving untouched the fields of the parent type. */
+my_condition_final_unimplemented_subtype (cce_condition_t * _C)
+/* Here we finalise only the fields  of this type, leaving untouched the
+   fields of the parent type. */
 {
   my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
   *(C->data) = 0;
@@ -38,7 +38,7 @@ my_condition_unimplemented_subtype_final (cce_condition_t * _C)
 }
 
 static void
-my_condition_unimplemented_subtype_delete (cce_condition_t * _C)
+my_condition_delete_unimplemented_subtype (cce_condition_t * _C)
 {
   my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
 
@@ -48,7 +48,7 @@ my_condition_unimplemented_subtype_delete (cce_condition_t * _C)
 }
 
 static char const *
-my_condition_unimplemented_subtype_static_message (cce_condition_t const * C CCE_UNUSED)
+my_condition_static_message_unimplemented_subtype (cce_condition_t const * C CCE_UNUSED)
 {
   return "Unimplemented subtype exceptional condition";
 }
@@ -56,15 +56,15 @@ my_condition_unimplemented_subtype_static_message (cce_condition_t const * C CCE
 static my_descriptor_unimplemented_subtype_t my_descriptor_unimplemented_subtype_stru = {
   /* This field is set below by the module initialisation function. */
   .descriptor.parent		= NULL,
-  .descriptor.delete		= my_condition_unimplemented_subtype_delete,
-  .descriptor.final		= my_condition_unimplemented_subtype_final,
-  .descriptor.static_message	= my_condition_unimplemented_subtype_static_message
+  .descriptor.delete		= my_condition_delete_unimplemented_subtype,
+  .descriptor.final		= my_condition_final_unimplemented_subtype,
+  .descriptor.static_message	= my_condition_static_message_unimplemented_subtype
 };
 
 my_descriptor_unimplemented_subtype_t const * const my_descriptor_unimplemented_subtype_ptr = &my_descriptor_unimplemented_subtype_stru;
 
 void
-my_condition_unimplemented_subtype_init (my_condition_unimplemented_subtype_t * C, int the_data)
+my_condition_init_unimplemented_subtype (my_condition_unimplemented_subtype_t * C, int the_data)
 /* Here we call the parent's initialisation function; then we initialise
    the fields of this type. */
 {
@@ -73,14 +73,14 @@ my_condition_unimplemented_subtype_init (my_condition_unimplemented_subtype_t * 
 }
 
 cce_condition_t const *
-my_condition_unimplemented_subtype_new (cce_destination_t L, int the_data)
+my_condition_new_unimplemented_subtype (cce_destination_t L, int the_data)
 /* Here  we  allocate  the  asynchronous resources  and  initialise  the
    descriptor field; then we call the initialisation function. */
 {
   my_condition_unimplemented_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_unimplemented_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
   cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_unimplemented_subtype_ptr->descriptor));
-  my_condition_unimplemented_subtype_init(C, the_data);
+  my_condition_init_unimplemented_subtype(C, the_data);
   return (cce_condition_t const *) C;
 }
 

@@ -35,7 +35,7 @@ main (void)
       fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
       cce_run_error_handlers_final(L);
     } else {
-      cce_raise(L, my_condition_break_subtype_new(L, 123));
+      cce_raise(L, my_condition_new_break_subtype(L, 123));
       cce_run_cleanup_handlers(L);
     }
   }
