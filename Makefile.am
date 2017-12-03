@@ -61,7 +61,8 @@ check_PROGRAMS	= \
 	tests/conditions-tests			\
 	tests/sizeof				\
 	\
-	tests/break-subtyping
+	tests/break-subtyping			\
+	tests/unimplemented-subtyping
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -127,6 +128,15 @@ tests_break_subtyping_SOURCES			= \
 	tests/break-subtyping.c		\
 	tests/break-subtyping-body.c	\
 	tests/break-subtyping-heaader.h
+
+## --------------------------------------------------------------------
+
+tests_unimplemented_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_unimplemented_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
+tests_unimplemented_subtyping_SOURCES		= \
+	tests/unimplemented-subtyping.c		\
+	tests/unimplemented-subtyping-body.c	\
+	tests/unimplemented-subtyping-heaader.h
 
 ## --------------------------------------------------------------------
 

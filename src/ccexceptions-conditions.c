@@ -156,12 +156,6 @@ cce_condition_unknown_t const * const cce_condition_unknown_ptr = &cce_condition
  ** Break condition.
  ** ----------------------------------------------------------------- */
 
-void
-cce_condition_init_break (cce_condition_break_t * C)
-{
-  C->root.condition.descriptor = &(cce_descriptor_root_stru.descriptor);
-}
-
 static char const *
 cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
 {

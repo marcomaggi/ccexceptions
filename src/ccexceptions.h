@@ -363,8 +363,11 @@ struct cce_condition_break_t {
 cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
 cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
 
-cce_decl void cce_condition_init_break (cce_condition_break_t * C)
-  __attribute__((__pure__,__nonnull__(1)));
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_break (cce_condition_break_t * C CCE_UNUSED)
+{
+}
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
@@ -543,6 +546,18 @@ struct cce_condition_unimplemented_t {
 
 cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr;
 cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_unimplemented (cce_condition_unimplemented_t * C CCE_UNUSED)
+{
+}
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_final_unimplemented (cce_condition_t * C CCE_UNUSED)
+{
+}
 
 __attribute__((__const__,__always_inline__))
 static inline cce_condition_t const *
