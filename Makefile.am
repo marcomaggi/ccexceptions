@@ -127,7 +127,7 @@ tests_break_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
 tests_break_subtyping_SOURCES			= \
 	tests/break-subtyping.c		\
 	tests/break-subtyping-body.c	\
-	tests/break-subtyping-heaader.h
+	tests/break-subtyping-header.h
 
 ## --------------------------------------------------------------------
 
@@ -136,7 +136,7 @@ tests_unimplemented_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
 tests_unimplemented_subtyping_SOURCES		= \
 	tests/unimplemented-subtyping.c		\
 	tests/unimplemented-subtyping-body.c	\
-	tests/unimplemented-subtyping-heaader.h
+	tests/unimplemented-subtyping-header.h
 
 ## --------------------------------------------------------------------
 
