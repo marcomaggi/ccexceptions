@@ -418,6 +418,18 @@ struct cce_condition_error_t {
 cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr;
 cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr;
 
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_error (cce_condition_error_t * C CCE_UNUSED)
+{
+}
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_final_error (cce_condition_t * C CCE_UNUSED)
+{
+}
+
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
 cce_condition_new_error (void)
