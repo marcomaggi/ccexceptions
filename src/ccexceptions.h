@@ -262,9 +262,6 @@ struct cce_condition_t {
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_set_descriptor (cce_condition_t * C, cce_descriptor_t const * const D)
-  __attribute__((__leaf__,__nonnull__(1,2)));
-
 cce_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 

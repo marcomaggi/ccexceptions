@@ -36,12 +36,6 @@
  ** ----------------------------------------------------------------- */
 
 void
-cce_condition_set_descriptor (cce_condition_t * C, cce_descriptor_t const * const D)
-{
-  C->descriptor = D;
-}
-
-void
 cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
 {
   C->descriptor = D;

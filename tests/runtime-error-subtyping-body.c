@@ -79,7 +79,7 @@ my_condition_new_runtime_error_subtype (cce_destination_t L, int the_data)
 {
   my_condition_runtime_error_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_runtime_error_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
   my_condition_init_runtime_error_subtype(C, the_data);
   return (cce_condition_t const *) C;
 }

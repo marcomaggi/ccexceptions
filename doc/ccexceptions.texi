@@ -1374,14 +1374,6 @@ Pointer to the condition descriptor associated to this condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_set_descriptor (cce_condition_t * @var{C}, cce_descriptor_t const * const @var{D})
-Initialise the field @code{descriptor} of @var{C} to the descriptor @var{D}.  We use this function
-to in the initialisation process of a condition object that is derived from
-@objtype{cce_condition_t}, knowing that the @objtype{cce_condition_t} field is always the first in
-its subtype definition.
-@end deftypefun
-
-
 @deftypefun void cce_condition_init (cce_condition_t * @var{C}, cce_descriptor_t const * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
 pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
@@ -1853,7 +1845,7 @@ my_condition_new_break_subtype (cce_destination_t L, int the_data)
 @{
   my_condition_break_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_break_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_break_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_break_subtype_ptr->descriptor));
   my_condition_init_break_subtype(C, the_data);
   return (cce_condition_t const *) C;
 @}
@@ -2075,7 +2067,7 @@ my_condition_new_error_subtype (cce_destination_t L, int the_data)
 @{
   my_condition_error_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_error_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_error_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_error_subtype_ptr->descriptor));
   my_condition_init_error_subtype(C, the_data);
   return (cce_condition_t const *) C;
 @}
@@ -2298,7 +2290,7 @@ my_condition_new_runtime_error_subtype (cce_destination_t L, int the_data)
 @{
   my_condition_runtime_error_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_runtime_error_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
   my_condition_init_runtime_error_subtype(C, the_data);
   return (cce_condition_t const *) C;
 @}
@@ -2522,7 +2514,7 @@ my_condition_new_logic_error_subtype (cce_destination_t L, int the_data)
 @{
   my_condition_logic_error_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_logic_error_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_logic_error_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_logic_error_subtype_ptr->descriptor));
   my_condition_init_logic_error_subtype(C, the_data);
   return (cce_condition_t const *) C;
 @}
@@ -2747,7 +2739,7 @@ my_condition_new_unimplemented_subtype (cce_destination_t L, int the_data)
 @{
   my_condition_unimplemented_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_unimplemented_subtype_t));
   C->data = cce_sys_malloc(L, sizeof(int));
-  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_unimplemented_subtype_ptr->descriptor));
+  cce_condition_init((cce_condition_t *) C, &(my_descriptor_unimplemented_subtype_ptr->descriptor));
   my_condition_init_unimplemented_subtype(C, the_data);
   return (cce_condition_t const *) C;
 @}
