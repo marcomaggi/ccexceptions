@@ -63,7 +63,8 @@ check_PROGRAMS	= \
 	\
 	tests/break-subtyping			\
 	tests/unimplemented-subtyping		\
-	tests/error-subtyping
+	tests/error-subtyping			\
+	tests/runtime-error-subtyping
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -147,6 +148,15 @@ tests_error_subtyping_SOURCES			= \
 	tests/error-subtyping.c		\
 	tests/error-subtyping-body.c	\
 	tests/error-subtyping-header.h
+
+## --------------------------------------------------------------------
+
+tests_runtime_error_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_runtime_error_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
+tests_runtime_error_subtyping_SOURCES		= \
+	tests/runtime-error-subtyping.c		\
+	tests/runtime-error-subtyping-body.c	\
+	tests/runtime-error-subtyping-header.h
 
 ## --------------------------------------------------------------------
 

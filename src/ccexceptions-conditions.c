@@ -239,7 +239,7 @@ cce_descriptor_runtime_error_t const * const cce_descriptor_runtime_error_ptr = 
 /* This is the single instance of "runtime error" exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static cce_condition_runtime_error_t const cce_condition_runtime_error_stru = {
-  .root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
+  .parent.root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
 };
 
 cce_condition_runtime_error_t const * const cce_condition_runtime_error_ptr = &cce_condition_runtime_error_stru;
@@ -270,7 +270,7 @@ cce_descriptor_logic_error_t const * const cce_descriptor_logic_error_ptr = &cce
 /* This is the  single instance of "logic  error" exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static cce_condition_logic_error_t const cce_condition_logic_error_stru = {
-  .root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
+  .parent.root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
 };
 
 cce_condition_logic_error_t const * const cce_condition_logic_error_ptr = &cce_condition_logic_error_stru;

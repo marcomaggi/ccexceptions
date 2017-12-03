@@ -467,11 +467,23 @@ struct cce_descriptor_runtime_error_t {
 };
 
 struct cce_condition_runtime_error_t {
-  cce_condition_root_t	root;
+  cce_condition_error_t	parent;
 };
 
 cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr;
 cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCE_UNUSED)
+{
+}
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_final_runtime_error (cce_condition_t * C CCE_UNUSED)
+{
+}
 
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
@@ -510,7 +522,7 @@ struct cce_descriptor_logic_error_t {
 };
 
 struct cce_condition_logic_error_t {
-  cce_condition_root_t	root;
+  cce_condition_error_t	parent;
 };
 
 cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr;
