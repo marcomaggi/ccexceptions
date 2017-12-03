@@ -262,6 +262,9 @@ struct cce_condition_t {
 
 /* ------------------------------------------------------------------ */
 
+cce_decl void cce_condition_set_descriptor (cce_condition_t * C, cce_descriptor_t const * const D)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
 cce_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
@@ -359,6 +362,15 @@ struct cce_condition_break_t {
 
 cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
 cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
+
+cce_decl void cce_condition_init_break (cce_condition_break_t * C)
+  __attribute__((__pure__,__nonnull__(1)));
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_final_break (cce_condition_t * C CCE_UNUSED)
+{
+}
 
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *

@@ -59,7 +59,9 @@ check_PROGRAMS	= \
 	tests/conditions-hierarchy		\
 	tests/conditions-example		\
 	tests/conditions-tests			\
-	tests/sizeof
+	tests/sizeof				\
+	\
+	tests/break-subtyping
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -116,6 +118,15 @@ tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
+
+## --------------------------------------------------------------------
+
+tests_break_subtyping_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_break_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
+tests_break_subtyping_SOURCES			= \
+	tests/break-subtyping.c		\
+	tests/break-subtyping-body.c	\
+	tests/break-subtyping-heaader.h
 
 ## --------------------------------------------------------------------
 

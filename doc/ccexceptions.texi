@@ -1368,10 +1368,18 @@ All the following definitions are accessible from the header file @file{ccexcept
 Type of structure representing an exceptional condition object.  It has the following public fields:
 
 @table @code
-@item cce_descriptor_t const * condition
+@item cce_descriptor_t const * descriptor
 Pointer to the condition descriptor associated to this condition object.
 @end table
 @end deftp
+
+
+@deftypefun void cce_condition_set_descriptor (cce_condition_t * @var{C}, cce_descriptor_t const * const @var{D})
+Initialise the field @code{descriptor} of @var{C} to the descriptor @var{D}.  We use this function
+to in the initialisation process of a condition object that is derived from
+@objtype{cce_condition_t}, knowing that the @objtype{cce_condition_t} field is always the first in
+its subtype definition.
+@end deftypefun
 
 
 @deftypefun void cce_condition_init (cce_condition_t * @var{C}, cce_descriptor_t const * @var{D})
@@ -1608,7 +1616,8 @@ The function @cfunc{cce_retry}.
 @end itemize
 
 There should be only one @emph{unknown} condition object: the one predefined by @value{PACKAGE} and
-built into the library as statically allocated structure.
+built into the library as statically allocated structure.  Sub--typing from the unknown type is
+discouraged.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
@@ -1686,6 +1695,18 @@ Structure type representing an @emph{break} condition object.
 @end deftp
 
 
+@deftypefun void cce_condition_init_break (cce_condition_break_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_break_t}.
+@end deftypefun
+
+
+@deftypefun void cce_condition_final_break (cce_condition_break_t * @var{C})
+Finalise a condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_break_t}.
+@end deftypefun
+
+
 @deftypefun {cce_condition_t const *} cce_condition_new_break (void)
 Return a pointer to the statically allocated structure representing the single @emph{break}
 condition object.
@@ -1721,6 +1742,158 @@ the single @emph{break} condition object.  The parent of this descriptor is the 
 @deftypevr {Dynamic Constant} {cce_condition_break_t const * const} cce_condition_break_ptr
 Pointer to a statically allocated structure representing the @emph{break} condition object.
 @end deftypevr
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Sub--typing example
+
+
+To define a sub--type of @objtype{cce_condition_break_t} we can use the following code, which
+defines a new condition object type @objtype{my_condition_break_subtype_t}.  The code is meant to be
+split into header and body parts; we can find the code in the test suite of the source distribution.
+
+In the header file @file{break-subtype-header.c} we put:
+
+@smallexample
+#ifndef BREAK_SUBTYPING_HEADER_H
+#define BREAK_SUBTYPING_HEADER_H 1
+
+#include <ccexceptions.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct my_descriptor_break_subtype_t    my_descriptor_break_subtype_t;
+typedef struct my_condition_break_subtype_t     my_condition_break_subtype_t;
+
+struct my_descriptor_break_subtype_t @{
+  cce_descriptor_t      descriptor;
+@};
+
+struct my_condition_break_subtype_t @{
+  cce_condition_break_t parent;
+  int *                 data;
+@};
+
+extern my_descriptor_break_subtype_t const * const      my_descriptor_break_subtype_ptr;
+
+extern void my_condition_break_subtype_init (my_condition_break_subtype_t * C, int the_data)
+  __attribute__((__nonnull__(1)));
+
+extern cce_condition_t const * my_condition_break_subtype_new (cce_destination_t L, int the_data)
+  __attribute__((__nonnull__(1)));
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+my_condition_is_break_subtype (cce_condition_t const * C)
+@{
+  return cce_is_condition(C, &(my_descriptor_break_subtype_ptr->descriptor));
+@}
+
+extern void break_subtyping_init_module (void);
+
+#endif /* BREAK_SUBTYPING_HEADER_H */
+@end smallexample
+
+@noindent
+in the body file @file{break-subtype-body.c} we put:
+
+@smallexample
+#include <ccexceptions.h>
+#include "break-subtyping-header.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+static void
+my_condition_break_subtype_final (cce_condition_t * _C)
+/* Here we  finalise only  the fields  of "my_condition_break_subtype_t"
+   leaving untouched the fields of the parent type. */
+@{
+  my_condition_break_subtype_t * C = (my_condition_break_subtype_t *) _C;
+  *(C->data) = 0;
+@}
+
+static void
+my_condition_break_subtype_delete (cce_condition_t * _C)
+@{
+  my_condition_break_subtype_t * C = (my_condition_break_subtype_t *) _C;
+
+  free(C->data);
+  free(C);
+@}
+
+static char const *
+my_condition_break_subtype_static_message (cce_condition_t const * C CCE_UNUSED)
+@{
+  return "Break subtype exceptional condition";
+@}
+
+static my_descriptor_break_subtype_t my_descriptor_break_subtype_stru = @{
+  /* This field is set below by the module initialisation function. */
+  .descriptor.parent            = NULL,
+  .descriptor.delete            = my_condition_break_subtype_delete,
+  .descriptor.final             = my_condition_break_subtype_final,
+  .descriptor.static_message    = my_condition_break_subtype_static_message
+@};
+
+my_descriptor_break_subtype_t const * const my_descriptor_break_subtype_ptr = &my_descriptor_break_subtype_stru;
+
+void
+my_condition_break_subtype_init (my_condition_break_subtype_t * C, int the_data)
+/* Here we call the parent's initialisation function; then we initialise
+   the fields of this type. */
+@{
+  cce_condition_init_break(&(C->parent));
+  *(C->data) = the_data;
+@}
+
+cce_condition_t const *
+my_condition_break_subtype_new (cce_destination_t L, int the_data)
+/* Here  we  allocate  the  asynchronous resources  and  initialise  the
+   descriptor field; then we call the initialisation function. */
+@{
+  my_condition_break_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_break_subtype_t));
+  C->data = cce_sys_malloc(L, sizeof(int));
+  cce_condition_set_descriptor((cce_condition_t *) C, &(my_descriptor_break_subtype_ptr->descriptor));
+  my_condition_break_subtype_init(C, the_data);
+  return (cce_condition_t const *) C;
+@}
+
+void
+break_subtyping_init_module (void)
+@{
+  my_descriptor_break_subtype_stru.descriptor.parent = &(cce_descriptor_break_ptr->descriptor);
+@}
+@end smallexample
+
+@noindent
+and we can use the definition as follows in the program @file{break-subtype.c}:
+
+@example
+#include <ccexceptions.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "break-subtyping-header.h"
+
+int
+main (void)
+@{
+  break_subtyping_init_module();
+
+  @{
+    cce_location_t      L[1];
+
+    if (cce_location(L)) @{
+      fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
+      cce_run_error_handlers_final(L);
+    @} else @{
+      cce_raise(L, my_condition_break_subtype_new(L, 123));
+      cce_run_cleanup_handlers(L);
+    @}
+  @}
+
+  exit(EXIT_SUCCESS);
+@}
+@end example
 
 @c page
 @node conditions error
