@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.2-devel.0
+--------------------------------
+
+* Added initialiser and finaliser functions for some condition objects.
+
+
 Notes for revision 0.6.0-devel.0
 --------------------------------
 
