@@ -1541,12 +1541,40 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_descriptor_root_t
 Type of the exceptional condition descriptor representing the root of the conditions hierarchy tree.
-This descriptor has a single instance built into the library.
+This descriptor has a single instance built into the library.  It has the following public fields:
+
+@table @code
+@item cce_descriptor_t descriptor
+The descriptor of the condition--object type.
+@end table
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_root_t
+Structure type representing the @emph{root} condition object.  It has the following public fields:
+
+@table @code
+@item cce_condition_t condition
+The condition--object base values.
+@end table
 @end deftp
 
 
 @deftypefun void cce_descriptor_set_root_parent (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the unique @emph{root} condition descriptor.
+@end deftypefun
+
+
+@deftypefun void cce_condition_init_root (cce_condition_root_t * @var{C})
+Initialisation function for the condition object.  This function must be called by all the
+initialisation function of condition object types derived from @objtype{cce_condition_root_t}.
+
+@quotation
+@strong{NOTE} At present this function does nothing, but still we must call it.  We need to remember
+that the true initialisation of the field @code{condition} is performed by
+@cfunc{cce_condition_init}, which must be always called by the ``condition_new'' function of the
+condition--object type being instantiated.
+@end quotation
 @end deftypefun
 
 

@@ -1,5 +1,13 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.2-devel.1
+--------------------------------
+
+* Added function "cce_condition_init_root()".
+
+* More documentation for the "root" condition type.
+
+
 Notes for revision 0.6.2-devel.0
 --------------------------------
 

@@ -298,6 +298,15 @@ struct cce_condition_root_t {
 cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
   __attribute__((__nonnull__(1)));
 
+static inline void
+cce_condition_init_root (cce_condition_root_t * C CCE_UNUSED)
+{
+  /* We  do   nothing  here.   We   need  to  remember  that   the  true
+     initialisation   of  the   field   "condition"   is  performed   by
+     "cce_condition_init()",  which   must  be  always  called   by  the
+     "condition_new" function. */
+}
+
 cce_decl bool cce_condition_is_root (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
@@ -364,6 +373,7 @@ __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
 cce_condition_init_break (cce_condition_break_t * C CCE_UNUSED)
 {
+  cce_condition_init_root(&(C->root));
 }
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
@@ -419,6 +429,7 @@ __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
 cce_condition_init_error (cce_condition_error_t * C CCE_UNUSED)
 {
+  cce_condition_init_root(&(C->root));
 }
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
@@ -584,6 +595,7 @@ __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
 cce_condition_init_unimplemented (cce_condition_unimplemented_t * C CCE_UNUSED)
 {
+  cce_condition_init_root(&(C->root));
 }
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
