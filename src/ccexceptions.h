@@ -295,6 +295,8 @@ struct cce_condition_root_t {
   cce_condition_t	condition;
 };
 
+cce_decl cce_descriptor_root_t const * const cce_descriptor_root_ptr;
+
 cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
   __attribute__((__nonnull__(1)));
 

@@ -95,12 +95,14 @@ cce_condition_root_static_message_fun (cce_condition_t const * C CCE_UNUSED)
 
 /* This  condition descriptor  is  the  root of  the  tree of  condition
    descriptors. */
-static const cce_descriptor_root_t cce_descriptor_root_stru = {
+static cce_descriptor_root_t const cce_descriptor_root_stru = {
   .descriptor.parent		= NULL,
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_root_static_message_fun
 };
+
+cce_descriptor_root_t const * const cce_descriptor_root_ptr = &cce_descriptor_root_stru;
 
 void
 cce_descriptor_set_root_parent (cce_descriptor_t * D)

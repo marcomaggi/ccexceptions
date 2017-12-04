@@ -1585,6 +1585,12 @@ returns @true{}.
 @end deftypefun
 
 
+@deftypevr {Dynamic Constant} {cce_descriptor_root_t const * const} cce_descriptor_root_ptr
+Pointer to a statically allocated structure representing the @emph{root} condition descriptor for
+@emph{root} condition objects.
+@end deftypevr
+
+
 To define an exceptional condition type @code{my_descriptor_error_t} whose parent is the @emph{root}
 condition, we must write initialisation code as follows:
 
