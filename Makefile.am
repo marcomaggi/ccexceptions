@@ -61,6 +61,7 @@ check_PROGRAMS	= \
 	tests/conditions-tests			\
 	tests/sizeof				\
 	\
+	tests/root-subtyping			\
 	tests/break-subtyping			\
 	tests/unimplemented-subtyping		\
 	tests/error-subtyping			\
@@ -122,6 +123,15 @@ tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
+
+## --------------------------------------------------------------------
+
+tests_root_subtyping_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_root_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
+tests_root_subtyping_SOURCES			= \
+	tests/root-subtyping.c		\
+	tests/root-subtyping-body.c	\
+	tests/root-subtyping-header.h
 
 ## --------------------------------------------------------------------
 
