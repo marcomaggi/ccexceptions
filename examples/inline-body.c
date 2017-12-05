@@ -83,7 +83,7 @@ my_condition_delete_error_2 (cce_condition_t * _C)
 char const *
 my_condition_static_message_error_2 (cce_condition_t const * C CCE_UNUSED)
 {
-  return "Error-1 exceptional condition";
+  return "Error-2 exceptional condition";
 }
 
 
