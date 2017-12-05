@@ -377,9 +377,7 @@ cce_descriptor_errno_t const cce_descriptor_errno_stru = {
 cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_errno_t const *) &cce_descriptor_errno_stru;
 
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
-  { .runtime_error = { \
-    .error = { \
-    .root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } } } }, .errnum = ERRNO, .message = MESSAGE }
+  { .runtime_error.error.root.condition.descriptor = &(cce_descriptor_errno_stru.descriptor), .errnum = ERRNO, .message = MESSAGE }
 
 #define ERRNO_CONDITIONS_NUM		149
 #define LAST_ERRNO_CONDITION		148
