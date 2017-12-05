@@ -465,7 +465,7 @@ struct cce_descriptor_runtime_error_t {
 };
 
 struct cce_condition_runtime_error_t {
-  cce_condition_error_t	parent;
+  cce_condition_error_t	error;
 };
 
 cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr;
@@ -514,7 +514,7 @@ struct cce_descriptor_logic_error_t {
 };
 
 struct cce_condition_logic_error_t {
-  cce_condition_error_t	parent;
+  cce_condition_error_t	error;
 };
 
 cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr;
@@ -612,7 +612,7 @@ struct cce_descriptor_invalid_argument_t {
 };
 
 struct cce_condition_invalid_argument_t {
-  cce_condition_root_t	root;
+  cce_condition_logic_error_t	logic_error;
   /* Pointer to  a statically  allocated ASCIIZ string  representing the
      function name; usually generated with "__func__". */
   char const *		funcname;
@@ -655,7 +655,7 @@ struct cce_descriptor_errno_t {
 };
 
 struct cce_condition_errno_t {
-  cce_condition_root_t	root;
+  cce_condition_runtime_error_t	runtime_error;
   int			errnum;
   char const *		message;
 };

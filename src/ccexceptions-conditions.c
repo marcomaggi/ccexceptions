@@ -235,7 +235,7 @@ cce_descriptor_runtime_error_t const * const cce_descriptor_runtime_error_ptr = 
 /* This is the single instance of "runtime error" exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static cce_condition_runtime_error_t const cce_condition_runtime_error_stru = {
-  .parent.root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
+  .error.root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
 };
 
 cce_condition_runtime_error_t const * const cce_condition_runtime_error_ptr = &cce_condition_runtime_error_stru;
@@ -266,7 +266,7 @@ cce_descriptor_logic_error_t const * const cce_descriptor_logic_error_ptr = &cce
 /* This is the  single instance of "logic  error" exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static cce_condition_logic_error_t const cce_condition_logic_error_stru = {
-  .parent.root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
+  .error.root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
 };
 
 cce_condition_logic_error_t const * const cce_condition_logic_error_ptr = &cce_condition_logic_error_stru;
@@ -327,10 +327,10 @@ cce_condition_t *
 cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
-  C->root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
+  C->logic_error.error.root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
   C->funcname	= func;
   C->index	= index;
-  return &(C->root.condition);
+  return (cce_condition_t *) C;
 }
 void
 cce_condition_invalid_argument_destructor (cce_condition_t * C CCE_UNUSED)
@@ -351,7 +351,7 @@ cce_condition_invalid_argument_static_message (cce_condition_t const * C CCE_UNU
 static char const *
 cce_condition_errno_static_message_fun (cce_condition_t const * C)
 {
-  cce_condition_errno_t const *	EC = (cce_condition_errno_t const *)C;
+  CCE_PC(cce_condition_errno_t const, EC, C);
   return EC->message;
 }
 
@@ -367,7 +367,12 @@ cce_descriptor_errno_t const cce_descriptor_errno_stru = {
 cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_errno_t const *) &cce_descriptor_errno_stru;
 
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
-  { .root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } }, .errnum = ERRNO, .message = MESSAGE }
+  { .runtime_error = { \
+    .error = { \
+    .root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } } } }, .errnum = ERRNO, .message = MESSAGE }
+
+
+//  { .runtime_error.error.root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } }, .errnum = ERRNO, .message = MESSAGE }
 
 #define ERRNO_CONDITIONS_NUM		149
 #define LAST_ERRNO_CONDITION		148
@@ -535,12 +540,12 @@ cce_condition_new_errno (int errnum)
 {
   for (int i = 0; i < ERRNO_CONDITIONS_NUM; ++i) {
     if (errnum == errno_conditions[i].errnum) {
-      return &(errno_conditions[i].root.condition);
+      return &(errno_conditions[i].runtime_error.error.root.condition);
     }
   }
   /* If  we  are  here  ERRNUM  is an  invalid  "errno"  value  for  the
      underlying platform. */
-  return &(errno_conditions[LAST_ERRNO_CONDITION].root.condition);
+  return &(errno_conditions[LAST_ERRNO_CONDITION].runtime_error.error.root.condition);
 }
 
 /* end of file */

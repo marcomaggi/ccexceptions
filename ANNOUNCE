@@ -47,6 +47,12 @@ Notes for revision 0.6.2-devel.3
 
 * Fixed tests handling asynchronous resources incorrectly.
 
+* Fixed   parent  type   of  "cce_condition_invalid_argument_t"   to  be
+  "cce_condition_logic_error_t".
+
+* Fixed    parent     type    of    "cce_condition_errno_t"     to    be
+  "cce_condition_runtime_error_t".
+
 Notes for revision 0.6.2-devel.2
 --------------------------------
 
