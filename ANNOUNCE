@@ -33,7 +33,7 @@ the documentation is available online:
 Notes for revision 0.6.2-devel.3
 --------------------------------
 
-* Fixes wrong names for malloc handlers.  In the source code it was wrongly:
+* Fixed wrong names for malloc handlers.  In the source code it was wrongly:
 
     cce_sys_error_handler_malloc_init()
     cce_sys_error_handler_malloc_init()
@@ -45,6 +45,7 @@ Notes for revision 0.6.2-devel.3
 
 * Added some examples under the "examples" directory of the source tree.
 
+* Fixed tests handling asynchronous resources incorrectly.
 
 Notes for revision 0.6.2-devel.2
 --------------------------------
