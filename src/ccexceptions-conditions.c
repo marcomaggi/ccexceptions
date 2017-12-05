@@ -297,11 +297,7 @@ cce_descriptor_unimplemented_t const * const cce_descriptor_unimplemented_ptr = 
 /* This is  the single instance of  unimplemented exceptional condition.
    It is used by "cce_raise()" and "cce_retry()". */
 static cce_condition_unimplemented_t const cce_condition_unimplemented_stru = {
-  .root = {
-    .condition = {
-      .descriptor = &(cce_descriptor_unimplemented_stru.descriptor)
-    }
-  }
+  .logic_error.error.root.condition.descriptor = &(cce_descriptor_unimplemented_stru.descriptor)
 };
 
 cce_condition_unimplemented_t const * const cce_condition_unimplemented_ptr = &cce_condition_unimplemented_stru;

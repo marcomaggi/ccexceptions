@@ -53,6 +53,9 @@ Notes for revision 0.6.2-devel.3
 * Fixed    parent     type    of    "cce_condition_errno_t"     to    be
   "cce_condition_runtime_error_t".
 
+* Fixed   parent   type   of   "cce_condition_unimplemented_t"   to   be
+  "cce_condition_logic_error_t".
+
 Notes for revision 0.6.2-devel.2
 --------------------------------
 

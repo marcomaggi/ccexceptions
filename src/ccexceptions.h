@@ -563,7 +563,7 @@ struct cce_descriptor_unimplemented_t {
 };
 
 struct cce_condition_unimplemented_t {
-  cce_condition_root_t	root;
+  cce_condition_logic_error_t	logic_error;
 };
 
 cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr;
@@ -573,7 +573,7 @@ __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
 cce_condition_init_unimplemented (cce_condition_unimplemented_t * C CCE_UNUSED)
 {
-  cce_condition_init_root(&(C->root));
+  cce_condition_init_logic_error(&(C->logic_error));
 }
 
 __attribute__((__const__,__always_inline__))
