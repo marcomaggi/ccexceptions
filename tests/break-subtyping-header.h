@@ -37,7 +37,7 @@ struct my_descriptor_break_subtype_t {
 };
 
 struct my_condition_break_subtype_t {
-  cce_condition_runtime_error_t	runtime_error;
+  cce_condition_break_t		parent;
   int *				data;
 };
 
