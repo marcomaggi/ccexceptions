@@ -49,6 +49,20 @@ main (void)
 	exit(EXIT_FAILURE);
       }
 
+      if (cce_condition_is_error(cce_condition(L))) {
+	fprintf(stderr, "%s: is error condition\n", __func__);
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
+	exit(EXIT_FAILURE);
+      }
+
+      if (cce_condition_is_root(cce_condition(L))) {
+	fprintf(stderr, "%s: is root condition\n", __func__);
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
+	exit(EXIT_FAILURE);
+      }
+
       cce_run_error_handlers_final(L);
     } else {
       cce_raise(L, my_condition_new_runtime_error_subtype(L, 123));
