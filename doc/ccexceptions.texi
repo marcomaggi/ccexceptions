@@ -2177,6 +2177,24 @@ values of suitable types; we can apply this macro to pointers of all the types d
 Pointer to a statically allocated structure representing the condition descriptor.
 @end deftypevr
 
+@c ------------------------------------------------------------------------
+
+@subsubheading Sub--typing example
+
+
+To define a sub--type of @objtype{cce_condition_invalid_argument_t} we can copy the code in the
+files:
+
+@example
+invalid-arg-subtype.c
+invalid-arg-subtype-headear.h
+invalid-arg-subtype-body.c
+@end example
+
+@noindent
+under the @file{tests} directory of the source distribution; the code defines a new
+condition--object type @objtype{my_condition_invalid_argument_subtype_t}.
+
 @c page
 @node conditions errno
 @section Predefined @code{errno} conditions
