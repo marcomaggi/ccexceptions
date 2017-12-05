@@ -91,7 +91,7 @@ cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t
 }
 
 void
-cce_sys_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
+cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
 {
   H->function	= cce_handler_malloc_function;
   H->pointer	= pointer;
@@ -99,7 +99,7 @@ cce_sys_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void
 }
 
 void
-cce_sys_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
+cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
 {
   H->function	= cce_handler_malloc_function;
   H->pointer	= pointer;
