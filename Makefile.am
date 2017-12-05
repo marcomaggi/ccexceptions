@@ -76,7 +76,7 @@ endif
 
 TESTS				= $(check_PROGRAMS)
 
-ccexceptions_tests_cppflags	= -I$(srcdir)/src
+ccexceptions_tests_cppflags	= -I$(srcdir)/src -I$(srcdir)/tests
 ccexceptions_tests_ldadd	= libccexceptions.la
 
 tests_version_CPPFLAGS				= $(ccexceptions_tests_cppflags)
@@ -182,6 +182,42 @@ tests_logic_error_subtyping_SOURCES		= \
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
+
+#page
+### examples
+
+noinst_PROGRAMS	= \
+	examples/plain		\
+	examples/inline
+
+ccexceptions_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples
+ccexceptions_examples_ldadd	= libccexceptions.la
+
+.PHONY: examples
+
+examples: $(noinst_PROGRAMS)
+	-./examples/plain
+	-./examples/inline
+
+## --------------------------------------------------------------------
+
+examples_plain_SOURCES		=	\
+	examples/plain.c		\
+	examples/plain-header.h		\
+	examples/plain-body.c
+
+examples_plain_CPPFLAGS		= $(ccexceptions_examples_cppflags)
+examples_plain_LDADD		= $(ccexceptions_examples_ldadd)
+
+## --------------------------------------------------------------------
+
+examples_inline_SOURCES		=	\
+	examples/inline.c		\
+	examples/inline-header.h	\
+	examples/inline-body.c
+
+examples_inline_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_inline_LDADD		= $(ccexceptions_examples_ldadd)
 
 #page
 #### Coverity support
