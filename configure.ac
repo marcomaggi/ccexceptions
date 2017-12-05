@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCExceptions],[0.6.2-devel.1],
+AC_INIT([CCExceptions],[0.6.2-devel.2],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
@@ -69,7 +69,7 @@ dnl AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
 dnl page
 #### libraries interface version
 
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d2.1])
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d2.2])
 AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 
 dnl This is the version stored in the pkg-config data file.

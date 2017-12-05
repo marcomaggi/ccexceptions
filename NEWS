@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.2-devel.2
+--------------------------------
+
+* Removed some useless condition object finalisation functions.
+
+
 Notes for revision 0.6.2-devel.1
 --------------------------------
 
