@@ -2178,7 +2178,8 @@ Pointer to a statically allocated structure representing the condition descripto
 
 
 The @dfn{errno exceptional--condition object} has the purpose of describing an exceptional condition
-caused by a system function setting @code{errno}.
+caused by a system function setting @code{errno}.  Condition objects of this type are @strong{not}
+meant to be sub--typed.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
