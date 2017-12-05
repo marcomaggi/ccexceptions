@@ -1,11 +1,11 @@
 /*
   Part of: CCExceptions
   Contents: header definitions for subtyping of "root" conditions
-  Date: Dec  4, 2017
+  Date: Dec  3, 2017
 
   Abstract
 
-	Header definitions for subtyping of "root" conditions
+	Header definitions for subtyping of "root" conditions.
 
   Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -37,13 +37,13 @@ struct my_descriptor_root_subtype_t {
 };
 
 struct my_condition_root_subtype_t {
-  cce_condition_root_t	parent;
+  cce_condition_root_t	root;
   int *			data;
 };
 
 extern my_descriptor_root_subtype_t const * const	my_descriptor_root_subtype_ptr;
 
-extern void my_condition_init_root_subtype (my_condition_root_subtype_t * C, int the_data)
+extern void my_condition_init_root_subtype (cce_destination_t L, my_condition_root_subtype_t * C, int the_data)
   __attribute__((__nonnull__(1)));
 
 extern cce_condition_t const * my_condition_new_root_subtype (cce_destination_t L, int the_data)

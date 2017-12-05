@@ -1,7 +1,7 @@
 /*
   Part of: CCExceptions
   Contents: test for subtyping of root conditions
-  Date: Dec  4, 2017
+  Date: Dec  3, 2017
 
   Abstract
 
@@ -33,10 +33,11 @@ main (void)
 
     if (cce_location(L)) {
       fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-      if (! my_condition_is_root_subtype(cce_condition(L))) {
-	exit(EXIT_FAILURE);
-      }
-      if (! cce_condition_is_root(cce_condition(L))) {
+      if (my_condition_is_root_subtype(cce_condition(L))) {
+	CCE_PC(my_condition_root_subtype_t, C, cce_condition(L));
+	fprintf(stderr, "%s: data=%d\n", __func__, *(C->data));
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
       }
       cce_run_error_handlers_final(L);
