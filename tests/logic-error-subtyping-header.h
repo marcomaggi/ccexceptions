@@ -37,13 +37,13 @@ struct my_descriptor_logic_error_subtype_t {
 };
 
 struct my_condition_logic_error_subtype_t {
-  cce_condition_logic_error_t	parent;
-  int *			data;
+  cce_condition_logic_error_t	logic_error;
+  int *				data;
 };
 
 extern my_descriptor_logic_error_subtype_t const * const	my_descriptor_logic_error_subtype_ptr;
 
-extern void my_condition_init_logic_error_subtype (my_condition_logic_error_subtype_t * C, int the_data)
+extern void my_condition_init_logic_error_subtype (cce_destination_t L, my_condition_logic_error_subtype_t * C, int the_data)
   __attribute__((__nonnull__(1)));
 
 extern cce_condition_t const * my_condition_new_logic_error_subtype (cce_destination_t L, int the_data)
