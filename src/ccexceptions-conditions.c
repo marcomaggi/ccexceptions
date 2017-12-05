@@ -347,7 +347,8 @@ cce_condition_t const *
 cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
-  C->logic_error.error.root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
+
+  cce_condition_init((cce_condition_t *) C, &(cce_descriptor_invalid_argument_stru.descriptor));
   cce_condition_init_invalid_argument(C, func, index);
   return &(C->logic_error.error.root.condition);
 }
@@ -379,9 +380,6 @@ cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_
   { .runtime_error = { \
     .error = { \
     .root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } } } }, .errnum = ERRNO, .message = MESSAGE }
-
-
-//  { .runtime_error.error.root = { .condition = { .descriptor = &(cce_descriptor_errno_stru.descriptor) } }, .errnum = ERRNO, .message = MESSAGE }
 
 #define ERRNO_CONDITIONS_NUM		149
 #define LAST_ERRNO_CONDITION		148
