@@ -373,7 +373,7 @@ cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
-cce_condition_init_break (cce_condition_break_t * C CCE_UNUSED)
+cce_condition_init_break (cce_condition_break_t * C)
 {
   cce_condition_init_root(&(C->root));
 }
@@ -423,7 +423,7 @@ cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr;
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
-cce_condition_init_error (cce_condition_error_t * C CCE_UNUSED)
+cce_condition_init_error (cce_condition_error_t * C)
 {
   cce_condition_init_root(&(C->root));
 }
@@ -571,7 +571,7 @@ cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemente
 
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
-cce_condition_init_unimplemented (cce_condition_unimplemented_t * C CCE_UNUSED)
+cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
 {
   cce_condition_init_logic_error(&(C->logic_error));
 }
@@ -622,7 +622,9 @@ struct cce_condition_invalid_argument_t {
 
 cce_decl cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr;
 
-cce_decl cce_condition_t * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
+cce_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index);
+
+cce_decl cce_condition_t const * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))

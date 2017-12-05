@@ -304,39 +304,52 @@ cce_condition_unimplemented_t const * const cce_condition_unimplemented_ptr = &c
 
 
 /** --------------------------------------------------------------------
- ** Invalid function argument.
+ ** Invalid function argument condition.
  ** ----------------------------------------------------------------- */
 
-static void		cce_condition_invalid_argument_destructor     (cce_condition_t * C);
-static char const *	cce_condition_invalid_argument_static_message (cce_condition_t const * C);
+static cce_condition_delete_fun_t		cce_condition_delete_invalid_argument;
+static cce_condition_static_message_fun_t	cce_condition_static_message_invalid_argument;
 
 static cce_descriptor_invalid_argument_t const cce_descriptor_invalid_argument_stru = {
   .descriptor.parent		= &(cce_descriptor_logic_error_stru.descriptor),
-  .descriptor.delete		= cce_condition_invalid_argument_destructor,
+  .descriptor.delete		= cce_condition_delete_invalid_argument,
   .descriptor.final		= NULL,
-  .descriptor.static_message	= cce_condition_invalid_argument_static_message
+  .descriptor.static_message	= cce_condition_static_message_invalid_argument
 };
 
 cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr = &cce_descriptor_invalid_argument_stru;
 
-cce_condition_t *
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_delete_invalid_argument (cce_condition_t * C CCE_UNUSED)
+{
+  free(C);
+}
+
+char const *
+cce_condition_static_message_invalid_argument (cce_condition_t const * C CCE_UNUSED)
+{
+  return "invalid function argument";
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index)
+{
+  cce_condition_init_logic_error(&(C->logic_error));
+  C->funcname	= func;
+  C->index	= index;
+}
+
+cce_condition_t const *
 cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsigned index)
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
   C->logic_error.error.root.condition.descriptor = &(cce_descriptor_invalid_argument_stru.descriptor);
-  C->funcname	= func;
-  C->index	= index;
-  return (cce_condition_t *) C;
-}
-void
-cce_condition_invalid_argument_destructor (cce_condition_t * C CCE_UNUSED)
-{
-  free(C);
-}
-char const *
-cce_condition_invalid_argument_static_message (cce_condition_t const * C CCE_UNUSED)
-{
-  return "invalid function argument";
+  cce_condition_init_invalid_argument(C, func, index);
+  return &(C->logic_error.error.root.condition);
 }
 
 

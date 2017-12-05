@@ -2143,7 +2143,12 @@ One--based index of the offending argument.
 @end deftp
 
 
-@deftypefun {cce_condition_invalid_argument_t *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, char const * @var{func}, unsigned @var{index})
+@deftypefun void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * @var{C}, char const * @var{func}, unsigned @var{index})
+Initialisation function for the condition object.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, char const * @var{func}, unsigned @var{index})
 Build and return a new condition object.  If building the object fails: raise an exception to the
 location @var{L}.
 @end deftypefun
