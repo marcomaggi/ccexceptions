@@ -5,7 +5,7 @@
 
   Abstract
 
-	Header definitions for subtyping of "unimplemented" conditions
+	Header definitions for subtyping of "unimplemented" conditions.
 
   Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -37,13 +37,13 @@ struct my_descriptor_unimplemented_subtype_t {
 };
 
 struct my_condition_unimplemented_subtype_t {
-  cce_condition_unimplemented_t	parent;
-  int *			data;
+  cce_condition_runtime_error_t	runtime_error;
+  int *				data;
 };
 
 extern my_descriptor_unimplemented_subtype_t const * const	my_descriptor_unimplemented_subtype_ptr;
 
-extern void my_condition_init_unimplemented_subtype (my_condition_unimplemented_subtype_t * C, int the_data)
+extern void my_condition_init_unimplemented_subtype (cce_destination_t L, my_condition_unimplemented_subtype_t * C, int the_data)
   __attribute__((__nonnull__(1)));
 
 extern cce_condition_t const * my_condition_new_unimplemented_subtype (cce_destination_t L, int the_data)
