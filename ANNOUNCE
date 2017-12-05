@@ -43,6 +43,9 @@ Notes for revision 0.6.2-devel.3
     cce_error_handler_malloc_init()
     cce_error_handler_malloc_init()
 
+* Added some examples under the "examples" directory of the source tree.
+
+
 Notes for revision 0.6.2-devel.2
 --------------------------------
 
