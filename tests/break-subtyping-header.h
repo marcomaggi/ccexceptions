@@ -5,7 +5,7 @@
 
   Abstract
 
-	Header definitions for subtyping of "break" conditions
+	Header definitions for subtyping of "break" conditions.
 
   Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
