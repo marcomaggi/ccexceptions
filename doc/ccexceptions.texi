@@ -2209,7 +2209,7 @@ A statically allocated string describing the error.
 @end deftp
 
 
-@deftypefun {cce_condition_errno_t const *} cce_condition_new_errno (int @var{errnum})
+@deftypefun {cce_condition_t const *} cce_condition_new_errno (int @var{errnum})
 Given the @code{errno} code @var{errnum}, return the pointer to the condition object associated to
 it.
 
@@ -2219,7 +2219,7 @@ condition object representing an invalid code.
 @end deftypefun
 
 
-@deftypefun {cce_condition_errno_t const *} cce_condition_new_errno_clear (void)
+@deftypefun {cce_condition_t const *} cce_condition_new_errno_clear (void)
 Consume the current value of @code{errno} and return the return value of
 @cfunc{cce_condition_new_errno} applied to it.  Before returning: @code{errno} is reset to zero.
 @end deftypefun
