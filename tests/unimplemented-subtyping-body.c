@@ -96,7 +96,7 @@ my_condition_init_unimplemented_subtype (cce_destination_t L, my_condition_unimp
  * the fields of this type.
  */
 {
-  cce_condition_init_runtime_error(&(C->runtime_error));
+  cce_condition_init_unimplemented(&(C->unimplemented));
   C->data = cce_sys_malloc(L, sizeof(int));
   *(C->data) = the_data;
   if (1) { fprintf(stderr, "%s: initialised %p\n", __func__, (void*)C); }

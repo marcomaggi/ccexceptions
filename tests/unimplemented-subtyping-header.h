@@ -37,7 +37,7 @@ struct my_descriptor_unimplemented_subtype_t {
 };
 
 struct my_condition_unimplemented_subtype_t {
-  cce_condition_runtime_error_t	runtime_error;
+  cce_condition_unimplemented_t	unimplemented;
   int *				data;
 };
 
