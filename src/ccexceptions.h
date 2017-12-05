@@ -378,12 +378,6 @@ cce_condition_init_break (cce_condition_break_t * C CCE_UNUSED)
   cce_condition_init_root(&(C->root));
 }
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
-static inline void
-cce_condition_final_break (cce_condition_t * C CCE_UNUSED)
-{
-}
-
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
 cce_condition_new_break (void)
@@ -434,12 +428,6 @@ cce_condition_init_error (cce_condition_error_t * C CCE_UNUSED)
   cce_condition_init_root(&(C->root));
 }
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
-static inline void
-cce_condition_final_error (cce_condition_t * C CCE_UNUSED)
-{
-}
-
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
 cce_condition_new_error (void)
@@ -486,12 +474,6 @@ cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_erro
 __attribute__((__always_inline__,__const__,__nonnull__(1)))
 static inline void
 cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCE_UNUSED)
-{
-}
-
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
-static inline void
-cce_condition_final_runtime_error (cce_condition_t * C CCE_UNUSED)
 {
 }
 
@@ -544,12 +526,6 @@ cce_condition_init_logic_error (cce_condition_logic_error_t * C CCE_UNUSED)
 {
 }
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
-static inline void
-cce_condition_final_logic_error (cce_condition_t * C CCE_UNUSED)
-{
-}
-
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
 cce_condition_new_logic_error (void)
@@ -598,12 +574,6 @@ static inline void
 cce_condition_init_unimplemented (cce_condition_unimplemented_t * C CCE_UNUSED)
 {
   cce_condition_init_root(&(C->root));
-}
-
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
-static inline void
-cce_condition_final_unimplemented (cce_condition_t * C CCE_UNUSED)
-{
 }
 
 __attribute__((__const__,__always_inline__))

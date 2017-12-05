@@ -1845,12 +1845,6 @@ Initialise an already allocated condition object.  This function exists to allow
 @end deftypefun
 
 
-@deftypefun void cce_condition_final_break (cce_condition_t * @var{C})
-Finalise a condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_break_t}.
-@end deftypefun
-
-
 @deftypefun {cce_condition_t const *} cce_condition_new_break (void)
 Return a pointer to the statically allocated structure representing the single @emph{break}
 condition object.
@@ -2070,12 +2064,6 @@ Initialise an already allocated condition object.  This function exists to allow
 @end deftypefun
 
 
-@deftypefun void cce_condition_final_error (cce_condition_t * @var{C})
-Finalise a condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_error_t}.
-@end deftypefun
-
-
 @deftypefun {cce_condition_t const *} cce_condition_new_error (void)
 Return a pointer to the statically allocated structure representing the single @emph{error}
 condition object.
@@ -2288,12 +2276,6 @@ Structure type representing a @emph{run--time} condition object.
 
 @deftypefun void cce_condition_init_runtime_error (cce_condition_runtime_error_t * @var{C})
 Initialise an already allocated condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_runtime_error_t}.
-@end deftypefun
-
-
-@deftypefun void cce_condition_final_runtime_error (cce_condition_t * @var{C})
-Finalise a condition object.  This function exists to allow sub--typing from
 @objtype{cce_condition_runtime_error_t}.
 @end deftypefun
 
@@ -2516,12 +2498,6 @@ Initialise an already allocated condition object.  This function exists to allow
 @end deftypefun
 
 
-@deftypefun void cce_condition_final_logic_error (cce_condition_t * @var{C})
-Finalise a condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_logic_error_t}.
-@end deftypefun
-
-
 @deftypefun {cce_condition_t const *} cce_condition_new_logic_error (void)
 Return a pointer to the statically allocated structure representing the single @emph{logic}
 condition object.
@@ -2737,12 +2713,6 @@ Structure type representing an @emph{unimplemented} condition object.
 
 @deftypefun void cce_condition_init_unimplemented (cce_condition_unimplemented_t * @var{C})
 Initialise an already allocated condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_unimplemented_t}.
-@end deftypefun
-
-
-@deftypefun void cce_condition_final_unimplemented (cce_condition_t * @var{C})
-Finalise a condition object.  This function exists to allow sub--typing from
 @objtype{cce_condition_unimplemented_t}.
 @end deftypefun
 
