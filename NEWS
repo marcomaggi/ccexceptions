@@ -1,5 +1,19 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.2-devel.3
+--------------------------------
+
+* Fixes wrong names for malloc handlers.  In the source code it was wrongly:
+
+    cce_sys_error_handler_malloc_init()
+    cce_sys_error_handler_malloc_init()
+
+  instead of the correct:
+
+    cce_error_handler_malloc_init()
+    cce_error_handler_malloc_init()
+
+
 Notes for revision 0.6.2-devel.2
 --------------------------------
 
