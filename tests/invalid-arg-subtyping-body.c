@@ -49,10 +49,10 @@ my_descriptor_invalid_argument_subtype_t const * const my_descriptor_invalid_arg
 
 void
 my_condition_final_invalid_argument_subtype (cce_condition_t * _C)
-/* Finalisation functions  are called automatically when  the client the
-   function "cce_condition_final()" is applied  to the argument C.  Here
-   we finalise only the fields of this type leaving untouched the fields
-   of the parent type. */
+/* Finalisation  functions are  called automatically  when the  function
+   "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
+   finalise only the fields of this type leaving untouched the fields of
+   the parent type. */
 {
   my_condition_invalid_argument_subtype_t * C = (my_condition_invalid_argument_subtype_t *) _C;
   *(C->data) = 0;

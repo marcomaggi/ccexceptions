@@ -57,10 +57,10 @@ my_descriptor_error_2_t const * const my_descriptor_error_2_ptr = &my_descriptor
 
 void
 my_condition_final_error_2 (cce_condition_t * _C)
-/* Finalisation functions  are called automatically when  the client the
-   function "cce_condition_final()" is applied  to the argument C.  Here
-   we finalise only the fields of this type leaving untouched the fields
-   of the parent type. */
+/* Finalisation  functions are  called automatically  when the  function
+   "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
+   finalise only the fields of this type leaving untouched the fields of
+   the parent type. */
 {
   my_condition_error_2_t * C = (my_condition_error_2_t *) _C;
   *(C->data) = 0;

@@ -49,10 +49,10 @@ my_descriptor_unimplemented_subtype_t const * const my_descriptor_unimplemented_
 
 void
 my_condition_final_unimplemented_subtype (cce_condition_t * _C)
-/* Finalisation functions  are called automatically when  the client the
-   function "cce_condition_final()" is applied  to the argument C.  Here
-   we finalise only the fields of this type leaving untouched the fields
-   of the parent type. */
+/* Finalisation  functions are  called automatically  when the  function
+   "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
+   finalise only the fields of this type leaving untouched the fields of
+   the parent type. */
 {
   my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
   *(C->data) = 0;
@@ -62,9 +62,9 @@ my_condition_final_unimplemented_subtype (cce_condition_t * _C)
 
 void
 my_condition_delete_unimplemented_subtype (cce_condition_t * _C)
-/* The  delete function  is called  automatically when  the client  code
-   applies "cce_condition_delete()" to the  argument C.  Here we release
-   memory allocated for the condition object. */
+/* The  delete  function  is  called  automatically  when  code  applies
+   "cce_condition_delete()" to  the argument C.  Here  we release memory
+   allocated for the condition object. */
 {
   my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
 
