@@ -1,11 +1,11 @@
 /*
   Part of: CCExceptions
-  Contents: body definitions of a subtype of "runtime error"
+  Contents: body definitions of a subtype of "unimplemented"
   Date: Dec  3, 2017
 
   Abstract
 
-	Body definitions of a subtype of "runtime error".
+	Body definitions of a subtype of "unimplemented".
 
   Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -18,7 +18,7 @@
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
-#include "runtime-error-subtyping-header.h"
+#include "condition-subtyping-unimplemented-header.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -27,20 +27,20 @@
  ** Condition type descriptor definition.
  ** ----------------------------------------------------------------- */
 
-static cce_condition_delete_fun_t		my_condition_delete_runtime_error_subtype;
-static cce_condition_final_fun_t		my_condition_final_runtime_error_subtype;
-static cce_condition_static_message_fun_t	my_condition_static_message_runtime_error_subtype;
+static cce_condition_delete_fun_t		my_condition_delete_unimplemented_subtype;
+static cce_condition_final_fun_t		my_condition_final_unimplemented_subtype;
+static cce_condition_static_message_fun_t	my_condition_static_message_unimplemented_subtype;
 
-static my_descriptor_runtime_error_subtype_t my_descriptor_runtime_error_subtype_stru = {
+static my_descriptor_unimplemented_subtype_t my_descriptor_unimplemented_subtype_stru = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
-  .descriptor.delete		= my_condition_delete_runtime_error_subtype,
-  .descriptor.final		= my_condition_final_runtime_error_subtype,
-  .descriptor.static_message	= my_condition_static_message_runtime_error_subtype
+  .descriptor.delete		= my_condition_delete_unimplemented_subtype,
+  .descriptor.final		= my_condition_final_unimplemented_subtype,
+  .descriptor.static_message	= my_condition_static_message_unimplemented_subtype
 };
 
-my_descriptor_runtime_error_subtype_t const * const my_descriptor_runtime_error_subtype_ptr = &my_descriptor_runtime_error_subtype_stru;
+my_descriptor_unimplemented_subtype_t const * const my_descriptor_unimplemented_subtype_ptr = &my_descriptor_unimplemented_subtype_stru;
 
 
 /** --------------------------------------------------------------------
@@ -48,34 +48,34 @@ my_descriptor_runtime_error_subtype_t const * const my_descriptor_runtime_error_
  ** ----------------------------------------------------------------- */
 
 void
-my_condition_final_runtime_error_subtype (cce_condition_t * _C)
+my_condition_final_unimplemented_subtype (cce_condition_t * _C)
 /* Finalisation  functions are  called automatically  when the  function
    "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
    finalise only the fields of this type leaving untouched the fields of
    the parent type. */
 {
-  my_condition_runtime_error_subtype_t * C = (my_condition_runtime_error_subtype_t *) _C;
+  my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
   *(C->data) = 0;
   free(C->data);
   if (1) { fprintf(stderr, "%s: finalised %p\n", __func__, (void*)C); }
 }
 
 void
-my_condition_delete_runtime_error_subtype (cce_condition_t * _C)
-/* The  delete function  is called  automatically when  the client  code
-   applies "cce_condition_delete()" to the  argument C.  Here we release
-   memory allocated for the condition object. */
+my_condition_delete_unimplemented_subtype (cce_condition_t * _C)
+/* The  delete  function  is  called  automatically  when  code  applies
+   "cce_condition_delete()" to  the argument C.  Here  we release memory
+   allocated for the condition object. */
 {
-  my_condition_runtime_error_subtype_t * C = (my_condition_runtime_error_subtype_t *) _C;
+  my_condition_unimplemented_subtype_t * C = (my_condition_unimplemented_subtype_t *) _C;
 
   free(C);
   if (1) { fprintf(stderr, "%s: deleted %p\n", __func__, (void*)C); }
 }
 
 char const *
-my_condition_static_message_runtime_error_subtype (cce_condition_t const * C CCE_UNUSED)
+my_condition_static_message_unimplemented_subtype (cce_condition_t const * C CCE_UNUSED)
 {
-  return "Runtime error subtype exceptional condition";
+  return "Unimplemented subtype exceptional condition";
 }
 
 
@@ -84,7 +84,7 @@ my_condition_static_message_runtime_error_subtype (cce_condition_t const * C CCE
  ** ----------------------------------------------------------------- */
 
 void
-my_condition_init_runtime_error_subtype (cce_destination_t L, my_condition_runtime_error_subtype_t * C, int the_data)
+my_condition_init_unimplemented_subtype (cce_destination_t L, my_condition_unimplemented_subtype_t * C, int the_data)
 /* This initialisation function must be called both by:
  *
  * - The constructor function of this object type.
@@ -96,16 +96,16 @@ my_condition_init_runtime_error_subtype (cce_destination_t L, my_condition_runti
  * the fields of this type.
  */
 {
-  cce_condition_init_runtime_error(&(C->runtime_error));
+  cce_condition_init_unimplemented(&(C->unimplemented));
   C->data = cce_sys_malloc(L, sizeof(int));
   *(C->data) = the_data;
   if (1) { fprintf(stderr, "%s: initialised %p\n", __func__, (void*)C); }
 }
 
 cce_condition_t const *
-my_condition_new_runtime_error_subtype (cce_destination_t upper_L, int the_data)
+my_condition_new_unimplemented_subtype (cce_destination_t upper_L, int the_data)
 /* This constructor function is the  public interface to the constructor
- * of condition objects of type "my_condition_runtime_error_subtype_t".
+ * of condition objects of type "my_condition_unimplemented_subtype_t".
  *
  * Here we:
  *
@@ -122,11 +122,11 @@ my_condition_new_runtime_error_subtype (cce_destination_t upper_L, int the_data)
   if (cce_location(L)) {
     cce_run_error_handlers_raise(L, upper_L);
   } else {
-    my_condition_runtime_error_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_runtime_error_subtype_t));
+    my_condition_unimplemented_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_unimplemented_subtype_t));
     cce_error_handler_malloc_init(L, C_H, C);
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
-    my_condition_init_runtime_error_subtype(L, C, the_data);
+    cce_condition_init((cce_condition_t *) C, &(my_descriptor_unimplemented_subtype_ptr->descriptor));
+    my_condition_init_unimplemented_subtype(L, C, the_data);
 
     cce_run_cleanup_handlers(L);
     if (1) { fprintf(stderr, "%s: constructed %p\n", __func__, (void*)C); }
@@ -136,9 +136,9 @@ my_condition_new_runtime_error_subtype (cce_destination_t upper_L, int the_data)
 
 
 void
-runtime_error_subtyping_init_module (void)
+unimplemented_subtyping_init_module (void)
 {
-  my_descriptor_runtime_error_subtype_stru.descriptor.parent = &(cce_descriptor_runtime_error_ptr->descriptor);
+  my_descriptor_unimplemented_subtype_stru.descriptor.parent = &(cce_descriptor_unimplemented_ptr->descriptor);
 }
 
 /* end of file */

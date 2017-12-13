@@ -47,28 +47,28 @@ libccexceptions_la_SOURCES= \
 #### tests
 
 check_PROGRAMS	= \
-	tests/version				\
-	tests/setjmp				\
-	tests/no-exceptions			\
-	tests/exception-no-handlers		\
-	tests/exception-with-cleanup-handler	\
-	tests/exception-with-error-handler	\
-	tests/exception-with-handlers		\
-	tests/handlers-routines			\
-	tests/conditions-raising		\
-	tests/conditions-hierarchy		\
-	tests/conditions-example		\
-	tests/conditions-tests			\
-	tests/sizeof				\
+	tests/version					\
+	tests/setjmp					\
+	tests/no-exceptions				\
+	tests/exception-no-handlers			\
+	tests/exception-with-cleanup-handler		\
+	tests/exception-with-error-handler		\
+	tests/exception-with-handlers			\
+	tests/handlers-routines				\
+	tests/conditions-raising			\
+	tests/conditions-hierarchy			\
+	tests/conditions-example			\
+	tests/conditions-tests				\
+	tests/sizeof					\
 	\
-	tests/root-subtyping			\
-	tests/break-subtyping			\
-	tests/unimplemented-subtyping		\
-	tests/error-subtyping			\
-	tests/runtime-error-subtyping		\
-	tests/logic-error-subtyping		\
-	tests/invalid-arg-subtyping		\
-	tests/condition-unreachable-subtyping
+	tests/condition-subtyping-root			\
+	tests/condition-subtyping-break			\
+	tests/condition-subtyping-unimplemented		\
+	tests/condition-subtyping-error			\
+	tests/condition-subtyping-runtime-error		\
+	tests/condition-subtyping-logic-error		\
+	tests/condition-subtyping-invalid-arg		\
+	tests/condition-subtyping-unreachable
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -128,75 +128,75 @@ tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
-tests_root_subtyping_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_root_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
-tests_root_subtyping_SOURCES			= \
-	tests/root-subtyping.c		\
-	tests/root-subtyping-body.c	\
-	tests/root-subtyping-header.h
+tests_condition_subtyping_root_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_root_LDADD		= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_root_SOURCES		= \
+	tests/condition-subtyping-root.c	\
+	tests/condition-subtyping-root-body.c	\
+	tests/condition-subtyping-root-header.h
 
 ## --------------------------------------------------------------------
 
-tests_break_subtyping_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_break_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
-tests_break_subtyping_SOURCES			= \
-	tests/break-subtyping.c		\
-	tests/break-subtyping-body.c	\
-	tests/break-subtyping-header.h
+tests_condition_subtyping_break_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_break_LDADD		= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_break_SOURCES		= \
+	tests/condition-subtyping-break.c		\
+	tests/condition-subtyping-break-body.c		\
+	tests/condition-subtyping-break-header.h
 
 ## --------------------------------------------------------------------
 
-tests_unimplemented_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_unimplemented_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
-tests_unimplemented_subtyping_SOURCES		= \
-	tests/unimplemented-subtyping.c		\
-	tests/unimplemented-subtyping-body.c	\
-	tests/unimplemented-subtyping-header.h
+tests_condition_subtyping_unimplemented_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_unimplemented_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_unimplemented_SOURCES	= \
+	tests/condition-subtyping-unimplemented.c	\
+	tests/condition-subtyping-unimplemented-body.c	\
+	tests/condition-subtyping-unimplemented-header.h
 
 ## --------------------------------------------------------------------
 
-tests_error_subtyping_CPPFLAGS			= $(ccexceptions_tests_cppflags)
-tests_error_subtyping_LDADD			= $(ccexceptions_tests_ldadd)
-tests_error_subtyping_SOURCES			= \
-	tests/error-subtyping.c		\
-	tests/error-subtyping-body.c	\
-	tests/error-subtyping-header.h
+tests_condition_subtyping_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_error_LDADD		= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_error_SOURCES		= \
+	tests/condition-subtyping-error.c	\
+	tests/condition-subtyping-error-body.c	\
+	tests/condition-subtyping-error-header.h
 
 ## --------------------------------------------------------------------
 
-tests_runtime_error_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_runtime_error_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
-tests_runtime_error_subtyping_SOURCES		= \
-	tests/runtime-error-subtyping.c		\
-	tests/runtime-error-subtyping-body.c	\
-	tests/runtime-error-subtyping-header.h
+tests_condition_subtyping_runtime_error_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_runtime_error_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_runtime_error_SOURCES	= \
+	tests/condition-subtyping-runtime-error.c	\
+	tests/condition-subtyping-runtime-error-body.c	\
+	tests/condition-subtyping-runtime-error-header.h
 
 ## --------------------------------------------------------------------
 
-tests_logic_error_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_logic_error_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
-tests_logic_error_subtyping_SOURCES		= \
-	tests/logic-error-subtyping.c		\
-	tests/logic-error-subtyping-body.c	\
-	tests/logic-error-subtyping-header.h
+tests_condition_subtyping_logic_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_logic_error_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_logic_error_SOURCES	= \
+	tests/condition-subtyping-logic-error.c		\
+	tests/condition-subtyping-logic-error-body.c	\
+	tests/condition-subtyping-logic-error-header.h
 
 ## --------------------------------------------------------------------
 
-tests_invalid_arg_subtyping_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_invalid_arg_subtyping_LDADD		= $(ccexceptions_tests_ldadd)
-tests_invalid_arg_subtyping_SOURCES		= \
-	tests/invalid-arg-subtyping.c		\
-	tests/invalid-arg-subtyping-body.c	\
-	tests/invalid-arg-subtyping-header.h
+tests_condition_subtyping_invalid_arg_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_invalid_arg_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_invalid_arg_SOURCES	= \
+	tests/condition-subtyping-invalid-arg.c		\
+	tests/condition-subtyping-invalid-arg-body.c	\
+	tests/condition-subtyping-invalid-arg-header.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_unreachable_subtyping_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_unreachable_subtyping_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_unreachable_subtyping_SOURCES	= \
-	tests/condition-unreachable-subtyping.c		\
-	tests/condition-unreachable-subtyping-body.c	\
-	tests/condition-unreachable-subtyping-header.h
+tests_condition_subtyping_unreachable_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_unreachable_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_unreachable_SOURCES	= \
+	tests/condition-subtyping-unreachable.c		\
+	tests/condition-subtyping-unreachable-body.c	\
+	tests/condition-subtyping-unreachable-header.h
 
 ## --------------------------------------------------------------------
 
