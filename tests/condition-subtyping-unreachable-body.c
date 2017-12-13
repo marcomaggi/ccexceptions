@@ -75,7 +75,7 @@ my_condition_delete_unreachable_subtype (cce_condition_t * _C)
 char const *
 my_condition_static_message_unreachable_subtype (cce_condition_t const * C CCE_UNUSED)
 {
-  return "Cce unreachable subtype exceptional condition";
+  return "CCExceptions unreachable subtype exceptional condition";
 }
 
 
