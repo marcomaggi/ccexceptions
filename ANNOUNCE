@@ -1,5 +1,5 @@
 -*- coding: utf-8-unix -*-
-Subject: [announce] CCExceptions revision 0.6.2-devel.3
+Subject: [announce] CCExceptions revision 0.6.3-devel.0
 
 			      CCExceptions
 			      ============
@@ -28,6 +28,10 @@ and as backup at:
 the documentation is available online:
 
 	  <http://marcomaggi.github.io/docs/ccexceptions.html>
+
+
+Notes for revision 0.6.3-devel.0
+--------------------------------
 
 
 Notes for revision 0.6.2-devel.3
