@@ -325,11 +325,11 @@
 @code{NULL}
 @end macro
 
-@macro true{}
+@macro ctrue{}
 @code{true}
 @end macro
 
-@macro false{}
+@macro cfalse{}
 @code{false}
 @end macro
 

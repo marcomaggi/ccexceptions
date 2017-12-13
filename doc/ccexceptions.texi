@@ -1079,6 +1079,7 @@ run--time according to the type of raised structure.
 * conditions logic error::      Predefined logic error condition object.
 * conditions unimplemented::    Predefined unimplemented condition object.
 * conditions invalid arg::      Predefined invalid argument conditions.
+* conditions unreachable::      Predefined unreachable code conditions.
 * conditions errno::            Predefined @code{errno} conditions.
 * conditions custom::           Defining custom condition objects.
 @end menu
@@ -1333,9 +1334,9 @@ condition.
 
 
 @deftypefun bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * @var{child}, cce_descriptor_t const * @var{ancestor})
-Establish if two condition descriptors are child and ancestor.  Return @true{} if @var{child} is
+Establish if two condition descriptors are child and ancestor.  Return @ctrue{} if @var{child} is
 equal to @var{ancestor} or @var{ancestor} is in the hierarchy of @var{child}'s ancestors; otherwise
-return @false{}.
+return @cfalse{}.
 @end deftypefun
 
 
@@ -1404,8 +1405,8 @@ table.
 
 
 @deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, cce_descriptor_t const * @var{D})
-Establish if a condition object is of a selected type.  Return @true{} if @var{C} is an instance of
-type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @false{}.
+Establish if a condition object is of a selected type.  Return @ctrue{} if @var{C} is an instance of
+type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -1579,9 +1580,9 @@ condition--object type being instantiated.
 
 
 @deftypefun bool cce_condition_is_root (cce_condition_t const * @var{C})
-Return @true{} if the condition object @var{C} is derived from the @emph{root} condition type;
-otherwise return @false{}.  With a correctly built conditions hierarchy: this function always
-returns @true{}.
+Return @ctrue{} if the condition object @var{C} is derived from the @emph{root} condition type;
+otherwise return @cfalse{}.  With a correctly built conditions hierarchy: this function always
+returns @ctrue{}.
 @end deftypefun
 
 
@@ -1649,7 +1650,7 @@ condition object.
 
 
 @deftypefn {Inline Function} bool cce_condition_is_unknown (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is an @emph{unknown} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is an @emph{unknown} condition object; otherwise return @cfalse{}.
 @end deftypefn
 
 
@@ -1717,7 +1718,7 @@ condition object.
 
 
 @deftypefn {Inline Function} bool cce_condition_is_break (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is an @emph{break} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is an @emph{break} condition object; otherwise return @cfalse{}.
 @end deftypefn
 
 
@@ -1801,7 +1802,7 @@ condition object.
 
 
 @deftypefun bool cce_is_condition_error (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is a @emph{error} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is a @emph{error} condition object; otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -1882,7 +1883,7 @@ condition object.
 
 
 @deftypefun bool cce_is_condition_runtime_error (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is a @emph{run--time} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is a @emph{run--time} condition object; otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -1964,7 +1965,7 @@ condition object.
 
 
 @deftypefun bool cce_is_condition_logic_error (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is a @emph{logic} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is a @emph{logic} condition object; otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -2047,7 +2048,7 @@ condition object.
 
 
 @deftypefun bool cce_is_condition_unimplemented (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is an @emph{unimplemented} condition object; otherwise return @false{}.
+Return @ctrue{} if @var{C} is an @emph{unimplemented} condition object; otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -2155,7 +2156,7 @@ location @var{L}.
 
 
 @deftypefn {Inline Function} bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is a condition object of the specified type; otherwise return @false{}.
+Return @ctrue{} if @var{C} is a condition object of the specified type; otherwise return @cfalse{}.
 @end deftypefn
 
 
@@ -2194,6 +2195,123 @@ invalid-arg-subtype-body.c
 @noindent
 under the @file{tests} directory of the source distribution; the code defines a new
 condition--object type @objtype{my_condition_invalid_argument_subtype_t}.
+
+@c page
+@node conditions unreachable
+@section Predefined unreachable code conditions
+
+
+@cindex Unreachable code, exceptional condition
+@cindex Exceptional conditions, Unreachable code
+
+
+We can use the @dfn{unreachable code exceptional--condition object--type} to signal the execution of
+unreachable code.  We can instantiate this type and also derive new types from it.  To catch this
+exceptional condition we can do:
+
+@smallexample
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  if (cce_condition_is_unreachable(cce_condition(L))) @{
+    CCE_PC(cce_condition_unreachable_t, C, cce_condition(L));
+    do_something_with(C);
+  @}
+  cce_run_error_handlers_final(L);
+@} else @{
+  do_something(L);
+  cce_run_cleanup_handlers(L);
+@}
+@end smallexample
+
+
+@deftp {Struct Typedef} cce_descriptor_unreachable_t
+Type of data structure representing the exceptional--condition descriptor.  It has the following
+public fields:
+
+@table @code
+@item cce_descriptor_t descriptor
+The condition descriptor's base values.
+@end table
+
+The parent of this type descriptor is the one referenced by @code{cce_descriptor_logic_error_ptr},
+@ref{conditions logic error, Predefined logic error condition object}.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_unreachable_t
+Type of data structure representing the exceptional--condition object.  It has the following public
+fields:
+
+@table @code
+@item cce_condition_logic_error_t logic_error
+The condition object's base values.
+
+@item char const * filename
+Pointer to a statically allocated @asciiz{} string representing the pathname of the source file in
+which the unreachable code is located.  This value is meant to be generated with the preprocessor
+macro @code{__FILE__}.
+
+@item char const * funcname
+Pointer to a statically allocated @asciiz{} string representing the name of the function in which
+the unreachable code is located.  This value is meant to be generated with the preprocessor macro
+@code{__func__}.
+
+@item int linenum
+The line number in the source file in which the unreachable code is located.  This value is meant to
+be generated with the preprocessor macro @code{__LINE__}.
+@end table
+@end deftp
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_unreachable_t const * const} cce_descriptor_unreachable_ptr
+Pointer to a statically allocated exceptional condition descriptor.
+@end deftypevr
+
+
+@deftypefun void cce_condition_init_unreachable (cce_condition_unreachable_t * @var{C}, char const * @var{filename}, char const * @var{funcname}, int @var{linenum})
+Initialisation function for the condition object.  This function is meant to be called from the
+initialisation function of sub--types of @objtype{cce_condition_unreachable_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_unreachable (cce_destination_t @var{L}, char const * @var{filename}, char const * @var{funcname}, int @var{linenum})
+Return a pointer to exceptional condition object.  If an error occurs building the instance: raise
+an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool cce_condition_is_unreachable (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @objtype{cce_condition_unreachable_t}; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} cce_raise_unreachable (cce_destination_t @var{L})
+Raise an exceptional condition of type @objtype{cce_condition_unreachable_t} by expanding into:
+
+@example
+cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
+@end example
+@end deftypefn
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Sub--typing example
+
+
+To define a sub--type of @objtype{cce_condition_unreachable_t} we can copy the code in the
+files:
+
+@example
+condition-unreachable-subtype.c
+condition-unreachable-subtype-headear.h
+condition-unreachable-subtype-body.c
+@end example
+
+@noindent
+under the @file{tests} directory of the source distribution; the code defines a new
+condition--object type @objtype{my_condition_unreachable_subtype_t}.
 
 @c page
 @node conditions errno
@@ -2244,7 +2362,7 @@ Consume the current value of @code{errno} and return the return value of
 
 
 @deftypefn {Inline Function} bool cce_condition_is_errno (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is a condition object of type @emph{errno}; otherwise return @false{}.
+Return @ctrue{} if @var{C} is a condition object of type @emph{errno}; otherwise return @cfalse{}.
 @end deftypefn
 
 

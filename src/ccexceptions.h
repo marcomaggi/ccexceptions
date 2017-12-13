@@ -191,6 +191,9 @@ typedef struct cce_condition_logic_error_t	cce_condition_logic_error_t;
 typedef struct cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_t;
 typedef struct cce_condition_invalid_argument_t	cce_condition_invalid_argument_t;
 
+typedef struct cce_descriptor_unreachable_t	cce_descriptor_unreachable_t;
+typedef struct cce_condition_unreachable_t	cce_condition_unreachable_t;
+
 typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
 typedef struct cce_condition_errno_t		cce_condition_errno_t;
 
@@ -552,6 +555,60 @@ cce_condition_is_logic_error (cce_condition_t const * C)
 	   cce_condition_logic_error_t	const	*: (cce_condition_logic_error_t const *)(S), \
 	   cce_condition_t		const	* const: (cce_condition_logic_error_t const *)(S), \
 	   cce_condition_logic_error_t	const	* const: (cce_condition_logic_error_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: unreachable code exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_unreachable_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_unreachable_t {
+  cce_condition_logic_error_t	logic_error;
+  char const *			filename;
+  char const *			funcname;
+  int				linenum;
+};
+
+cce_decl cce_descriptor_unreachable_t const * const	cce_descriptor_unreachable_ptr;
+cce_decl cce_condition_unreachable_t  const * const	cce_condition_unreachable_ptr;
+
+cce_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
+					      char const * const filename,
+					      char const * const funcname,
+					      int const linenum)
+  __attribute__((__nonnull__(1,2,3)));
+
+cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
+								char const * const filename,
+								char const * const funcname,
+								int const linenum)
+  __attribute__((__nonnull__(1,2,3),__returns_nonnull__));
+
+#define cce_raise_unreachable(L)		\
+  cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_unreachable (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_unreachable_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_unreachable(S)					\
+  _Generic((S),								\
+	   cce_location_t			*: (cce_condition_unreachable_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (cce_condition_unreachable_t const *)CCE_CLOC(S), \
+	   cce_condition_t			*: (cce_condition_unreachable_t const *)(S), \
+	   cce_condition_unreachable_t		*: (cce_condition_unreachable_t const *)(S), \
+	   cce_condition_t		const	*: (cce_condition_unreachable_t const *)(S), \
+	   cce_condition_unreachable_t	const	*: (cce_condition_unreachable_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_unreachable_t const *)(S), \
+	   cce_condition_unreachable_t	const	* const: (cce_condition_unreachable_t const *)(S))
 
 
 /** --------------------------------------------------------------------

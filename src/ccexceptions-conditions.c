@@ -273,6 +273,68 @@ cce_condition_logic_error_t const * const cce_condition_logic_error_ptr = &cce_c
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional condition descriptor: unreachable code.
+ ** ----------------------------------------------------------------- */
+
+static cce_condition_static_message_fun_t	cce_condition_static_message_unreachable;
+static cce_condition_delete_fun_t		cce_condition_delete_unreachable;
+
+static cce_descriptor_unreachable_t const cce_descriptor_unreachable_stru = {
+  .descriptor.parent		= &cce_descriptor_logic_error_stru.descriptor,
+  .descriptor.delete		= cce_condition_delete_unreachable,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_unreachable
+};
+
+cce_descriptor_unreachable_t const * const cce_descriptor_unreachable_ptr = &cce_descriptor_unreachable_stru;
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_delete_unreachable (cce_condition_t * C)
+{
+  free(C);
+}
+
+char const *
+cce_condition_static_message_unreachable (cce_condition_t const * C CCE_UNUSED)
+{
+  return "CCExceptions unreachable code was executed";
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_unreachable (cce_condition_unreachable_t * C,
+				char const * const filename,
+				char const * const funcname,
+				int const linenum)
+{
+  /* Initialise the parent type. */
+  cce_condition_init_logic_error(&(C->logic_error));
+
+  /* Initialise the fields of this type. */
+  C->filename			= filename;
+  C->funcname			= funcname;
+  C->linenum			= linenum;
+}
+
+cce_condition_t const *
+cce_condition_new_unreachable (cce_destination_t L,
+			       char const * const filename, char const * const funcname, int const linenum)
+{
+  cce_condition_unreachable_t *	C = cce_sys_malloc(L, sizeof(cce_condition_unreachable_t));
+
+  /* Initialise the basic condition fields. */
+  cce_condition_init((cce_condition_t *)C, &cce_descriptor_unreachable_stru.descriptor);
+
+  cce_condition_init_unreachable(C, filename, funcname, linenum);
+
+  return (cce_condition_t const *)C;
+}
+
+
+/** --------------------------------------------------------------------
  ** Unimplemented condition.
  ** ----------------------------------------------------------------- */
 

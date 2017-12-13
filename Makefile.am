@@ -67,7 +67,8 @@ check_PROGRAMS	= \
 	tests/error-subtyping			\
 	tests/runtime-error-subtyping		\
 	tests/logic-error-subtyping		\
-	tests/invalid-arg-subtyping
+	tests/invalid-arg-subtyping		\
+	tests/condition-unreachable-subtyping
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -187,6 +188,15 @@ tests_invalid_arg_subtyping_SOURCES		= \
 	tests/invalid-arg-subtyping.c		\
 	tests/invalid-arg-subtyping-body.c	\
 	tests/invalid-arg-subtyping-header.h
+
+## --------------------------------------------------------------------
+
+tests_condition_unreachable_subtyping_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_condition_unreachable_subtyping_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_unreachable_subtyping_SOURCES	= \
+	tests/condition-unreachable-subtyping.c		\
+	tests/condition-unreachable-subtyping-body.c	\
+	tests/condition-unreachable-subtyping-header.h
 
 ## --------------------------------------------------------------------
 
