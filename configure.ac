@@ -69,13 +69,13 @@ dnl AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
 dnl page
 #### libraries interface version
 
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d2.3])
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d3.0])
 AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 
 dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.6.2])
+AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.6.3])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],6,2,0)
+MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],6,3,0)
 
 dnl page
 #### basic system inspection
