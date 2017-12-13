@@ -2288,11 +2288,18 @@ Return @ctrue{} if @var{C} if of type @objtype{cce_condition_unreachable_t}; oth
 
 
 @deftypefn {Preprocessor Macro} cce_raise_unreachable (cce_destination_t @var{L})
-Raise an exceptional condition of type @objtype{cce_condition_unreachable_t} by expanding into:
+@cindex @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE}, preprocessor symbol
+@cindex Preprocessor symbol @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE}
+If the preprocessor symbol @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} @strong{is not} defined: raise an
+exceptional condition of type @objtype{cce_condition_unreachable_t} by expanding into:
 
 @example
-cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
+cce_raise((L), cce_condition_new_unreachable((L),
+                 __FILE__, __func__, __LINE__))
 @end example
+
+If the preprocessor symbol @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} @strong{is} defined: expand to
+nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 @end deftypefn
 
 @c ------------------------------------------------------------------------

@@ -587,8 +587,12 @@ cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_
 								int const linenum)
   __attribute__((__nonnull__(1,2,3),__returns_nonnull__));
 
-#define cce_raise_unreachable(L)		\
-  cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
+#if (defined CCEXCEPTIONS_EXCLUDE_UNREACHABLE)
+#  define cce_raise_unreachable(L)		/* empty */
+#else
+#  define cce_raise_unreachable(L)		\
+     cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
+#endif
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
