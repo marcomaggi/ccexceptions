@@ -126,8 +126,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * locations::                   The locations @api{}.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
-* syscalls::                    System call adapters.
-* syshandlers::                 Predefined exception handlers.
+* system::                      System call adapters.
 * helpers::                     Helpers.
 
 Appendices
@@ -971,8 +970,8 @@ void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
 
 Let's say we need to allocate memory with @cfunc{malloc}, and to release it with @cfunc{free}
 whenever the dynamic extent of the local function terminates; we can use built--in functions for
-this, @ref{syshandlers malloc}.  To show the mechanism, in the following example: we implement a
-handler explicitly.
+this, @ref{system memory}.  To show the mechanism, in the following example: we implement a handler
+explicitly.
 
 @example
 typedef struct handler_t @{
@@ -2036,7 +2035,7 @@ condition--object type @objtype{my_condition_logic_error_subtype_t}.
 The @dfn{unimplemented exceptional--condition object} has the purpose of describing an exceptional
 condition caused by attempting to use an unimplemented feature.  For example: attempting to call a
 system function adapter for which the underlying function is not available on the current platform
-(@pxref{syscalls}).
+(@pxref{system}).
 
 There should be only one @emph{unimplemented} condition object: the one predefined by
 @value{PACKAGE}.
@@ -2421,7 +2420,7 @@ The source distribution of @value{PACKAGE} comes with coding examples under the 
 directory of the source tree; we can take that code and use it as a starting point.
 
 @c page
-@node syscalls
+@node system
 @chapter System call adapters
 
 
@@ -2437,11 +2436,11 @@ before returning.  In case of error: the raised exceptional condition objects ar
 @objtype{cce_condition_errno_t}.
 
 @menu
-* syscalls alloc::              Memory allocation.
+* system memory::               Memory allocation.
 @end menu
 
 @c page
-@node syscalls alloc
+@node system memory
 @section Memory allocation
 
 
@@ -2460,6 +2459,33 @@ Wrapper for @cfunc{realloc}.  This function never returns @cnull{}.
 
 @deftypefun {void *} cce_sys_calloc (cce_location_t * @var{L}, size_t @var{count}, size_t @var{eltsize})
 Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Handlers for allocated memory
+
+
+We can handle memory that must be released with the standard function @cfunc{free} as follows:
+
+@example
+cce_location_t  L[1];
+cce_handler_t   P_H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers_final(L);
+@} else @{
+  void *        P = cce_sys_malloc(L, 4096);
+  cce_cleanup_handler_malloc_init(L, P_H, P);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+
+@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
+Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
+release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
 
 @c ------------------------------------------------------------------------
@@ -2498,9 +2524,9 @@ cce_location_t          L[1];
 cce_cleanup_handler_t   P_H[1];
 
 if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
+  cce_run_error_handlers_final(L);
 @} else @{
-  void *        P = cce_sys_malloc_guarded(L, P_H, 1024);
+  void *  P = cce_sys_malloc_guarded(L, P_H, 1024);
 
   /* Do something with P. */
   cce_run_cleanup_handlers(L);
@@ -2515,54 +2541,15 @@ cce_location_t          L[1];
 cce_error_handler_t     P_H[1];
 
 if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
+  cce_run_error_handlers_final(L);
 @} else @{
-  void *        P = cce_sys_malloc_guarded(L, P_H, 1024);
+  void *  P = cce_sys_malloc_guarded(L, P_H, 1024);
 
   /* Do something with P. */
   cce_run_cleanup_handlers(L);
 @}
 @end example
 @end deftypefn
-
-@c page
-@node syshandlers
-@chapter Predefined exception handlers
-
-
-@menu
-* syshandlers malloc::          Handler for allocated memory.
-@end menu
-
-@c page
-@node syshandlers malloc
-@section Handler for allocated memory
-
-
-We can handle memory that must be released with the standard function @cfunc{free} as follows:
-
-@example
-cce_location_t  L[1];
-cce_handler_t   H[1];
-
-if (cce_location(L)) @{
-  cce_run_error_handlers(L);
-  cce_condition_delete(cce_condition(L));
-@} else @{
-  void *        P = cce_sys_malloc(L, 4096);
-  cce_cleanup_handler_malloc_init(L, H, P);
-  cce_run_cleanup_handlers(L);
-@}
-@end example
-
-The following symbols are defined in the header file @file{ccexceptions.h}.
-
-
-@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the memory block referenced by @var{P} using the standard function @cfunc{free}.
-@end deftypefun
 
 @c page
 @node helpers
