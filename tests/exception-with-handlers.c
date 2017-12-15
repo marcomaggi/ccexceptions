@@ -227,13 +227,14 @@ test_dynamically_allocated_handlers (void)
   cce_location_t	L[1];
   volatile bool		flag1 = false;
   volatile bool		flag2 = false;
-  test_dynamically_allocated_handler_t * H1;
-  test_dynamically_allocated_handler_t * H2;
 
   if (cce_location(L)) {
     cce_run_error_handlers(L);
     cce_condition_delete(cce_condition(L));
   } else {
+    test_dynamically_allocated_handler_t * H1;
+    test_dynamically_allocated_handler_t * H2;
+
     H1 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag1);
     H2 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag2);
     cce_register_cleanup_handler(L, &(H1->handler));
