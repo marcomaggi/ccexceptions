@@ -864,6 +864,19 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_cleanup_handler_t	*: cce_sys_malloc_guarded_cleanup,	\
 	   cce_error_handler_t		*: cce_sys_malloc_guarded_error)(L,P_H,size)
 
+/* ------------------------------------------------------------------ */
+
+cce_decl void * cce_sys_calloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t count, size_t eltsize)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_handler_t *   P_H, size_t count, size_t eltsize)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+#define cce_sys_calloc_guarded(L,P_H,count,eltsize) \
+  _Generic((P_H),								\
+	   cce_cleanup_handler_t	*: cce_sys_calloc_guarded_cleanup,	\
+	   cce_error_handler_t		*: cce_sys_calloc_guarded_error)(L,P_H,count,eltsize)
+
 
 /** --------------------------------------------------------------------
  ** Generic macros.

@@ -2490,7 +2490,7 @@ release the memory block referenced by @var{P} using the standard function @cfun
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Guarded allocation
+@subsubheading Guarded allocation: @cfunc{malloc}
 
 @deftypefun {void *} cce_sys_malloc_guarded_cleanup (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{size})
 Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
@@ -2549,6 +2549,36 @@ if (cce_location(L)) @{
   cce_run_cleanup_handlers(L);
 @}
 @end example
+@end deftypefn
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Guarded allocation: @cfunc{calloc}
+
+@deftypefun {void *} cce_sys_calloc_guarded_cleanup (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
+@var{P_H}.
+@end deftypefun
+
+
+@deftypefun {void *} cce_sys_calloc_guarded_error (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
+@var{P_H}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefnx {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+This preprocessor macro uses @code{_Generic} to dispatch the call according to the type of the
+pointer @var{P_H}; if the type is:
+
+@table @code
+@item cce_cleanup_handler_t
+The macro expands into a call to @cfunc{cce_sys_calloc_guarded_cleanup}.
+
+@item cce_error_handler_t
+The macro expands into a call to @cfunc{cce_sys_calloc_guarded_error}.
+@end table
 @end deftypefn
 
 @c page

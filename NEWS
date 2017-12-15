@@ -1,5 +1,15 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.4-devel.1
+--------------------------------
+
+* Added API for guarded malloc invocation:
+
+    cce_sys_calloc_guarded_cleanup
+    cce_sys_calloc_guarded_error
+    cce_sys_calloc_guarded
+
+
 Notes for revision 0.6.4-devel.0
 --------------------------------
 

@@ -127,4 +127,22 @@ cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, siz
   return P;
 }
 
+/* ------------------------------------------------------------------ */
+
+void *
+cce_sys_calloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t count, size_t eltsize)
+{
+  void *	P = cce_sys_calloc(L, count, eltsize);
+  cce_cleanup_handler_malloc_init(L, &(P_H->handler), P);
+  return P;
+}
+
+void *
+cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
+{
+  void *	P = cce_sys_calloc(L, count, eltsize);
+  cce_error_handler_malloc_init(L, &(P_H->handler), P);
+  return P;
+}
+
 /* end of file */
