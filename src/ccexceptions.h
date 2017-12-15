@@ -898,6 +898,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_runtime_error_t		*: CCE_C001(S), \
 	   cce_descriptor_logic_error_t			*: CCE_C001(S), \
 	   cce_descriptor_invalid_argument_t		*: CCE_C001(S), \
+	   cce_descriptor_unreachable_t			*: CCE_C001(S), \
 	   cce_descriptor_errno_t			*: CCE_C001(S), \
 									\
 	   cce_descriptor_t			const   *: CCE_C001(S), \
@@ -909,6 +910,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_runtime_error_t	const	*: CCE_C001(S), \
 	   cce_descriptor_logic_error_t		const	*: CCE_C001(S), \
 	   cce_descriptor_invalid_argument_t	const	*: CCE_C001(S), \
+	   cce_descriptor_unreachable_t		const	*: CCE_C001(S), \
 	   cce_descriptor_errno_t		const	*: CCE_C001(S), \
 									\
 	   cce_descriptor_t			const	* const: CCE_C001(S), \
@@ -920,6 +922,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_runtime_error_t	const	* const: CCE_C001(S), \
 	   cce_descriptor_logic_error_t		const	* const: CCE_C001(S), \
 	   cce_descriptor_invalid_argument_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_unreachable_t		const	* const: CCE_C001(S), \
 	   cce_descriptor_errno_t		const	* const: CCE_C001(S), \
 									\
 	   cce_condition_t				*: CCE_C003(S),	\
@@ -931,6 +934,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t		*: CCE_C003(S),	\
 	   cce_condition_logic_error_t			*: CCE_C003(S),	\
 	   cce_condition_invalid_argument_t		*: CCE_C003(S),	\
+	   cce_condition_unreachable_t			*: CCE_C003(S),	\
 	   cce_condition_errno_t			*: CCE_C003(S),	\
 									\
 	   cce_condition_t			const	*: CCE_C003(S),	\
@@ -942,6 +946,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t	const	*: CCE_C003(S),	\
 	   cce_condition_logic_error_t		const	*: CCE_C003(S),	\
 	   cce_condition_invalid_argument_t	const	*: CCE_C003(S),	\
+	   cce_condition_unreachable_t		const	*: CCE_C003(S),	\
 	   cce_condition_errno_t		const	*: CCE_C003(S),	\
 									\
 	   cce_condition_root_t			const	* const: CCE_C003(S),	\
@@ -952,6 +957,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t	const	* const: CCE_C003(S),	\
 	   cce_condition_logic_error_t		const	* const: CCE_C003(S),	\
 	   cce_condition_invalid_argument_t	const	* const: CCE_C003(S),	\
+	   cce_condition_unreachable_t		const	* const: CCE_C003(S),	\
 	   cce_condition_errno_t		const	* const: CCE_C003(S))
 
 
@@ -968,6 +974,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t		*: CCE_C002(S), \
 	   cce_condition_logic_error_t			*: CCE_C002(S), \
 	   cce_condition_invalid_argument_t		*: CCE_C002(S), \
+	   cce_condition_unreachable_t			*: CCE_C002(S), \
 	   cce_condition_errno_t			*: CCE_C002(S), \
 									\
 	   cce_condition_t			const	* const: CCE_C002(S), \
@@ -979,6 +986,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t	const	* const: CCE_C002(S), \
 	   cce_condition_logic_error_t		const	* const: CCE_C002(S), \
 	   cce_condition_invalid_argument_t	const	* const: CCE_C002(S), \
+	   cce_condition_unreachable_t		const	* const: CCE_C002(S), \
 	   cce_condition_errno_t		const	* const: CCE_C002(S), \
 									\
 	   cce_condition_t			const	*: CCE_C002(S), \
@@ -990,6 +998,7 @@ cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_runtime_error_t	const	*: CCE_C002(S), \
 	   cce_condition_logic_error_t		const	*: CCE_C002(S), \
 	   cce_condition_invalid_argument_t	const	*: CCE_C002(S), \
+	   cce_condition_unreachable_t		const	*: CCE_C002(S), \
 	   cce_condition_errno_t		const	*: CCE_C002(S), \
 	   \
 	   cce_location_t[1]				 : CCE_C002(CCE_CLOC(S)), \
