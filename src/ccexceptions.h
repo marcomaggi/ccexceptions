@@ -163,6 +163,8 @@ cce_decl int		cce_version_interface_age	(void)
 
 typedef struct cce_location_t			cce_location_t;
 typedef struct cce_handler_t			cce_handler_t;
+typedef struct cce_cleanup_handler_t		cce_cleanup_handler_t;
+typedef struct cce_error_handler_t		cce_error_handler_t;
 
 typedef struct cce_descriptor_t			cce_descriptor_t;
 typedef struct cce_condition_t			cce_condition_t;
@@ -216,6 +218,14 @@ struct cce_handler_t {
     int			filedes;
     int			pipedes[2];
   };
+};
+
+struct cce_cleanup_handler_t {
+  cce_handler_t		handler;
+};
+
+struct cce_error_handler_t {
+  cce_handler_t		handler;
 };
 
 cce_decl void cce_register_cleanup_handler (cce_destination_t L, cce_handler_t * H)
@@ -833,16 +843,26 @@ cce_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize
 cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-
-/** --------------------------------------------------------------------
- ** Predefined POSIX exception handler: malloc pointer.
- ** ----------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
 
 cce_decl void cce_cleanup_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
 cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void * cce_sys_malloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t size)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+#define cce_sys_malloc_guarded(L,P_H,size) \
+  _Generic((P_H),								\
+	   cce_cleanup_handler_t	*: cce_sys_malloc_guarded_cleanup,	\
+	   cce_error_handler_t		*: cce_sys_malloc_guarded_error)(L,P_H,size)
 
 
 /** --------------------------------------------------------------------

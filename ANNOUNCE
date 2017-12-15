@@ -30,6 +30,16 @@ the documentation is available online:
 	  <http://marcomaggi.github.io/docs/ccexceptions.html>
 
 
+Notes for revision 0.6.4-devel.0
+--------------------------------
+
+* Added API for guarded malloc invocation:
+
+    cce_sys_malloc_guarded_cleanup
+    cce_sys_malloc_guarded_error
+    cce_sys_malloc_guarded
+
+
 Notes for revision 0.6.3-devel.0
 --------------------------------
 

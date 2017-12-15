@@ -59,6 +59,7 @@ check_PROGRAMS	= \
 	tests/conditions-hierarchy			\
 	tests/conditions-example			\
 	tests/conditions-tests				\
+	tests/system-memory				\
 	tests/sizeof					\
 	\
 	tests/condition-subtyping-root			\
@@ -122,6 +123,9 @@ tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_conditions_tests_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_system_memory_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_system_memory_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
