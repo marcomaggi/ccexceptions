@@ -38,6 +38,9 @@ Notes for revision 0.6.4-devel.1
     cce_sys_calloc_guarded_cleanup
     cce_sys_calloc_guarded_error
     cce_sys_calloc_guarded
+    cce_sys_realloc_guarded_cleanup
+    cce_sys_realloc_guarded_error
+    cce_sys_realloc_guarded
 
 
 Notes for revision 0.6.4-devel.0

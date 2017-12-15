@@ -87,7 +87,7 @@ static void
 cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
   free(H->pointer);
-  if (1) { fprintf(stderr, "%s: done\n", __func__); }
+  if (0) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 void
@@ -125,6 +125,32 @@ cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, siz
   void *	P = cce_sys_malloc(L, size);
   cce_error_handler_malloc_init(L, &(P_H->handler), P);
   return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+void *
+cce_sys_realloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, void * old_P, size_t newsize)
+{
+  if (P_H->handler.pointer == old_P) {
+    void *	P = cce_sys_realloc(L, old_P, newsize);
+    P_H->handler.pointer = P;
+    return P;
+  } else {
+    cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
+  }
+}
+
+void *
+cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * old_P, size_t newsize)
+{
+  if (P_H->handler.pointer == old_P) {
+    void *	P = cce_sys_realloc(L, old_P, newsize);
+    P_H->handler.pointer = P;
+    return P;
+  } else {
+    cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
+  }
 }
 
 /* ------------------------------------------------------------------ */
