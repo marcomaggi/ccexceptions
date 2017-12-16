@@ -43,6 +43,12 @@ branches:
 env:
   global:
     - MAKEFLAGS="-j 2"
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "GCyS6Y0E3uYWr5pTgQkVlMorDmEU0b4YvBvqQBjFWZkNlswJBbX0fAB2pFIMHveWtTCihGJBW5pvVeBMDM2YqE3MgVavGmg9kYqp1S3scx+LygqXS7a05cRerpcClJ23vsNAxxr8kHTVyn0LyiFtn6ulWghH3HvvBUNXf7QDVeDn9Otz2k5dE2asLvwvhYFyrBJfYQaGOVaJHgnKQ3XuXYEMKlm4NJTC3UjEdlssElcncicDdtOI1Zv08pHUTrKn0fODOcjscSvSm6382mkqEuDVVNoD0XJuaQJmjSFuae5ggWdcGxDacrA66WSjJ2fc21ns6L9o+OKVj88xPES9TBNS96mB0pJT05BaPDDAjFpunHIOl6oBQu19UfOi9nWB9IDzygUNcPcOF9AIAKoOpUr+3jhodzt7/esDHmPv6LGWdPqZODzZVR1y+t/10dVoVceKUhZUwHnoJgaiRz1btCHCwcLbWhYlq+kncoIKjYpgounsgEHYAIiYtYsPpdH2PSyrj66uPXcur3dXKfjHywK14R5cJKEbTjNsB4FEghedr6lpq3tD1HhS9wXClQi54zfxeLSBmIEJVxN9cB2DBYrEzF8/a51b2G8VBythtcPl7qWRHZEUQQQyv9DCMQ1thQqbVeQfSgg/XVgk8yFGdR4320qYbt9gnl5LU/Cf/Nc="
+
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
 matrix:
   #allow_failures:
@@ -167,5 +173,30 @@ matrix:
         make check;
       after_success:
         bash <(curl -s https://codecov.io/bash) -xgcov-7
+
+    # Coverity Scan support under Ubuntu GNU+Linux "trusty", GCC 7.
+    - os: linux
+      dist: trusty
+      compiler: gcc-7
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - texinfo
+            - gcc-7
+        coverity_scan:
+          project:
+            name: "marcomaggi/ccexceptions"
+            description: "Build submitted via Travis CI"
+          notification_email: marco.maggi-ipsu@poste.it
+          build_command_prepend: "./configure; make clean"
+          build_command: "make -j 4"
+          branch_pattern: coverity_scan
+      script: |
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode --enable-glibc --enable-linux CFLAGS='-O0 --coverage';
+        make all;
+        make check;
 
 ### end of file

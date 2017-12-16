@@ -2,7 +2,7 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1028/badge)](https://bestpractices.coreinfrastructure.org/projects/1028)
 [![Build Status](https://travis-ci.org/marcomaggi/ccexceptions.svg?branch=master)](https://travis-ci.org/marcomaggi/ccexceptions)
-[![Coverity passed](https://scan.coverity.com/projects/12270/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/12270/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6faa0b600ca148b2ba288dfa46438da1)](https://www.codacy.com/app/marcomaggi/ccexceptions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/ccexceptions&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/marcomaggi/ccexceptions/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccexceptions)
 
