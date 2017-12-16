@@ -72,7 +72,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
+        ./configure --enable-maintainer-mode;
         make all;
         make check;
 
@@ -90,7 +90,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
+        ./configure --enable-maintainer-mode;
         make all;
         make check;
 
@@ -108,7 +108,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode --enable-glibc --enable-linux;
+        ./configure --enable-maintainer-mode;
         make all;
         make check;
 
@@ -168,7 +168,7 @@ matrix:
       script: |
         #echo CC=$CC; $CC --version;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode --enable-glibc --enable-linux CFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage';
         make all;
         make check;
       after_success:
@@ -190,13 +190,11 @@ matrix:
             name: "marcomaggi/ccexceptions"
             description: "Build submitted via Travis CI"
           notification_email: marco.maggi-ipsu@poste.it
-          build_command_prepend: "./configure; make clean"
-          build_command: "make -j 4"
+          build_command_prepend: |
+            sh ./autogen.sh;
+            ./configure --enable-maintainer-mode;
+            make clean
+          build_command: "make all"
           branch_pattern: coverity_scan
-      script: |
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode --enable-glibc --enable-linux CFLAGS='-O0 --coverage';
-        make all;
-        make check;
 
 ### end of file
