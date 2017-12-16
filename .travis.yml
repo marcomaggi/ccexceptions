@@ -195,5 +195,10 @@ matrix:
             make clean
           build_command: "make all"
           branch_pattern: coverity_scan
+      script: |
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode;
+        make all;
+        make check;
 
 ### end of file
