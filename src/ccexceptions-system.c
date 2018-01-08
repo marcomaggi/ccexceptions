@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -82,7 +82,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
  ** Predefined POSIX exception handler: malloc pointer.
  ** ----------------------------------------------------------------- */
 
-__attribute__((nonnull(1,2)))
+__attribute__((__nonnull__(1,2)))
 static void
 cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 {
