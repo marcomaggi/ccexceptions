@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -441,8 +441,8 @@ cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
   { .runtime_error.error.root.condition.descriptor = &(cce_descriptor_errno_stru.descriptor), .errnum = ERRNO, .message = MESSAGE }
 
-#define ERRNO_CONDITIONS_NUM		149
-#define LAST_ERRNO_CONDITION		148
+#define ERRNO_CONDITIONS_NUM		148
+#define LAST_ERRNO_CONDITION		147
 
 static cce_condition_errno_t const
 errno_conditions[ERRNO_CONDITIONS_NUM] = {
@@ -596,10 +596,9 @@ errno_conditions[ERRNO_CONDITIONS_NUM] = {
   /* 142 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_ENOTSUP,	"(errno=ENOTSUP) Not supported"),
   /* 143 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_EBACKGROUND,	"(errno=EBACKGROUND) Inappropriate operation for background process"),
   /* 144 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_EDIED,		"(errno=EDIED) Translator died"),
-  /* 145 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_ENOLINK,	"(errno=ENOLINK) Link has been severed"),
-  /* 146 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_ERFKILL,	"(errno=ERFKILL) Operation not possible due to RF-kill"),
-  /* 147 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_EHWPOISON,	"(errno=EHWPOISON) Memory page has hardware error"),
-  /* 148 */ CCE_DECLARE_ERRNO_CONDITION(INT_MAX,		"Unknown errno code")
+  /* 145 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_ERFKILL,	"(errno=ERFKILL) Operation not possible due to RF-kill"),
+  /* 146 */ CCE_DECLARE_ERRNO_CONDITION(VALUEOF_EHWPOISON,	"(errno=EHWPOISON) Memory page has hardware error"),
+  /* 147 */ CCE_DECLARE_ERRNO_CONDITION(INT_MAX,		"Unknown errno code")
 };
 
 cce_condition_t const *
