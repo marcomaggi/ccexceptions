@@ -11,7 +11,7 @@
 
 	   #define _POSIX_C_SOURCE 200809L
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -850,6 +850,11 @@ cce_decl void cce_cleanup_handler_malloc_init (cce_destination_t L, cce_handler_
 
 cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
+
+#define cce_handler_malloc_init(L,P_H,P) \
+  _Generic((P_H),								\
+	   cce_cleanup_handler_t	*: cce_cleanup_handler_malloc_init,	\
+	   cce_error_handler_t		*: cce_error_handler_malloc_init)(L,&(P_H->handler),P)
 
 /* ------------------------------------------------------------------ */
 

@@ -5,6 +5,8 @@ Notes for revision 0.6.4-devel.2
 
 * Removed duplicate definitions for errno code ENOLINK.
 
+* Added "cce_handler_malloc_init()".
+
 
 Notes for revision 0.6.4-devel.1
 --------------------------------
