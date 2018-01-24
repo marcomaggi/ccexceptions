@@ -67,14 +67,14 @@ cce_condition_static_message (cce_condition_t * C)
   return C->descriptor->static_message(C);
 }
 bool
-cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * descriptor)
+cce_is_condition (cce_condition_t const * const C, cce_descriptor_t const * const descriptor)
 {
   return cce_descriptor_child_and_ancestor(C->descriptor, descriptor);
 }
 bool
-cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
+cce_descriptor_child_and_ancestor (cce_descriptor_t const * const D, cce_descriptor_t const * const ancestor)
 {
-  for (; child; child = child->parent) {
+  for (cce_descriptor_t const * child = D; child; child = child->parent) {
     if (child == ancestor) {
       return true;
     }

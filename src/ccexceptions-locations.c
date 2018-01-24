@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -75,16 +75,14 @@ cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
 void
 cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 {
-  if (H) {
-    if (L->first_handler == H) {
-      L->first_handler = H->next_handler;
-      H->next_handler  = NULL;
-    } else {
-      for (cce_handler_t * iter = L->first_handler; iter; iter = iter->next_handler) {
-	if (iter->next_handler == H) {
-	  iter->next_handler = H->next_handler;
-	  H->next_handler    = NULL;
-	}
+  if (L->first_handler == H) {
+    L->first_handler = H->next_handler;
+    H->next_handler  = NULL;
+  } else {
+    for (cce_handler_t * iter = L->first_handler; iter; iter = iter->next_handler) {
+      if (iter->next_handler == H) {
+	iter->next_handler = H->next_handler;
+	H->next_handler    = NULL;
       }
     }
   }
