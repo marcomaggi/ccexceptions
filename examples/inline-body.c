@@ -15,7 +15,7 @@
 	inline  functions;   new  condition   objects  allocated   by  a
 	constructor.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -64,8 +64,8 @@ my_condition_final_error_2 (cce_condition_t * _C)
 {
   my_condition_error_2_t * C = (my_condition_error_2_t *) _C;
   *(C->data) = 0;
+  if (1) { fprintf(stderr, "%s: finalising %p\n", __func__, (void*)C); }
   free(C->data);
-  if (1) { fprintf(stderr, "%s: finalised %p\n", __func__, (void*)C); }
 }
 
 void
@@ -76,8 +76,8 @@ my_condition_delete_error_2 (cce_condition_t * _C)
 {
   my_condition_error_2_t * C = (my_condition_error_2_t *) _C;
 
+  if (1) { fprintf(stderr, "%s: deleting %p\n", __func__, (void*)C); }
   free(C);
-  if (1) { fprintf(stderr, "%s: deleted %p\n", __func__, (void*)C); }
 }
 
 char const *
