@@ -766,6 +766,24 @@ cce_condition_is_errno (cce_condition_t const * C)
 	   cce_condition_t		const	* const: (cce_condition_errno_t const *)(S), \
 	   cce_condition_errno_t	const	* const: (cce_condition_errno_t const *)(S))
 
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__pure__))
+static inline int
+cce_ref_condition_errno_errnum (cce_condition_t const * const C)
+{
+  CCE_PC(cce_condition_errno_t const, K, C);
+  return K->errnum;
+}
+
+__attribute__((__always_inline__,__pure__,__returns_nonnull__))
+static inline char const *
+cce_ref_condition_errno_message (cce_condition_t const * const C)
+{
+  CCE_PC(cce_condition_errno_t const, K, C);
+  return K->message;
+}
+
 
 /** --------------------------------------------------------------------
  ** Locations.

@@ -5,6 +5,11 @@ Notes for revision 0.6.4-devel.3
 
 * Some code tweaking about non-null pointers.
 
+* Added field getters:
+
+    cce_ref_condition_errno_errnum()
+    cce_ref_condition_errno_message()
+
 
 Notes for revision 0.6.4-devel.2
 --------------------------------

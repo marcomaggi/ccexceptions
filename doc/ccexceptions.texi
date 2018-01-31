@@ -2410,6 +2410,18 @@ Pointer to a statically allocated structure representing the condition descripto
 @emph{errno} condition objects.
 @end deftypevr
 
+
+@deftypefun int cce_ref_condition_errno_errnum (cce_condition_t const * @var{C})
+Return the value of the field @code{errnum} in the condition object @var{C} of type
+@objtype{cce_condition_errno_t}
+@end deftypefun
+
+
+@deftypefun {char const *} cce_ref_condition_errno_message (cce_condition_t const * @var{C})
+Return the value of the field @code{message} in the condition object @var{C} of type
+@objtype{cce_condition_errno_t}
+@end deftypefun
+
 @c page
 @node conditions custom
 @section Defining custom condition objects
