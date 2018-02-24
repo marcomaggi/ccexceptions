@@ -28,6 +28,23 @@
 
 #include "ccexceptions-internals.h"
 
+
+/** --------------------------------------------------------------------
+ ** Helpers.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__always_inline__,__returns_nonnull__))
+static inline cce_condition_t const *
+cce_condition_or_default (cce_condition_t const * C)
+{
+  return ((C)? C : &(cce_condition_unknown_ptr->root.condition));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Mechanism.
+ ** ----------------------------------------------------------------- */
+
 __attribute__((hot))
 void
 cce_location_init (cce_location_t * L)
@@ -38,10 +55,10 @@ cce_location_init (cce_location_t * L)
 
 __attribute__((hot))
 void
-cce_raise (cce_location_t * L, cce_condition_t const * C)
+cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 {
   if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
-  L->condition = (C)? C : &(cce_condition_unknown_ptr->root.condition);
+  L->condition = cce_condition_or_default(C);
   siglongjmp(L->buffer, (int)CCE_EXCEPT);
 }
 
@@ -120,6 +137,48 @@ cce_run_error_handlers (cce_location_t * L)
     next = H->next_handler;
     H->function(L->condition, H);
   }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Tracing.
+ ** ----------------------------------------------------------------- */
+
+int
+cce_trace_init (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
+{
+  if (CCE_EXCEPT == rv) {
+    fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "catching:", filename, linenum, funcname,
+	    cce_condition_static_message(L->condition));
+  }
+  return rv;
+}
+
+cce_condition_t const *
+cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
+{
+  cce_condition_t const * K = cce_condition_or_default(C);
+  fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "raising:", filename, linenum, funcname,
+	  cce_condition_static_message(K));
+  return C;
+}
+
+void
+cce_trace_reraise (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+{
+  cce_condition_t const * C = L->condition;
+  cce_condition_t const * K = cce_condition_or_default(C);
+  fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "re-raising:", filename, linenum, funcname,
+	  cce_condition_static_message(K));
+}
+
+void
+cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+{
+  cce_condition_t const * C = L->condition;
+  cce_condition_t const * K = cce_condition_or_default(C);
+  fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "finalising:", filename, linenum, funcname,
+	  cce_condition_static_message(K));
 }
 
 /* end of file */

@@ -127,6 +127,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * handlers::                    The handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
 * system::                      System call adapters.
+* tracing::                     Printing execution traces.
 * helpers::                     Helpers.
 
 Appendices
@@ -2659,6 +2660,110 @@ The macro expands into a call to @cfunc{cce_sys_realloc_guarded_cleanup}.
 The macro expands into a call to @cfunc{cce_sys_realloc_guarded_error}.
 @end table
 @end deftypefn
+
+@c page
+@node tracing
+@chapter Printing execution traces
+
+
+When code using @value{PACKAGE} is compiled with the preprocessor macro @code{CCEXCEPTIONS_TRACE}
+defined before including @file{ccexceptions.h}: some tracing features are enabled.  It means debug
+messages are printed on @code{stderr} following the execution path of raised exceptions representing
+errors.  The affected functions and macros are:
+
+@example
+cce_location
+cce_raise
+cce_run_error_handlers_raise
+cce_run_error_handlers_final
+cce_run_cleanup_handlers_raise
+cce_run_cleanup_handlers_final
+@end example
+
+Tracing features are completely transparent to the client code: we must do nothing different when
+tracing is enabled.
+
+As example, when the following code is run:
+
+@example
+#define CCEXCEPTIONS_TRACE      1
+#include <ccexceptions.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void
+test_tracing_sub_sub_sub (cce_destination_t upper_L)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_raise(L, upper_L);
+  @} else @{
+    cce_raise(L, cce_condition_new_unknown());
+    cce_run_cleanup_handlers(L);
+  @}
+@}
+
+void
+test_tracing_sub_sub (cce_destination_t upper_L)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_raise(L, upper_L);
+  @} else @{
+    test_tracing_sub_sub_sub(L);
+    cce_run_cleanup_handlers(L);
+  @}
+@}
+
+void
+test_tracing_sub (cce_destination_t upper_L)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_raise(L, upper_L);
+  @} else @{
+    test_tracing_sub_sub(L);
+    cce_run_cleanup_handlers(L);
+  @}
+@}
+
+void
+test_tracing (void)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_final(L);
+  @} else @{
+    test_tracing_sub(L);
+    cce_run_cleanup_handlers(L);
+  @}
+@}
+
+int
+main (void)
+@{
+  test_tracing();
+@}
+@end example
+
+@noindent
+it prints:
+
+@smallexample
+raising:    ../tests/tracing.c:48, test_tracing_sub_sub_sub(): Unknown exceptional condition
+catching:   ../tests/tracing.c:45, test_tracing_sub_sub_sub(): Unknown exceptional condition
+re-raising: ../tests/tracing.c:46, test_tracing_sub_sub_sub(): Unknown exceptional condition
+catching:   ../tests/tracing.c:58, test_tracing_sub_sub(): Unknown exceptional condition
+re-raising: ../tests/tracing.c:59, test_tracing_sub_sub(): Unknown exceptional condition
+catching:   ../tests/tracing.c:71, test_tracing_sub(): Unknown exceptional condition
+re-raising: ../tests/tracing.c:72, test_tracing_sub(): Unknown exceptional condition
+catching:   ../tests/tracing.c:84, test_tracing(): Unknown exceptional condition
+finalising: ../tests/tracing.c:85, test_tracing(): Unknown exceptional condition
+@end smallexample
 
 @c page
 @node helpers

@@ -59,6 +59,7 @@ check_PROGRAMS	= \
 	tests/conditions-hierarchy			\
 	tests/conditions-example			\
 	tests/conditions-tests				\
+	tests/tracing					\
 	tests/system-memory				\
 	tests/sizeof					\
 	\
@@ -123,6 +124,9 @@ tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_conditions_tests_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_conditions_tests_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_tracing_CPPFLAGS				= $(ccexceptions_tests_cppflags)
+tests_tracing_LDADD				= $(ccexceptions_tests_ldadd)
 
 tests_system_memory_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_system_memory_LDADD			= $(ccexceptions_tests_ldadd)

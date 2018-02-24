@@ -10,6 +10,8 @@ Notes for revision 0.6.4-devel.3
     cce_ref_condition_errno_errnum()
     cce_ref_condition_errno_message()
 
+* Added tracing features.
+
 
 Notes for revision 0.6.4-devel.2
 --------------------------------

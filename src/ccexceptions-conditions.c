@@ -62,7 +62,7 @@ cce_condition_delete (cce_condition_t * C)
   }
 }
 char const *
-cce_condition_static_message (cce_condition_t * C)
+cce_condition_static_message (cce_condition_t const * C)
 {
   return C->descriptor->static_message(C);
 }
