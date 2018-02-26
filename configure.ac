@@ -82,7 +82,6 @@ dnl page
 
 AC_LANG([C])
 AC_PROG_CC_C99
-
 AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
 
 AS_VAR_SET(AX_CFLAGS,[-std=c11])
@@ -94,7 +93,6 @@ AS_IF([test "x$GCC" = "xyes"],
 AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
-AC_PROG_CC
 AM_PROG_CC_C_O
 AC_HEADER_STDC
 AC_CHECK_HEADERS([assert.h stdint.h stdbool.h setjmp.h memory.h limits.h])
