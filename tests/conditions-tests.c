@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -60,10 +60,110 @@ test_invalid_argument (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Mathematical conditions.
+ ** ----------------------------------------------------------------- */
+
+void
+test_math_error (void)
+{
+  cce_location_t	L[1];
+  bool			error_flag = false;
+
+  if (cce_location(L)) {
+    assert(cce_condition_is_runtime_error(cce_condition(L)));
+    assert(cce_condition_is_math_error(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    error_flag = true;
+  } else {
+    cce_raise(L, cce_condition(cce_condition_new_math_error()));
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == error_flag);
+}
+
+void
+test_math_nan (void)
+{
+  cce_location_t	L[1];
+  bool			error_flag = false;
+
+  if (cce_location(L)) {
+    assert(cce_condition_is_math_error(cce_condition(L)));
+    assert(cce_condition_is_math_nan(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    error_flag = true;
+  } else {
+    cce_raise(L, cce_condition(cce_condition_new_math_nan()));
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == error_flag);
+}
+
+void
+test_math_infinity (void)
+{
+  cce_location_t	L[1];
+  bool			error_flag = false;
+
+  if (cce_location(L)) {
+    assert(cce_condition_is_math_error(cce_condition(L)));
+    assert(cce_condition_is_math_infinity(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    error_flag = true;
+  } else {
+    cce_raise(L, cce_condition(cce_condition_new_math_infinity()));
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == error_flag);
+}
+
+void
+test_math_overflow (void)
+{
+  cce_location_t	L[1];
+  bool			error_flag = false;
+
+  if (cce_location(L)) {
+    assert(cce_condition_is_math_error(cce_condition(L)));
+    assert(cce_condition_is_math_overflow(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    error_flag = true;
+  } else {
+    cce_raise(L, cce_condition(cce_condition_new_math_overflow()));
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == error_flag);
+}
+
+void
+test_math_underflow (void)
+{
+  cce_location_t	L[1];
+  bool			error_flag = false;
+
+  if (cce_location(L)) {
+    assert(cce_condition_is_math_error(cce_condition(L)));
+    assert(cce_condition_is_math_underflow(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    error_flag = true;
+  } else {
+    cce_raise(L, cce_condition(cce_condition_new_math_underflow()));
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == error_flag);
+}
+
+
 int
 main (void)
 {
   if (1) { test_invalid_argument(); }
+  if (1) { test_math_error(); }
+  if (1) { test_math_nan(); }
+  if (1) { test_math_infinity(); }
+  if (1) { test_math_overflow(); }
+  if (1) { test_math_underflow(); }
 
   exit(EXIT_SUCCESS);
 }

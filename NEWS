@@ -12,6 +12,8 @@ Notes for revision 0.6.4-devel.3
 
 * Added tracing features.
 
+* Added mathematical errors condition objects.
+
 
 Notes for revision 0.6.4-devel.2
 --------------------------------

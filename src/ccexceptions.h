@@ -196,6 +196,21 @@ typedef struct cce_condition_invalid_argument_t	cce_condition_invalid_argument_t
 typedef struct cce_descriptor_unreachable_t	cce_descriptor_unreachable_t;
 typedef struct cce_condition_unreachable_t	cce_condition_unreachable_t;
 
+typedef struct cce_descriptor_math_error_t	cce_descriptor_math_error_t;
+typedef struct cce_condition_math_error_t	cce_condition_math_error_t;
+
+typedef struct cce_descriptor_math_nan_t	cce_descriptor_math_nan_t;
+typedef struct cce_condition_math_nan_t		cce_condition_math_nan_t;
+
+typedef struct cce_descriptor_math_infinity_t	cce_descriptor_math_infinity_t;
+typedef struct cce_condition_math_infinity_t	cce_condition_math_infinity_t;
+
+typedef struct cce_descriptor_math_overflow_t	cce_descriptor_math_overflow_t;
+typedef struct cce_condition_math_overflow_t	cce_condition_math_overflow_t;
+
+typedef struct cce_descriptor_math_underflow_t	cce_descriptor_math_underflow_t;
+typedef struct cce_condition_math_underflow_t	cce_condition_math_underflow_t;
+
 typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
 typedef struct cce_condition_errno_t		cce_condition_errno_t;
 
@@ -783,6 +798,256 @@ cce_ref_condition_errno_message (cce_condition_t const * const C)
   CCE_PC(cce_condition_errno_t const, K, C);
   return K->message;
 }
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: mathematical error exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_math_error_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_math_error_t {
+  cce_condition_runtime_error_t	runtime_error;
+};
+
+cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr;
+cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_math_error (cce_condition_math_error_t * C)
+{
+  cce_condition_init_runtime_error(&(C->runtime_error));
+}
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_math_error (void)
+{
+  return (cce_condition_t const *) cce_condition_math_error_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_math_error (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_math_error_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_math_error(S)					\
+  _Generic((S),								\
+	   cce_location_t			*: (cce_condition_math_error_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (cce_condition_math_error_t const *)CCE_CLOC(S), \
+	   cce_condition_t			*: (cce_condition_math_error_t const *)(S), \
+	   cce_condition_math_error_t		*: (cce_condition_math_error_t const *)(S), \
+	   cce_condition_t		const	*: (cce_condition_math_error_t const *)(S), \
+	   cce_condition_math_error_t	const	*: (cce_condition_math_error_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_math_error_t const *)(S), \
+	   cce_condition_math_error_t	const	* const: (cce_condition_math_error_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: mathematical not-a-number exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_math_nan_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_math_nan_t {
+  cce_condition_math_error_t	math_error;
+};
+
+cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr;
+cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_math_nan (cce_condition_math_nan_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_math_nan (void)
+{
+  return (cce_condition_t const *) cce_condition_math_nan_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_math_nan (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_math_nan_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_math_nan(S)					\
+  _Generic((S),								\
+	   cce_location_t			*: (cce_condition_math_nan_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]			 : (cce_condition_math_nan_t const *)CCE_CLOC(S), \
+	   cce_condition_t			*: (cce_condition_math_nan_t const *)(S), \
+	   cce_condition_math_nan_t		*: (cce_condition_math_nan_t const *)(S), \
+	   cce_condition_t		const	*: (cce_condition_math_nan_t const *)(S), \
+	   cce_condition_math_nan_t	const	*: (cce_condition_math_nan_t const *)(S), \
+	   cce_condition_t		const	* const: (cce_condition_math_nan_t const *)(S), \
+	   cce_condition_math_nan_t	const	* const: (cce_condition_math_nan_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: mathematical not-a-number exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_math_infinity_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_math_infinity_t {
+  cce_condition_math_error_t	math_error;
+};
+
+cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infinity_ptr;
+cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_math_infinity (void)
+{
+  return (cce_condition_t const *) cce_condition_math_infinity_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_math_infinity (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_math_infinity_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_math_infinity(S)					\
+  _Generic((S),								\
+	   cce_location_t				*: (cce_condition_math_infinity_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_math_infinity_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_math_infinity_t const *)(S), \
+	   cce_condition_math_infinity_t		*: (cce_condition_math_infinity_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_math_infinity_t const *)(S), \
+	   cce_condition_math_infinity_t	const	*: (cce_condition_math_infinity_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_math_infinity_t const *)(S), \
+	   cce_condition_math_infinity_t	const	* const: (cce_condition_math_infinity_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: mathematical overflow exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_math_overflow_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_math_overflow_t {
+  cce_condition_math_error_t	math_error;
+};
+
+cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overflow_ptr;
+cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_math_overflow (void)
+{
+  return (cce_condition_t const *) cce_condition_math_overflow_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_math_overflow (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_math_overflow_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_math_overflow(S)					\
+  _Generic((S),								\
+	   cce_location_t				*: (cce_condition_math_overflow_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_math_overflow_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_math_overflow_t const *)(S), \
+	   cce_condition_math_overflow_t		*: (cce_condition_math_overflow_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_math_overflow_t const *)(S), \
+	   cce_condition_math_overflow_t	const	*: (cce_condition_math_overflow_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_math_overflow_t const *)(S), \
+	   cce_condition_math_overflow_t	const	* const: (cce_condition_math_overflow_t const *)(S))
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional condition objects: mathematical underflow exception.
+ ** ----------------------------------------------------------------- */
+
+struct cce_descriptor_math_underflow_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct cce_condition_math_underflow_t {
+  cce_condition_math_error_t	math_error;
+};
+
+cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_underflow_ptr;
+cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr;
+
+__attribute__((__always_inline__,__const__,__nonnull__(1)))
+static inline void
+cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+__attribute__((__always_inline__,__const__))
+static inline cce_condition_t const *
+cce_condition_new_math_underflow (void)
+{
+  return (cce_condition_t const *) cce_condition_math_underflow_ptr;
+}
+
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
+cce_condition_is_math_underflow (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(cce_descriptor_math_underflow_ptr->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+#define cce_condition_math_underflow(S)					\
+  _Generic((S),								\
+	   cce_location_t				*: (cce_condition_math_underflow_t const *)CCE_CLOC(S), \
+	   cce_location_t[1]				 : (cce_condition_math_underflow_t const *)CCE_CLOC(S), \
+	   cce_condition_t				*: (cce_condition_math_underflow_t const *)(S), \
+	   cce_condition_math_underflow_t		*: (cce_condition_math_underflow_t const *)(S), \
+	   cce_condition_t			const	*: (cce_condition_math_underflow_t const *)(S), \
+	   cce_condition_math_underflow_t	const	*: (cce_condition_math_underflow_t const *)(S), \
+	   cce_condition_t			const	* const: (cce_condition_math_underflow_t const *)(S), \
+	   cce_condition_math_underflow_t	const	* const: (cce_condition_math_underflow_t const *)(S))
 
 
 /** --------------------------------------------------------------------

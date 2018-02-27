@@ -417,6 +417,161 @@ cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsig
 
 
 /** --------------------------------------------------------------------
+ ** Mathematical error condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_static_message_math_error (cce_condition_t const * C CCE_UNUSED)
+{
+  return "error computing a mathematical expression";
+}
+
+/* This   condition   descriptor   represents  an   mathematical   error
+   exceptional  condition.   This  descriptor   has  only  one  instance
+   statically allocated below: "cce_condition_math_error". */
+static cce_descriptor_math_error_t const cce_descriptor_math_error_stru = {
+  .descriptor.parent		= &(cce_descriptor_runtime_error_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_math_error
+};
+
+cce_descriptor_math_error_t const * const cce_descriptor_math_error_ptr = &cce_descriptor_math_error_stru;
+
+/* This is  the single instance  of "math error"  exceptional condition.
+   It is used by "cce_raise()" and "cce_retry()". */
+static cce_condition_math_error_t const cce_condition_math_error_stru = {
+  .runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_error_stru.descriptor)
+};
+
+cce_condition_math_error_t const * const cce_condition_math_error_ptr = &cce_condition_math_error_stru;
+
+
+/** --------------------------------------------------------------------
+ ** Mathematical not-a-number error condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_static_message_math_nan (cce_condition_t const * C CCE_UNUSED)
+{
+  return "not-a-number result while computing a mathematical expression";
+}
+
+/* This  condition descriptor  represents  an mathematical  not-a-number
+   error exceptional  condition.  This descriptor has  only one instance
+   statically allocated below: "cce_condition_math_nan". */
+static cce_descriptor_math_nan_t const cce_descriptor_math_nan_stru = {
+  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_math_nan
+};
+
+cce_descriptor_math_nan_t const * const cce_descriptor_math_nan_ptr = &cce_descriptor_math_nan_stru;
+
+/* This  is  the  single  instance   of  "math  nan  error"  exceptional
+   condition.  It is used by "cce_raise()" and "cce_retry()". */
+static cce_condition_math_nan_t const cce_condition_math_nan_stru = {
+  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_nan_stru.descriptor)
+};
+
+cce_condition_math_nan_t const * const cce_condition_math_nan_ptr = &cce_condition_math_nan_stru;
+
+
+/** --------------------------------------------------------------------
+ ** Mathematical infinity error condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_static_message_math_infinity (cce_condition_t const * C CCE_UNUSED)
+{
+  return "infinite result while computing a mathematical expression";
+}
+
+/* This  condition descriptor  represents  an mathematical  not-a-number
+   error exceptional  condition.  This descriptor has  only one instance
+   statically allocated below: "cce_condition_math_infinity". */
+static cce_descriptor_math_infinity_t const cce_descriptor_math_infinity_stru = {
+  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_math_infinity
+};
+
+cce_descriptor_math_infinity_t const * const cce_descriptor_math_infinity_ptr = &cce_descriptor_math_infinity_stru;
+
+/* This  is the  single instance  of "math  infinity error"  exceptional
+   condition.  It is used by "cce_raise()" and "cce_retry()". */
+static cce_condition_math_infinity_t const cce_condition_math_infinity_stru = {
+  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_infinity_stru.descriptor)
+};
+
+cce_condition_math_infinity_t const * const cce_condition_math_infinity_ptr = &cce_condition_math_infinity_stru;
+
+
+/** --------------------------------------------------------------------
+ ** Mathematical overflow error condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_static_message_math_overflow (cce_condition_t const * C CCE_UNUSED)
+{
+  return "overflow error while computing a mathematical expression";
+}
+
+/* This condition  descriptor represents an mathematical  overflow error
+   exceptional  condition.   This  descriptor   has  only  one  instance
+   statically allocated below: "cce_condition_math_overflow". */
+static cce_descriptor_math_overflow_t const cce_descriptor_math_overflow_stru = {
+  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_math_overflow
+};
+
+cce_descriptor_math_overflow_t const * const cce_descriptor_math_overflow_ptr = &cce_descriptor_math_overflow_stru;
+
+/* This  is the  single instance  of "math  overflow error"  exceptional
+   condition.  It is used by "cce_raise()" and "cce_retry()". */
+static cce_condition_math_overflow_t const cce_condition_math_overflow_stru = {
+  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_overflow_stru.descriptor)
+};
+
+cce_condition_math_overflow_t const * const cce_condition_math_overflow_ptr = &cce_condition_math_overflow_stru;
+
+
+/** --------------------------------------------------------------------
+ ** Mathematical underflow error condition.
+ ** ----------------------------------------------------------------- */
+
+static char const *
+cce_condition_static_message_math_underflow (cce_condition_t const * C CCE_UNUSED)
+{
+  return "underflow error while computing a mathematical expression";
+}
+
+/* This condition descriptor represents  an mathematical underflow error
+   exceptional  condition.   This  descriptor   has  only  one  instance
+   statically allocated below: "cce_condition_math_underflow". */
+static cce_descriptor_math_underflow_t const cce_descriptor_math_underflow_stru = {
+  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= cce_condition_static_message_math_underflow
+};
+
+cce_descriptor_math_underflow_t const * const cce_descriptor_math_underflow_ptr = &cce_descriptor_math_underflow_stru;
+
+/* This is  the single  instance of  "math underflow  error" exceptional
+   condition.  It is used by "cce_raise()" and "cce_retry()". */
+static cce_condition_math_underflow_t const cce_condition_math_underflow_stru = {
+  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_underflow_stru.descriptor)
+};
+
+cce_condition_math_underflow_t const * const cce_condition_math_underflow_ptr = &cce_condition_math_underflow_stru;
+
+
+/** --------------------------------------------------------------------
  ** Errno condition.
  ** ----------------------------------------------------------------- */
 

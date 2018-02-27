@@ -1100,6 +1100,7 @@ run--time according to the type of raised structure.
 * conditions invalid arg::      Predefined invalid argument conditions.
 * conditions unreachable::      Predefined unreachable code conditions.
 * conditions errno::            Predefined @code{errno} conditions.
+* conditions math::             Predefined mathematical conditions.
 * conditions custom::           Defining custom condition objects.
 @end menu
 
@@ -2422,6 +2423,346 @@ Return the value of the field @code{errnum} in the condition object @var{C} of t
 Return the value of the field @code{message} in the condition object @var{C} of type
 @objtype{cce_condition_errno_t}
 @end deftypefun
+
+@c page
+@node conditions math
+@section Predefined mathematical conditions
+
+
+@menu
+* conditions math error::       Error computing a mathematical expression.
+* conditions math nan::         Mathematical not-a-number error.
+* conditions math infinity::    Mathematical infinity error.
+* conditions math overflow::    Mathematical overflow error.
+* conditions math underflow::   Mathematical underflow error.
+@end menu
+
+@c page
+@node conditions math error
+@subsection Error computing a mathematical expression
+
+
+The @dfn{mathematical error exceptional--condition object} has the purpose of describing an
+exceptional condition caused by attempting to compute an invalid mathematical expression.
+
+There should be only one @emph{mathematical error} condition object: the one predefined by
+@value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_math_error_t
+Structure type representing the descriptor for @emph{mathematical error} condition objects.  This
+descriptor has the @emph{runtime error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_math_error_t
+Structure type representing an @emph{mathematical error} condition object.
+@end deftp
+
+
+@deftypefun void cce_condition_init_math_error (cce_condition_math_error_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_math_error_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_math_error (void)
+Return a pointer to the statically allocated structure representing the single @emph{mathematical
+error} condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_math_error (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} is an @emph{mathematical error} condition object; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_math_error_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_math_error_t const * const} cce_descriptor_math_error_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical error} condition
+descriptor for the single @emph{mathematical error} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_math_error_t const * const} cce_condition_math_error_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical error} condition object.
+@end deftypevr
+
+@c page
+@node conditions math nan
+@subsection Mathematical not-a-number error
+
+
+The @dfn{mathematical not--a--number exceptional--condition object} has the purpose of describing an
+exceptional condition caused by not--a--number result while computing a mathematical expression.
+
+There should be only one @emph{mathematical not--a--number} condition object: the one predefined by
+@value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_math_nan_t
+Structure type representing the descriptor for @emph{mathematical not--a--number} condition objects.
+This descriptor has the @emph{mathematical error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_math_nan_t
+Structure type representing an @emph{mathematical not--a--number} condition object.
+@end deftp
+
+
+@deftypefun void cce_condition_init_math_nan (cce_condition_math_nan_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_math_nan_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_math_nan (void)
+Return a pointer to the statically allocated structure representing the single @emph{mathematical
+not--a--number} condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_math_nan (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} is an @emph{mathematical not--a--number} condition object; otherwise
+return @cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_math_nan_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_math_nan_t const * const} cce_descriptor_math_nan_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical not--a--number} condition
+descriptor for the single @emph{mathematical not--a--number} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_math_nan_t const * const} cce_condition_math_nan_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical not--a--number} condition object.
+@end deftypevr
+
+@c page
+@node conditions math infinity
+@subsection Mathematical infinity error
+
+
+The @dfn{mathematical infinity exceptional--condition object} has the purpose of describing an
+exceptional condition caused by an infinite result while computing a mathematical expression.
+
+There should be only one @emph{mathematical infinity} condition object: the one predefined by
+@value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_math_infinity_t
+Structure type representing the descriptor for @emph{mathematical infinity} condition objects.  This
+descriptor has the @emph{mathematical error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_math_infinity_t
+Structure type representing an @emph{mathematical infinity} condition object.
+@end deftp
+
+
+@deftypefun void cce_condition_init_math_infinity (cce_condition_math_infinity_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_math_infinity_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_math_infinity (void)
+Return a pointer to the statically allocated structure representing the single @emph{mathematical
+infinity} condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_math_infinity (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} is an @emph{mathematical infinity} condition object; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_math_infinity_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_math_infinity_t const * const} cce_descriptor_math_infinity_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical infinity} condition
+descriptor for the single @emph{mathematical infinity} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_math_infinity_t const * const} cce_condition_math_infinity_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical infinity} condition
+object.
+@end deftypevr
+
+@c page
+@node conditions math overflow
+@subsection Mathematical overflow error
+
+
+The @dfn{mathematical overflow exceptional--condition object} has the purpose of describing an
+exceptional condition caused by an overflow while computing a mathematical expression.
+
+There should be only one @emph{mathematical overflow} condition object: the one predefined by
+@value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_math_overflow_t
+Structure type representing the descriptor for @emph{mathematical overflow} condition objects.  This
+descriptor has the @emph{mathematical error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_math_overflow_t
+Structure type representing an @emph{mathematical overflow} condition object.
+@end deftp
+
+
+@deftypefun void cce_condition_init_math_overflow (cce_condition_math_overflow_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_math_overflow_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_math_overflow (void)
+Return a pointer to the statically allocated structure representing the single @emph{mathematical
+overflow} condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_math_overflow (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} is an @emph{mathematical overflow} condition object; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_math_overflow_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_math_overflow_t const * const} cce_descriptor_math_overflow_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical overflow} condition
+descriptor for the single @emph{mathematical overflow} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_math_overflow_t const * const} cce_condition_math_overflow_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical overflow} condition object.
+@end deftypevr
+
+@c page
+@node conditions math underflow
+@subsection Mathematical underflow error
+
+
+The @dfn{mathematical underflow exceptional--condition object} has the purpose of describing an
+exceptional condition caused by an underflow while computing a mathematical expression.
+
+There should be only one @emph{mathematical underflow} condition object: the one predefined by
+@value{PACKAGE}.
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
+
+
+@deftp {Struct Typedef} cce_descriptor_math_underflow_t
+Structure type representing the descriptor for @emph{mathematical underflow} condition objects.
+This descriptor has the @emph{mathematical error} descriptor as parent.
+@end deftp
+
+
+@deftp {Struct Typedef} cce_condition_math_underflow_t
+Structure type representing an @emph{mathematical underflow} condition object.
+@end deftp
+
+
+@deftypefun void cce_condition_init_math_underflow (cce_condition_math_underflow_t * @var{C})
+Initialise an already allocated condition object.  This function exists to allow sub--typing from
+@objtype{cce_condition_math_underflow_t}.
+@end deftypefun
+
+
+@deftypefun {cce_condition_t const *} cce_condition_new_math_underflow (void)
+Return a pointer to the statically allocated structure representing the single @emph{mathematical
+underflow} condition object.
+@end deftypefun
+
+
+@deftypefun bool cce_is_condition_math_underflow (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} is an @emph{mathematical underflow} condition object; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_location_t * @var{L})
+@deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t * @var{C})
+@deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t const * @var{C})
+This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
+@objtype{cce_condition_math_underflow_t}.
+
+This macro performs compile--time type--checking so that the cast operation is applied only to
+values of suitable types; we can apply this macro to pointers of all the types defined by
+@value{PACKAGE} for which it makes sense.
+@end deftypefn
+
+
+@deftypevr {Dynamic Constant} {cce_descriptor_math_underflow_t const * const} cce_descriptor_math_underflow_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical underflow} condition
+descriptor for the single @emph{mathematical underflow} condition object.
+@end deftypevr
+
+
+@deftypevr {Dynamic Constant} {cce_condition_math_underflow_t const * const} cce_condition_math_underflow_ptr
+Pointer to a statically allocated structure representing the @emph{mathematical underflow} condition
+object.
+@end deftypevr
 
 @c page
 @node conditions custom
