@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -150,11 +150,11 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 
   /* Branching upon condition types with "cce_is_condition()". */
   {
-    cce_location_t	L[1];
+    cce_location_t	inner_L[1];
     bool		flag = false;
 
-    if (cce_location(L)) {
-      cce_condition_t *	C = cce_condition(L);
+    if (cce_location(inner_L)) {
+      cce_condition_t *	C = cce_condition(inner_L);
 
       if (cce_is_condition(C, cce_descriptor(cce_descriptor_unknown_ptr)))
 	{
@@ -168,22 +168,22 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 	{
 	  flag = false;
 	}
-      cce_run_error_handlers(L);
+      cce_run_error_handlers(inner_L);
       cce_condition_delete(C);
     } else {
-      cce_raise(L, cce_condition(cce_condition_new_errno(EINVAL)));
-      cce_run_cleanup_handlers(L);
+      cce_raise(inner_L, cce_condition(cce_condition_new_errno(EINVAL)));
+      cce_run_cleanup_handlers(inner_L);
     }
     assert(true == flag);
   }
 
   /* Branching upon condition types with "cce_descriptor_child_and_ancestor()". */
   {
-    cce_location_t	L[1];
+    cce_location_t	inner_L[1];
     bool		flag = false;
 
-    if (cce_location(L)) {
-      cce_condition_t *	C  = cce_condition(L);
+    if (cce_location(inner_L)) {
+      cce_condition_t *	C  = cce_condition(inner_L);
       cce_descriptor_t const *	CD = cce_descriptor(C);
 
       if (cce_descriptor_child_and_ancestor(CD, cce_descriptor(cce_descriptor_unknown_ptr)))
@@ -198,11 +198,11 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 	{
 	  flag = false;
 	}
-      cce_run_error_handlers(L);
+      cce_run_error_handlers(inner_L);
       cce_condition_delete(C);
     } else {
-      cce_raise(L, cce_condition(cce_condition_new_errno(EINVAL)));
-      cce_run_cleanup_handlers(L);
+      cce_raise(inner_L, cce_condition(cce_condition_new_errno(EINVAL)));
+      cce_run_cleanup_handlers(inner_L);
     }
     assert(true == flag);
   }
