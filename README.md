@@ -223,11 +223,11 @@ and appropriate entries in Travis CI's matrix of builds.
 
 ### Codacy
 
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
+Codacy is  an online service  providing code  review.  We can  find this
+project's dashboard at:
 
 [https://www.codacy.com/app/marcomaggi/ccexceptions](https://www.codacy.com/app/marcomaggi/ccexceptions)
 
 Usage of this service is  implemented through direct integration between
-GitHub and Codecov sites.
+GitHub and Codacy sites.
 
