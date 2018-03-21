@@ -8,7 +8,7 @@ dnl
 dnl	Macros used in "configure.ac".  Some  of these macros are reused
 dnl     from infrastructure of the the package Vicare Scheme.
 dnl
-dnl Copyright (C) 2014, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+dnl Copyright (C) 2014, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 dnl
 dnl This program is free software: you can redistribute it and/or modify
 dnl it  under the  terms of  the GNU  Lesser General  Public License  as
@@ -46,6 +46,35 @@ AC_DEFUN([CCE_ENABLE_OPTION],
         [AC_MSG_ERROR([bad value $enableval for --enable-$2])])],
      [cce_enable_$1=$3])
    AC_MSG_RESULT([$cce_enable_$1])])
+
+dnl Wrapper for AC_COMPUTE_INT which computes  and caches the value of a
+dnl C language constant.  For example, to compute the value of the
+dnl "errno" constant EPERM we do:
+dnl
+dnl    CCE_VALUEOF_TEST([EPERM],[EPERM])
+dnl
+dnl this macro expansion: defines  the shell variable "VALUEOF_EPERM" to
+dnl the    value    of    EPERM;     defines    the    shell    variable
+dnl "cce_cv_valueof_EPERM" to cache the value; defines an Autoconf
+dnl substitution for the symbol "VALUEOF_EPERM".
+dnl
+dnl $1 - the stem  to use  to define  shell variables  representing the
+dnl      result of this test
+dnl $2 - the name of a C language constant whose value is an integer
+dnl
+AC_DEFUN([CCE_VALUEOF_TEST],
+  [VALUEOF_$1="-1"
+   AC_CACHE_CHECK([the value of '$2'],
+     [cce_cv_valueof_$1],
+     [AC_COMPUTE_INT([cce_cv_valueof_$1],
+        [$2],
+        [#include <errno.h>
+],
+        [cce_cv_valueof_$1="-1"])])
+    VALUEOF_$1="$cce_cv_valueof_$1"
+    AC_DEFINE_UNQUOTED([VALUEOF_$1],$VALUEOF_$1,[value of constant $1])])
+
+AC_DEFUN([CCE_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
 
 dnl end of file
 dnl Local Variables:

@@ -41,32 +41,6 @@ LT_PREREQ([2.4])
 LT_INIT
 
 dnl page
-#### configuration
-
-dnl case "$target_os" in
-dnl   *linux*)
-dnl     ccexceptions_OS_LINUX=yes
-dnl     AC_MSG_NOTICE([detected OS: linux])
-dnl     ;;
-dnl   *bsd*)
-dnl     ccexceptions_OS_BSD=yes
-dnl     AC_MSG_NOTICE([detected OS: BSD])
-dnl     ;;
-dnl   *cygwin*)
-dnl     ccexceptions_OS_CYGWIN=yes
-dnl     AC_MSG_NOTICE([detected OS: CYGWIN])
-dnl     ;;
-dnl   *darwin*)
-dnl     ccexceptions_OS_DARWIN=yes
-dnl     AC_MSG_NOTICE([detected OS: DARWIN])
-dnl     ;;
-dnl esac
-dnl AM_CONDITIONAL([ON_LINUX], [test "x$ccexceptions_OS_LINUX"  = xyes])
-dnl AM_CONDITIONAL([ON_BSD],   [test "x$ccexceptions_OS_BSD"    = xyes])
-dnl AM_CONDITIONAL([ON_CYGWIN],[test "x$ccexceptions_OS_CYGWIN" = xyes])
-dnl AM_CONDITIONAL([ON_DARWIN],[test "x$ccexceptions_OS_DARWIN" = xyes])
-
-dnl page
 #### libraries interface version
 
 AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.6d4.3])
@@ -75,21 +49,13 @@ AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.6.4])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],6,4,0)
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],6,4,0)
 
 dnl page
 #### basic system inspection
 
 AC_LANG([C])
-AC_PROG_CC_C99
-AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
-
-AS_VAR_SET(AX_CFLAGS,[-std=c11])
-AS_VAR_APPEND(AX_CFLAGS,[" -Wall -Wextra"])
-AX_GCC_VERSION
-AS_IF([test "x$GCC" = "xyes"],
-  [AS_CASE("$GCC_VERSION",
-     [7.*],[AS_VAR_APPEND(AX_CFLAGS,[" -pedantic -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion -Wshadow -Wformat=2 -Wmisleading-indentation"])])])
+MMUX_LANG_C11
 AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
@@ -102,11 +68,6 @@ dnl The  documentation of GNU  Autoconf states that AC_PROG_CC  sets the
 dnl variable "GCC" to "yes" if the selected compiler is GCC.
 AM_CONDITIONAL([WANT_GCC],[test "x$GCC" = xyes])
 
-AC_CACHE_SAVE
-
-dnl page
-#### checks for library functions
-
 dnl This constant is redefined in the main header file.  We define it here so
 dnl that it is there in the tests below.
 AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Request enabling latest POSIX features.])
@@ -115,35 +76,6 @@ AC_CACHE_SAVE
 
 dnl page
 #### errno values inspection
-
-dnl Wrapper for AC_COMPUTE_INT which computes  and caches the value of a
-dnl C language constant.  For example, to compute the value of the
-dnl "errno" constant EPERM we do:
-dnl
-dnl    CCE_VALUEOF_TEST([EPERM],[EPERM])
-dnl
-dnl this macro expansion: defines  the shell variable "VALUEOF_EPERM" to
-dnl the    value    of    EPERM;     defines    the    shell    variable
-dnl "cce_cv_valueof_EPERM" to cache the value; defines an Autoconf
-dnl substitution for the symbol "VALUEOF_EPERM".
-dnl
-dnl $1 - the stem  to use  to define  shell variables  representing the
-dnl      result of this test
-dnl $2 - the name of a C language constant whose value is an integer
-dnl
-AC_DEFUN([CCE_VALUEOF_TEST],
-  [VALUEOF_$1="-1"
-   AC_CACHE_CHECK([the value of '$2'],
-     [cce_cv_valueof_$1],
-     [AC_COMPUTE_INT([cce_cv_valueof_$1],
-        [$2],
-        [#include <errno.h>
-],
-        [cce_cv_valueof_$1="-1"])])
-    VALUEOF_$1="$cce_cv_valueof_$1"
-    AC_DEFINE_UNQUOTED([VALUEOF_$1],$VALUEOF_$1,[value of constant $1])])
-
-AC_DEFUN([CCE_ERRNO_TEST],[CCE_VALUEOF_TEST([$1],[$1])])
 
 CCE_ERRNO_TEST([E2BIG])
 CCE_ERRNO_TEST([EACCES])
