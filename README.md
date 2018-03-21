@@ -12,8 +12,8 @@ This package installs a C11 language library; it implements an interface
 to non-local  exits, which is  somewhat similar to  exceptions handling.
 The library targets POSIX systems.
 
-The  package makes  use of  the  GNU Autotools  and  it is  tested on  a
-GNU+Linux system.
+The package uses the GNU Autotools and it is tested, using Travis CI, on
+both Ubuntu GNU+Linux systems and OS X systems.
 
 
 ## License
@@ -53,12 +53,6 @@ to inspect the available configuration options:
 ```
 $ ../configure --help
 ```
-
-The script offers the following special options:
-
-* `--enable-glibc` Enable GNU C Library features (default is yes).
-
-* `--enable-linux` Enable Linux features (default is yes).
 
 The Makefile is designed to allow parallel builds, so we can do:
 
