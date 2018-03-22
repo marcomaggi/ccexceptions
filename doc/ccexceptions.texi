@@ -298,7 +298,7 @@ this is what happens:
 
 @itemize
 @item
-When @cfunc{setjmp} is invoked: it saves the current ``position'' in @var{here}, then it returns
+When @cfunc{setjmp} is invoked: it saves the current ``location'' in @var{here}, then it returns
 zero.
 
 @item
@@ -343,7 +343,6 @@ Let's see some logic example; we will assume the following preamble:
 #include <setjmp.h>
 
 #define JUMP_TO_ERROR           2
-#define JUMP_TO_RETRY           3
 @end example
 
 In the following code no jump is performed; we just call @cfunc{setjmp} once and never call
@@ -397,62 +396,6 @@ default:
 @}
 assert(JUMP_TO_ERROR == code);
 assert(2 == flag);
-@end example
-
-In the following code we perform a jump and try an alternative body; we handle the logic with a
-@code{switch} statement:
-
-@example
-jmp_buf         L;
-int             flag = 0, code;
-
-code = setjmp(L);
-switch (code) @{
-case JUMP_TO_ERROR:
-  flag = 2;
-  longjmp(L, JUMP_TO_RETRY);
-  break;
-case JUMP_TO_RETRY:
-  // the alternative body
-  flag = 3;
-  break;
-default:
-  // the body
-  flag = 1;
-  longjmp(L, JUMP_TO_ERROR);
-@}
-assert(JUMP_TO_RETRY == code);
-assert(3 == flag);
-@end example
-
-In the following code we perform a jump and retry the body several times:
-
-@example
-jmp_buf         L;
-int             flag = 0, code;
-volatile int    times = 0;
-
-code = setjmp(L);
-switch (code) @{
-case JUMP_TO_ERROR:
-  flag = 2;
-  longjmp(L, JUMP_TO_RETRY);
-  break;
-default:
-  if ((JUMP_TO_RETRY == code) && (times < 5)) @{
-    // retrying
-    ++times;
-    longjmp(L, JUMP_TO_ERROR);
-  @} else if (JUMP_TO_RETRY == code) @{
-    flag = 3;
-  @} else @{
-    // the body
-    flag = 1;
-    longjmp(L, JUMP_TO_ERROR);
-  @}
-@}
-assert(JUMP_TO_RETRY == code);
-assert(3 == flag);
 @end example
 
 @c page
@@ -539,9 +482,9 @@ Struct type representing the location context.  This type is ``derived'' from @o
 in the sense that a pointer to @objtype{cce_location_t} is also a pointer to @objtype{sigjmp_buf}.
 
 Instances of this structure reference an instance of type @objtype{cce_condition_t}; it is set by
-@cfunc{cce_raise} and @cfunc{cce_retry}.  The client code is responsible for releasing resources
-associated to this value by retrieving a pointer to it with @cfunc{cce_condition} and releasing it
-with @cfunc{cce_condition_delete}.
+@cfunc{cce_raise}.  The client code is responsible for releasing resources associated to this value
+by retrieving a pointer to it with @cfunc{cce_condition} and releasing it with
+@cfunc{cce_condition_delete}.
 
 Before terminating the use of instances of this type we must always call
 @cfunc{cce_run_error_handlers} or @cfunc{cce_run_cleanup_handlers}.  We must assume that the
@@ -580,12 +523,6 @@ return value of @cfunc{cce_location} when a non--local exit is performed by @cfu
 @end deftypevr
 
 
-@deftypevr Constant int CCE_RETRY
-Constant used by the library as non--local exit code.  It is the return value of
-@cfunc{cce_location} when a non--local exit is performed by @cfunc{cce_retry}.
-@end deftypevr
-
-
 @deftypefun void cce_raise (cce_location_t * @var{L}, cce_condition_t const * @var{C})
 Raise an exception associated to the location @var{L}, with exceptional condition object @var{C}.
 This function performs the call to @cfunc{siglongjmp} with code @code{CCE_EXCEPT}.
@@ -597,24 +534,14 @@ selected to represent an ``unknown exceptional condition''; we can transparently
 @end deftypefun
 
 
-@deftypefun void cce_retry (cce_location_t * @var{L})
-Raise an exception associated to the location @var{L} with the purpose or retrying the body
-evaluation.  This function performs the call to @cfunc{siglongjmp} with code @code{CCE_RETRY}.
-
-This function selects an internal, statically allocated, exceptional condition object to represent
-an ``unknown exceptional condition''; we can transparently apply the function
-@cfunc{cce_condition_delete} to this object.
-@end deftypefun
-
-
 @deftypefn {Generic Macro} {cce_condition_t *} cce_condition (cce_location_t * @var{L})
 Return the condition object associated to the location @var{L}; this value is @strong{never}
 @cnull{}.
 
-If we apply this function to a location without calling @cfunc{cce_raise} or @cfunc{cce_retry}: the
-returned pointer references an internal, statically allocated, exceptional condition object
-representing an ``unknown exceptional condition''; we can transparently apply the function
-@cfunc{cce_condition_delete} to this object.
+If we apply this function to a location without calling @cfunc{cce_raise}: the returned pointer
+references an internal, statically allocated, exceptional condition object representing an ``unknown
+exceptional condition''; we can transparently apply the function @cfunc{cce_condition_delete} to
+this object.
 @end deftypefn
 
 
@@ -667,65 +594,6 @@ inner (cce_location_t * there)
   @} else @{
     /* do something useful here */
     cce_run_cleanup_handlers(L);
-  @}
-@}
-@end example
-
-@item
-When attempting to evaluate a body of code multiple times with the retry facility, it is suggested
-to use @code{switch} statements to organise the logic of location mechanisms.  If we want to
-distinguish between the main body and the retry body, we do:
-
-@example
-cce_location_t  L[1];
-
-switch (cce_location(L)) @{
-case CCE_EXCEPT:
-  /* handle the error */
-  cce_run_error_handlers_final(L);
-  break;
-
-case CCE_RETRY:
-  /* retry the operation here */
-  if (some_recoverable_error()) @{
-    cce_retry(L);
-  @} else if (some_error()) @{
-    cce_raise(L, NULL);
-  @}
-  break;
-
-default:
-  /* do something useful here */
-  if (some_recoverable_error()) @{
-    cce_retry(L);
-  @} else if (some_error()) @{
-    cce_raise(L, NULL);
-  @}
-@}
-@end example
-
-@noindent
-and we can fall through:
-
-@example
-cce_location_t  L[1];
-
-switch (cce_location(L)) @{
-case CCE_EXCEPT:
-  /* handle the exception here */
-  cce_run_error_handlers_final(L);
-  break;
-
-case CCE_RETRY:
-  /* prepare to retry here, fall through */
-
-default:
-  /* do something useful here */
-  do_something();
-  if (some_recoverable_error()) @{
-    cce_retry(L);
-  @} else if (some_error()) @{
-    cce_raise(L, NULL);
   @}
 @}
 @end example
@@ -1635,15 +1503,8 @@ condition--object type @objtype{my_condition_root_subtype_t}.
 
 
 The @dfn{unknown exceptional--condition object} has the purpose of describing an exceptional
-condition with unknown cause; it should be used only by:
-
-@itemize
-@item
-The function @cfunc{cce_raise} when the condition object argument is set to @cnull{}.
-
-@item
-The function @cfunc{cce_retry}.
-@end itemize
+condition with unknown cause; it should be used only by the function @cfunc{cce_raise} when the
+condition object argument is set to @cnull{}.
 
 There should be only one @emph{unknown} condition object: the one predefined by @value{PACKAGE} and
 built into the library as statically allocated structure.  Sub--typing from the unknown type is

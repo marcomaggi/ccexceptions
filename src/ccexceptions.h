@@ -132,10 +132,6 @@ typedef enum {
   CCE_ERROR		= 1,
   CCE_EXCEPT		= 1,
 
-  /* This  code  represents  the   return  value  of  the  "setjmp()"
-     evaluation after a "cce_retry()" call. */
-  CCE_RETRY,
-
   /* This  code  is  available  to  the  custom  code  to  define  other
      represents the return value of the "setjmp()" evaluation after a
      "cce_raise()" call. */
@@ -1065,9 +1061,6 @@ cce_decl void cce_location_init	(cce_destination_t here)
   __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl void cce_p_raise (cce_destination_t L, cce_condition_t const * C)
-  __attribute__((__noreturn__,__nonnull__(1)));
-
-cce_decl void cce_retry (cce_destination_t L)
   __attribute__((__noreturn__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */

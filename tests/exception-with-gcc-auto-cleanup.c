@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -123,62 +123,11 @@ test_with_error (void)
 }
 
 
-static bool	test_with_retry_out_flag1 = false;
-static bool	test_with_retry_out_flag2 = false;
-
-static void
-test_with_retry_handler1 (volatile bool * flagp)
-{
-  test_with_retry_out_flag1 = *flagp;
-}
-static void
-test_with_retry_handler2 (volatile bool * flagp)
-{
-  test_with_retry_out_flag2 = *flagp;
-}
-
-static void
-test_with_retry (void)
-/* Show  the  interaction  between  CCException's  mechanism  and  GCC's
-   built-in handler mechanism.  Case with retry. */
-{
-  {
-    cce_location_t	L[1];
-    volatile bool	flag1 __attribute__((cleanup(test_with_retry_handler1))) = false;
-    volatile bool	flag2 __attribute__((cleanup(test_with_retry_handler2))) = false;
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      flag1 = false;
-      flag2 = false;
-      cce_run_error_handlers(L);
-      break;
-
-    case CCE_SUCCESS:
-      flag1 = true;
-      flag2 = true;
-      if (1) {
-	cce_retry(L);
-      }
-      // else fall through
-
-    default:
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true == flag1);
-    assert(true == flag2);
-  }
-  assert(true == test_with_retry_out_flag1);
-  assert(true == test_with_retry_out_flag2);
-}
-
-
 int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   test_no_exception();
   test_with_error();
-  test_with_retry();
 
   exit(EXIT_SUCCESS);
 }

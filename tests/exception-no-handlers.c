@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -68,30 +68,6 @@ main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
       cce_run_cleanup_handlers(L);
     }
     assert(false == flag);
-  }
-
-  /* "switch" statement, retry */
-  {
-    cce_location_t	L[1];
-    bool		flag = false;
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      flag = false;
-      cce_run_error_handlers(L);
-      break;
-
-    case CCE_RETRY:
-      flag = true;
-      cce_run_cleanup_handlers(L);
-      break;
-
-    default:
-      cce_retry(L);
-      flag = true;
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true == flag);
   }
 
   exit(EXIT_SUCCESS);

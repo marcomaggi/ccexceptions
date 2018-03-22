@@ -140,7 +140,7 @@ static cce_descriptor_unknown_t const cce_descriptor_unknown_stru = {
 cce_descriptor_unknown_t const * const cce_descriptor_unknown_ptr = &cce_descriptor_unknown_stru;
 
 /* This is the single instance  of unknown exceptional condition.  It is
-   used by "cce_raise()" and "cce_retry()". */
+   used by "cce_raise()". */
 static cce_condition_unknown_t const cce_condition_unknown_stru = {
   .root.condition.descriptor = &(cce_descriptor_unknown_stru.descriptor)
 };
@@ -171,7 +171,7 @@ static cce_descriptor_break_t const cce_descriptor_break_stru = {
 cce_descriptor_break_t const * const cce_descriptor_break_ptr = &cce_descriptor_break_stru;
 
 /* This is  the single instance  of break exceptional condition.   It is
-   used by "cce_raise()" and "cce_retry()". */
+   used by "cce_raise()". */
 static cce_condition_break_t const cce_condition_break_stru = {
   .root.condition.descriptor = &(cce_descriptor_break_stru.descriptor)
 };
@@ -202,7 +202,7 @@ static cce_descriptor_error_t const cce_descriptor_error_stru = {
 cce_descriptor_error_t const * const cce_descriptor_error_ptr = &cce_descriptor_error_stru;
 
 /* This  is  the  single  instance of  "unspecified  error"  exceptional
-   condition.  It is used by "cce_raise()" and "cce_retry()". */
+   condition.  It is used by "cce_raise()". */
 static cce_condition_error_t const cce_condition_error_stru = {
   .root.condition.descriptor = &(cce_descriptor_error_stru.descriptor)
 };
@@ -233,7 +233,7 @@ static cce_descriptor_runtime_error_t const cce_descriptor_runtime_error_stru = 
 cce_descriptor_runtime_error_t const * const cce_descriptor_runtime_error_ptr = &cce_descriptor_runtime_error_stru;
 
 /* This is the single instance of "runtime error" exceptional condition.
-   It is used by "cce_raise()" and "cce_retry()". */
+   It is used by "cce_raise()". */
 static cce_condition_runtime_error_t const cce_condition_runtime_error_stru = {
   .error.root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
 };
@@ -264,7 +264,7 @@ static cce_descriptor_logic_error_t const cce_descriptor_logic_error_stru = {
 cce_descriptor_logic_error_t const * const cce_descriptor_logic_error_ptr = &cce_descriptor_logic_error_stru;
 
 /* This is the  single instance of "logic  error" exceptional condition.
-   It is used by "cce_raise()" and "cce_retry()". */
+   It is used by "cce_raise()". */
 static cce_condition_logic_error_t const cce_condition_logic_error_stru = {
   .error.root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
 };
@@ -357,7 +357,7 @@ static cce_descriptor_unimplemented_t const cce_descriptor_unimplemented_stru = 
 cce_descriptor_unimplemented_t const * const cce_descriptor_unimplemented_ptr = &cce_descriptor_unimplemented_stru;
 
 /* This is  the single instance of  unimplemented exceptional condition.
-   It is used by "cce_raise()" and "cce_retry()". */
+   It is used by "cce_raise()". */
 static cce_condition_unimplemented_t const cce_condition_unimplemented_stru = {
   .logic_error.error.root.condition.descriptor = &(cce_descriptor_unimplemented_stru.descriptor)
 };
@@ -439,7 +439,7 @@ static cce_descriptor_math_error_t const cce_descriptor_math_error_stru = {
 cce_descriptor_math_error_t const * const cce_descriptor_math_error_ptr = &cce_descriptor_math_error_stru;
 
 /* This is  the single instance  of "math error"  exceptional condition.
-   It is used by "cce_raise()" and "cce_retry()". */
+   It is used by "cce_raise()". */
 static cce_condition_math_error_t const cce_condition_math_error_stru = {
   .runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_error_stru.descriptor)
 };
@@ -470,7 +470,7 @@ static cce_descriptor_math_nan_t const cce_descriptor_math_nan_stru = {
 cce_descriptor_math_nan_t const * const cce_descriptor_math_nan_ptr = &cce_descriptor_math_nan_stru;
 
 /* This  is  the  single  instance   of  "math  nan  error"  exceptional
-   condition.  It is used by "cce_raise()" and "cce_retry()". */
+   condition.  It is used by "cce_raise()". */
 static cce_condition_math_nan_t const cce_condition_math_nan_stru = {
   .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_nan_stru.descriptor)
 };
@@ -501,7 +501,7 @@ static cce_descriptor_math_infinity_t const cce_descriptor_math_infinity_stru = 
 cce_descriptor_math_infinity_t const * const cce_descriptor_math_infinity_ptr = &cce_descriptor_math_infinity_stru;
 
 /* This  is the  single instance  of "math  infinity error"  exceptional
-   condition.  It is used by "cce_raise()" and "cce_retry()". */
+   condition.  It is used by "cce_raise()". */
 static cce_condition_math_infinity_t const cce_condition_math_infinity_stru = {
   .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_infinity_stru.descriptor)
 };
@@ -532,7 +532,7 @@ static cce_descriptor_math_overflow_t const cce_descriptor_math_overflow_stru = 
 cce_descriptor_math_overflow_t const * const cce_descriptor_math_overflow_ptr = &cce_descriptor_math_overflow_stru;
 
 /* This  is the  single instance  of "math  overflow error"  exceptional
-   condition.  It is used by "cce_raise()" and "cce_retry()". */
+   condition.  It is used by "cce_raise()". */
 static cce_condition_math_overflow_t const cce_condition_math_overflow_stru = {
   .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_overflow_stru.descriptor)
 };
@@ -563,7 +563,7 @@ static cce_descriptor_math_underflow_t const cce_descriptor_math_underflow_stru 
 cce_descriptor_math_underflow_t const * const cce_descriptor_math_underflow_ptr = &cce_descriptor_math_underflow_stru;
 
 /* This is  the single  instance of  "math underflow  error" exceptional
-   condition.  It is used by "cce_raise()" and "cce_retry()". */
+   condition.  It is used by "cce_raise()". */
 static cce_condition_math_underflow_t const cce_condition_math_underflow_stru = {
   .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_underflow_stru.descriptor)
 };

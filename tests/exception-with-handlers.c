@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -134,61 +134,6 @@ test_with_error (void)
 }
 
 
-typedef struct test_with_retry_handler1_t {
-  cce_handler_t		handler;
-  volatile bool *	flagp;
-} test_with_retry_handler1_t;
-
-typedef struct test_with_retry_handler2_t {
-  cce_handler_t		handler;
-  volatile bool *	flagp;
-} test_with_retry_handler2_t;
-
-static void
-test_with_retry_handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
-{
-  test_with_retry_handler1_t *	data = (test_with_retry_handler1_t *)_data;
-  *(data->flagp) = true;
-}
-
-static void
-test_with_retry_handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
-{
-  test_with_retry_handler2_t *	data = (test_with_retry_handler2_t *)_data;
-  *(data->flagp) = true;
-}
-
-static void
-test_with_retry (void)
-{
-  cce_location_t	L[1];
-  volatile bool		flag1 = false;
-  volatile bool		flag2 = false;
-  test_with_retry_handler1_t H1 = { .handler.function = test_with_retry_handler1 , .flagp = &flag1 };
-  test_with_retry_handler2_t H2 = { .handler.function = test_with_retry_handler2 , .flagp = &flag2 };
-
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_error_handlers(L);
-    cce_condition_delete(cce_condition(L));
-    break;
-
-  case CCE_SUCCESS:
-    cce_register_cleanup_handler(L, &H1.handler);
-    cce_register_error_handler(L, &H2.handler);
-    if (1) {
-      cce_retry(L);
-    }
-    // else fall through
-
-  default:
-    cce_run_cleanup_handlers(L);
-  }
-  assert(true  == flag1);
-  assert(false == flag2);
-}
-
-
 typedef struct test_dynamically_allocated_handler_t {
   cce_handler_t		handler;
   volatile bool *	flagp;
@@ -254,7 +199,6 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   if (1) test_no_exception();
   if (1) test_with_error();
-  if (1) test_with_retry();
   if (1) test_dynamically_allocated_handlers();
   //
   exit(EXIT_SUCCESS);

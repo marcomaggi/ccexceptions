@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -96,34 +96,6 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       cce_register_cleanup_handler(L, H1.exception_handler);
       cce_register_cleanup_handler(L, H2.exception_handler);
       cce_raise(L, NULL);
-      cce_run_cleanup_handlers(L);
-    }
-    assert(true == flag1);
-    assert(true == flag2);
-  }
-
-  /* with retry */
-  {
-    cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
-
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_error_handlers(L);
-      break;
-
-    case CCE_SUCCESS:
-      cce_register_cleanup_handler(L, H1.exception_handler);
-      cce_register_cleanup_handler(L, H2.exception_handler);
-      if (1) {
-	cce_retry(L);
-      }
-      // else fall through
-
-    default:
       cce_run_cleanup_handlers(L);
     }
     assert(true == flag1);

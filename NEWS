@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.6.4-beta.0
+-------------------------------
+
+* Removed the retry facilities.
+
+
 Notes for revision 0.6.4-devel.3
 --------------------------------
 

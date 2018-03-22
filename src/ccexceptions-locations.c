@@ -64,15 +64,6 @@ cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 
 __attribute__((hot))
 void
-cce_retry (cce_location_t * L)
-{
-  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
-  L->condition = &(cce_condition_unknown_ptr->root.condition);
-  siglongjmp(L->buffer, (int)CCE_RETRY);
-}
-
-__attribute__((hot))
-void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
 {
   H->is_cleanup_handler = true;
