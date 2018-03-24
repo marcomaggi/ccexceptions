@@ -62,6 +62,14 @@ cce_p_raise (cce_location_t * L, cce_condition_t const * C)
   siglongjmp(L->buffer, (int)CCE_EXCEPT);
 }
 
+void
+cce_p_retry (cce_location_t * L)
+{
+  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
+  L->condition = &(cce_condition_unknown_ptr->root.condition);
+  siglongjmp(L->buffer, (int)CCE_RETRY);
+}
+
 __attribute__((hot))
 void
 cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
@@ -152,6 +160,13 @@ cce_trace_raise (cce_condition_t const * C, char const * filename, char const * 
   fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "raising:", filename, linenum, funcname,
 	  cce_condition_static_message(K));
   return C;
+}
+
+cce_destination_t
+cce_trace_retry (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+{
+  fprintf(stderr, "%-11s %s:%d, %s()\n", "retrying:", filename, linenum, funcname);
+  return L;
 }
 
 void

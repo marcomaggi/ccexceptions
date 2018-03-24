@@ -498,13 +498,13 @@ Pointer to @objtype{cce_location_t}.
 @end deftp
 
 
-@deftypefun void cce_location_init (cce_location_t * @var{L})
+@deftypefun void cce_location_init (cce_destination_t @var{L})
 Initialise the location @var{L}, but do @strong{not} call @cfunc{sigsetjmp}.  We are not meant to
 call this function directly; rather we should use the macro @cfunc{cce_location}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} int cce_location (cce_location_t * @var{L})
+@deftypefn {Preprocessor Macro} int cce_location (cce_destination_t @var{L})
 Initialise the location @var{L}; call @cfunc{sigsetjmp} and return its return value.
 @end deftypefn
 
@@ -516,6 +516,12 @@ the return value of @cfunc{cce_location} at the first evaluation.
 @end deftypevr
 
 
+@deftypevr Constant int CCE_RETRY
+This code represents the return value of the @cfunc{setjmp} evaluation after a @cfunc{cce_retry}
+call.
+@end deftypevr
+
+
 @deftypevr Constant int CCE_EXCEPT
 @deftypevrx Constant int CCE_ERROR
 Constants used by the library as non--local exit codes.  They are defined as @code{1} and are the
@@ -523,7 +529,7 @@ return value of @cfunc{cce_location} when a non--local exit is performed by @cfu
 @end deftypevr
 
 
-@deftypefun void cce_raise (cce_location_t * @var{L}, cce_condition_t const * @var{C})
+@deftypefun void cce_raise (cce_destination_t @var{L}, cce_condition_t const * @var{C})
 Raise an exception associated to the location @var{L}, with exceptional condition object @var{C}.
 This function performs the call to @cfunc{siglongjmp} with code @code{CCE_EXCEPT}.
 
@@ -534,7 +540,12 @@ selected to represent an ``unknown exceptional condition''; we can transparently
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_t *} cce_condition (cce_location_t * @var{L})
+@deftypefun void cce_retry (cce_destinataion_t @var{L})
+Jump back to the location @var{L}, reentering the body of the construct.
+@end deftypefun
+
+
+@deftypefn {Generic Macro} {cce_condition_t *} cce_condition (cce_destination_t @var{L})
 Return the condition object associated to the location @var{L}; this value is @strong{never}
 @cnull{}.
 
@@ -684,7 +695,7 @@ to release its memory.
 @end deftypefn
 
 
-@deftypefun void cce_register_cleanup_handler (cce_location_t * @var{L}, cce_handler_t * @var{H})
+@deftypefun void cce_register_cleanup_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
 Register the cleanup handler referenced by @var{H} in the list of handlers associated to the
 location @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is
 a structure of type @code{cce_handler_t}; such structure can either be allocated on the same stack
@@ -696,7 +707,7 @@ location, whether with an exception or as part of the successful execution path.
 @end deftypefun
 
 
-@deftypefun void cce_register_error_handler (cce_location_t * @var{L}, cce_handler_t * @var{H})
+@deftypefun void cce_register_error_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
 Register the error handler referenced by @var{H} in the list of handlers associated to the location
 @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
 structure of type @code{cce_handler_t}; such structure can either be allocated on the same stack
@@ -715,7 +726,7 @@ in @var{L}: nothing happens.
 @end deftypefun
 
 
-@deftypefun void cce_run_cleanup_handlers (cce_location_t * @var{L})
+@deftypefun void cce_run_cleanup_handlers (cce_destination_t @var{L})
 Run all the cleanup handlers associated to the location @var{L}.  Each handler must return to its
 caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
@@ -726,7 +737,7 @@ from the context of @var{L}, so it can be finalised and its memory released.
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers (cce_location_t * @var{L})
+@deftypefun void cce_run_error_handlers (cce_destination_t @var{L})
 Run all the cleanup and error handlers associated to the location @var{L}.  Each handler must return
 to its caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
@@ -741,7 +752,7 @@ associated to @var{L}, so this function should always be called @strong{before} 
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers_final (cce_location_t * @var{L})
+@deftypefun void cce_run_error_handlers_final (cce_destination_t @var{L})
 Equivalent to calling:
 
 @example
@@ -751,7 +762,7 @@ cce_condition_delete(cce_condition(L));
 @end deftypefun
 
 
-@deftypefun void cce_run_cleanup_handlers_final (cce_location_t * @var{L})
+@deftypefun void cce_run_cleanup_handlers_final (cce_destination_t @var{L})
 Equivalent to calling:
 
 @example
@@ -761,7 +772,7 @@ cce_condition_delete(cce_condition(L));
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers_raise (cce_location_t * @var{L}, cce_location_t * @var{upper_L})
+@deftypefun void cce_run_error_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
 Equivalent to calling:
 
 @example
@@ -771,7 +782,7 @@ cce_raise(upper_L, cce_condition(L));
 @end deftypefun
 
 
-@deftypefun void cce_run_cleanup_handlers_raise (cce_location_t * @var{L}, cce_location_t * @var{upper_L})
+@deftypefun void cce_run_cleanup_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
 Equivalent to calling:
 
 @example
@@ -1535,7 +1546,7 @@ Return @ctrue{} if @var{C} is an @emph{unknown} condition object; otherwise retu
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t const * @var{C})
@@ -1603,7 +1614,7 @@ Return @ctrue{} if @var{C} is an @emph{break} condition object; otherwise return
 @end deftypefn
 
 
-@deftypefn {Generic Macro}  {cce_condition_break_t const *} cce_condition_break (cce_location_t * @var{L})
+@deftypefn {Generic Macro}  {cce_condition_break_t const *} cce_condition_break (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_break_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t const * @var{C})
@@ -1687,7 +1698,7 @@ Return @ctrue{} if @var{C} is a @emph{error} condition object; otherwise return 
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -1768,7 +1779,7 @@ Return @ctrue{} if @var{C} is a @emph{run--time} condition object; otherwise ret
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -1850,7 +1861,7 @@ Return @ctrue{} if @var{C} is a @emph{logic} condition object; otherwise return 
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -1933,7 +1944,7 @@ Return @ctrue{} if @var{C} is an @emph{unimplemented} condition object; otherwis
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2030,7 +2041,7 @@ Initialisation function for the condition object.
 @end deftypefun
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_invalid_argument (cce_location_t * @var{L}, char const * @var{func}, unsigned @var{index})
+@deftypefun {cce_condition_t const *} cce_condition_new_invalid_argument (cce_destination_t @var{L}, char const * @var{func}, unsigned @var{index})
 Build and return a new condition object.  If building the object fails: raise an exception to the
 location @var{L}.
 @end deftypefun
@@ -2041,7 +2052,7 @@ Return @ctrue{} if @var{C} is a condition object of the specified type; otherwis
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t const * @var{C})
@@ -2254,7 +2265,7 @@ Return @ctrue{} if @var{C} is a condition object of type @emph{errno}; otherwise
 @end deftypefn
 
 
-@deftypefn {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_errno_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t const * @var{C})
@@ -2341,7 +2352,7 @@ Return @ctrue{} if @var{C} is an @emph{mathematical error} condition object; oth
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2406,7 +2417,7 @@ return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2471,7 +2482,7 @@ Return @ctrue{} if @var{C} is an @emph{mathematical infinity} condition object; 
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2537,7 +2548,7 @@ Return @ctrue{} if @var{C} is an @emph{mathematical overflow} condition object; 
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2602,7 +2613,7 @@ Return @ctrue{} if @var{C} is an @emph{mathematical underflow} condition object;
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_location_t * @var{L})
+@deftypefn {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_destination_t @var{L})
 @deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t * @var{C})
 @deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t const * @var{C})
 This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
@@ -2674,17 +2685,17 @@ before returning.  In case of error: the raised exceptional condition objects ar
 The following symbols are defined in the header file @file{ccexceptions.h}.
 
 
-@deftypefun {void *} cce_sys_malloc (cce_location_t * @var{L}, size_t @var{size})
+@deftypefun {void *} cce_sys_malloc (cce_destination_t @var{L}, size_t @var{size})
 Wrapper for @cfunc{malloc}.  This function never returns @cnull{}.
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_realloc (cce_location_t * @var{L}, void * @var{old_P}, size_t @var{newsize})
+@deftypefun {void *} cce_sys_realloc (cce_destination_t @var{L}, void * @var{old_P}, size_t @var{newsize})
 Wrapper for @cfunc{realloc}.  This function never returns @cnull{}.
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_calloc (cce_location_t * @var{L}, size_t @var{count}, size_t @var{eltsize})
+@deftypefun {void *} cce_sys_calloc (cce_destination_t @var{L}, size_t @var{count}, size_t @var{eltsize})
 Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 @end deftypefun
 
@@ -2709,8 +2720,8 @@ if (cce_location(L)) @{
 @end example
 
 
-@deftypefun void cce_cleanup_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, void * @var{P})
+@deftypefun void cce_cleanup_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
@@ -2769,20 +2780,20 @@ if (cce_location(L)) @{
 @end example
 
 
-@deftypefun {void *} cce_sys_malloc_guarded_cleanup (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{size})
+@deftypefun {void *} cce_sys_malloc_guarded_cleanup (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{size})
 Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_malloc_guarded_error (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
+@deftypefun {void *} cce_sys_malloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
 Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} {void *} cce_sys_malloc_guarded (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{size})
-@deftypefnx {Preprocessor Macro} {void *} cce_sys_malloc_guarded (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
+@deftypefn {Preprocessor Macro} {void *} cce_sys_malloc_guarded (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{size})
+@deftypefnx {Preprocessor Macro} {void *} cce_sys_malloc_guarded (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
 This preprocessor macro uses @code{_Generic} to dispatch the call according to the type of the
 pointer @var{P_H}; if the type is:
 
@@ -2800,20 +2811,20 @@ The macro expands into a call to @cfunc{cce_sys_malloc_guarded_error}.
 @subsection Guarded allocation: @cfunc{calloc}
 
 
-@deftypefun {void *} cce_sys_calloc_guarded_cleanup (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefun {void *} cce_sys_calloc_guarded_cleanup (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
 Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_calloc_guarded_error (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefun {void *} cce_sys_calloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
 Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
-@deftypefnx {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefn {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefnx {Preprocessor Macro} {void *} cce_sys_calloc_guarded (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
 This preprocessor macro uses @code{_Generic} to dispatch the call according to the type of the
 pointer @var{P_H}; if the type is:
 
@@ -2831,7 +2842,7 @@ The macro expands into a call to @cfunc{cce_sys_calloc_guarded_error}.
 @subsection Guarded allocation: @cfunc{realloc}
 
 
-@deftypefun {void *} cce_sys_realloc_guarded_cleanup (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
+@deftypefun {void *} cce_sys_realloc_guarded_cleanup (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
 Like @cfunc{cce_sys_realloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.  The handler is updated to reference the new memory pointer.  If, upon entering this
 function, the handler @var{P_H} does not reference the pointer @var{old_P}: raise an exception by
@@ -2840,7 +2851,7 @@ performing a non--local exit to @var{L}, with condition object of type
 @end deftypefun
 
 
-@deftypefun {void *} cce_sys_realloc_guarded_error (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
+@deftypefun {void *} cce_sys_realloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
 Like @cfunc{cce_sys_realloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.  The handler is updated to reference the new memory pointer.  If, upon entering this
 function, the handler @var{P_H} does not reference the pointer @var{old_P}: raise an exception by
@@ -2849,8 +2860,8 @@ performing a non--local exit to @var{L}, with condition object of type
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} {void *} cce_sys_realloc_guarded (cce_location_t * @var{L}, cce_cleanup_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
-@deftypefnx {Preprocessor Macro} {void *} cce_sys_realloc_guarded (cce_location_t * @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
+@deftypefn {Preprocessor Macro} {void *} cce_sys_realloc_guarded (cce_destination_t @var{L}, cce_cleanup_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
+@deftypefnx {Preprocessor Macro} {void *} cce_sys_realloc_guarded (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
 This preprocessor macro uses @code{_Generic} to dispatch the call according to the type of the
 pointer @var{P_H}; if the type is:
 

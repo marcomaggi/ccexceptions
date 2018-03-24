@@ -127,14 +127,15 @@ typedef enum {
   CCE_SUCCESS		= 0,
   CCE_ENTER		= 0,
 
-  /* This  code  represents  the   return  value  of  the  "setjmp()"
-     evaluation after a "cce_throw()" call. */
+  /* This code represents the return  value of the "setjmp()" evaluation
+     after a "cce_retry()" call. */
+  CCE_RETRY		= 0,
+
+  /* This code represents the return  value of the "setjmp()" evaluation
+     after a "cce_raise()" call. */
   CCE_ERROR		= 1,
   CCE_EXCEPT		= 1,
 
-  /* This  code  is  available  to  the  custom  code  to  define  other
-     represents the return value of the "setjmp()" evaluation after a
-     "cce_raise()" call. */
   CCE_FIRST_NEXT
 } cce_code_t;
 
@@ -1063,6 +1064,9 @@ cce_decl void cce_location_init	(cce_destination_t here)
 cce_decl void cce_p_raise (cce_destination_t L, cce_condition_t const * C)
   __attribute__((__noreturn__,__nonnull__(1)));
 
+cce_decl void cce_p_retry (cce_destination_t L)
+  __attribute__((__noreturn__,__nonnull__(1)));
+
 /* ------------------------------------------------------------------ */
 
 cce_decl int cce_trace_init (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
@@ -1071,16 +1075,21 @@ cce_decl int cce_trace_init (cce_destination_t L, int rv, char const * filename,
 cce_decl cce_condition_t const * cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(2,3)));
 
+cce_decl cce_destination_t cce_trace_retry (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+  __attribute__((__nonnull__(1,2,3)));
+
 /* ------------------------------------------------------------------ */
 
 #if (! defined CCEXCEPTIONS_TRACE)
 #  define cce_location(HERE)		 __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
 #  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), (CONDITION))
+#  define cce_retry(THERE)		cce_p_retry(THERE)
 #else
 #  define cce_location(HERE)		\
   (cce_location_init(HERE), cce_trace_init((HERE), sigsetjmp((void *)(HERE),0), __FILE__, __func__, __LINE__))
 #  define cce_raise(THERE, CONDITION)	\
   cce_p_raise((THERE), cce_trace_raise(CONDITION, __FILE__, __func__, __LINE__))
+#  define cce_retry(THERE)		cce_p_retry(cce_trace_retry(THERE, __FILE__, __func__, __LINE__))
 #endif
 
 

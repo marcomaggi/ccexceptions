@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.7.1-beta.0
+-------------------------------
+
+* Added another, simpler, implementation of the retry facilities.
+
+
 Notes for revision 0.7.0-beta.0
 -------------------------------
 
