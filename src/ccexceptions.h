@@ -1270,6 +1270,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_invalid_argument_t		*: CCE_C001(S), \
 	   cce_descriptor_unreachable_t			*: CCE_C001(S), \
 	   cce_descriptor_errno_t			*: CCE_C001(S), \
+	   cce_descriptor_math_error_t			*: CCE_C001(S), \
+	   cce_descriptor_math_nan_t			*: CCE_C001(S), \
+	   cce_descriptor_math_infinity_t		*: CCE_C001(S), \
+	   cce_descriptor_math_overflow_t		*: CCE_C001(S), \
+	   cce_descriptor_math_underflow_t		*: CCE_C001(S), \
 									\
 	   cce_descriptor_t			const   *: CCE_C001(S), \
 	   cce_descriptor_root_t		const	*: CCE_C001(S), \
@@ -1282,6 +1287,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_invalid_argument_t	const	*: CCE_C001(S), \
 	   cce_descriptor_unreachable_t		const	*: CCE_C001(S), \
 	   cce_descriptor_errno_t		const	*: CCE_C001(S), \
+	   cce_descriptor_math_error_t		const	*: CCE_C001(S), \
+	   cce_descriptor_math_nan_t		const	*: CCE_C001(S), \
+	   cce_descriptor_math_infinity_t	const	*: CCE_C001(S), \
+	   cce_descriptor_math_overflow_t	const	*: CCE_C001(S), \
+	   cce_descriptor_math_underflow_t	const	*: CCE_C001(S), \
 									\
 	   cce_descriptor_t			const	* const: CCE_C001(S), \
 	   cce_descriptor_root_t		const	* const: CCE_C001(S), \
@@ -1294,6 +1304,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_descriptor_invalid_argument_t	const	* const: CCE_C001(S), \
 	   cce_descriptor_unreachable_t		const	* const: CCE_C001(S), \
 	   cce_descriptor_errno_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_math_error_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_math_nan_t		const	* const: CCE_C001(S), \
+	   cce_descriptor_math_infinity_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_math_overflow_t	const	* const: CCE_C001(S), \
+	   cce_descriptor_math_underflow_t	const	* const: CCE_C001(S), \
 									\
 	   cce_condition_t				*: CCE_C003(S),	\
 	   cce_condition_root_t				*: CCE_C003(S),	\
@@ -1306,6 +1321,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_invalid_argument_t		*: CCE_C003(S),	\
 	   cce_condition_unreachable_t			*: CCE_C003(S),	\
 	   cce_condition_errno_t			*: CCE_C003(S),	\
+	   cce_condition_math_error_t			*: CCE_C003(S), \
+	   cce_condition_math_nan_t			*: CCE_C003(S), \
+	   cce_condition_math_infinity_t		*: CCE_C003(S), \
+	   cce_condition_math_overflow_t		*: CCE_C003(S), \
+	   cce_condition_math_underflow_t		*: CCE_C003(S), \
 									\
 	   cce_condition_t			const	*: CCE_C003(S),	\
 	   cce_condition_root_t			const	*: CCE_C003(S),	\
@@ -1318,6 +1338,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_invalid_argument_t	const	*: CCE_C003(S),	\
 	   cce_condition_unreachable_t		const	*: CCE_C003(S),	\
 	   cce_condition_errno_t		const	*: CCE_C003(S),	\
+	   cce_condition_math_error_t		const	*: CCE_C003(S), \
+	   cce_condition_math_nan_t		const	*: CCE_C003(S), \
+	   cce_condition_math_infinity_t	const	*: CCE_C003(S), \
+	   cce_condition_math_overflow_t	const	*: CCE_C003(S), \
+	   cce_condition_math_underflow_t	const	*: CCE_C003(S), \
 									\
 	   cce_condition_root_t			const	* const: CCE_C003(S),	\
 	   cce_condition_unknown_t		const	* const: CCE_C003(S),	\
@@ -1328,7 +1353,12 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_logic_error_t		const	* const: CCE_C003(S),	\
 	   cce_condition_invalid_argument_t	const	* const: CCE_C003(S),	\
 	   cce_condition_unreachable_t		const	* const: CCE_C003(S),	\
-	   cce_condition_errno_t		const	* const: CCE_C003(S))
+	   cce_condition_errno_t		const	* const: CCE_C003(S),	\
+	   cce_condition_math_error_t		const	* const: CCE_C003(S),	\
+	   cce_condition_math_nan_t		const	* const: CCE_C003(S),	\
+	   cce_condition_math_infinity_t	const	* const: CCE_C003(S),	\
+	   cce_condition_math_overflow_t	const	* const: CCE_C003(S),	\
+	   cce_condition_math_underflow_t	const	* const: CCE_C003(S))
 
 
 /* ------------------------------------------------------------------ */
@@ -1346,6 +1376,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_invalid_argument_t		*: CCE_C002(S), \
 	   cce_condition_unreachable_t			*: CCE_C002(S), \
 	   cce_condition_errno_t			*: CCE_C002(S), \
+	   cce_condition_math_error_t			*: CCE_C002(S), \
+	   cce_condition_math_nan_t			*: CCE_C002(S), \
+	   cce_condition_math_infinity_t		*: CCE_C002(S), \
+	   cce_condition_math_overflow_t		*: CCE_C002(S), \
+	   cce_condition_math_underflow_t		*: CCE_C002(S), \
 									\
 	   cce_condition_t			const	* const: CCE_C002(S), \
 	   cce_condition_root_t			const	* const: CCE_C002(S), \
@@ -1358,6 +1393,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_invalid_argument_t	const	* const: CCE_C002(S), \
 	   cce_condition_unreachable_t		const	* const: CCE_C002(S), \
 	   cce_condition_errno_t		const	* const: CCE_C002(S), \
+	   cce_condition_math_error_t		const	* const: CCE_C002(S), \
+	   cce_condition_math_nan_t		const	* const: CCE_C002(S), \
+	   cce_condition_math_infinity_t	const	* const: CCE_C002(S), \
+	   cce_condition_math_overflow_t	const	* const: CCE_C002(S), \
+	   cce_condition_math_underflow_t	const	* const: CCE_C002(S), \
 									\
 	   cce_condition_t			const	*: CCE_C002(S), \
 	   cce_condition_root_t			const	*: CCE_C002(S), \
@@ -1370,6 +1410,11 @@ cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_ha
 	   cce_condition_invalid_argument_t	const	*: CCE_C002(S), \
 	   cce_condition_unreachable_t		const	*: CCE_C002(S), \
 	   cce_condition_errno_t		const	*: CCE_C002(S), \
+	   cce_condition_math_error_t		const	*: CCE_C002(S), \
+	   cce_condition_math_nan_t		const	*: CCE_C002(S), \
+	   cce_condition_math_infinity_t	const	*: CCE_C002(S), \
+	   cce_condition_math_overflow_t	const	*: CCE_C002(S), \
+	   cce_condition_math_underflow_t	const	*: CCE_C002(S), \
 	   \
 	   cce_location_t[1]				 : CCE_C002(CCE_CLOC(S)), \
 	   cce_location_t				*: CCE_C002(CCE_CLOC(S)))
