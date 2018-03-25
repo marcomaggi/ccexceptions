@@ -1094,8 +1094,8 @@ cce_code (int const code)
 #  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), (CONDITION))
 #  define cce_retry(THERE)		cce_p_retry(THERE)
 #else
-#  define cce_location(HERE)		\
-  (cce_location_init(HERE), cce_trace_setjmp((HERE), CCE_SETJMP(HERE), __FILE__, __func__, __LINE__))
+#  define cce_location(HERE)		(cce_location_init(HERE), \
+					 cce_trace_setjmp((HERE), CCE_SETJMP(HERE), __FILE__, __func__, __LINE__))
 #  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), cce_trace_raise(CONDITION, __FILE__, __func__, __LINE__))
 #  define cce_retry(THERE)		cce_p_retry(cce_trace_retry(THERE, __FILE__, __func__, __LINE__))
 #endif
