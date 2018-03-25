@@ -128,13 +128,13 @@ typedef enum {
   CCE_ENTER		= 0,
 
   /* This code represents the return  value of the "setjmp()" evaluation
-     after a "cce_retry()" call. */
-  CCE_RETRY		= 0,
-
-  /* This code represents the return  value of the "setjmp()" evaluation
      after a "cce_raise()" call. */
   CCE_ERROR		= 1,
   CCE_EXCEPT		= 1,
+
+  /* This code represents the return  value of the "setjmp()" evaluation
+     after a "cce_retry()" call. */
+  CCE_RETRY		= 2,
 
   CCE_FIRST_NEXT
 } cce_code_t;
@@ -1080,15 +1080,23 @@ cce_decl cce_destination_t cce_trace_retry (cce_destination_t L, char const * fi
 
 /* ------------------------------------------------------------------ */
 
+__attribute__((__always_inline__,__const__))
+static inline int
+cce_code (int const code)
+{
+  return (((CCE_ENTER == code) || (CCE_RETRY == code))? CCE_ENTER : code);
+}
+
+#define CCE_SETJMP(THERE)	__builtin_expect(cce_code(sigsetjmp((void *)(THERE),0)),CCE_ENTER)
+
 #if (! defined CCEXCEPTIONS_TRACE)
-#  define cce_location(HERE)		 __builtin_expect((cce_location_init(HERE),sigsetjmp((void *)(HERE),0)),0)
+#  define cce_location(HERE)		(cce_location_init(HERE), CCE_SETJMP(HERE))
 #  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), (CONDITION))
 #  define cce_retry(THERE)		cce_p_retry(THERE)
 #else
 #  define cce_location(HERE)		\
-  (cce_location_init(HERE), cce_trace_init((HERE), sigsetjmp((void *)(HERE),0), __FILE__, __func__, __LINE__))
-#  define cce_raise(THERE, CONDITION)	\
-  cce_p_raise((THERE), cce_trace_raise(CONDITION, __FILE__, __func__, __LINE__))
+  (cce_location_init(HERE), cce_trace_init((HERE), CCE_SETJMP(HERE), __FILE__, __func__, __LINE__))
+#  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), cce_trace_raise(CONDITION, __FILE__, __func__, __LINE__))
 #  define cce_retry(THERE)		cce_p_retry(cce_trace_retry(THERE, __FILE__, __func__, __LINE__))
 #endif
 
