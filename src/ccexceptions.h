@@ -1069,7 +1069,7 @@ cce_decl void cce_p_retry (cce_destination_t L)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl int cce_trace_init (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
+cce_decl int cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,3,4)));
 
 cce_decl cce_condition_t const * cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
@@ -1095,7 +1095,7 @@ cce_code (int const code)
 #  define cce_retry(THERE)		cce_p_retry(THERE)
 #else
 #  define cce_location(HERE)		\
-  (cce_location_init(HERE), cce_trace_init((HERE), CCE_SETJMP(HERE), __FILE__, __func__, __LINE__))
+  (cce_location_init(HERE), cce_trace_setjmp((HERE), CCE_SETJMP(HERE), __FILE__, __func__, __LINE__))
 #  define cce_raise(THERE, CONDITION)	cce_p_raise((THERE), cce_trace_raise(CONDITION, __FILE__, __func__, __LINE__))
 #  define cce_retry(THERE)		cce_p_retry(cce_trace_retry(THERE, __FILE__, __func__, __LINE__))
 #endif

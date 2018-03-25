@@ -144,7 +144,7 @@ cce_run_error_handlers (cce_location_t * L)
  ** ----------------------------------------------------------------- */
 
 int
-cce_trace_init (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
+cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
 {
   if (CCE_EXCEPT == rv) {
     fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "catching:", filename, linenum, funcname,
