@@ -1,5 +1,14 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.7.2-beta.0
+-------------------------------
+
+* For  every name  in the  API containing  "cleanup" there  is an  alias
+  containing "clean".  The  "clean" names are to be  considered the main
+  ones.  This  is because "clean"  and "error"  have the same  number of
+  characters and code aligns more beautifully.
+
+
 Notes for revision 0.7.1-beta.1
 -------------------------------
 

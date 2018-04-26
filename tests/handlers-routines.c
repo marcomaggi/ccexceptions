@@ -1,13 +1,13 @@
 /*
   Part of: CCExceptions
-  Contents: tests with error and cleanup handlers
+  Contents: tests with error and clean handlers
   Date: Dec 26, 2016
 
   Abstract
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -54,8 +54,8 @@ handler3 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 
 
 static void
-test_just_run_cleanup_handlers()
-/* Just run cleanup handlers. */
+test_just_run_clean_handlers()
+/* Just run clean handlers. */
 {
   cce_location_t	L[1];
   bool			flag1 = false;
@@ -66,10 +66,10 @@ test_just_run_cleanup_handlers()
   cce_handler_t		H3 = { .function = handler3, .pointer = &flag3 };
 
   cce_location_init(L);
-  cce_register_cleanup_handler(L, &H1);
-  cce_register_cleanup_handler(L, &H2);
-  cce_register_cleanup_handler(L, &H3);
-  cce_run_cleanup_handlers(L);
+  cce_register_clean_handler(L, &H1);
+  cce_register_clean_handler(L, &H2);
+  cce_register_clean_handler(L, &H3);
+  cce_run_clean_handlers(L);
 
   assert(true == flag1);
   assert(true == flag2);
@@ -79,7 +79,7 @@ test_just_run_cleanup_handlers()
 
 static void
 test_just_run_error_handlers (void)
-/* Just run cleanup handlers. */
+/* Just run clean handlers. */
 {
   cce_location_t	L[1];
   bool			flag1 = false;
@@ -134,12 +134,12 @@ test_allocating_memory_success_execution (void)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_cleanup_handler(L, &H.handler);
+      cce_register_clean_handler(L, &H.handler);
     } else {
       cce_raise(L, NULL);
     }
     // do something here
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag);
 }
@@ -178,7 +178,7 @@ test_allocating_memory_exceptional_execution (void)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_cleanup_handler(L, &H.handler);
+      cce_register_clean_handler(L, &H.handler);
     } else {
       cce_raise(L, NULL);
     }
@@ -186,7 +186,7 @@ test_allocating_memory_exceptional_execution (void)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag);
 }
@@ -223,7 +223,7 @@ test_csse_constructor (cce_location_t * upper_L)
     if (0) {
       cce_raise(L, NULL);
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   return P;
 }
@@ -264,9 +264,9 @@ test_csse_caller (void)
   default:
     P = test_csse_constructor(L);
     assert(NULL != P);
-    cce_register_cleanup_handler(L, &H.handler);
+    cce_register_clean_handler(L, &H.handler);
     // do_something_with(P);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag);
 }
@@ -310,7 +310,7 @@ test_csee_constructor (cce_location_t * upper_L)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   return P;
 }
@@ -354,9 +354,9 @@ test_constructor_scheme_exceptional_execution (void)
   default:
     P = test_csee_constructor(L);
     assert(NULL != P);
-    cce_register_cleanup_handler(L, &H.handler);
+    cce_register_clean_handler(L, &H.handler);
     // do_something_with(P);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag);
 }
@@ -386,10 +386,10 @@ test_handler_removal_1_0 (void)
     H1.pointer  = &flag1;
     H2.pointer  = &flag2;
     H3.pointer  = &flag3;
-    cce_register_cleanup_handler(L, &H1);
-    cce_register_cleanup_handler(L, &H2);
-    cce_register_cleanup_handler(L, &H3);
-    cce_run_cleanup_handlers(L);
+    cce_register_clean_handler(L, &H1);
+    cce_register_clean_handler(L, &H2);
+    cce_register_clean_handler(L, &H3);
+    cce_run_clean_handlers(L);
   }
 
   assert(true == flag1);
@@ -414,11 +414,11 @@ test_handler_removal_1_1 (void)
     H1.pointer  = &flag1;
     H2.pointer  = &flag2;
     H3.pointer  = &flag3;
-    cce_register_cleanup_handler(L, &H1);
-    cce_register_cleanup_handler(L, &H2);
-    cce_register_cleanup_handler(L, &H3);
+    cce_register_clean_handler(L, &H1);
+    cce_register_clean_handler(L, &H2);
+    cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H1);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 
   assert(false == flag1);
@@ -443,11 +443,11 @@ test_handler_removal_1_2 (void)
     H1.pointer  = &flag1;
     H2.pointer  = &flag2;
     H3.pointer  = &flag3;
-    cce_register_cleanup_handler(L, &H1);
-    cce_register_cleanup_handler(L, &H2);
-    cce_register_cleanup_handler(L, &H3);
+    cce_register_clean_handler(L, &H1);
+    cce_register_clean_handler(L, &H2);
+    cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H2);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 
   assert(true  == flag1);
@@ -472,11 +472,11 @@ test_handler_removal_1_3 (void)
     H1.pointer  = &flag1;
     H2.pointer  = &flag2;
     H3.pointer  = &flag3;
-    cce_register_cleanup_handler(L, &H1);
-    cce_register_cleanup_handler(L, &H2);
-    cce_register_cleanup_handler(L, &H3);
+    cce_register_clean_handler(L, &H1);
+    cce_register_clean_handler(L, &H2);
+    cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H3);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 
   assert(true  == flag1);
@@ -488,7 +488,7 @@ test_handler_removal_1_3 (void)
 int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
-  test_just_run_cleanup_handlers();
+  test_just_run_clean_handlers();
   test_just_run_error_handlers();
   test_allocating_memory_success_execution();
   test_allocating_memory_exceptional_execution();

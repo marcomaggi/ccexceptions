@@ -160,7 +160,7 @@ cce_decl int		cce_version_interface_age	(void)
 
 typedef struct cce_location_t			cce_location_t;
 typedef struct cce_handler_t			cce_handler_t;
-typedef struct cce_cleanup_handler_t		cce_cleanup_handler_t;
+typedef struct cce_clean_handler_t		cce_clean_handler_t;
 typedef struct cce_error_handler_t		cce_error_handler_t;
 
 typedef struct cce_descriptor_t			cce_descriptor_t;
@@ -221,7 +221,7 @@ typedef cce_location_t *			cce_destination_t;
 typedef void cce_handler_fun_t (cce_condition_t const * C, cce_handler_t * H);
 
 struct cce_handler_t {
-  bool			is_cleanup_handler;
+  bool			is_clean_handler;
   cce_handler_fun_t *	function;
   cce_handler_t *	next_handler;
   union {
@@ -232,7 +232,7 @@ struct cce_handler_t {
   };
 };
 
-struct cce_cleanup_handler_t {
+struct cce_clean_handler_t {
   cce_handler_t		handler;
 };
 
@@ -240,7 +240,7 @@ struct cce_error_handler_t {
   cce_handler_t		handler;
 };
 
-cce_decl void cce_register_cleanup_handler (cce_destination_t L, cce_handler_t * H)
+cce_decl void cce_register_clean_handler (cce_destination_t L, cce_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_register_error_handler (cce_destination_t L, cce_handler_t * H)
@@ -252,13 +252,18 @@ cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 /* We do *not*  set the "leaf" attribute for this  function, because the
    cleanup  handlers  might  modify  data  in  the  current  compilation
    unit. */
-cce_decl void cce_run_cleanup_handlers (cce_destination_t L)
+cce_decl void cce_run_clean_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    error handlers might modify data in the current compilation unit. */
 cce_decl void cce_run_error_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
+
+/* For compatibility with old versions. */
+#define cce_cleanup_handler_t		cce_clean_handler_t
+#define cce_run_cleanup_handlers	cce_run_clean_handlers
+#define cce_register_cleanup_handler	cce_register_clean_handler
 
 
 /** --------------------------------------------------------------------
@@ -1115,9 +1120,9 @@ cce_p_run_error_handlers_final (cce_destination_t L)
 
 __attribute__((__nonnull__(1),__always_inline__))
 static inline void
-cce_p_run_cleanup_handlers_final (cce_destination_t L)
+cce_p_run_clean_handlers_final (cce_destination_t L)
 {
-  cce_run_cleanup_handlers(L);
+  cce_run_clean_handlers(L);
   cce_condition_delete((cce_condition_t *)(L->condition));
 }
 
@@ -1126,13 +1131,16 @@ cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char 
 
 #if (! defined CCEXCEPTIONS_TRACE)
 #  define cce_run_error_handlers_final(L)	cce_p_run_error_handlers_final(L)
-#  define cce_run_cleanup_handlers_final(L)	cce_p_run_cleanup_handlers_final(L)
+#  define cce_run_clean_handlers_final(L)	cce_p_run_clean_handlers_final(L)
 #else
 #  define cce_run_error_handlers_final(L)			\
   (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_final(L))
-#  define cce_run_cleanup_handlers_final(L)			\
-  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_cleanup_handlers_final(L))
+#  define cce_run_clean_handlers_final(L)			\
+  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_clean_handlers_final(L))
 #endif
+
+/* For compatibility with old versions. */
+#define cce_run_cleanup_handlers_final		cce_run_clean_handlers_final
 
 
 /** --------------------------------------------------------------------
@@ -1149,9 +1157,9 @@ cce_p_run_error_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
 
 __attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
 static inline void
-cce_p_run_cleanup_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+cce_p_run_clean_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
 {
-  cce_run_cleanup_handlers(L);
+  cce_run_clean_handlers(L);
   cce_p_raise(upper_L, L->condition);
 }
 
@@ -1160,13 +1168,16 @@ cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, cha
 
 #if (! defined CCEXCEPTIONS_TRACE)
 #  define cce_run_error_handlers_raise(L,upper_L)	cce_p_run_error_handlers_raise((L),(upper_L))
-#  define cce_run_cleanup_handlers_raise(L,upper_L)	cce_p_run_cleanup_handlers_raise((L),(upper_L))
+#  define cce_run_clean_handlers_raise(L,upper_L)	cce_p_run_clean_handlers_raise((L),(upper_L))
 #else
 #  define cce_run_error_handlers_raise(L,upper_L)			\
   (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_raise((L), (upper_L)))
-#  define cce_run_cleanup_handlers_raise(L,upper_L)			\
-  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_cleanup_handlers_raise((L), (upper_L)))
+#  define cce_run_clean_handlers_raise(L,upper_L)			\
+  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_clean_handlers_raise((L), (upper_L)))
 #endif
+
+/* For compatibility with old versions. */
+#define cce_run_cleanup_handlers_raise		cce_run_clean_handlers_raise
 
 
 /** --------------------------------------------------------------------
@@ -1184,7 +1195,7 @@ cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsiz
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_cleanup_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
+cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
 cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
@@ -1192,47 +1203,55 @@ cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t 
 
 #define cce_handler_malloc_init(L,P_H,P) \
   _Generic((P_H),								\
-	   cce_cleanup_handler_t	*: cce_cleanup_handler_malloc_init,	\
-	   cce_error_handler_t		*: cce_error_handler_malloc_init)(L,&(P_H->handler),P)
+	   cce_clean_handler_t	*: cce_clean_handler_malloc_init,	\
+	   cce_error_handler_t	*: cce_error_handler_malloc_init)(L,&(P_H->handler),P)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_malloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t size)
+cce_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_malloc_guarded_error   (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
+cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_malloc_guarded(L,P_H,size) \
   _Generic((P_H),								\
-	   cce_cleanup_handler_t	*: cce_sys_malloc_guarded_cleanup,	\
-	   cce_error_handler_t		*: cce_sys_malloc_guarded_error)(L,P_H,size)
+	   cce_clean_handler_t	*: cce_sys_malloc_guarded_clean,	\
+	   cce_error_handler_t	*: cce_sys_malloc_guarded_error)(L,P_H,size)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_realloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, void * P, size_t newsize)
+cce_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_realloc_guarded_error   (cce_location_t * L, cce_error_handler_t *   P_H, void * P, size_t newsize)
+cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, void * P, size_t newsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_realloc_guarded(L,P_H,old_P,newsize) \
   _Generic((P_H),								\
-	   cce_cleanup_handler_t	*: cce_sys_realloc_guarded_cleanup,	\
-	   cce_error_handler_t		*: cce_sys_realloc_guarded_error)(L,P_H,old_P,newsize)
+	   cce_clean_handler_t	*: cce_sys_realloc_guarded_clean,	\
+	   cce_error_handler_t	*: cce_sys_realloc_guarded_error)(L,P_H,old_P,newsize)
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_calloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t count, size_t eltsize)
+cce_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_calloc_guarded_error   (cce_location_t * L, cce_error_handler_t *   P_H, size_t count, size_t eltsize)
+cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_calloc_guarded(L,P_H,count,eltsize) \
   _Generic((P_H),								\
-	   cce_cleanup_handler_t	*: cce_sys_calloc_guarded_cleanup,	\
-	   cce_error_handler_t		*: cce_sys_calloc_guarded_error)(L,P_H,count,eltsize)
+	   cce_clean_handler_t	*: cce_sys_calloc_guarded_clean,	\
+	   cce_error_handler_t	*: cce_sys_calloc_guarded_error)(L,P_H,count,eltsize)
+
+/* ------------------------------------------------------------------ */
+
+/* For compatibility with old versions. */
+#define cce_cleanup_handler_malloc_init		cce_clean_handler_malloc_init
+#define cce_sys_malloc_guarded_cleanup		cce_sys_malloc_guarded_clean
+#define cce_sys_realloc_guarded_cleanup		cce_sys_realloc_guarded_clean
+#define cce_sys_calloc_guarded_cleanup		cce_sys_calloc_guarded_clean
 
 
 /** --------------------------------------------------------------------

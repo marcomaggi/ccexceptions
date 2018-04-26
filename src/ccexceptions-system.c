@@ -91,11 +91,11 @@ cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t
 }
 
 void
-cce_cleanup_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
+cce_clean_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * pointer)
 {
   H->function	= cce_handler_malloc_function;
   H->pointer	= pointer;
-  cce_register_cleanup_handler(L, H);
+  cce_register_clean_handler(L, H);
 }
 
 void
@@ -112,10 +112,10 @@ cce_error_handler_malloc_init (cce_location_t * L, cce_handler_t * H, void * poi
  ** ----------------------------------------------------------------- */
 
 void *
-cce_sys_malloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t size)
+cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
 {
   void *	P = cce_sys_malloc(L, size);
-  cce_cleanup_handler_malloc_init(L, &(P_H->handler), P);
+  cce_clean_handler_malloc_init(L, &(P_H->handler), P);
   return P;
 }
 
@@ -130,7 +130,7 @@ cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, siz
 /* ------------------------------------------------------------------ */
 
 void *
-cce_sys_realloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, void * old_P, size_t newsize)
+cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * old_P, size_t newsize)
 {
   if (P_H->handler.pointer == old_P) {
     void *	P = cce_sys_realloc(L, old_P, newsize);
@@ -156,10 +156,10 @@ cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, vo
 /* ------------------------------------------------------------------ */
 
 void *
-cce_sys_calloc_guarded_cleanup (cce_location_t * L, cce_cleanup_handler_t * P_H, size_t count, size_t eltsize)
+cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
 {
   void *	P = cce_sys_calloc(L, count, eltsize);
-  cce_cleanup_handler_malloc_init(L, &(P_H->handler), P);
+  cce_clean_handler_malloc_init(L, &(P_H->handler), P);
   return P;
 }
 

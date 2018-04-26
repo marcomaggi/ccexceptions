@@ -72,9 +72,9 @@ cce_p_retry (cce_location_t * L)
 
 __attribute__((hot))
 void
-cce_register_cleanup_handler (cce_location_t * L, cce_handler_t * H)
+cce_register_clean_handler (cce_location_t * L, cce_handler_t * H)
 {
-  H->is_cleanup_handler = true;
+  H->is_clean_handler = true;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
@@ -83,7 +83,7 @@ __attribute__((hot))
 void
 cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
 {
-  H->is_cleanup_handler = false;
+  H->is_clean_handler = false;
   H->next_handler	= L->first_handler;
   L->first_handler	= H;
 }
@@ -106,8 +106,8 @@ cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 
 __attribute__((hot))
 void
-cce_run_cleanup_handlers (cce_location_t * L)
-/* Traverse the linked  list of registered handlers and  run the cleanup
+cce_run_clean_handlers (cce_location_t * L)
+/* Traverse the linked  list of registered handlers and  run the clean
    ones.   This  is a  destructive  function:  once  the list  has  been
    traversed, it is not valid anymore.
 */
@@ -116,7 +116,7 @@ cce_run_cleanup_handlers (cce_location_t * L)
   L->first_handler = NULL;
   for (cce_handler_t * H = next; H && H->function; H = next) {
     next = H->next_handler;
-    if (true == H->is_cleanup_handler) {
+    if (true == H->is_clean_handler) {
       H->function(L->condition, H);
     }
   }

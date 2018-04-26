@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -54,7 +54,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(0)));
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(0)) == cce_condition(L));
     assert(false == flag);
@@ -76,7 +76,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(EINVAL)));
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(EINVAL)) == cce_condition(L));
     assert(false == flag);
@@ -98,7 +98,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(INT_MAX)));
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(INT_MAX)) == cce_condition(L));
     assert(false == flag);
@@ -120,7 +120,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(-1)));
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(-1)) == cce_condition(L));
     assert(false == flag);

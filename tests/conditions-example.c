@@ -7,7 +7,7 @@
 
 	This example is copied in the documentation.
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -320,7 +320,7 @@ test_it (cce_condition_t const * C, const int expected_flag)
     cce_run_error_handlers_final(L);
   } else {
     cce_raise(L, C);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(expected_flag == flag);
 }
@@ -340,7 +340,7 @@ main (void)
     test_it(condition_new_alpha(L, 1), 1);
     test_it(condition_new_beta(L, 1, 2), 2);
     test_it(condition_new_gamma(L, 1, 2, 3), 3);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 
   exit(EXIT_SUCCESS);
