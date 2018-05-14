@@ -996,6 +996,8 @@ run--time according to the type of raised structure.
 The purpose of @value{PACKAGE}'s condition objects module is to allow us to write code like this:
 
 @example
+cce_location_t  L[1];
+
 if (cce_location(L)) @{
   // handle the exceptional condition
   if (my_condition_is_alpha(cce_condition(L)))
@@ -1018,10 +1020,10 @@ if (cce_location(L)) @{
 @end example
 
 @noindent
-in which we use some, previously defined, conditional exception types @samp{alpha} and @samp{beta}.
-From the point of view of our ability to react to an exception at run--time: a flexible situation is
-the one in which the conditional exception types are organised in a tree hierarchy.  It allows us to
-select the level of granularity we desire in the branching logic.
+in which we use some, previously defined, exceptional--condition object--types @samp{alpha} and
+@samp{beta}.  From the point of view of our ability to react to an exception at run--time: a
+flexible situation is the one in which the conditional exception types are organised in a tree
+hierarchy.  It allows us to select the level of granularity we desire in the branching logic.
 
 The tree hierarchy implemented by @value{PACKAGE} uses single inheritance; multiple inheritance
 would be more general, but also more complex.
@@ -1030,8 +1032,8 @@ would be more general, but also more complex.
 
 @subsubheading How the hierarchy is implemented
 
-Exceptional condition objects are C language structures referencing a type descriptor, which is also
-a C language structure.  Type descriptors are usually statically allocated and mostly have a
+Exceptional--condition objects are C language structures referencing a type descriptor, which is
+also a C language structure.  Type descriptors are usually statically allocated and mostly have a
 hard--coded initialisation.  Condition object instances are either dynamically allocated and
 initialised or statically allocated with hard--coded initialisation.
 
@@ -1129,7 +1131,7 @@ typedef struct my_condition_beta_t   my_condition_beta_t;
 /*** Descriptors types. ***/
 
 struct my_descriptor_alpha_t @{
-  cce_descriptor_t     condition;
+  cce_descriptor_t     descriptor;
 @};
 
 struct my_descriptor_beta_t @{
@@ -1152,17 +1154,17 @@ we can statically allocate and initialise the type descriptors as follows:
 
 @example
 my_descriptor_alpha_t my_descriptor_alpha = @{
-  .parent = NULL
+  .descriptor.parent = NULL
 @};
 
-my_descriptor_beta_t  my_descriptor_beta = @{
-  .parent = &my_descriptor_alpha.condition
+my_descriptor_beta_t  my_descriptor_beta  = @{
+  .descriptor.parent = &my_descriptor_alpha.condition
 @};
 
 void
 initialisation_function (void)
 @{
-  cce_condition_set_root_parent(&my_descriptor_alpha.condition));
+  cce_descriptor_set_root_parent(&my_descriptor_alpha.descriptor));
 @}
 @end example
 
