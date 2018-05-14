@@ -26,8 +26,12 @@
 
 */
 
-#include "ccexceptions-internals.h"
+
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
 
+#include "ccexceptions-internals.h"
 #include <limits.h>	// for INT_MAX
 
 
@@ -36,12 +40,12 @@
  ** ----------------------------------------------------------------- */
 
 void
-cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
+cce_condition_init (cce_condition_t * const C, cce_descriptor_t const * D)
 {
   C->descriptor = D;
 }
 void
-cce_condition_final (cce_condition_t * C)
+cce_condition_final (cce_condition_t * const C)
 {
   cce_descriptor_t const * D = C->descriptor;
   for (cce_descriptor_t const * iter = D; iter; iter = iter->parent) {
@@ -51,7 +55,7 @@ cce_condition_final (cce_condition_t * C)
   }
 }
 void
-cce_condition_delete (cce_condition_t * C)
+cce_condition_delete (cce_condition_t * const C)
 {
   cce_condition_final(C);
   {
@@ -62,7 +66,7 @@ cce_condition_delete (cce_condition_t * C)
   }
 }
 char const *
-cce_condition_static_message (cce_condition_t const * C)
+cce_condition_static_message (cce_condition_t const * const C)
 {
   return C->descriptor->static_message(C);
 }
