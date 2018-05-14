@@ -401,7 +401,7 @@ struct cce_condition_break_t {
 cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
 cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_break (cce_condition_break_t * C)
 {
@@ -451,7 +451,7 @@ struct cce_condition_error_t {
 cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr;
 cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_error (cce_condition_error_t * C)
 {
@@ -501,7 +501,7 @@ struct cce_condition_runtime_error_t {
 cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr;
 cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCE_UNUSED)
 {
@@ -550,7 +550,7 @@ struct cce_condition_logic_error_t {
 cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr;
 cce_decl cce_condition_logic_error_t  const * const	cce_condition_logic_error_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_logic_error (cce_condition_logic_error_t * C CCE_UNUSED)
 {
@@ -657,7 +657,7 @@ struct cce_condition_unimplemented_t {
 cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr;
 cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
 {
@@ -817,7 +817,7 @@ struct cce_condition_math_error_t {
 cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr;
 cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_math_error (cce_condition_math_error_t * C)
 {
@@ -867,7 +867,7 @@ struct cce_condition_math_nan_t {
 cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr;
 cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_math_nan (cce_condition_math_nan_t * C)
 {
@@ -917,7 +917,7 @@ struct cce_condition_math_infinity_t {
 cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infinity_ptr;
 cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
 {
@@ -967,7 +967,7 @@ struct cce_condition_math_overflow_t {
 cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overflow_ptr;
 cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
 {
@@ -1017,7 +1017,7 @@ struct cce_condition_math_underflow_t {
 cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_underflow_ptr;
 cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr;
 
-__attribute__((__always_inline__,__const__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
 {
