@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCExceptions],[0.7.2-beta.0],
+AC_INIT([CCExceptions],[0.7.2-beta.1],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 dnl This is the revision number of this configure.ac
@@ -43,16 +43,18 @@ LT_INIT
 dnl page
 #### libraries interface version
 
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.7.2])
-AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],7,2,0)
 
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.7.2])
 
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],7,2,0)
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.7.2])
+AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 
 dnl page
 #### basic system inspection
+
+MMUX_CHECK_TARGET_OS
 
 AC_LANG([C])
 MMUX_LANG_C11
