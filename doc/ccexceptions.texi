@@ -1176,6 +1176,32 @@ initialisation_function (void)
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
+@deftp {Struct Typedef} cce_descriptor_t
+Type of @code{struct} representing exceptional--condition object--type descriptors; it holds a table
+of function pointers to handle exceptional--condition objects.  It has the following fields:
+
+@table @code
+@item cce_descriptor_t const * parent
+Pointer to the descriptor that is parent of this one in the tree hierarchy.  This pointer is set to
+@cnull{} only for the root condition descriptor, @xref{conditions root, Predefined root condition
+descriptor}.
+
+@item cce_condition_final_fun_t * delete
+Pointer to function releasing the exceptional--condition object's memory block itself.  This pointer
+can be @cnull{}, meaning that: the condition object is statically allocated.
+
+@item cce_condition_final_fun_t * final
+Pointer to function releasing all the dynamic resources associated to the fields in the
+exceptional--condition object.  This pointer can be @cnull{}, meaning that: there are no dynamic
+resources in the fields.
+
+@item cce_condition_static_message_fun_t * static_message
+Pointer to function returning a statically allocated @asciiz{} string describing the
+exceptional--condition.
+@end table
+@end deftp
+
+
 @deftypefn {Function Prototype} void cce_condition_final_fun_t (cce_condition_t * @var{C})
 Release all the dynamic resources associated to the fields of the condition object referenced by
 @var{C}; leave untouched the condition object itself.
@@ -1196,7 +1222,7 @@ my_condition_delete_stuff (my_condition_stuff_t * C)
 @end deftypefn
 
 
-@deftypefn {Function Prototype} {const char *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
+@deftypefn {Function Prototype} {char const *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
 Return a statically allocated @asciiz{} string describing the exceptional condition @var{C}.  A
 static message must always be defined; another client--defined function can build a dynamic and more
 descriptive message.
@@ -1211,32 +1237,6 @@ my_condition_static_message_stuff (my_condition_stuff_t const * C)
 @}
 @end example
 @end deftypefn
-
-
-@deftp {Struct Typedef} cce_descriptor_t
-Type of structures holding a table of function pointers to handle exceptional condition objects.  It
-has the following fields:
-
-@table @code
-@item cce_descriptor_t const * parent
-Pointer to the condition descriptor that is parent of this one in the tree hierarchy.  This pointer
-is set to @cnull{} only for the root condition descriptor, @xref{conditions root, Predefined root
-condition descriptor}.
-
-@item cce_condition_final_fun_t * delete
-Pointer to function releasing the condition object's memory block itself.  This pointer can be
-@cnull{}, meaning that: the condition object is statically allocated.
-
-@item cce_condition_final_fun_t * final
-Pointer to function releasing all the dynamic resources associated to the fields in the condition
-object.  This pointer can be @cnull{}, meaning that: there are no dynamic resources in the condition
-object fields.
-
-@item cce_condition_static_message_fun_t * static_message
-Pointer to function returning a statically allocated @asciiz{} string describing the exceptional
-condition.
-@end table
-@end deftp
 
 
 @deftypefun bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * @var{child}, cce_descriptor_t const * @var{ancestor})
