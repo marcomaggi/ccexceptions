@@ -1,7 +1,6 @@
 # CCExceptions
 
 [![Build Status](https://travis-ci.org/marcomaggi/ccexceptions.svg?branch=master)](https://travis-ci.org/marcomaggi/ccexceptions)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/12270/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6faa0b600ca148b2ba288dfa46438da1)](https://www.codacy.com/app/marcomaggi/ccexceptions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/ccexceptions&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/marcomaggi/ccexceptions/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccexceptions)
 
@@ -177,18 +176,6 @@ project's dashboard at:
 
 Usage of this  service is configured through the  file `.travis.yml` and
 additional scripts are under the directory `meta/travis-ci`.
-
-
-### Coverity Scan
-
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
-
-[https://scan.coverity.com/projects/marcomaggi-ccexceptions](https://scan.coverity.com/projects/marcomaggi-ccexceptions)
-
-Usage of this  service is implemented with make rules;  see the relevant
-section in the file `Makefile.am`.  To access the service a unique token
-is needed: this token is private and is owned by the current maintainer.
 
 
 ### Clang's Static Analyzer

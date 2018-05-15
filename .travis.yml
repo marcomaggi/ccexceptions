@@ -60,8 +60,7 @@
 
 language: c
 
-# We need sudo for Coverity Scan.
-sudo: true
+#sudo: true
 
 # Let's just look at the project's dashboard at Travis CI's site.
 #
@@ -76,7 +75,6 @@ git:
 branches:
   only:
     - master
-    - coverity_scan
 
 # NOTE There must be only *one* env.global key!!!  Otherwise the earlier
 # settings will be ineffective.
@@ -86,47 +84,6 @@ env:
     - PATH=/tmp/mine/bin:$PATH;
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
-    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-    #   via the "travis encrypt" command using the project repo's public key
-    - secure: "GCyS6Y0E3uYWr5pTgQkVlMorDmEU0b4YvBvqQBjFWZkNlswJBbX0fAB2pFIMHveWtTCihGJBW5pvVeBMDM2YqE3MgVavGmg9kYqp1S3scx+LygqXS7a05cRerpcClJ23vsNAxxr8kHTVyn0LyiFtn6ulWghH3HvvBUNXf7QDVeDn9Otz2k5dE2asLvwvhYFyrBJfYQaGOVaJHgnKQ3XuXYEMKlm4NJTC3UjEdlssElcncicDdtOI1Zv08pHUTrKn0fODOcjscSvSm6382mkqEuDVVNoD0XJuaQJmjSFuae5ggWdcGxDacrA66WSjJ2fc21ns6L9o+OKVj88xPES9TBNS96mB0pJT05BaPDDAjFpunHIOl6oBQu19UfOi9nWB9IDzygUNcPcOF9AIAKoOpUr+3jhodzt7/esDHmPv6LGWdPqZODzZVR1y+t/10dVoVceKUhZUwHnoJgaiRz1btCHCwcLbWhYlq+kncoIKjYpgounsgEHYAIiYtYsPpdH2PSyrj66uPXcur3dXKfjHywK14R5cJKEbTjNsB4FEghedr6lpq3tD1HhS9wXClQi54zfxeLSBmIEJVxN9cB2DBYrEzF8/a51b2G8VBythtcPl7qWRHZEUQQQyv9DCMQ1thQqbVeQfSgg/XVgk8yFGdR4320qYbt9gnl5LU/Cf/Nc="
-
-#page
-#### Coverity Scan integration
-#
-# This is still in  development (why it is so hard to  set it up?!?).  I
-# would like to:
-#
-# - Run a single scan job when commits are pushed on the "coverity_scan"
-# branch.
-#
-# - Do  not run the scan  when commits are pushed  to branches different
-# from "coverity_scan".
-#
-# - Do not run the full matrix of scripts when commits are pushed on the
-# "coverity_scan" branch.
-#
-
-before_install:
-  - if test "$TRAVIS_OS_NAME" != osx ; then echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-; else true; fi
-
-addons:
-  coverity_scan:
-    project:
-      name: "marcomaggi/ccexceptions"
-      description: "Build submitted via Travis CI"
-    notification_email: marco.maggi-ipsu@poste.it
-    # To run the scan we want to execute the following commands:
-    #
-    #   sh ./autogen.sh
-    #   ./configure --enable-maintainer-mode
-    #   make clean
-    #   cov-build make all
-    #
-    # so we put the preparation in "build_command_prepend:" and the
-    # making in "build_command:".
-    build_command_prepend: "sh ./autogen.sh; ./configure --enable-maintainer-mode; make clean"
-    build_command: "make all"
-    branch_pattern: coverity_scan
 
 #page
 #### dependencies management
