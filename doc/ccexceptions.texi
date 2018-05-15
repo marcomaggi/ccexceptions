@@ -1188,12 +1188,11 @@ descriptor}.
 
 @item cce_condition_final_fun_t * delete
 Pointer to function releasing the exceptional--condition object's memory block itself.  This pointer
-can be @cnull{}, meaning that: the condition object is statically allocated.
+can be @cnull{}, meaning that: the object is statically allocated.
 
 @item cce_condition_final_fun_t * final
-Pointer to function releasing all the dynamic resources associated to the fields in the
-exceptional--condition object.  This pointer can be @cnull{}, meaning that: there are no dynamic
-resources in the fields.
+Pointer to function releasing all the dynamic resources associated to the exceptional--condition
+object.  This pointer can be @cnull{}, meaning that: there are no dynamic resources.
 
 @item cce_condition_static_message_fun_t * static_message
 Pointer to function returning a statically allocated @asciiz{} string describing the
@@ -1203,8 +1202,8 @@ exceptional--condition.
 
 
 @deftypefn {Function Prototype} void cce_condition_final_fun_t (cce_condition_t * @var{C})
-Release all the dynamic resources associated to the fields of the condition object referenced by
-@var{C}; leave untouched the condition object itself.
+Release all the dynamic resources associated to @var{C}; leave untouched the memory block holding
+the @objtype{cce_condition_t} instance itself.
 @end deftypefn
 
 
@@ -1223,8 +1222,8 @@ my_condition_delete_stuff (my_condition_stuff_t * C)
 
 
 @deftypefn {Function Prototype} {char const *} cce_condition_static_message_fun_t (cce_condition_t const * @var{C})
-Return a statically allocated @asciiz{} string describing the exceptional condition @var{C}.  A
-static message must always be defined; another client--defined function can build a dynamic and more
+Return a statically allocated @asciiz{} string describing the exceptional--condition.  A static
+message must always be defined; another client--defined function can build a dynamic and more
 descriptive message.
 
 For example, an instance of this function can be:
