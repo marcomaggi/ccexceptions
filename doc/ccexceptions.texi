@@ -972,8 +972,7 @@ run--time according to the type of raised structure.
 
 @menu
 * conditions intro::            Introduction to exceptional-condition objects.
-* conditions descriptors::      Exceptional-condition object-types
-                                descriptors.
+* conditions descriptors::      Exceptional-condition object-type descriptors.
 * conditions objects::          Exceptional-condition objects.
 * conditions root::             The @emph{root} exceptional-condition object.
 * conditions unknown::          The @emph{unknown} exceptional-condition object.
@@ -1029,12 +1028,49 @@ if (cce_location(L)) @{
 
 @noindent
 in which we use some, previously defined, exceptional--condition object--types @samp{alpha} and
-@samp{beta}.  From the point of view of our ability to react to an exception at run--time: a
-flexible situation is the one in which the conditional exception types are organised in a tree
-hierarchy.  It allows us to select the level of granularity we desire in the branching logic.
+@samp{beta}.
 
-The tree hierarchy implemented by @value{PACKAGE} uses single inheritance; multiple inheritance
-would be more general, but also more complex.
+If we need to hand the exceptional--condition object to an upper level location we can do it as
+follows:
+
+@example
+void
+upper_function (void)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    fprintf(stderr, "log: %s\n", \
+        cce_condition_static_message(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+  @} else @{
+    lower_function(L);
+    cce_run_clean_handlers(L);
+  @}
+@}
+
+void
+lower_function (cce_location_t * upper_L)
+@{
+  cce_location_t        L[1];
+
+  if (cce_location(L)) @{
+    cce_run_error_handlers_raise(L, upper_L);
+  @} else @{
+    do_something();
+    if (an_error_occurred()) @{
+      cce_raise(L, select_condition_object());
+    @}
+   cce_run_clean_handlers(L);
+  @}
+@}
+@end example
+
+From the point of view of our ability to react to an exception at run--time: a flexible situation is
+the one in which the exceptional--condition object--types are organised in a tree hierarchy.  It
+allows us to select the level of granularity we desire in the branching logic.  The tree hierarchy
+implemented by @value{PACKAGE} uses single inheritance; multiple inheritance would be more general,
+but also more complex.
 
 @c ------------------------------------------------------------------------
 
@@ -1178,7 +1214,7 @@ initialisation_function (void)
 
 @c page
 @node conditions descriptors
-@section Condition descriptor type
+@section Exceptional--condition object--type descriptors
 
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
@@ -1272,7 +1308,7 @@ on values of suitable types; we can apply this macro to pointers to all the type
 
 @c page
 @node conditions objects
-@section Condition object type
+@section Exceptional-condition objects
 
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
@@ -1352,93 +1388,6 @@ A == B;
 cce_condition(A) == cce_condition(B);
 @end example
 @end deftypefn
-
-
-The basic usage pattern of condition objects is as follows:
-
-@example
-cce_location_t      L[1];
-
-if (cce_location(L)) @{
-  fprintf(stderr, "log: %s\n", \
-      cce_condition_static_message(cce_condition(L)));
-  cce_run_error_handlers(L);
-  cce_condition_delete(cce_condition(L));
-@} else @{
-  do_something();
-  if (an_error_occurred()) @{
-    cce_raise(L, select_condition_object());
-  @}
-  cce_run_clean_handlers(L);
-@}
-@end example
-
-If we need to hand the condition object to an upper level location we can do it as follows:
-
-@example
-void
-upper_function (void)
-@{
-  cce_location_t        L[1];
-
-  if (cce_location(L)) @{
-    fprintf(stderr, "log: %s\n", \
-        cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers(L);
-    cce_condition_delete(cce_condition(L));
-  @} else @{
-    lower_function(L);
-    cce_run_clean_handlers(L);
-  @}
-@}
-
-void
-lower_function (cce_location_t * upper_L)
-@{
-  cce_location_t        L[1];
-
-  if (cce_location(L)) @{
-    cce_run_error_handlers(L);
-    cce_raise(upper_L, cce_condition(L));
-  @} else @{
-    do_something();
-    if (an_error_occurred()) @{
-      cce_raise(L, select_condition_object());
-    @}
-   cce_run_clean_handlers(L);
-  @}
-@}
-@end example
-
-If we need to branch according to a condition object's type, we can do it as follows using wrappers
-for @cfunc{cce_is_condition}:
-
-@example
-cce_location_t      L[1];
-
-if (cce_location(L)) @{
-  if (cce_condition_is_unknown(cce_condition(L)))
-    @{
-      do_something();
-    @}
-  else if (cce_condition_is_errno(cce_condition(L)))
-    @{
-      do_something();
-    @}
-  else
-    @{
-      do_something();
-    @}
-  cce_run_error_handlers(L);
-  cce_condition_delete(cce_condition(L));
-@} else @{
-  do_something();
-  if (an_exception_occurred()) @{
-    cce_raise(L, select_condition_object());
-  @}
-  cce_run_clean_handlers(L);
-@}
-@end example
 
 @c page
 @node conditions root
