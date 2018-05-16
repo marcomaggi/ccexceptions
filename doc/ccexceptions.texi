@@ -9,6 +9,28 @@
 
 @c page
 @c ------------------------------------------------------------
+@c Document specific.
+@c ------------------------------------------------------------
+
+@macro ConditionSubtypingExample{FILE_STEM, TYPE_STEM}
+@subsubheading Sub--typing example
+
+
+To define a sub--type of @objtype{cce_condition_\TYPE_STEM\_t} we can copy the code in the files:
+
+@example
+condition-subtyping-\FILE_STEM\.c
+condition-subtyping-\FILE_STEM\-header.h
+condition-subtyping-\FILE_STEM\-body.c
+@end example
+
+@noindent
+under the @file{tests} directory of the source distribution; the code defines a new
+exceptional--condition object--type @objtype{my_condition_\TYPE_STEM\_subtype_t}.
+@end macro
+
+@c page
+@c ------------------------------------------------------------
 @c Values.
 @c ------------------------------------------------------------
 
@@ -1396,37 +1418,39 @@ cce_condition(A) == cce_condition(B);
 @section Predefined root condition descriptor
 
 
-The @dfn{root exceptional--condition descriptor} has the only purpose of being the root of the
-condition descriptors tree; there should be no condition objects having this descriptor.  The
-@emph{root} descriptor has @code{parent} field set to @cnull{}; this should be the only descriptor
-with such a property.
+The @dfn{root} exceptional--condition object--type descriptor has the only purpose of being the root
+of the descriptors tree; there should be no exceptional--condition objects having this as
+descriptor.  The @emph{root} descriptor has @code{parent} field set to @cnull{}; this must be the
+only descriptor with such a property.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_descriptor_root_t
-Type of the exceptional condition descriptor representing the root of the conditions hierarchy tree.
-This descriptor has a single instance built into the library.  It has the following public fields:
+Type of @code{struct} representing the @emph{root} exceptional--condition object--type descriptor,
+the root of the descriptors hierarchy tree.  This descriptor has a single instance built into the
+library.  It has the following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
-The descriptor of the exceptional--condition object--type.
+Core values of the exceptional--condition object--type.
 @end table
 @end deftp
 
 
 @deftp {Struct Typedef} cce_condition_root_t
-Structure type representing the @emph{root} condition object.  It has the following public fields:
+Type of @code{struct} representing the @emph{root} exceptional--condition object; this @code{struct}
+type must never be instantiated.  It has the following public fields:
 
 @table @code
 @item cce_condition_t condition
-The object's base values.
+Core values of the exceptional--condition object.
 @end table
 @end deftp
 
 
 @deftypefun void cce_descriptor_set_root_parent (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the unique @emph{root} condition descriptor.
+Configure the descriptor @var{D} so that its parent is the unique @emph{root} descriptor.
 @end deftypefun
 
 
@@ -1438,34 +1462,19 @@ the initialisation functions of exceptional--condition object--types derived fro
 
 
 @deftypefun bool cce_condition_is_root (cce_condition_t const * @var{C})
-Return @ctrue{} if the condition object @var{C} is derived from the @emph{root} condition type;
-otherwise return @cfalse{}.  With a correctly built conditions hierarchy: this function always
-returns @ctrue{}.
+Return @ctrue{} if the object referenced by @var{C} is derived from the @emph{root} type; otherwise
+return @cfalse{}.  With a correctly built conditions hierarchy: this function always returns
+@ctrue{}.
 @end deftypefun
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_root_t const * const} cce_descriptor_root_ptr
-Pointer to a statically allocated structure representing the @emph{root} condition descriptor for
-@emph{root} condition objects.
+Pointer to the statically allocated structure representing the @emph{root} descriptor.
 @end deftypevr
-
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_root_t} we can copy the code in the files:
-
-@example
-root-subtype.c
-root-subtype-headear.h
-root-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_root_subtype_t}.
+@ConditionSubtypingExample{root, root}
 
 @c page
 @node conditions unknown
@@ -1610,20 +1619,7 @@ Pointer to a statically allocated structure representing the @emph{break} condit
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_break_t} we can copy the code in the files:
-
-@example
-break-subtype.c
-break-subtype-headear.h
-break-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_break_subtype_t}.
+@ConditionSubtypingExample{break, break}
 
 @c page
 @node conditions error
@@ -1696,20 +1692,7 @@ Pointer to a statically allocated structure representing the @emph{error} condit
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_error_t} we can copy the code in the files:
-
-@example
-error-subtype.c
-error-subtype-headear.h
-error-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_error_subtype_t}.
+@ConditionSubtypingExample{error, error}
 
 @c page
 @node conditions run-time error
@@ -1782,20 +1765,7 @@ Pointer to a statically allocated structure representing the @emph{run--time} co
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_runtime_error_t} we can copy the code in the files:
-
-@example
-runtime-error-subtype.c
-runtime-error-subtype-headear.h
-runtime-error-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_runtime_error_subtype_t}.
+@ConditionSubtypingExample{runtime-error, runtime_error}
 
 @c page
 @node conditions logic error
@@ -1869,20 +1839,7 @@ Pointer to a statically allocated structure representing the @emph{logic} condit
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_logic_error_t} we can copy the code in the files:
-
-@example
-logic-error-subtype.c
-logic-error-subtype-headear.h
-logic-error-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_logic_error_subtype_t}.
+@ConditionSubtypingExample{logic-error, logic_error}
 
 @c page
 @node conditions unimplemented
@@ -1957,20 +1914,7 @@ Pointer to a statically allocated structure representing the @emph{unimplemented
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_unimplemented_t} we can copy the code in the files:
-
-@example
-unimplemented-subtype.c
-unimplemented-subtype-headear.h
-unimplemented-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_unimplemented_subtype_t}.
+@ConditionSubtypingExample{unimplemented, unimplemented}
 
 @c page
 @node conditions invalid arg
@@ -2066,21 +2010,7 @@ Pointer to a statically allocated structure representing the condition descripto
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_invalid_argument_t} we can copy the code in the
-files:
-
-@example
-invalid-arg-subtype.c
-invalid-arg-subtype-headear.h
-invalid-arg-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_invalid_argument_subtype_t}.
+@ConditionSubtypingExample{invalid-arg, invalid_argument}
 
 @c page
 @node conditions unreachable
@@ -2190,21 +2120,7 @@ nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Sub--typing example
-
-
-To define a sub--type of @objtype{cce_condition_unreachable_t} we can copy the code in the
-files:
-
-@example
-condition-unreachable-subtype.c
-condition-unreachable-subtype-headear.h
-condition-unreachable-subtype-body.c
-@end example
-
-@noindent
-under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_unreachable_subtype_t}.
+@ConditionSubtypingExample{unreachable, unreachable}
 
 @c page
 @node conditions errno
