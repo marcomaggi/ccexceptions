@@ -13,10 +13,10 @@
 @c ------------------------------------------------------------
 
 @macro ConditionSubtypingExample{FILE_STEM, TYPE_STEM}
-@subsubheading Sub--typing example
+@subsubheading subtyping example
 
 
-To define a sub--type of @objtype{cce_condition_\TYPE_STEM\_t} we can copy the code in the files:
+To define a subtype of @objtype{cce_condition_\TYPE_STEM\_t} we can copy the code in the files:
 
 @example
 condition-subtyping-\FILE_STEM\.c
@@ -1243,7 +1243,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_t
-Type of @code{struct} representing exceptional--condition object--type descriptors; it holds a table
+Structure type representing exceptional--condition object--type descriptors; it holds a table
 of function pointers to handle exceptional--condition objects.  It has the following fields:
 
 @table @code
@@ -1427,7 +1427,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_root_t
-Type of @code{struct} representing the @emph{root} exceptional--condition object--type descriptor,
+Structure type representing the @emph{root} exceptional--condition object--type descriptor,
 the root of the descriptors hierarchy tree.  This descriptor has a single instance built into the
 library.  It has the following public fields:
 
@@ -1439,7 +1439,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_root_t
-Type of @code{struct} representing the @emph{root} exceptional--condition object; this @code{struct}
+Structure type representing the @emph{root} exceptional--condition object; this @code{struct}
 type must never be instantiated.  It has the following public fields:
 
 @table @code
@@ -1493,7 +1493,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_unknown_t
-Type of @code{struct} representing the @emph{unknown} exceptional--condition object--type
+Structure type representing the @emph{unknown} exceptional--condition object--type
 descriptor.  This descriptor has the @emph{root} descriptor as parent.  It has the following public
 fields:
 
@@ -1505,7 +1505,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_unknown_t
-Type of @code{struct} representing the @emph{unknown} exceptional--condition object.  It has the
+Structure type representing the @emph{unknown} exceptional--condition object.  It has the
 following public fields:
 
 @table @code
@@ -1542,13 +1542,13 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_unknown_t const * const} cce_descriptor_unknown_ptr
-Pointer to a statically allocated @code{struct} representing the @emph{unknown}
+Pointer to a statically allocated structure representing the @emph{unknown}
 exceptional--condition object--type descriptor.
 @end deftypevr
 
 
 @deftypevr {Dynamic Constant} {cce_condition_unknown_t const * const} cce_condition_unknown_ptr
-Pointer to a statically allocated @code{struct} representing the @emph{unknown}
+Pointer to a statically allocated structure representing the @emph{unknown}
 exceptional--condition object.
 @end deftypevr
 
@@ -1569,7 +1569,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_break_t
-Type of @code{struct} representing the @emph{break} exceptional--condition object--type descriptor.
+Structure type representing the @emph{break} exceptional--condition object--type descriptor.
 This descriptor has the @emph{root} descriptor as parent.  It has the following public fields:
 
 @table @code
@@ -1580,8 +1580,8 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_break_t
-Type of @code{struct} representing the @emph{break} exceptional--condition object.  It has the
-following public fields:
+Structure type representing the @emph{break} exceptional--condition object.  It has the following
+public fields:
 
 @table @code
 @item cce_condition_root_t root
@@ -1623,13 +1623,13 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_break_t const * const} cce_descriptor_break_ptr
-Pointer to a statically allocated @code{struct} representing the @emph{break} exceptional--condition
+Pointer to a statically allocated structure representing the @emph{break} exceptional--condition
 object--type descriptor.
 @end deftypevr
 
 
 @deftypevr {Dynamic Constant} {cce_condition_break_t const * const} cce_condition_break_ptr
-Pointer to a statically allocated @code{struct} representing the @emph{break} exceptional--condition
+Pointer to a statically allocated structure representing the @emph{break} exceptional--condition
 object.
 @end deftypevr
 
@@ -1642,11 +1642,12 @@ object.
 @section Predefined error condition object
 
 
-The @dfn{error exceptional--condition object} has the purpose of describing an exceptional condition
-caused by an unspecified error; this condition type is meant to be the base of more specialised
-condition types.
+The @dfn{error} exceptional--condition object--type has the purpose of describing an exceptional
+condition caused by an unspecified error; this condition type is meant to be the base of more
+specialised object--types.
 
-There should be only one @emph{error} condition object: the one predefined by @value{PACKAGE}.
+There should be only one @emph{error} condition object: the one predefined by @value{PACKAGE} and
+built into the library as statically allocated structure.  Subtyping from this object--type is fine.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
@@ -1663,29 +1664,31 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_error_t
-Structure type representing a @emph{error} condition object.  It has the following public fields:
+Structure type representing a @emph{error} exceptional--condition object.  It has the following
+public fields:
 
 @table @code
-@item cce_condition_t condition
+@item cce_condition_root_t root
 Core values of the exceptional--condition object.
 @end table
 @end deftp
 
 
 @deftypefun void cce_condition_init_error (cce_condition_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
-@objtype{cce_condition_error_t}.
+Initialise an already allocated exceptional--condition object.  This function exists to allow
+subtyping from @objtype{cce_condition_error_t}.
 @end deftypefun
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_error (void)
 Return a pointer to the statically allocated structure representing the single @emph{error}
-condition object.
+exceptional--condition object.
 @end deftypefun
 
 
 @deftypefun bool cce_is_condition_error (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} is a @emph{error} condition object; otherwise return @cfalse{}.
+Return @ctrue{} if @var{C} is an @emph{error} exceptional--condition object; otherwise return
+@cfalse{}.
 @end deftypefun
 
 
@@ -1702,13 +1705,14 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_error_t const * const} cce_descriptor_error_ptr
-Pointer to a statically allocated structure representing the @emph{error} condition
-descriptor for the single @emph{error} condition object.
+Pointer to a statically allocated structure representing the @emph{error} exceptional--condition
+object--type descriptor.
 @end deftypevr
 
 
 @deftypevr {Dynamic Constant} {cce_condition_error_t const * const} cce_condition_error_ptr
-Pointer to a statically allocated structure representing the @emph{error} condition object.
+Pointer to a statically allocated structure representing the @emph{error} exceptional--condition
+object.
 @end deftypevr
 
 @c ------------------------------------------------------------------------
@@ -1746,7 +1750,7 @@ Structure type representing a @emph{run--time} condition object.
 
 
 @deftypefun void cce_condition_init_runtime_error (cce_condition_runtime_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_runtime_error_t}.
 @end deftypefun
 
@@ -1820,7 +1824,7 @@ Structure type representing a @emph{logic} condition object.
 
 
 @deftypefun void cce_condition_init_logic_error (cce_condition_logic_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_logic_error_t}.
 @end deftypefun
 
@@ -1895,7 +1899,7 @@ Structure type representing an @emph{unimplemented} condition object.
 
 
 @deftypefun void cce_condition_init_unimplemented (cce_condition_unimplemented_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_unimplemented_t}.
 @end deftypefun
 
@@ -2108,7 +2112,7 @@ Pointer to a statically allocated exceptional condition descriptor.
 
 @deftypefun void cce_condition_init_unreachable (cce_condition_unreachable_t * @var{C}, char const * @var{filename}, char const * @var{funcname}, int @var{linenum})
 Initialisation function for the condition object.  This function is meant to be called from the
-initialisation function of sub--types of @objtype{cce_condition_unreachable_t}.
+initialisation function of subtypes of @objtype{cce_condition_unreachable_t}.
 @end deftypefun
 
 
@@ -2150,7 +2154,7 @@ nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 
 The @dfn{errno exceptional--condition object} has the purpose of describing an exceptional condition
 caused by a system function setting @code{errno}.  Condition objects of this type are @strong{not}
-meant to be sub--typed.
+meant to be subtyped.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
@@ -2276,7 +2280,7 @@ Structure type representing an @emph{mathematical error} condition object.
 
 
 @deftypefun void cce_condition_init_math_error (cce_condition_math_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_math_error_t}.
 @end deftypefun
 
@@ -2346,7 +2350,7 @@ Structure type representing an @emph{mathematical not--a--number} condition obje
 
 
 @deftypefun void cce_condition_init_math_nan (cce_condition_math_nan_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_math_nan_t}.
 @end deftypefun
 
@@ -2416,7 +2420,7 @@ Structure type representing an @emph{mathematical infinity} condition object.
 
 
 @deftypefun void cce_condition_init_math_infinity (cce_condition_math_infinity_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_math_infinity_t}.
 @end deftypefun
 
@@ -2487,7 +2491,7 @@ Structure type representing an @emph{mathematical overflow} condition object.
 
 
 @deftypefun void cce_condition_init_math_overflow (cce_condition_math_overflow_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_math_overflow_t}.
 @end deftypefun
 
@@ -2558,7 +2562,7 @@ Structure type representing an @emph{mathematical underflow} condition object.
 
 
 @deftypefun void cce_condition_init_math_underflow (cce_condition_math_underflow_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow sub--typing from
+Initialise an already allocated condition object.  This function exists to allow subtyping from
 @objtype{cce_condition_math_underflow_t}.
 @end deftypefun
 
