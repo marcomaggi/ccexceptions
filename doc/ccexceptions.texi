@@ -243,7 +243,7 @@ The installed libraries follow version numbering as established by the
 system, libtool, Shared library support for @gnu{}}.
 
 
-@deftypefun {const char *} cce_version_string (void)
+@deftypefun {char const *} cce_version_string (void)
 Return a pointer to a statically allocated @asciiz{} string representing
 the interface version number.
 @end deftypefun
@@ -1315,19 +1315,20 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_t
-Type of structure representing an exceptional condition object.  It has the following public fields:
+Type of structure representing an exceptional--condition object.  It has the following public
+fields:
 
 @table @code
 @item cce_descriptor_t const * descriptor
-Pointer to the condition descriptor associated to this condition object.
+Pointer to the descriptor of the exceptional--condition object--type.
 @end table
 @end deftp
 
 
 @deftypefun void cce_condition_init (cce_condition_t * @var{C}, cce_descriptor_t const * @var{D})
 Initialise the core fields of an already allocated condition object.  The argument @var{D} must be a
-pointer to the condition descriptor: it is stored in the condition object referenced by @var{C}.
-This function is usually called from a type--specific constructor function.
+pointer to the descriptor: it is stored in the object referenced by @var{C}.  This function is
+usually called from a type--specific constructor function.
 @end deftypefun
 
 
@@ -1335,9 +1336,9 @@ This function is usually called from a type--specific constructor function.
 @strong{Usually we do not need to call this function directly; rather, we should use
 @cfunc{cce_condition_delete}.}
 
-Traverse, from leave to root, the hierarchy of descriptors for the condition object in @var{C} and
-apply to @var{C} the @code{final} functions referenced by the descriptors' functions tables.  The
-finalisation functions are applied from leave to root.
+Traverse, from leaf to root, the hierarchy of descriptors for the type of the exceptional--condition
+object referenced by @var{C}: apply to @var{C} the @code{final} functions referenced by the
+descriptors' functions tables.  The finalisation functions are applied from leaf to root.
 @end deftypefun
 
 
@@ -1347,15 +1348,16 @@ referenced by the descriptor's functions table.
 @end deftypefun
 
 
-@deftypefun {const char *} cce_condition_static_message (cce_condition_t const * @var{C})
+@deftypefun {char const *} cce_condition_static_message (cce_condition_t const * @var{C})
 Apply to @var{C} the @code{static_message} function referenced by its descriptor's functions
 table.
 @end deftypefun
 
 
 @deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, cce_descriptor_t const * @var{D})
-Establish if a condition object is of a selected type.  Return @ctrue{} if @var{C} is an instance of
-type @var{D}, or an instance of a type that is ancestor of @var{D}; otherwise return @cfalse{}.
+Determine if an object is of a selected object--type.  Return @ctrue{} if the object referenced by
+@var{C} is an instance of the type whose descriptor is referenced by @var{D}, or an instance of a
+type that is an ancestor of such descriptor; otherwise return @cfalse{}.
 @end deftypefun
 
 
