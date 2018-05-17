@@ -1977,7 +1977,7 @@ exceptional--condition object.
 @section The @emph{invalid argument} exceptional--condition object
 
 
-The @dfn{invalid argument exceptional--condition object} has the purpose of describing an
+The @dfn{invalid argument} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by a wrong function argument.  This condition object is meant to be
 used to describe unexpected exceptions: we do not really expect the argument to be invalid, but we
 want a fall--back just in case.
@@ -1988,17 +1988,12 @@ The function is meant to be used as follows:
 void
 do_something (unsigned N)
 @{
-  cce_location_t        L[1];
-
-  if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
-  @} else @{
-    if (0 == N) @{
-      cce_raise(L,
-          cce_condition_new_invalid_argument(L, __func__, 1));
-    @}
-    cce_run_clean_handlers(L);
+  if (0 == N) @{
+    cce_raise(L,
+      cce_condition_new_invalid_argument(L, __func__, 1));
   @}
+
+  /* do something with N */
 @}
 @end example
 
@@ -2006,8 +2001,8 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_invalid_argument_t
-Structure type representing the descriptor of the condition objects.  This descriptor has the
-@emph{logic error} descriptor as parent.  It has the following public fields:
+Structure type representing the exceptional--condition object--type descriptor.  This descriptor has
+the @emph{logic error} descriptor as parent.  It has the following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
@@ -2017,12 +2012,15 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_invalid_argument_t
-Structure type representing the condition object.  It has the following public fields:
+Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
+@item cce_condition_logic_error_t logic_error
+Core values of the exceptional--condition object.
+
 @item char const * funcname
 Pointer to a statically allocated @asciiz{} string representing the name of the function that raised
-the exception.  It is usually generated with @code{__func__}.
+the exception.  It is usually generated with the preprocessor symbol @code{__func__}.
 
 @item unsigned index
 One--based index of the offending argument.
@@ -2031,18 +2029,35 @@ One--based index of the offending argument.
 
 
 @deftypefun void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * @var{C}, char const * @var{func}, unsigned @var{index})
-Initialisation function for the condition object.
+Initialise an already allocated exceptional--condition object.  This function exists to allow
+subtyping from @objtype{cce_condition_invalid_argument_t}.
 @end deftypefun
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_invalid_argument (cce_destination_t @var{L}, char const * @var{func}, unsigned @var{index})
-Build and return a new condition object.  If building the object fails: raise an exception to the
-location @var{L}.
+Build and return a new exceptional--condition object.  If building the object fails: raise an
+exception by jumping to @var{L}.
 @end deftypefun
 
 
 @deftypefn {Inline Function} bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} is a condition object of the specified type; otherwise return @cfalse{}.
+Return @ctrue{} if @var{C} is an @emph{invalid argument} exceptional--condition object; otherwise
+return @cfalse{}.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} void cce_check_argument (cce_destination_t @var{L}, bool @var{expr}, unsigned @var{argnum})
+Expand to the following:
+
+@example
+if (! (@var{expr})) @{
+  cce_raise(@var{L},
+    cce_condition_new_invalid_argument(@var{L}, __func__, @var{argnum}));
+@}
+@end example
+
+@noindent
+where @var{expr} is an expression evaluating to @ctrue{} if the argument is @strong{valid}.
 @end deftypefn
 
 
@@ -2061,7 +2076,8 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_invalid_argument_t const * const} cce_descriptor_invalid_argument
-Pointer to a statically allocated structure representing the condition descriptor.
+Pointer to a statically allocated structure representing the @emph{invalid argument}
+exceptional--condition object--type descriptor.
 @end deftypevr
 
 @c ------------------------------------------------------------------------

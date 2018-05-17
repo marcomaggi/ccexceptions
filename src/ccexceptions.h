@@ -722,6 +722,9 @@ cce_condition_is_invalid_argument (cce_condition_t const * C)
   return cce_is_condition(C, &(cce_descriptor_invalid_argument_ptr->descriptor));
 }
 
+#define cce_check_argument(L,EXPR,ARGNUM) \
+  if (! (EXPR)) { cce_raise(L, cce_condition_new_invalid_argument(L, __func__, ARGNUM)); }
+
 /* ------------------------------------------------------------------ */
 
 #define cce_condition_invalid_argument(S)				\

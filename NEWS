@@ -5,6 +5,8 @@ Notes for revision 0.7.2-beta.1
 
 * Review of packaging infrastructure.
 
+* Added preprocessor macro "cce_check_argument()".
+
 
 Notes for revision 0.7.2-beta.0
 -------------------------------
