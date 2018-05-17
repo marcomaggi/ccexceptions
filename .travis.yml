@@ -81,7 +81,7 @@ branches:
 env:
   global:
     - MAKEFLAGS="-j 2"
-    - PATH=/tmp/mine/bin:$PATH;
+    - PATH=$PATH:/tmp/mine/bin;
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 
