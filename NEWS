@@ -12,6 +12,9 @@ Notes for revision 0.8.0-devel.0
      cce_ref_condition_errno_errnum -> cce_condition_ref_errno_errnum
      cce_ref_condition_errno_message -> cce_condition_ref_errno_message
 
+* Removed "cleanup"  aliases that were  kept for compatibility  with old
+  versions.
+
 
 Notes for revision 0.7.2-beta.0
 -------------------------------

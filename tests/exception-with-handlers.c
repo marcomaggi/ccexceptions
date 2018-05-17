@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: test with error and cleanup handlers
+  Contents: test with error and clean handlers
   Date: Fri Dec 23, 2016
 
   Abstract
@@ -73,9 +73,9 @@ test_no_exception (void)
     break;
 
   default:
-    cce_register_cleanup_handler(L, &H1.handler);
+    cce_register_clean_handler(L, &H1.handler);
     cce_register_error_handler(L, &H2.handler);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true  == flag1);
   assert(false == flag2);
@@ -122,12 +122,12 @@ test_with_error (void)
     break;
 
   default:
-    cce_register_cleanup_handler(L, &H1.handler);
+    cce_register_clean_handler(L, &H1.handler);
     cce_register_error_handler(L, &H2.handler);
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag1);
   assert(true == flag2);
@@ -140,7 +140,7 @@ typedef struct test_dynamically_allocated_handler_t {
 } test_dynamically_allocated_handler_t;
 
 static void
-test_dynamically_allocated_cleanup_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+test_dynamically_allocated_clean_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_dynamically_allocated_handler_t * H = (test_dynamically_allocated_handler_t *) _H;
   free(H->handler.pointer);
@@ -180,14 +180,14 @@ test_dynamically_allocated_handlers (void)
     test_dynamically_allocated_handler_t * H1;
     test_dynamically_allocated_handler_t * H2;
 
-    H1 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag1);
-    H2 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_cleanup_handler, &flag2);
-    cce_register_cleanup_handler(L, &(H1->handler));
+    H1 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_clean_handler, &flag1);
+    H2 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_clean_handler, &flag2);
+    cce_register_clean_handler(L, &(H1->handler));
     cce_register_error_handler(L, &(H2->handler));
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(true == flag1);
   assert(true == flag2);

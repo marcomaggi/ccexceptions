@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: test with cleanup handler
+  Contents: test with clean handler
   Date: Fri Dec 23, 2016
 
   Abstract
@@ -71,9 +71,9 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       break;
 
     default:
-      cce_register_cleanup_handler(L, H1.exception_handler);
-      cce_register_cleanup_handler(L, H2.exception_handler);
-      cce_run_cleanup_handlers(L);
+      cce_register_clean_handler(L, H1.exception_handler);
+      cce_register_clean_handler(L, H2.exception_handler);
+      cce_run_clean_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);
@@ -93,10 +93,10 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       break;
 
     default:
-      cce_register_cleanup_handler(L, H1.exception_handler);
-      cce_register_cleanup_handler(L, H2.exception_handler);
+      cce_register_clean_handler(L, H1.exception_handler);
+      cce_register_clean_handler(L, H2.exception_handler);
       cce_raise(L, NULL);
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);

@@ -54,8 +54,8 @@ test_no_exception (void)
   /* Upon exiting this block: the handlers will be called. */
   {
     cce_location_t	L[1];
-    volatile bool	flag1 __attribute__((cleanup(test_no_exception_handler1))) = false;
-    volatile bool	flag2 __attribute__((cleanup(test_no_exception_handler2))) = false;
+    volatile bool	flag1 __attribute__((__cleanup__(test_no_exception_handler1))) = false;
+    volatile bool	flag2 __attribute__((__cleanup__(test_no_exception_handler2))) = false;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -67,7 +67,7 @@ test_no_exception (void)
     default:
       flag1 = true;
       flag2 = true;
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);
@@ -99,8 +99,8 @@ test_with_error (void)
   /* Upon exiting this block: the handlers will be called. */
   {
     cce_location_t	L[1];
-    volatile bool	flag1 __attribute__((cleanup(test_with_error_handler1))) = false;
-    volatile bool	flag2 __attribute__((cleanup(test_with_error_handler2))) = false;
+    volatile bool	flag1 __attribute__((__cleanup__(test_with_error_handler1))) = false;
+    volatile bool	flag2 __attribute__((__cleanup__(test_with_error_handler2))) = false;
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -113,7 +113,7 @@ test_with_error (void)
       flag1 = true;
       flag2 = true;
       cce_raise(L, NULL);
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
     assert(false == flag1);
     assert(false == flag2);

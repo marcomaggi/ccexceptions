@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -43,7 +43,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     cce_run_error_handlers(L);
   } else {
     flag = true;
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   assert(flag);
 

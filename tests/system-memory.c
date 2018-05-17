@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -29,11 +29,11 @@
 
 void
 test_1_1 (void)
-/* Allocate and release  memory using "malloc()" and  a cleanup handler,
+/* Allocate and release  memory using "malloc()" and  a clean handler,
    successful execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -42,18 +42,18 @@ test_1_1 (void)
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
 
 void
 test_1_2 (void)
-/* Allocate and release  memory using "malloc()" and  a cleanup handler,
+/* Allocate and release  memory using "malloc()" and  a clean handler,
    exception execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -112,11 +112,11 @@ test_2_2 (void)
 
 void
 test_3_1 (void)
-/* Allocate and release  memory using "calloc()" and  a cleanup handler,
+/* Allocate and release  memory using "calloc()" and  a clean handler,
    successful execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -125,18 +125,18 @@ test_3_1 (void)
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
 
 void
 test_3_2 (void)
-/* Allocate and release  memory using "calloc()" and  a cleanup handler,
+/* Allocate and release  memory using "calloc()" and  a clean handler,
    exception execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -195,11 +195,11 @@ test_4_2 (void)
 
 void
 test_5_1 (void)
-/* Allocate and release memory using  "realloc()" and a cleanup handler,
+/* Allocate and release memory using  "realloc()" and a clean handler,
    successful execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -210,18 +210,18 @@ test_5_1 (void)
     assert(NULL != P);
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
 
 void
 test_5_2 (void)
-/* Allocate and release memory using  "realloc()" and a cleanup handler,
+/* Allocate and release memory using  "realloc()" and a clean handler,
    exception execution path. */
 {
   cce_location_t	L[1];
-  cce_cleanup_handler_t	P_H[1];
+  cce_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));

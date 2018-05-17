@@ -689,7 +689,6 @@ Integers meant to be used for pipe descriptors.
 
 
 @deftp {Struct Typedef} cce_clean_handler_t
-@deftpx {Struct Typedef} cce_cleanup_handler_t
 Structure representing a clean handler.  It has the following public fields:
 
 @table @code
@@ -723,7 +722,6 @@ to release its memory.
 
 
 @deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
-@deftypefunx void cce_register_cleanup_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
 Register the clean handler referenced by @var{H} in the list of handlers associated to the location
 @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
 structure of type @code{cce_handler_t}; such structure can either be allocated on the same stack
@@ -755,7 +753,6 @@ in @var{L}: nothing happens.
 
 
 @deftypefun void cce_run_clean_handlers (cce_destination_t @var{L})
-@deftypefunx void cce_run_cleanup_handlers (cce_destination_t @var{L})
 Run all the clean handlers associated to the location @var{L}.  Each handler must return to its
 caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
@@ -792,7 +789,6 @@ cce_condition_delete(cce_condition(L));
 
 
 @deftypefun void cce_run_clean_handlers_final (cce_destination_t @var{L})
-@deftypefunx void cce_run_cleanup_handlers_final (cce_destination_t @var{L})
 Equivalent to calling:
 
 @example
@@ -813,7 +809,6 @@ cce_raise(upper_L, cce_condition(L));
 
 
 @deftypefun void cce_run_clean_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
-@deftypefunx void cce_run_cleanup_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
 Equivalent to calling:
 
 @example
@@ -2818,7 +2813,6 @@ if (cce_location(L)) @{
 
 
 @deftypefun void cce_clean_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
-@deftypefunx void cce_cleanup_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
 @deftypefunx void cce_error_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
 Register @var{H} as clean or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
@@ -2879,7 +2873,6 @@ if (cce_location(L)) @{
 
 
 @deftypefun {void *} cce_sys_malloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{size})
-@deftypefunx {void *} cce_sys_malloc_guarded_cleanup (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{size})
 Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
@@ -2911,7 +2904,6 @@ The macro expands into a call to @cfunc{cce_sys_malloc_guarded_error}.
 
 
 @deftypefun {void *} cce_sys_calloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
-@deftypefunx {void *} cce_sys_calloc_guarded_cleanup (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
 Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
@@ -2943,7 +2935,6 @@ The macro expands into a call to @cfunc{cce_sys_calloc_guarded_error}.
 
 
 @deftypefun {void *} cce_sys_realloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
-@deftypefunx {void *} cce_sys_realloc_guarded_cleanup (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
 Like @cfunc{cce_sys_realloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.  The handler is updated to reference the new memory pointer.  If, upon entering this
 function, the handler @var{P_H} does not reference the pointer @var{old_P}: raise an exception by
