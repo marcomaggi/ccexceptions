@@ -36,12 +36,18 @@
 # otherwise the installed packages will  not be found and used correctly
 # by the "configure" script.
 #
+# Notice that (as of May 17,  2018) Travis CI's run-time system raises a
+# warning if the first directory in the PATH environment variable is not
+# the one  that it sets.   So, for now,  we append the  custom directory
+# rather than prepend it;  this is not the best if we  want to make sure
+# that the executables we install are  found before the one installed by
+# the platform.
 #
 # We need the following in the global environment:
 #
 #   env:
 #     global:
-#       - PATH=/tmp/mine/bin:$PATH;
+#       - PATH=$PATH:/tmp/mine/bin;
 #       - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
 #       - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 #
@@ -49,7 +55,7 @@
 # running the "configure" script as follows:
 #
 #   script: |
-#     export PATH=/tmp/mine/bin:$PATH;
+#     export PATH=$PATH:/tmp/mine/bin;
 #     export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
 #     export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 #     ./configure
