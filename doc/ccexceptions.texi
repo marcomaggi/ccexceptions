@@ -12,20 +12,20 @@
 @c Document specific macros.
 @c ------------------------------------------------------------
 
-@macro ConditionSubtypingExample{FILE_STEM, TYPE_STEM}
+@macro ConditionSubtypingExample{FILESTEM, TYPESTEM}
 @subsubheading Subtyping example
 
-To define a subtype of @objtype{cce_condition_\TYPE_STEM\_t} we can copy the code in the files:
+To define a subtype of @objtype{cce_condition_\TYPESTEM\_t} we can copy the code in the files:
 
 @example
-condition-subtyping-\FILE_STEM\.c
-condition-subtyping-\FILE_STEM\-header.h
-condition-subtyping-\FILE_STEM\-body.c
+condition-subtyping-\FILESTEM\.c
+condition-subtyping-\FILESTEM\-header.h
+condition-subtyping-\FILESTEM\-body.c
 @end example
 
 @noindent
 under the @file{tests} directory of the source distribution; the code defines a new
-exceptional--condition object--type @objtype{my_condition_\TYPE_STEM\_subtype_t}.
+exceptional--condition object--type @objtype{my_condition_\TYPESTEM\_subtype_t}.
 @end macro
 
 @macro ExceptionalConditionIndexEntries{DESCRIPTION}
