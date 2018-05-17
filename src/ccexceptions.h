@@ -723,7 +723,7 @@ cce_condition_is_invalid_argument (cce_condition_t const * C)
 }
 
 #define cce_check_argument(L,EXPR,ARGNUM) \
-  if (! (EXPR)) { cce_raise(L, cce_condition_new_invalid_argument(L, __func__, ARGNUM)); }
+  if (! (EXPR)) { cce_raise((L), cce_condition_new_invalid_argument((L), __func__, (ARGNUM))); }
 
 /* ------------------------------------------------------------------ */
 
