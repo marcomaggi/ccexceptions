@@ -790,7 +790,7 @@ cce_condition_is_errno (cce_condition_t const * C)
 
 __attribute__((__always_inline__,__pure__))
 static inline int
-cce_ref_condition_errno_errnum (cce_condition_t const * const C)
+cce_condition_ref_errno_errnum (cce_condition_t const * const C)
 {
   CCE_PC(cce_condition_errno_t const, K, C);
   return K->errnum;
@@ -798,7 +798,7 @@ cce_ref_condition_errno_errnum (cce_condition_t const * const C)
 
 __attribute__((__always_inline__,__pure__,__returns_nonnull__))
 static inline char const *
-cce_ref_condition_errno_message (cce_condition_t const * const C)
+cce_condition_ref_errno_message (cce_condition_t const * const C)
 {
   CCE_PC(cce_condition_errno_t const, K, C);
   return K->message;

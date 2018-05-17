@@ -7,6 +7,11 @@ Notes for revision 0.8.0-devel.0
 
 * Added preprocessor macro "cce_check_argument()".
 
+* Renamed functions:
+
+     cce_ref_condition_errno_errnum -> cce_condition_ref_errno_errnum
+     cce_ref_condition_errno_message -> cce_condition_ref_errno_message
+
 
 Notes for revision 0.7.2-beta.0
 -------------------------------

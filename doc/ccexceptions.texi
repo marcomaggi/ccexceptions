@@ -2295,13 +2295,13 @@ object--type descriptor.
 @subsubheading Structure field getters
 
 
-@deftypefun int cce_ref_condition_errno_errnum (cce_condition_t const * @var{C})
+@deftypefun int cce_condition_ref_errno_errnum (cce_condition_t const * @var{C})
 Return the value of the field @code{errnum} in the exceptional--condition object referenced by
 @var{C}, which must be of type @objtype{cce_condition_errno_t}
 @end deftypefun
 
 
-@deftypefun {char const *} cce_ref_condition_errno_message (cce_condition_t const * @var{C})
+@deftypefun {char const *} cce_condition_ref_errno_message (cce_condition_t const * @var{C})
 Return the value of the field @code{message} in the exceptional--condition object referenced by
 @var{C}, which must be of type @objtype{cce_condition_errno_t}
 @end deftypefun
