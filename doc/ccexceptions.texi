@@ -29,6 +29,11 @@ under the @file{tests} directory of the source distribution; the code defines a 
 exceptional--condition object--type @objtype{my_condition_\TYPE_STEM\_subtype_t}.
 @end macro
 
+@macro ExceptionalConditionIndexEntries{DESCRIPTION}
+@cindex \DESCRIPTION\, exceptional condition
+@cindex Exceptional conditions, \DESCRIPTION\
+@end macro
+
 @c page
 @c ------------------------------------------------------------
 @c Values.
@@ -1418,6 +1423,9 @@ cce_condition(A) == cce_condition(B);
 @section The @emph{root} exceptional--condition object
 
 
+@ExceptionalConditionIndexEntries{root}
+
+
 The @dfn{root} exceptional--condition object--type descriptor has the only purpose of being the root
 of the descriptors tree; there should be no exceptional--condition objects having this as
 descriptor.  The @emph{root} descriptor has @code{parent} field set to @cnull{}; this must be the
@@ -1479,6 +1487,9 @@ Pointer to the statically allocated structure representing the @emph{root} descr
 @c page
 @node conditions unknown
 @section The @emph{unknown} exceptional--condition object
+
+
+@ExceptionalConditionIndexEntries{unknown}
 
 
 The @dfn{unknown} exceptional--condition object--type has the purpose of describing an
@@ -1555,6 +1566,9 @@ exceptional--condition object.
 @c page
 @node conditions break
 @section The @emph{break} exceptional--condition object
+
+
+@ExceptionalConditionIndexEntries{break}
 
 
 The @dfn{break} exceptional--condition object--type has the purpose of describing an exceptional
@@ -1642,6 +1656,9 @@ object.
 @section The @emph{error} exceptional--condition object
 
 
+@ExceptionalConditionIndexEntries{error}
+
+
 The @dfn{error} exceptional--condition object--type has the purpose of describing an exceptional
 condition caused by an unspecified error; this condition type is meant to be the base of more
 specialised object--types.
@@ -1723,6 +1740,9 @@ object.
 @c page
 @node conditions run-time error
 @section The @emph{run--time error} exceptional--condition object
+
+
+@ExceptionalConditionIndexEntries{run--time error}
 
 
 The @dfn{run--time error} exceptional--condition object--type has the purpose of describing an
@@ -1809,6 +1829,9 @@ exceptional--condition object.
 @section The @emph{logic error} exceptional--condition object
 
 
+@ExceptionalConditionIndexEntries{logic error}
+
+
 The @dfn{logic error} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by a logic error; these are mostly synchronisation errors like failures
 to open a file or allocate memory.
@@ -1890,6 +1913,9 @@ exceptional--condition object.
 @c page
 @node conditions unimplemented
 @section The @emph{unimplemented} exceptional--condition object
+
+
+@ExceptionalConditionIndexEntries{unimplemented}
 
 
 The @dfn{unimplemented} exceptional--condition object--type has the purpose of describing an
@@ -1977,6 +2003,9 @@ exceptional--condition object.
 @section The @emph{invalid argument} exceptional--condition object
 
 
+@ExceptionalConditionIndexEntries{invalid argument}
+
+
 The @dfn{invalid argument} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by a wrong function argument.  This condition object is meant to be
 used to describe unexpected exceptions: we do not really expect the argument to be invalid, but we
@@ -2041,8 +2070,8 @@ exception by jumping to @var{L}.
 
 
 @deftypefn {Inline Function} bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} is an @emph{invalid argument} exceptional--condition object; otherwise
-return @cfalse{}.
+Return @ctrue{} if @var{C} references an @emph{invalid argument} exceptional--condition object;
+otherwise return @cfalse{}.
 @end deftypefn
 
 
@@ -2051,8 +2080,8 @@ Expand to the following:
 
 @example
 if (! (@var{expr})) @{
-  cce_raise(@var{L},
-    cce_condition_new_invalid_argument(@var{L}, __func__, @var{argnum}));
+  cce_raise((@var{L}),
+    cce_condition_new_invalid_argument((@var{L}), __func__, (@var{argnum})));
 @}
 @end example
 
@@ -2086,54 +2115,36 @@ exceptional--condition object--type descriptor.
 
 @c page
 @node conditions unreachable
-@section The @emph{unreachable} exceptional--condition object
+@section The @emph{unreachable code} exceptional--condition object
 
 
-@cindex Unreachable code, exceptional condition
-@cindex Exceptional conditions, Unreachable code
+@ExceptionalConditionIndexEntries{unreachable code}
 
 
-We can use the @dfn{unreachable code exceptional--condition object--type} to signal the execution of
-unreachable code.  We can instantiate this type and also derive new types from it.  To catch this
-exceptional condition we can do:
+We can use the @dfn{unreachable code} exceptional--condition object--type to signal the execution of
+unreachable code.
 
-@smallexample
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  if (cce_condition_is_unreachable(cce_condition(L))) @{
-    CCE_PC(cce_condition_unreachable_t, C, cce_condition(L));
-    do_something_with(C);
-  @}
-  cce_run_error_handlers_final(L);
-@} else @{
-  do_something(L);
-  cce_run_clean_handlers(L);
-@}
-@end smallexample
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_descriptor_unreachable_t
-Type of data structure representing the exceptional--condition descriptor.  It has the following
-public fields:
+Structure type @emph{unreachable code} exceptional--condition object--type descriptor.  This
+descriptor has the @emph{logic error} descriptor as parent.  It has the following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
 Core values of the exceptional--condition object--type descriptor.
 @end table
-
-The parent of this type descriptor is the one referenced by @code{cce_descriptor_logic_error_ptr},
-@ref{conditions logic error, Predefined logic error condition object}.
 @end deftp
 
 
 @deftp {Struct Typedef} cce_condition_unreachable_t
-Type of data structure representing the exceptional--condition object.  It has the following public
-fields:
+Structure type representing the @emph{unreachable code} exceptional--condition object.  It has the
+following public fields:
 
 @table @code
 @item cce_condition_logic_error_t logic_error
-The condition object's base values.
+Core values of the exceptional--condition object--type descriptor.
 
 @item char const * filename
 Pointer to a statically allocated @asciiz{} string representing the pathname of the source file in
@@ -2152,26 +2163,21 @@ be generated with the preprocessor macro @code{__LINE__}.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_unreachable_t const * const} cce_descriptor_unreachable_ptr
-Pointer to a statically allocated exceptional condition descriptor.
-@end deftypevr
-
-
 @deftypefun void cce_condition_init_unreachable (cce_condition_unreachable_t * @var{C}, char const * @var{filename}, char const * @var{funcname}, int @var{linenum})
-Initialisation function for the condition object.  This function is meant to be called from the
-initialisation function of subtypes of @objtype{cce_condition_unreachable_t}.
+Initialise an already allocated exceptional--condition object.  This function exists to allow
+subtyping from @objtype{cce_condition_unreachable_t}.
 @end deftypefun
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_unreachable (cce_destination_t @var{L}, char const * @var{filename}, char const * @var{funcname}, int @var{linenum})
-Return a pointer to exceptional condition object.  If an error occurs building the instance: raise
-an exception by performing a non--local exit to @var{L}.
+Build and return a new exceptional--condition object.  If building the object fails: raise an
+exception by jumping to @var{L}.
 @end deftypefun
 
 
 @deftypefun bool cce_condition_is_unreachable (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} if of type @objtype{cce_condition_unreachable_t}; otherwise return
-@cfalse{}.
+Return @ctrue{} if @var{C} references an @emph{unreachable code} exceptional--condition object;
+otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -2190,6 +2196,12 @@ If the preprocessor symbol @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} @strong{is} d
 nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 @end deftypefn
 
+
+@deftypevr {Dynamic Constant} {cce_descriptor_unreachable_t const * const} cce_descriptor_unreachable_ptr
+Pointer to a statically allocated structure representing the @emph{unreachable code}
+exceptional--condition object--type descriptor.
+@end deftypevr
+
 @c ------------------------------------------------------------------------
 
 @ConditionSubtypingExample{unreachable, unreachable}
@@ -2197,6 +2209,9 @@ nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 @c page
 @node conditions errno
 @section The @code{errno} exceptional--condition object
+
+
+@ExceptionalConditionIndexEntries{@code{errno}}
 
 
 The @dfn{errno exceptional--condition object} has the purpose of describing an exceptional condition
@@ -2301,6 +2316,9 @@ Return the value of the field @code{message} in the condition object @var{C} of 
 @subsection Error computing a mathematical expression
 
 
+@ExceptionalConditionIndexEntries{mathematical error}
+
+
 The @dfn{mathematical error exceptional--condition object} has the purpose of describing an
 exceptional condition caused by attempting to compute an invalid mathematical expression.
 
@@ -2371,6 +2389,10 @@ Pointer to a statically allocated structure representing the @emph{mathematical 
 @subsection Mathematical not-a-number error
 
 
+@ExceptionalConditionIndexEntries{mathematical not-a-number error}
+@ExceptionalConditionIndexEntries{not-a-number error}
+
+
 The @dfn{mathematical not--a--number exceptional--condition object} has the purpose of describing an
 exceptional condition caused by not--a--number result while computing a mathematical expression.
 
@@ -2439,6 +2461,10 @@ Pointer to a statically allocated structure representing the @emph{mathematical 
 @c page
 @node conditions math infinity
 @subsection Mathematical infinity error
+
+
+@ExceptionalConditionIndexEntries{mathematical infinity error}
+@ExceptionalConditionIndexEntries{infinity error}
 
 
 The @dfn{mathematical infinity exceptional--condition object} has the purpose of describing an
@@ -2512,6 +2538,10 @@ object.
 @subsection Mathematical overflow error
 
 
+@ExceptionalConditionIndexEntries{mathematical overflow error}
+@ExceptionalConditionIndexEntries{overflow error}
+
+
 The @dfn{mathematical overflow exceptional--condition object} has the purpose of describing an
 exceptional condition caused by an overflow while computing a mathematical expression.
 
@@ -2580,6 +2610,10 @@ Pointer to a statically allocated structure representing the @emph{mathematical 
 @c page
 @node conditions math underflow
 @subsection Mathematical underflow error
+
+
+@ExceptionalConditionIndexEntries{mathematical underflow error}
+@ExceptionalConditionIndexEntries{underflow error}
 
 
 The @dfn{mathematical underflow exceptional--condition object} has the purpose of describing an
