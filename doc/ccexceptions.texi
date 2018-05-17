@@ -2576,18 +2576,20 @@ exceptional--condition object.
 @ExceptionalConditionIndexEntries{overflow error}
 
 
-The @dfn{mathematical overflow exceptional--condition object} has the purpose of describing an
+The @dfn{mathematical overflow} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by an overflow while computing a mathematical expression.
 
-There should be only one @emph{mathematical overflow} condition object: the one predefined by
-@value{PACKAGE}.
+There should be only one @emph{mathematical overflow} exceptional--condition object: the one
+predefined by @value{PACKAGE} and built into the library as statically allocated structure.
+Subtyping from this object--type is fine.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_descriptor_math_overflow_t
-Structure type representing the descriptor for @emph{mathematical overflow} condition objects.  This
-descriptor has the @emph{mathematical error} descriptor as parent.  It has the following public fields:
+Structure type representing the @emph{mathematical overflow} exceptional--condition object--type
+descriptor.  This descriptor has the @emph{mathematical error} descriptor as parent.  It has the
+following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
@@ -2597,25 +2599,31 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_math_overflow_t
-Structure type representing an @emph{mathematical overflow} condition object.
+Structure type representing a @emph{mathematical overflow} exceptional--condition object.  It has
+the following public fields:
+
+@table @code
+@item cce_condition_math_error_t math_error
+Core values of the exceptional--condition object--type descriptor.
+@end table
 @end deftp
 
 
 @deftypefun void cce_condition_init_math_overflow (cce_condition_math_overflow_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow subtyping from
-@objtype{cce_condition_math_overflow_t}.
+Initialise an already allocated exceptional--condition object.  This function exists to allow
+subtyping from @objtype{cce_condition_math_overflow_t}.
 @end deftypefun
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_math_overflow (void)
-Return a pointer to the statically allocated structure representing the single @emph{mathematical
-overflow} condition object.
+Return a pointer to the statically allocated structure representing the predefined
+@emph{mathematical overflow} exceptional--condition object.
 @end deftypefun
 
 
 @deftypefun bool cce_is_condition_math_overflow (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references an @emph{mathematical overflow} condition object; otherwise return
-@cfalse{}.
+Return @ctrue{} if @var{C} references a @emph{mathematical overflow} exceptional--condition object;
+otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -2632,13 +2640,14 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_math_overflow_t const * const} cce_descriptor_math_overflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical overflow} condition
-descriptor for the single @emph{mathematical overflow} condition object.
+Pointer to a statically allocated structure representing the @emph{mathematical overflow}
+exceptional--condition object--type descriptor.
 @end deftypevr
 
 
 @deftypevr {Dynamic Constant} {cce_condition_math_overflow_t const * const} cce_condition_math_overflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical overflow} condition object.
+Pointer to a statically allocated structure representing the @emph{mathematical overflow}
+exceptional--condition object.
 @end deftypevr
 
 @c page
@@ -2650,19 +2659,20 @@ Pointer to a statically allocated structure representing the @emph{mathematical 
 @ExceptionalConditionIndexEntries{underflow error}
 
 
-The @dfn{mathematical underflow exceptional--condition object} has the purpose of describing an
+The @dfn{mathematical underflow} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by an underflow while computing a mathematical expression.
 
-There should be only one @emph{mathematical underflow} condition object: the one predefined by
-@value{PACKAGE}.
+There should be only one @emph{mathematical underflow} exceptional--condition object: the one
+predefined by @value{PACKAGE} and built into the library as statically allocated structure.
+Subtyping from this object--type is fine.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_descriptor_math_underflow_t
-Structure type representing the descriptor for @emph{mathematical underflow} condition objects.
-This descriptor has the @emph{mathematical error} descriptor as parent.  It has the following public
-fields:
+Structure type representing the @emph{mathematical underflow} exceptional--condition object--type
+descriptor.  This descriptor has the @emph{mathematical error} descriptor as parent.  It has the
+following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
@@ -2672,25 +2682,31 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_math_underflow_t
-Structure type representing an @emph{mathematical underflow} condition object.
+Structure type representing a @emph{mathematical underflow} exceptional--condition object.  It has
+the following public fields:
+
+@table @code
+@item cce_condition_math_error_t math_error
+Core values of the exceptional--condition object--type descriptor.
+@end table
 @end deftp
 
 
 @deftypefun void cce_condition_init_math_underflow (cce_condition_math_underflow_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow subtyping from
-@objtype{cce_condition_math_underflow_t}.
+Initialise an already allocated exceptional--condition object.  This function exists to allow
+subtyping from @objtype{cce_condition_math_underflow_t}.
 @end deftypefun
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_math_underflow (void)
-Return a pointer to the statically allocated structure representing the single @emph{mathematical
-underflow} condition object.
+Return a pointer to the statically allocated structure representing the predefined
+@emph{mathematical underflow} exceptional--condition object.
 @end deftypefun
 
 
 @deftypefun bool cce_is_condition_math_underflow (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references an @emph{mathematical underflow} condition object; otherwise
-return @cfalse{}.
+Return @ctrue{} if @var{C} references a @emph{mathematical underflow} exceptional--condition object;
+otherwise return @cfalse{}.
 @end deftypefun
 
 
@@ -2707,14 +2723,14 @@ values of suitable types; we can apply this macro to pointers of all the types d
 
 
 @deftypevr {Dynamic Constant} {cce_descriptor_math_underflow_t const * const} cce_descriptor_math_underflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical underflow} condition
-descriptor for the single @emph{mathematical underflow} condition object.
+Pointer to a statically allocated structure representing the @emph{mathematical underflow}
+exceptional--condition object--type descriptor.
 @end deftypevr
 
 
 @deftypevr {Dynamic Constant} {cce_condition_math_underflow_t const * const} cce_condition_math_underflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical underflow} condition
-object.
+Pointer to a statically allocated structure representing the @emph{mathematical underflow}
+exceptional--condition object.
 @end deftypevr
 
 @c page
