@@ -1146,12 +1146,12 @@ cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char 
   __attribute__((__nonnull__(1,2,3)));
 
 #if (! defined CCEXCEPTIONS_TRACE)
-#  define cce_run_error_handlers_final(L)	cce_p_run_catch_handlers_final(L)
+#  define cce_run_error_handlers_final(L)	cce_p_run_error_handlers_final(L)
 #  define cce_run_catch_handlers_final(L)	cce_p_run_catch_handlers_final(L)
 #  define cce_run_clean_handlers_final(L)	cce_p_run_clean_handlers_final(L)
 #else
 #  define cce_run_error_handlers_final(L)			\
-  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_catch_handlers_final(L))
+  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_final(L))
 #  define cce_run_catch_handlers_final(L)			\
   (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_catch_handlers_final(L))
 #  define cce_run_clean_handlers_final(L)			\
@@ -1191,12 +1191,12 @@ cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, cha
   __attribute__((__nonnull__(1,2,3)));
 
 #if (! defined CCEXCEPTIONS_TRACE)
-#  define cce_run_error_handlers_raise(L,upper_L)	cce_p_run_catch_handlers_raise((L),(upper_L))
+#  define cce_run_error_handlers_raise(L,upper_L)	cce_p_run_error_handlers_raise((L),(upper_L))
 #  define cce_run_catch_handlers_raise(L,upper_L)	cce_p_run_catch_handlers_raise((L),(upper_L))
 #  define cce_run_clean_handlers_raise(L,upper_L)	cce_p_run_clean_handlers_raise((L),(upper_L))
 #else
 #  define cce_run_error_handlers_raise(L,upper_L)			\
-  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_catch_handlers_raise((L), (upper_L)))
+  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_raise((L), (upper_L)))
 #  define cce_run_catch_handlers_raise(L,upper_L)			\
   (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_catch_handlers_raise((L), (upper_L)))
 #  define cce_run_clean_handlers_raise(L,upper_L)			\
