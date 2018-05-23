@@ -49,7 +49,7 @@ test_invalid_argument (void)
   if (cce_location(L)) {
     assert(cce_condition_is_invalid_argument(cce_condition(L)));
     assert(0 == strcmp(__func__, cce_condition_invalid_argument(L)->funcname));
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_condition_delete(cce_condition(L));
     error_flag = true;
   } else {
@@ -73,7 +73,7 @@ test_math_error (void)
   if (cce_location(L)) {
     assert(cce_condition_is_runtime_error(cce_condition(L)));
     assert(cce_condition_is_math_error(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_error()));
@@ -91,7 +91,7 @@ test_math_nan (void)
   if (cce_location(L)) {
     assert(cce_condition_is_math_error(cce_condition(L)));
     assert(cce_condition_is_math_nan(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_nan()));
@@ -109,7 +109,7 @@ test_math_infinity (void)
   if (cce_location(L)) {
     assert(cce_condition_is_math_error(cce_condition(L)));
     assert(cce_condition_is_math_infinity(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_infinity()));
@@ -127,7 +127,7 @@ test_math_overflow (void)
   if (cce_location(L)) {
     assert(cce_condition_is_math_error(cce_condition(L)));
     assert(cce_condition_is_math_overflow(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_overflow()));
@@ -145,7 +145,7 @@ test_math_underflow (void)
   if (cce_location(L)) {
     assert(cce_condition_is_math_error(cce_condition(L)));
     assert(cce_condition_is_math_underflow(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_underflow()));

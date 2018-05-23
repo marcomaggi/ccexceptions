@@ -51,7 +51,7 @@ test_retry_from_body (void)
 
   if (cce_location(L)) {
     ++except_flag;
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     ++body_flag;
     if (0 == retry_flag) {
@@ -78,7 +78,7 @@ test_retry_from_body_twice (void)
 
   if (cce_location(L)) {
     ++except_flag;
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     ++body_flag;
     if (0 == retry_flag) {
@@ -118,7 +118,7 @@ test_retry_from_handler (void)
       ++retry_flag;
       cce_retry(L);
     }
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     ++body_flag;
     if (0 == retry_flag) {
@@ -152,7 +152,7 @@ test_retry_from_handler_twice (void)
       ++reretry_flag;
       cce_retry(L);
     }
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     ++body_flag;
     if (2 > retry_flag) {

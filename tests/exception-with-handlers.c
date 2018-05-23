@@ -68,7 +68,7 @@ test_no_exception (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_condition_delete(cce_condition(L));
     break;
 
@@ -117,7 +117,7 @@ test_with_error (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_condition_delete(cce_condition(L));
     break;
 
@@ -174,7 +174,7 @@ test_dynamically_allocated_handlers (void)
   volatile bool		flag2 = false;
 
   if (cce_location(L)) {
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_condition_delete(cce_condition(L));
   } else {
     test_dynamically_allocated_handler_t * H1;

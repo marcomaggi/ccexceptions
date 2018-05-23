@@ -121,7 +121,7 @@ my_condition_new_invalid_argument_subtype (cce_destination_t upper_L, char const
   cce_handler_t		C_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     my_condition_invalid_argument_subtype_t * C = cce_sys_malloc(L, sizeof(my_condition_invalid_argument_subtype_t));
     cce_error_handler_malloc_init(L, C_H, C);

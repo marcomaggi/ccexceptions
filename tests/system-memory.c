@@ -37,7 +37,7 @@ test_1_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
@@ -57,7 +57,7 @@ test_1_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
@@ -77,12 +77,12 @@ test_2_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
@@ -97,7 +97,7 @@ test_2_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
@@ -120,7 +120,7 @@ test_3_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
@@ -140,7 +140,7 @@ test_3_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
@@ -160,12 +160,12 @@ test_4_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
@@ -180,7 +180,7 @@ test_4_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
@@ -203,7 +203,7 @@ test_5_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
@@ -225,7 +225,7 @@ test_5_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
@@ -247,14 +247,14 @@ test_6_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
@@ -269,7 +269,7 @@ test_6_2 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
@@ -294,7 +294,7 @@ test_7_1 (void)
     if (! cce_condition_is_invalid_argument(cce_condition(L))) {
       exit(EXIT_FAILURE);
     }
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);

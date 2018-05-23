@@ -168,7 +168,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 	{
 	  flag = false;
 	}
-      cce_run_error_handlers(inner_L);
+      cce_run_catch_handlers(inner_L);
       cce_condition_delete(C);
     } else {
       cce_raise(inner_L, cce_condition(cce_condition_new_errno(EINVAL)));
@@ -198,7 +198,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 	{
 	  flag = false;
 	}
-      cce_run_error_handlers(inner_L);
+      cce_run_catch_handlers(inner_L);
       cce_condition_delete(C);
     } else {
       cce_raise(inner_L, cce_condition(cce_condition_new_errno(EINVAL)));

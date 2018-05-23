@@ -47,7 +47,7 @@ test_tracing_sub_sub_sub (cce_destination_t upper_L)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     cce_raise(L, cce_condition_new_unknown());
     cce_run_clean_handlers(L);
@@ -60,7 +60,7 @@ test_tracing_sub_sub (cce_destination_t upper_L)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     test_tracing_sub_sub_sub(L);
     cce_run_clean_handlers(L);
@@ -73,7 +73,7 @@ test_tracing_sub (cce_destination_t upper_L)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     test_tracing_sub_sub(L);
     cce_run_clean_handlers(L);
@@ -86,7 +86,7 @@ test_tracing (void)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     test_tracing_sub(L);
     cce_run_clean_handlers(L);
@@ -104,7 +104,7 @@ test_retrying_sub (cce_destination_t upper_L, bool * retry_flag_p)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     if (*retry_flag_p) {
       *retry_flag_p = false;
@@ -121,7 +121,7 @@ test_retrying (void)
   bool			retry_flag = true;
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     test_retrying_sub(L, &retry_flag);
     cce_run_clean_handlers(L);

@@ -444,7 +444,7 @@ if (CCE_ENTER == cce_location(L)) @{
   cce_run_clean_handlers(L);
 @} else @{
   /* handle the exception here */
-  cce_run_error_handlers(L);
+  cce_run_catch_handlers(L);
   cce_condition_delete(cce_condition(L));
 @}
 @end example
@@ -457,7 +457,7 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* handle the exception here */
-  cce_run_error_handlers(L);
+  cce_run_catch_handlers(L);
   cce_condition_delete(cce_condition(L));
 @} else @{
   /* do something useful here */
@@ -475,7 +475,7 @@ if (CCE_ENTER == cce_location(L)) @{
   cce_run_clean_handlers(L);
 @} else @{
   /* handle the exception here */
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @}
 @end example
 
@@ -487,7 +487,7 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* handle the exception here */
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   /* do something useful here */
   cce_run_clean_handlers(L);
@@ -513,7 +513,7 @@ by retrieving a pointer to it with @cfunc{cce_condition} and releasing it with
 @cfunc{cce_condition_delete}.
 
 Before terminating the use of instances of this type we must always call
-@cfunc{cce_run_error_handlers} or @cfunc{cce_run_clean_handlers}.  We must assume that the handlers
+@cfunc{cce_run_catch_handlers} or @cfunc{cce_run_clean_handlers}.  We must assume that the handlers
 might access the @objtype{cce_condition_t} object, so: first we call the handlers, then we release
 the exceptional--condition object.
 @end deftp
@@ -594,7 +594,7 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* handle the exception here */
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   /* do something useful here */
   cce_run_clean_handlers(L);
@@ -613,7 +613,7 @@ outer (void)
 
   if (cce_location(L)) @{
     /* handle the exception here */
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   @} else @{
     inner(L);
     cce_run_clean_handlers(L);
@@ -626,7 +626,7 @@ inner (cce_location_t * there)
   cce_location_t  L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_raise(there, cce_condition(L));
   @} else @{
     /* do something useful here */
@@ -644,8 +644,8 @@ inner (cce_location_t * there)
 Location handlers allow us to execute callback functions whenever we exit a location context, either
 by normal execution or by raising an exception.  Normal--execution handlers are run by calling the
 function @cfunc{cce_run_clean_handlers}; exception--reaction handlers are run by calling the
-function @cfunc{cce_run_error_handlers}, but we should use the more useful functions
-@cfunc{cce_run_error_handlers_final} and @cfunc{cce_run_error_handlers_raise}.
+function @cfunc{cce_run_catch_handlers}, but we should use the more useful functions
+@cfunc{cce_run_catch_handlers_final} and @cfunc{cce_run_catch_handlers_raise}.
 
 The basic code template is the following:
 
@@ -654,7 +654,7 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* location handler */
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   /* location body */
   cce_run_clean_handlers(L);
@@ -685,7 +685,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 Structure type representing an exception handler, either a clean handler or an error handler.
 Instances of this type are associated to a location by calling one of the functions:
 @cfunc{cce_register_clean_handler}, @cfunc{cce_register_error_handler}.  Handlers are invoked by
-calling one of the functions: @cfunc{cce_run_clean_handlers}, @cfunc{cce_run_error_handlers}.
+calling one of the functions: @cfunc{cce_run_clean_handlers}, @cfunc{cce_run_catch_handlers}.
 Before terminating the use of a @objtype{cce_location_t} instance we must always call the handlers.
 
 The structure has the following public fields:
@@ -835,7 +835,8 @@ from the context of @var{L}, so it can be finalised and its memory released.
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers (cce_destination_t @var{L})
+@deftypefun void cce_run_catch_handlers (cce_destination_t @var{L})
+@deftypefunx void cce_run_error_handlers (cce_destination_t @var{L})
 Run all the clean and error handlers associated to the location @var{L}.  Each handler must return
 to its caller, taking care of itself regarding internal error handling and asynchronous resources
 allocation.  Handlers are called starting from the last registered one.
@@ -851,11 +852,12 @@ should always be called @strong{before} applying @cfunc{cce_condition_delete} to
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers_final (cce_destination_t @var{L})
+@deftypefun void cce_run_catch_handlers_final (cce_destination_t @var{L})
+@deftypefunx void cce_run_error_handlers_final (cce_destination_t @var{L})
 Equivalent to calling:
 
 @example
-cce_run_error_handlers(L);
+cce_run_catch_handlers(L);
 cce_condition_delete(cce_condition(L));
 @end example
 @end deftypefun
@@ -871,11 +873,12 @@ cce_condition_delete(cce_condition(L));
 @end deftypefun
 
 
-@deftypefun void cce_run_error_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
+@deftypefun void cce_run_catch_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
+@deftypefunx void cce_run_error_handlers_raise (cce_destination_t @var{L}, cce_location_t * @var{upper_L})
 Equivalent to calling:
 
 @example
-cce_run_error_handlers(L);
+cce_run_catch_handlers(L);
 cce_raise(upper_L, cce_condition(L));
 @end example
 @end deftypefun
@@ -911,7 +914,7 @@ if (cce_location(outer_L)) @{
 
   if (cce_location(inner_L)) @}
     /* inner exception handler */
-    cce_run_error_handlers_final(inner_L);
+    cce_run_catch_handlers_final(inner_L);
   @} else @{
     /* inner body */
     cce_run_clean_handlers(inner_L);
@@ -953,7 +956,7 @@ if (cce_location(outer_L)) @{
 
   if (cce_location(inner_L)) @}
     /* inner exception handler */
-    cce_run_error_handlers_final(inner_L);
+    cce_run_catch_handlers_final(inner_L);
   @} else @{
     cce_register_clean_handler_to_run_clean_handlers
        (inner_L, inner_H, outer_L);
@@ -971,7 +974,7 @@ if (cce_location(outer_L)) @{
 @subsection Using a clean handler to run error handlers
 
 
-@deftypefun void cce_register_clean_handler_to_run_error_handlers (cce_destination_t @var{inner_L}, cce_clean_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+@deftypefun void cce_register_clean_handler_to_run_catch_handlers (cce_destination_t @var{inner_L}, cce_clean_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
 Register the clean handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
 will run the error handlers registered for the location @var{outer_L}.  The exceptional--condition
 object associated to @var{outer_L} will be deleted by the handler.
@@ -990,9 +993,9 @@ if (cce_location(outer_L)) @{
 
   if (cce_location(inner_L)) @}
     /* inner exception handler */
-    cce_run_error_handlers_final(inner_L);
+    cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_clean_handler_to_run_error_handlers
+    cce_register_clean_handler_to_run_catch_handlers
        (inner_L, inner_H, outer_L);
     /* inner body */
     cce_run_clean_handlers(inner_L);
@@ -1027,7 +1030,7 @@ if (cce_location(outer_L)) @{
 
   if (cce_location(inner_L)) @}
     /* inner exception handler */
-    cce_run_error_handlers_final(inner_L);
+    cce_run_catch_handlers_final(inner_L);
   @} else @{
     cce_register_error_handler_to_run_clean_handlers
        (inner_L, inner_H, outer_L);
@@ -1045,7 +1048,7 @@ if (cce_location(outer_L)) @{
 @subsection Using an error handler to run error handlers
 
 
-@deftypefun void cce_register_error_handler_to_run_error_handlers (cce_destination_t @var{inner_L}, cce_error_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+@deftypefun void cce_register_error_handler_to_run_catch_handlers (cce_destination_t @var{inner_L}, cce_error_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
 Register the error handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
 will run the error handlers registered for the location @var{outer_L}.  The exceptional--condition
 object associated to @var{outer_L} will be deleted by the handler.
@@ -1064,9 +1067,9 @@ if (cce_location(outer_L)) @{
 
   if (cce_location(inner_L)) @}
     /* inner exception handler */
-    cce_run_error_handlers_final(inner_L);
+    cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_error_handler_to_run_error_handlers
+    cce_register_error_handler_to_run_catch_handlers
        (inner_L, inner_H, outer_L);
     /* inner body */
     cce_run_clean_handlers(inner_L);
@@ -1161,7 +1164,7 @@ func (void)
   cce_register_error_handler(L, &H1);
   cce_register_error_handler(L, &H2);
   cce_register_error_handler(L, &H3);
-  cce_run_error_handlers(L);
+  cce_run_catch_handlers(L);
 @}
 @end example
 
@@ -1189,7 +1192,7 @@ func (void)
   cce_handler_t   P_H;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   @} else @{
     void *  P;
 
@@ -1244,7 +1247,7 @@ constructor (cce_destination_t upper_L)
   cce_handler_t   P_H;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     void *  P;
 
@@ -1273,7 +1276,7 @@ void caller (void)
   cce_handler_t     P_H;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   @} else @{
     void *  P;
 
@@ -1347,7 +1350,7 @@ if (cce_location(L)) @{
     @{
       // default reaction to any exception
     @}
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   // do something useful
   cce_run_clean_handlers(L);
@@ -1370,7 +1373,7 @@ upper_function (void)
   if (cce_location(L)) @{
     fprintf(stderr, "log: %s\n", \
         cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   @} else @{
     lower_function(L);
     cce_run_clean_handlers(L);
@@ -1383,7 +1386,7 @@ lower_function (cce_location_t * upper_L)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     do_something();
     if (an_error_occurred()) @{
@@ -3110,7 +3113,7 @@ cce_location_t  L[1];
 cce_handler_t   P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   void *        P = cce_sys_malloc(L, 4096);
   cce_clean_handler_malloc_init(L, P_H, P);
@@ -3152,7 +3155,7 @@ cce_location_t          L[1];
 cce_clean_handler_t     P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   void *  P = cce_sys_malloc_guarded(L, P_H, 1024);
 
@@ -3169,7 +3172,7 @@ cce_location_t          L[1];
 cce_error_handler_t     P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   void *  P = cce_sys_malloc_guarded(L, P_H, 1024);
 
@@ -3286,8 +3289,8 @@ errors.  The affected functions and macros are:
 @example
 cce_location
 cce_raise
-cce_run_error_handlers_raise
-cce_run_error_handlers_final
+cce_run_catch_handlers_raise
+cce_run_catch_handlers_final
 cce_run_clean_handlers_raise
 cce_run_clean_handlers_final
 @end example
@@ -3309,7 +3312,7 @@ test_tracing_sub_sub_sub (cce_destination_t upper_L)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     cce_raise(L, cce_condition_new_unknown());
     cce_run_clean_handlers(L);
@@ -3322,7 +3325,7 @@ test_tracing_sub_sub (cce_destination_t upper_L)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     test_tracing_sub_sub_sub(L);
     cce_run_clean_handlers(L);
@@ -3335,7 +3338,7 @@ test_tracing_sub (cce_destination_t upper_L)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     test_tracing_sub_sub(L);
     cce_run_clean_handlers(L);
@@ -3348,7 +3351,7 @@ test_tracing (void)
   cce_location_t        L[1];
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   @} else @{
     test_tracing_sub(L);
     cce_run_clean_handlers(L);

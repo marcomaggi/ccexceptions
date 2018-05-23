@@ -47,7 +47,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       {
 	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-	cce_run_error_handlers(L);
+	cce_run_catch_handlers(L);
 	cce_condition_delete(C);
       }
       flag = false;
@@ -69,7 +69,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       {
 	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-	cce_run_error_handlers(L);
+	cce_run_catch_handlers(L);
 	cce_condition_delete(C);
       }
       flag = false;
@@ -91,7 +91,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       {
 	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-	cce_run_error_handlers(L);
+	cce_run_catch_handlers(L);
 	cce_condition_delete(C);
       }
       flag = false;
@@ -113,7 +113,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       {
 	cce_condition_t *	C = cce_condition(L);
 	fprintf(stderr, "log: %s\n", cce_condition_static_message(C));
-	cce_run_error_handlers(L);
+	cce_run_catch_handlers(L);
 	cce_condition_delete(C);
       }
       flag = false;

@@ -124,7 +124,7 @@ cce_run_clean_handlers (cce_location_t * L)
 
 __attribute__((hot))
 void
-cce_run_error_handlers (cce_location_t * L)
+cce_run_catch_handlers (cce_location_t * L)
 /* Traverse the  linked list  of registered handlers  and run  the error
    ones.   This  is a  destructive  function:  once  the list  has  been
    traversed, it is not valid anymore.
@@ -136,6 +136,12 @@ cce_run_error_handlers (cce_location_t * L)
     next = H->next_handler;
     H->function(L->condition, H);
   }
+}
+
+void
+cce_run_error_handlers (cce_location_t * L)
+{
+  cce_run_catch_handlers(L);
 }
 
 
@@ -153,9 +159,9 @@ run_clean_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_
 
 __attribute__((__nonnull__(1,2)))
 static void
-run_error_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
+run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
 {
-  cce_run_error_handlers(inner_H->location);
+  cce_run_catch_handlers(inner_H->location);
   cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
 }
 
@@ -170,9 +176,9 @@ cce_register_clean_handler_to_run_clean_handlers (cce_destination_t inner_L, cce
 }
 
 void
-cce_register_clean_handler_to_run_error_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
+cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_error_handlers;
+  inner_H->handler.function	= run_catch_handlers;
   inner_H->handler.pointer	= outer_L;
   cce_register_handler(inner_L, inner_H);
 }
@@ -188,9 +194,9 @@ cce_register_error_handler_to_run_clean_handlers (cce_destination_t inner_L, cce
 }
 
 void
-cce_register_error_handler_to_run_error_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
+cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_error_handlers;
+  inner_H->handler.function	= run_catch_handlers;
   inner_H->handler.pointer	= outer_L;
   cce_register_handler(inner_L, inner_H);
 }

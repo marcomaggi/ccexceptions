@@ -317,7 +317,7 @@ test_it (cce_condition_t const * C, const int expected_flag)
     } else {
       flag = 0;
     }
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     cce_raise(L, C);
     cce_run_clean_handlers(L);
@@ -335,7 +335,7 @@ main (void)
   cce_descriptor_set_root_parent(&descriptor_alpha.descriptor);
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     test_it(condition_new_alpha(L, 1), 1);
     test_it(condition_new_beta(L, 1, 2), 2);

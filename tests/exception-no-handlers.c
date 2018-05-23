@@ -42,7 +42,7 @@ main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
 
     if (cce_location(L)) { // the error handler
       flag = false;
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
     } else { // the body
       cce_raise(L, NULL);
       flag = true;
@@ -59,7 +59,7 @@ main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
     switch (cce_location(L)) {
     case CCE_ERROR:
       flag = false;
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
       break;
 
     default:

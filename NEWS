@@ -12,6 +12,9 @@ Notes for revision 0.8.0-devel.1
 
 * Added macro "cce_registe_handler()".
 
+* Added  "run_catch_handlers" aliases  for all  the "run_error_handlers"
+  macros and functions.  The "catch" variants are preferred.
+
 
 Notes for revision 0.8.0-devel.0
 --------------------------------

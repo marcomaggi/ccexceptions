@@ -78,7 +78,7 @@ test_just_run_clean_handlers()
 
 
 static void
-test_just_run_error_handlers (void)
+test_just_run_catch_handlers (void)
 /* Just run clean handlers. */
 {
   cce_location_t	L[1];
@@ -93,7 +93,7 @@ test_just_run_error_handlers (void)
   cce_register_error_handler(L, &H1);
   cce_register_error_handler(L, &H2);
   cce_register_error_handler(L, &H3);
-  cce_run_error_handlers(L);
+  cce_run_catch_handlers(L);
 
   assert(true == flag1);
   assert(true == flag2);
@@ -128,7 +128,7 @@ test_allocating_memory_success_execution (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     break;
 
   default:
@@ -172,7 +172,7 @@ test_allocating_memory_exceptional_execution (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     break;
 
   default:
@@ -208,7 +208,7 @@ test_csse_constructor (cce_location_t * upper_L)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_raise(upper_L, NULL);
     break;
 
@@ -258,7 +258,7 @@ test_csse_caller (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     break;
 
   default:
@@ -295,7 +295,7 @@ test_csee_constructor (cce_location_t * upper_L)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     cce_raise(upper_L, NULL);
     break;
 
@@ -347,7 +347,7 @@ test_constructor_scheme_exceptional_execution (void)
 
   switch (cce_location(L)) {
   case CCE_ERROR:
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
     flag = true;
     break;
 
@@ -378,7 +378,7 @@ test_handler_removal_1_0 (void)
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     H1.function = handler_removal_function;
     H2.function = handler_removal_function;
@@ -406,7 +406,7 @@ test_handler_removal_1_1 (void)
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     H1.function = handler_removal_function;
     H2.function = handler_removal_function;
@@ -435,7 +435,7 @@ test_handler_removal_1_2 (void)
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     H1.function = handler_removal_function;
     H2.function = handler_removal_function;
@@ -464,7 +464,7 @@ test_handler_removal_1_3 (void)
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
   } else {
     H1.function = handler_removal_function;
     H2.function = handler_removal_function;
@@ -489,7 +489,7 @@ int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   test_just_run_clean_handlers();
-  test_just_run_error_handlers();
+  test_just_run_catch_handlers();
   test_allocating_memory_success_execution();
   test_allocating_memory_exceptional_execution();
   test_constructor_scheme_success_execution();

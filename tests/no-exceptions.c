@@ -40,7 +40,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 
   if (cce_location(L)) {
     flag = false;
-    cce_run_error_handlers(L);
+    cce_run_catch_handlers(L);
   } else {
     flag = true;
     cce_run_clean_handlers(L);

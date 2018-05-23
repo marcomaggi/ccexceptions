@@ -67,7 +67,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 
     switch (cce_location(L)) {
     case CCE_ERROR:
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
       break;
 
     default:
@@ -89,7 +89,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 
     switch (cce_location(L)) {
     case CCE_ERROR:
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
       break;
 
     default:

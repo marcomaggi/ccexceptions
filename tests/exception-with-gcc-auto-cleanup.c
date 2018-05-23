@@ -61,7 +61,7 @@ test_no_exception (void)
     case CCE_ERROR:
       flag1 = false;
       flag2 = false;
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
       break;
 
     default:
@@ -106,7 +106,7 @@ test_with_error (void)
     case CCE_ERROR:
       flag1 = false;
       flag2 = false;
-      cce_run_error_handlers(L);
+      cce_run_catch_handlers(L);
       break;
 
     default:
