@@ -150,7 +150,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * version::                     Version functions.
 * setjmp::                      Brief introduction to non-local exits.
 * locations::                   The locations @api{}.
-* handlers::                    The handlers @api{}.
+* handlers::                    The location handlers @api{}.
 * conditions::                  Exceptional condition descriptors.
 * system::                      System call adapters.
 * tracing::                     Printing execution traces.
@@ -638,35 +638,61 @@ inner (cce_location_t * there)
 
 @c page
 @node handlers
-@chapter The handlers @api{}
+@chapter The location handlers @api{}
+
+
+Location handlers allow us to execute callback functions whenever we exit a location context, either
+by normal execution or by raising an exception.  Normal--execution handlers are run by calling the
+function @cfunc{cce_run_clean_handlers}; exception--reaction handlers are run by calling the
+function @cfunc{cce_run_error_handlers}, but we should use the more useful functions
+@cfunc{cce_run_error_handlers_final} and @cfunc{cce_run_error_handlers_raise}.
+
+The basic code template is the following:
+
+@example
+cce_location_t  L[1];
+
+if (cce_location(L)) @{
+  /* location handler */
+  cce_run_error_handlers_final(L);
+@} else @{
+  /* location body */
+  cce_run_clean_handlers(L);
+@}
+@end example
+
+@value{PACKAGE} defines @dfn{clean handlers}, which are run as both normal--execution and
+exception-reaction handlers; it also defines @dfn{error handlers}, which are run only as
+exception-reaction handlers.
+
+@menu
+* handlers typedefs::           Handlers type definitions.
+* handlers registering::        Registering location handlers.
+* handlers running::            Running location handlers.
+* handlers handlers::           Running handlers from handlers.
+* handlers examples::           Examples of location handlers usage.
+@end menu
+
+@c page
+@node handlers typedefs
+@section Handlers type definitions
 
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftp {Struct Typedef} cce_handler_t
-Structure type representing a clean or error handler.  Instances of this type are associated to a
-location by calling one of the functions @cfunc{cce_register_*_handler}.  Handlers are invoked by
-calling one of the functions @cfunc{cce_run_*_handlers}; before terminating the use of a
-@objtype{cce_location_t} instance we must always call the handlers.
-
-We are meant to wrap instances of this type into an enclosing struct definition as follows:
-
-@example
-struct resource_handler_t @{
-  cce_handler_t 	handler;
-  void *		resourcep;
-@};
-@end example
-
-@noindent
-in which the instance of @code{cce_handler_t} is the first field.
+Structure type representing an exception handler, either a clean handler or an error handler.
+Instances of this type are associated to a location by calling one of the functions:
+@cfunc{cce_register_clean_handler}, @cfunc{cce_register_error_handler}.  Handlers are invoked by
+calling one of the functions: @cfunc{cce_run_clean_handlers}, @cfunc{cce_run_error_handlers}.
+Before terminating the use of a @objtype{cce_location_t} instance we must always call the handlers.
 
 The structure has the following public fields:
 
 @table @code
 @item cce_handler_fun_t * function
-Pointer to the function implementing the handler.
+Pointer to the callback function implementing the exception handler.
 @end table
 
 @noindent
@@ -679,12 +705,28 @@ Pointer available to the client code.
 @item char * pathname
 Pointer available to the client code.
 
+@item cce_destination_t location
+Pointer available to the client code.
+
 @item int filedes
-An integer meant to be used for file descriptors.
+An integer meant to be used for @posix{} file descriptors.
 
 @item int pipedes[2]
-Integers meant to be used for pipe descriptors.
+Integers meant to be used for @posix{} pipe descriptors.
 @end table
+
+When needed, we are meant to wrap instances of this type into an enclosing struct definition as
+follows:
+
+@example
+struct resource_handler_t @{
+  cce_handler_t 	handler;
+  void *		resourcep;
+@};
+@end example
+
+@noindent
+in which the instance of @code{cce_handler_t} is the first field.
 @end deftp
 
 
@@ -699,7 +741,7 @@ The handler structure.
 
 
 @deftp {Struct Typedef} cce_error_handler_t
-Structure representing a error handler.  It has the following public fields:
+Structure representing an error handler.  It has the following public fields:
 
 @table @code
 @item cce_handler_t handler
@@ -709,9 +751,10 @@ The handler structure.
 
 
 @deftypefn {Function Typedef} void cce_handler_fun_t (cce_condition_t const * @var{C}, cce_handler_t * @var{H})
-Type of handler functions meant to release some asynchronous resource.  The argument @var{C}
-references the object representing the exceptional condition; the handler must leave it untouched,
-it must @strong{not} mutate or release it.  The argument @var{H} references the handler context.
+Type of exception handler functions meant to release some asynchronous resource.  The argument
+@var{C} references a structure representing the raised exceptional--condition object; the handler
+must leave it untouched, it must @strong{not} mutate or release it.  The argument @var{H} references
+the handler context.
 
 If an error occurs: the handler function must take care of itself and return to the caller, it must
 @strong{not} raise an exceptional condition and jump to a remote location.
@@ -719,6 +762,13 @@ If an error occurs: the handler function must take care of itself and return to 
 If the structure referenced by @var{H} is dynamically allocated: the handler function is responsible
 to release its memory.
 @end deftypefn
+
+@c page
+@node handlers registering
+@section Registering location handlers
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
@@ -746,10 +796,32 @@ successful execution path.
 @end deftypefun
 
 
+@deftypefn {Preprocessor Macro} void cce_register_handler (cce_destination_t @var{L}, cce_clean_handler_t * @var{H})
+@deftypefnx {Preprocessor Macro} void cce_register_handler (cce_destination_t @var{L}, cce_error_handler_t * @var{H})
+Generic macro which using @code{_Generic} to dispatch its expansion depending on the type of the
+argument @var{H}.  If the type of structure referenced by @var{H} is:
+
+@table @objtype
+@item cce_clean_handler_t
+The macro expands into a call to @cfunc{cce_register_clean_handler}.
+
+@item cce_error_handler_t
+The macro expands into a call to @cfunc{cce_register_error_handler}.
+@end table
+@end deftypefn
+
+
 @deftypefun void cce_forget_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
 Remove the handler @var{H} from the context of the location @var{L}.  If @var{H} is not registered
 in @var{L}: nothing happens.
 @end deftypefun
+
+@c page
+@node handlers running
+@section Running location handlers
+
+
+All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
 @deftypefun void cce_run_clean_handlers (cce_destination_t @var{L})
@@ -772,9 +844,10 @@ This is a destructive function: once the list has been traversed, it is not vali
 handler function is applied to the handler structure: the handler structure is completely detached
 from the context of @var{L}, so it can be finalised and its memory released.
 
-@strong{NOTE} It must assume that an error handler might access the exceptional--condition object
-associated to @var{L}, so this function should always be called @strong{before} applying
-@cfunc{cce_condition_delete} to the return value of @cfunc{cce_condition}.
+@strong{NOTE} This function must assume that an error handler might access the
+exceptional--condition object associated to @var{L} upon raising the exception, so this function
+should always be called @strong{before} applying @cfunc{cce_condition_delete} to the return value of
+@code{cce_condition(@var{L})}.
 @end deftypefun
 
 
@@ -817,20 +890,231 @@ cce_raise(upper_L, cce_condition(L));
 @end example
 @end deftypefun
 
+@c page
+@node handlers handlers
+@section Running handlers from handlers
+
+
+It is sometimes useful to execute complex code in an exception--handler code block; for example we
+may need to map a set of exceptional--condition objects into another set.  Whenever an
+exception--handler code block needs to handle exceptions itself, we must register the outer handlers
+as inner handlers; @value{PACKAGE} offers functions to do this with ease.
+
+The basic code template is this:
+
+@example
+cce_location_t  outer_L[1];
+
+if (cce_location(outer_L)) @{
+  /* outer exception handler */
+  cce_location_t  inner_L[1];
+
+  if (cce_location(inner_L)) @}
+    /* inner exception handler */
+    cce_run_error_handlers_final(inner_L);
+  @} else @{
+    /* inner body */
+    cce_run_clean_handlers(inner_L);
+  @}
+@} else @{
+  /* outer body */
+  cce_run_clean_handlers(outer_L);
+@}
+@end example
+
+@menu
+* handlers handlers cc::        Using a clean handler to run clean handlers.
+* handlers handlers ce::        Using a clean handler to run error handlers.
+* handlers handlers ec::        Using an error handler to run clean handlers.
+* handlers handlers ee::        Using an error handler to run error handlers.
+@end menu
+
+@c page
+@node handlers handlers cc
+@subsection Using a clean handler to run clean handlers
+
+
+@deftypefun void cce_register_clean_handler_to_run_clean_handlers (cce_destination_t @var{inner_L}, cce_clean_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+Register the clean handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
+will run the clean handlers registered for the location @var{outer_L}.  The exceptional--condition
+object associated to @var{outer_L} will be deleted by the handler.
+@end deftypefun
+
+
+We can use this function as follows:
+
+@example
+cce_location_t  outer_L[1];
+
+if (cce_location(outer_L)) @{
+  /* outer exception handler */
+  cce_location_t       inner_L[1];
+  cce_clean_handler_t  inner_H[1];
+
+  if (cce_location(inner_L)) @}
+    /* inner exception handler */
+    cce_run_error_handlers_final(inner_L);
+  @} else @{
+    cce_register_clean_handler_to_run_clean_handlers
+       (inner_L, inner_H, outer_L);
+    /* inner body */
+    cce_run_clean_handlers(inner_L);
+  @}
+@} else @{
+  /* outer body */
+  cce_run_clean_handlers(outer_L);
+@}
+@end example
+
+@c page
+@node handlers handlers ce
+@subsection Using a clean handler to run error handlers
+
+
+@deftypefun void cce_register_clean_handler_to_run_error_handlers (cce_destination_t @var{inner_L}, cce_clean_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+Register the clean handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
+will run the error handlers registered for the location @var{outer_L}.  The exceptional--condition
+object associated to @var{outer_L} will be deleted by the handler.
+@end deftypefun
+
+
+We can use this function as follows:
+
+@example
+cce_location_t  outer_L[1];
+
+if (cce_location(outer_L)) @{
+  /* outer exception handler */
+  cce_location_t       inner_L[1];
+  cce_clean_handler_t  inner_H[1];
+
+  if (cce_location(inner_L)) @}
+    /* inner exception handler */
+    cce_run_error_handlers_final(inner_L);
+  @} else @{
+    cce_register_clean_handler_to_run_error_handlers
+       (inner_L, inner_H, outer_L);
+    /* inner body */
+    cce_run_clean_handlers(inner_L);
+  @}
+@} else @{
+  /* outer body */
+  cce_run_clean_handlers(outer_L);
+@}
+@end example
+
+@c page
+@node handlers handlers ec
+@subsection Using an error handler to run clean handlers
+
+
+@deftypefun void cce_register_error_handler_to_run_clean_handlers (cce_destination_t @var{inner_L}, cce_error_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+Register the error handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
+will run the clean handlers registered for the location @var{outer_L}.  The exceptional--condition
+object associated to @var{outer_L} will be deleted by the handler.
+@end deftypefun
+
+
+We can use this function as follows:
+
+@example
+cce_location_t  outer_L[1];
+
+if (cce_location(outer_L)) @{
+  /* outer exception handler */
+  cce_location_t       inner_L[1];
+  cce_error_handler_t  inner_H[1];
+
+  if (cce_location(inner_L)) @}
+    /* inner exception handler */
+    cce_run_error_handlers_final(inner_L);
+  @} else @{
+    cce_register_error_handler_to_run_clean_handlers
+       (inner_L, inner_H, outer_L);
+    /* inner body */
+    cce_run_clean_handlers(inner_L);
+  @}
+@} else @{
+  /* outer body */
+  cce_run_clean_handlers(outer_L);
+@}
+@end example
+
+@c page
+@node handlers handlers ee
+@subsection Using an error handler to run error handlers
+
+
+@deftypefun void cce_register_error_handler_to_run_error_handlers (cce_destination_t @var{inner_L}, cce_error_handler_t * @var{inner_H}, cce_destination_t @var{outer_L})
+Register the error handler @var{inner_H}, in the context of the location @var{inner_L}, so that it
+will run the error handlers registered for the location @var{outer_L}.  The exceptional--condition
+object associated to @var{outer_L} will be deleted by the handler.
+@end deftypefun
+
+
+We can use this function as follows:
+
+@example
+cce_location_t  outer_L[1];
+
+if (cce_location(outer_L)) @{
+  /* outer exception handler */
+  cce_location_t       inner_L[1];
+  cce_error_handler_t  inner_H[1];
+
+  if (cce_location(inner_L)) @}
+    /* inner exception handler */
+    cce_run_error_handlers_final(inner_L);
+  @} else @{
+    cce_register_error_handler_to_run_error_handlers
+       (inner_L, inner_H, outer_L);
+    /* inner body */
+    cce_run_clean_handlers(inner_L);
+  @}
+@} else @{
+  /* outer body */
+  cce_run_clean_handlers(outer_L);
+@}
+@end example
+
+@c page
+@node handlers examples
+@section Examples of location handlers usage
+
+@menu
+* handlers examples mech::      Examples of basic mechanisms.
+* handlers examples clean::     Example of asynchronous resource handling
+                                using a clean handler.
+* handlers examples error::     Example of asynchronous resource handling
+                                using an error handler.
+@end menu
+
+@c page
+@node handlers examples mech
+@subsection Examples of basic mechanisms
+
 
 We could define and call a list of clean handlers as follows:
 
 @example
-void handler1 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler1 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_cleanup();
 @}
-void handler2 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler2 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_cleanup();
 @}
-void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler3 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_cleanup();
 @}
 
+void
+func (void)
 @{
   cce_location_t L[1];
   cce_handler_t  H1 = @{ .function = handler1 @};
@@ -849,16 +1133,24 @@ void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
 and we could define and call a list of error handlers as follows:
 
 @example
-void handler1 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler1 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_error_handling();
 @}
-void handler2 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler2 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_error_handling();
 @}
-void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
+void
+handler3 (cce_condition_t const * C, cce_handler_t * H)
+@{
   do_some_error_handling();
 @}
 
+void
+func (void)
 @{
   cce_location_t L[1];
   cce_handler_t  H1 = @{ .function = handler1 @};
@@ -873,40 +1165,42 @@ void handler3 (cce_condition_t const * C, cce_handler_t * H) @{
 @}
 @end example
 
+@c page
+@node handlers examples clean
+@subsection Example of asynchronous resource handling using a clean handler
+
+
 Let's say we need to allocate memory with @cfunc{malloc}, and to release it with @cfunc{free}
 whenever the dynamic extent of the local function terminates; we can use built--in functions for
-this, @ref{system memory}.  To show the mechanism, in the following example: we implement a handler
-explicitly.
+this, @ref{system memory} for details.  To show the mechanism, in the following example: we
+implement a handler explicitly.
 
 @example
-typedef struct handler_t @{
-  cce_handler_t handler;
-  void *        pointer;
-@} handler_t;
-
-static void
-P_handler (cce_condition_t const * C, cce_handler_t * _H)
+void
+P_handler (cce_condition_t const * C, cce_handler_t * H)
 @{
-  handler_t * H = (handler_t *)_H;
   free(H->pointer);
 @}
 
+void
+func (void)
 @{
-  cce_location_t        L[1];
-  handler_t             H;
-  void *                P;
-
-  H.handler.function = P_handler;
+  cce_location_t  L[1];
+  cce_handler_t   P_H;
 
   if (cce_location(L)) @{
     cce_run_error_handlers_final(L);
   @} else @{
+    void *  P;
+
     errno = 0;
     P = malloc(4096);
     if (P) @{
-      cce_register_clean_handler(L, &H.handler);
+      P_H.function = P_handler;
+      P_H.pointer  = P;
+      cce_register_clean_handler(L, &P_H);
     @} else @{
-      cce_raise(L, cce_condition_new_errno(errno));
+      cce_raise(L, cce_condition_new_errno_clear(errno));
     @}
     do_something(L, P);
     cce_run_clean_handlers(L);
@@ -918,45 +1212,56 @@ P_handler (cce_condition_t const * C, cce_handler_t * _H)
 whether @cfunc{do_something} raises an exception or not: the clean handler is invoked and the memory
 is released.
 
-Let's say we are writing a constructor and we need to allocate memory, do something and, if
-successful, return the memory to the caller; to better show the mechanism: we do not use the field
-@code{pointer} of @objtype{cce_handler_t}; we can organise the code as follows, using an error
-handler in the constructor and a clean handler in the caller:
+@c page
+@node handlers examples error
+@subsection Example of asynchronous resource handling using an error handler
+
+
+Let's say we are writing a constructor function and we need to allocate memory, do something and:
+
+@itemize
+@item
+If successful: return the memory to the caller.
+
+@item
+If an error occurs: release the memory locally.
+@end itemize
+
+We can organise the code as follows, using an error handler in the constructor and a clean handler
+in the caller:
 
 @example
-typedef struct handler_t @{
-  cce_handler_t handler;
-  void *        pointer;
-@} handler_t;
-
-static void
-P_handler (cce_condition_t const * C, cce_handler_t * _H)
+void
+P_handler (cce_condition_t const * C, cce_handler_t * H)
 @{
-  handler_t * H = (handler_t *)_H;
   free(H->pointer);
 @}
 
 void *
-constructor (cce_location_t * there)
+constructor (cce_destination_t upper_L)
 @{
-  cce_location_t    L;
-  handler_t         H;
-  void *            P;
-
-  H.handler.function = P_handler;
+  cce_location_t  L;
+  cce_handler_t   P_H;
 
   if (cce_location(L)) @{
-    cce_run_error_handlers_raise(L, there);
+    cce_run_error_handlers_raise(L, upper_L);
   @} else @{
+    void *  P;
+
     errno = 0;
     P = malloc(4096);
     if (P) @{
-      H.pointer = P;
-      cce_register_error_handler(L, &H.handler);
+      P_H.function = P_handler;
+      P_H.pointer  = P;
+      cce_register_error_handler(L, &P_H);
     @} else @{
-      cce_raise(L, cce_condition_new_errno(errno));
+      cce_raise(L, cce_condition_new_errno_clear(errno));
     @}
-    do_some_initialisation_in(P);
+
+    /* If this function raises an exception: the error
+       handler releases the memory. */
+    do_some_initialisation(L, P);
+
     cce_run_clean_handlers(L);
   @}
   return P;
@@ -965,17 +1270,19 @@ constructor (cce_location_t * there)
 void caller (void)
 @{
   cce_location_t    L[1];
-  handler_t         H;
-  void *            P;
-
-  H.handler.function = P_handler;
+  cce_handler_t     P_H;
 
   if (cce_location(L)) @{
     cce_run_error_handlers_final(L);
   @} else @{
+    void *  P;
+
     P = constructor(L);
-    H.pointer = P;
-    cce_register_clean_handler(L, &H.handler);
+    @{
+      P_H.function = P_handler;
+      P_H.pointer  = P;
+      cce_register_clean_handler(L, &P_H);
+    @}
     do_something_with(P);
     cce_run_clean_handlers(L);
   @}

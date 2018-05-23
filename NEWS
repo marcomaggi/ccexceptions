@@ -1,5 +1,18 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.8.0-devel.1
+--------------------------------
+
+* Added handler registering functions:
+
+    cce_register_clean_handler_to_run_clean_handler
+    cce_register_clean_handler_to_run_error_handler
+    cce_register_error_handler_to_run_clean_handler
+    cce_register_error_handler_to_run_error_handler
+
+* Added macro "cce_registe_handler()".
+
+
 Notes for revision 0.8.0-devel.0
 --------------------------------
 

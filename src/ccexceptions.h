@@ -227,6 +227,7 @@ struct cce_handler_t {
   union {
     void *		pointer;
     char *		pathname;
+    cce_destination_t	location;
     int			filedes;
     int			pipedes[2];
   };
@@ -248,6 +249,11 @@ cce_decl void cce_register_error_handler (cce_destination_t L, cce_handler_t * H
 
 cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
+
+#define cce_register_handler(L,H)					\
+  _Generic((H),								\
+	   cce_clean_handler_t *: cce_register_clean_handler,		\
+	   cce_error_handler_t *: cce_register_error_handler)((L),&((H)->handler))
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    clean handlers might modify data in the current compilation unit. */
@@ -1169,6 +1175,27 @@ cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, cha
 #  define cce_run_clean_handlers_raise(L,upper_L)			\
   (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_clean_handlers_raise((L), (upper_L)))
 #endif
+
+
+/** --------------------------------------------------------------------
+ ** Registering handlers to run handlers.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_register_clean_handler_to_run_clean_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
+								cce_destination_t outer_L)
+  __attribute__((__nonnull__(1,2,3)));
+
+cce_decl void cce_register_clean_handler_to_run_error_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
+								cce_destination_t outer_L)
+  __attribute__((__nonnull__(1,2,3)));
+
+cce_decl void cce_register_error_handler_to_run_clean_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
+								cce_destination_t outer_L)
+  __attribute__((__nonnull__(1,2,3)));
+
+cce_decl void cce_register_error_handler_to_run_error_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
+								cce_destination_t outer_L)
+  __attribute__((__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------

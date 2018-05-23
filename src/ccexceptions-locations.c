@@ -140,6 +140,63 @@ cce_run_error_handlers (cce_location_t * L)
 
 
 /** --------------------------------------------------------------------
+ ** Running handlers from a handler.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__nonnull__(1,2)))
+static void
+run_clean_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
+{
+  cce_run_clean_handlers(inner_H->location);
+  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+}
+
+__attribute__((__nonnull__(1,2)))
+static void
+run_error_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
+{
+  cce_run_error_handlers(inner_H->location);
+  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_register_clean_handler_to_run_clean_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
+{
+  inner_H->handler.function	= run_clean_handlers;
+  inner_H->handler.pointer	= outer_L;
+  cce_register_handler(inner_L, inner_H);
+}
+
+void
+cce_register_clean_handler_to_run_error_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
+{
+  inner_H->handler.function	= run_error_handlers;
+  inner_H->handler.pointer	= outer_L;
+  cce_register_handler(inner_L, inner_H);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_register_error_handler_to_run_clean_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
+{
+  inner_H->handler.function	= run_clean_handlers;
+  inner_H->handler.pointer	= outer_L;
+  cce_register_handler(inner_L, inner_H);
+}
+
+void
+cce_register_error_handler_to_run_error_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
+{
+  inner_H->handler.function	= run_error_handlers;
+  inner_H->handler.pointer	= outer_L;
+  cce_register_handler(inner_L, inner_H);
+}
+
+
+/** --------------------------------------------------------------------
  ** Tracing.
  ** ----------------------------------------------------------------- */
 

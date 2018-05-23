@@ -55,6 +55,7 @@ check_PROGRAMS	= \
 	tests/exception-with-error-handler		\
 	tests/exception-with-handlers			\
 	tests/handlers-routines				\
+	tests/handlers-as-handlers			\
 	tests/conditions-raising			\
 	tests/conditions-hierarchy			\
 	tests/conditions-example			\
@@ -83,6 +84,8 @@ TESTS				= $(check_PROGRAMS)
 
 ccexceptions_tests_cppflags	= -I$(srcdir)/src -I$(srcdir)/tests
 ccexceptions_tests_ldadd	= libccexceptions.la
+
+## --------------------------------------------------------------------
 
 tests_version_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_version_LDADD				= $(ccexceptions_tests_ldadd)
@@ -113,6 +116,9 @@ tests_exception_with_gcc_auto_cleanup_LDADD	= $(ccexceptions_tests_ldadd)
 
 tests_handlers_routines_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_handlers_routines_LDADD			= $(ccexceptions_tests_ldadd)
+
+tests_handlers_as_handlers_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_handlers_as_handlers_LDADD		= $(ccexceptions_tests_ldadd)
 
 tests_conditions_raising_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_conditions_raising_LDADD			= $(ccexceptions_tests_ldadd)
