@@ -67,7 +67,7 @@ test_no_exception (void)
     default:
       flag1 = true;
       flag2 = true;
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);
@@ -113,7 +113,7 @@ test_with_error (void)
       flag1 = true;
       flag2 = true;
       cce_raise(L, NULL);
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(false == flag1);
     assert(false == flag2);

@@ -58,7 +58,7 @@ test_retry_from_body (void)
       ++retry_flag;
       cce_retry(L);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   fprintf(stderr, "%s: body_flag=%d, retry_flag=%d, except_flag=%d\n", __func__,
 	  body_flag, retry_flag, except_flag);
@@ -89,7 +89,7 @@ test_retry_from_body_twice (void)
       ++reretry_flag;
       cce_retry(L);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   fprintf(stderr, "%s: body_flag=%d, retry_flag=%d, reretry_flag=%d, except_flag=%d\n", __func__,
 	  body_flag, retry_flag, reretry_flag, except_flag);
@@ -124,7 +124,7 @@ test_retry_from_handler (void)
     if (0 == retry_flag) {
       cce_raise(L, cce_condition_new_unknown());
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   fprintf(stderr, "%s: body_flag=%d, retry_flag=%d, except_flag=%d\n", __func__,
 	  body_flag, retry_flag, except_flag);
@@ -158,7 +158,7 @@ test_retry_from_handler_twice (void)
     if (2 > retry_flag) {
       cce_raise(L, cce_condition_new_unknown());
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   fprintf(stderr, "%s: body_flag=%d, retry_flag=%d, reretry_flag=%d, except_flag=%d\n", __func__,
 	  body_flag, retry_flag, reretry_flag, except_flag);

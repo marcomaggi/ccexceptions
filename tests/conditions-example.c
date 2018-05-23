@@ -320,7 +320,7 @@ test_it (cce_condition_t const * C, const int expected_flag)
     cce_run_catch_handlers_final(L);
   } else {
     cce_raise(L, C);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(expected_flag == flag);
 }
@@ -340,7 +340,7 @@ main (void)
     test_it(condition_new_alpha(L, 1), 1);
     test_it(condition_new_beta(L, 1, 2), 2);
     test_it(condition_new_gamma(L, 1, 2, 3), 3);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 
   exit(EXIT_SUCCESS);

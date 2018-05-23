@@ -3,7 +3,19 @@
 Notes for revision 0.8.0-devel.2
 --------------------------------
 
-*
+* BACKWARDS INCOMPATIBILITY Renamed functions:
+
+    cce_register_clean_handler_to_run_clean_handlers
+    cce_register_error_handler_to_run_clean_handlers
+
+  to:
+
+    cce_register_clean_handler_to_run_body_handlers
+    cce_register_error_handler_to_run_body_handlers
+
+* Added  "run_body_handlers" aliases  for  all the  "run_clean_handlers"
+  macros and functions.  The "body"  variants are preferred; the "clean"
+  variants are deprecated.
 
 
 Notes for revision 0.8.0-devel.1
@@ -11,15 +23,16 @@ Notes for revision 0.8.0-devel.1
 
 * Added handler registering functions:
 
-    cce_register_clean_handler_to_run_clean_handler
-    cce_register_clean_handler_to_run_error_handler
-    cce_register_error_handler_to_run_clean_handler
-    cce_register_error_handler_to_run_error_handler
+    cce_register_clean_handler_to_run_clean_handlers
+    cce_register_clean_handler_to_run_catch_handlers
+    cce_register_error_handler_to_run_clean_handlers
+    cce_register_error_handler_to_run_catch_handlers
 
 * Added macro "cce_registe_handler()".
 
 * Added  "run_catch_handlers" aliases  for all  the "run_error_handlers"
-  macros and functions.  The "catch" variants are preferred.
+  macros and functions.  The "catch" variants are preferred; the "error"
+  variants are deprecated.
 
 
 Notes for revision 0.8.0-devel.0

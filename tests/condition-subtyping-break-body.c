@@ -128,7 +128,7 @@ my_condition_new_break_subtype (cce_destination_t upper_L, int the_data)
     cce_condition_init((cce_condition_t *) C, &(my_descriptor_break_subtype_ptr->descriptor));
     my_condition_init_break_subtype(L, C, the_data);
 
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
     if (1) { fprintf(stderr, "%s: constructed %p\n", __func__, (void*)C); }
     return (cce_condition_t const *) C;
   }

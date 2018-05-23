@@ -42,7 +42,7 @@ test_1_1 (void)
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
@@ -125,7 +125,7 @@ test_3_1 (void)
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }
@@ -210,7 +210,7 @@ test_5_1 (void)
     assert(NULL != P);
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
     fprintf(stderr, "%s: all right, successful execution path\n", __func__);
   }
 }

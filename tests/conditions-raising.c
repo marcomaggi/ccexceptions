@@ -54,7 +54,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(0)));
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(0)) == cce_condition(L));
     assert(false == flag);
@@ -76,7 +76,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(EINVAL)));
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(EINVAL)) == cce_condition(L));
     assert(false == flag);
@@ -98,7 +98,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(INT_MAX)));
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(INT_MAX)) == cce_condition(L));
     assert(false == flag);
@@ -120,7 +120,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     } else {
       flag = true;
       cce_raise(L, cce_condition(cce_condition_new_errno(-1)));
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(cce_condition(cce_condition_new_errno(-1)) == cce_condition(L));
     assert(false == flag);

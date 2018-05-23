@@ -136,7 +136,7 @@ my_condition_new_error_2 (cce_destination_t upper_L, int the_data)
     cce_condition_init((cce_condition_t *) C, &(my_descriptor_error_2_ptr->descriptor));
     my_condition_init_error_2(L, C, the_data);
 
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
     if (1) { fprintf(stderr, "%s: constructed %p\n", __func__, (void*)C); }
     return (cce_condition_t const *) C;
   }

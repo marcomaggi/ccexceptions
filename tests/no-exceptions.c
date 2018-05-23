@@ -43,7 +43,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     cce_run_catch_handlers(L);
   } else {
     flag = true;
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(flag);
 

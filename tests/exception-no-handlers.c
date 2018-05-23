@@ -46,7 +46,7 @@ main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
     } else { // the body
       cce_raise(L, NULL);
       flag = true;
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(false == flag);
   }
@@ -65,7 +65,7 @@ main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
     default:
       cce_raise(L, NULL);
       flag = true;
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(false == flag);
   }

@@ -54,7 +54,7 @@ handler3 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
 
 
 static void
-test_just_run_clean_handlers()
+test_just_run_body_handlers()
 /* Just run clean handlers. */
 {
   cce_location_t	L[1];
@@ -69,7 +69,7 @@ test_just_run_clean_handlers()
   cce_register_clean_handler(L, &H1);
   cce_register_clean_handler(L, &H2);
   cce_register_clean_handler(L, &H3);
-  cce_run_clean_handlers(L);
+  cce_run_body_handlers(L);
 
   assert(true == flag1);
   assert(true == flag2);
@@ -139,7 +139,7 @@ test_allocating_memory_success_execution (void)
       cce_raise(L, NULL);
     }
     // do something here
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag);
 }
@@ -186,7 +186,7 @@ test_allocating_memory_exceptional_execution (void)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag);
 }
@@ -223,7 +223,7 @@ test_csse_constructor (cce_location_t * upper_L)
     if (0) {
       cce_raise(L, NULL);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   return P;
 }
@@ -266,7 +266,7 @@ test_csse_caller (void)
     assert(NULL != P);
     cce_register_clean_handler(L, &H.handler);
     // do_something_with(P);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag);
 }
@@ -310,7 +310,7 @@ test_csee_constructor (cce_location_t * upper_L)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   return P;
 }
@@ -356,7 +356,7 @@ test_constructor_scheme_exceptional_execution (void)
     assert(NULL != P);
     cce_register_clean_handler(L, &H.handler);
     // do_something_with(P);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag);
 }
@@ -389,7 +389,7 @@ test_handler_removal_1_0 (void)
     cce_register_clean_handler(L, &H1);
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 
   assert(true == flag1);
@@ -418,7 +418,7 @@ test_handler_removal_1_1 (void)
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H1);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 
   assert(false == flag1);
@@ -447,7 +447,7 @@ test_handler_removal_1_2 (void)
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H2);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 
   assert(true  == flag1);
@@ -476,7 +476,7 @@ test_handler_removal_1_3 (void)
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
     cce_forget_handler(L, &H3);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 
   assert(true  == flag1);
@@ -488,7 +488,7 @@ test_handler_removal_1_3 (void)
 int
 main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
-  test_just_run_clean_handlers();
+  test_just_run_body_handlers();
   test_just_run_catch_handlers();
   test_allocating_memory_success_execution();
   test_allocating_memory_exceptional_execution();

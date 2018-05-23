@@ -73,7 +73,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     default:
       cce_register_error_handler(L, H1.exception_handler);
       cce_register_error_handler(L, H2.exception_handler);
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(false == flag1);
     assert(false == flag2);
@@ -98,7 +98,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       if (1) {
 	cce_raise(L, NULL);
       }
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);

@@ -71,7 +71,7 @@ register_error_flag_handler (cce_destination_t L, cce_error_handler_t * H, bool 
  ** ----------------------------------------------------------------- */
 
 void
-test_run_clean_handlers_from_clean_handler__no_exception (void)
+test_run_body_handlers_from_clean_handler__no_exception (void)
 {
   cce_location_t	outer_L[1];
   cce_clean_handler_t	outer_clean_H[1];
@@ -91,10 +91,10 @@ test_run_clean_handlers_from_clean_handler__no_exception (void)
       cce_run_catch_handlers_final(inner_L);
       assert(false);
     } else {
-      cce_register_clean_handler_to_run_clean_handlers(inner_L, inner_H, outer_L);
+      cce_register_clean_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
-      cce_run_clean_handlers(inner_L);
+      cce_run_body_handlers(inner_L);
     }
   } else {
     register_clean_flag_handler(outer_L, outer_clean_H, &outer_clean_flag);
@@ -113,7 +113,7 @@ test_run_clean_handlers_from_clean_handler__no_exception (void)
 }
 
 void
-test_run_clean_handlers_from_clean_handler__exception_raised (void)
+test_run_body_handlers_from_clean_handler__exception_raised (void)
 {
   cce_location_t	outer_L[1];
   cce_clean_handler_t	outer_clean_H[1];
@@ -132,7 +132,7 @@ test_run_clean_handlers_from_clean_handler__exception_raised (void)
     if (cce_location(inner_L)) {
       cce_run_catch_handlers_final(inner_L);
     } else {
-      cce_register_clean_handler_to_run_clean_handlers(inner_L, inner_H, outer_L);
+      cce_register_clean_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
       cce_raise(inner_L, NULL);
@@ -184,7 +184,7 @@ test_run_catch_handlers_from_clean_handler__no_exception (void)
       cce_register_clean_handler_to_run_catch_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
-      cce_run_clean_handlers(inner_L);
+      cce_run_body_handlers(inner_L);
     }
   } else {
     register_clean_flag_handler(outer_L, outer_clean_H, &outer_clean_flag);
@@ -250,7 +250,7 @@ test_run_catch_handlers_from_clean_handler__exception_raised (void)
  ** ----------------------------------------------------------------- */
 
 void
-test_run_clean_handlers_from_error_handler__no_exception (void)
+test_run_body_handlers_from_error_handler__no_exception (void)
 {
   cce_location_t	outer_L[1];
   cce_clean_handler_t	outer_clean_H[1];
@@ -270,10 +270,10 @@ test_run_clean_handlers_from_error_handler__no_exception (void)
       cce_run_catch_handlers_final(inner_L);
       assert(false);
     } else {
-      cce_register_error_handler_to_run_clean_handlers(inner_L, inner_H, outer_L);
+      cce_register_error_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
-      cce_run_clean_handlers(inner_L);
+      cce_run_body_handlers(inner_L);
     }
   } else {
     register_clean_flag_handler(outer_L, outer_clean_H, &outer_clean_flag);
@@ -292,7 +292,7 @@ test_run_clean_handlers_from_error_handler__no_exception (void)
 }
 
 void
-test_run_clean_handlers_from_error_handler__exception_raised (void)
+test_run_body_handlers_from_error_handler__exception_raised (void)
 {
   cce_location_t	outer_L[1];
   cce_clean_handler_t	outer_clean_H[1];
@@ -311,7 +311,7 @@ test_run_clean_handlers_from_error_handler__exception_raised (void)
     if (cce_location(inner_L)) {
       cce_run_catch_handlers_final(inner_L);
     } else {
-      cce_register_error_handler_to_run_clean_handlers(inner_L, inner_H, outer_L);
+      cce_register_error_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
       cce_raise(inner_L, NULL);
@@ -363,7 +363,7 @@ test_run_catch_handlers_from_error_handler__no_exception (void)
       cce_register_error_handler_to_run_catch_handlers(inner_L, inner_H, outer_L);
       register_clean_flag_handler(inner_L, inner_clean_H, &inner_clean_flag);
       register_error_flag_handler(inner_L, inner_error_H, &inner_error_flag);
-      cce_run_clean_handlers(inner_L);
+      cce_run_body_handlers(inner_L);
     }
   } else {
     register_clean_flag_handler(outer_L, outer_clean_H, &outer_clean_flag);
@@ -429,14 +429,14 @@ test_run_catch_handlers_from_error_handler__exception_raised (void)
 int
 main (void)
 {
-  if (1) { test_run_clean_handlers_from_clean_handler__no_exception();     }
-  if (1) { test_run_clean_handlers_from_clean_handler__exception_raised(); }
+  if (1) { test_run_body_handlers_from_clean_handler__no_exception();     }
+  if (1) { test_run_body_handlers_from_clean_handler__exception_raised(); }
 
   if (1) { test_run_catch_handlers_from_clean_handler__no_exception(); }
   if (1) { test_run_catch_handlers_from_clean_handler__exception_raised(); }
 
-  if (1) { test_run_clean_handlers_from_error_handler__no_exception();     }
-  if (1) { test_run_clean_handlers_from_error_handler__exception_raised(); }
+  if (1) { test_run_body_handlers_from_error_handler__no_exception();     }
+  if (1) { test_run_body_handlers_from_error_handler__exception_raised(); }
 
   if (1) { test_run_catch_handlers_from_error_handler__no_exception();     }
   if (1) { test_run_catch_handlers_from_error_handler__exception_raised(); }

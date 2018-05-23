@@ -75,7 +75,7 @@ test_no_exception (void)
   default:
     cce_register_clean_handler(L, &H1.handler);
     cce_register_error_handler(L, &H2.handler);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true  == flag1);
   assert(false == flag2);
@@ -127,7 +127,7 @@ test_with_error (void)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag1);
   assert(true == flag2);
@@ -187,7 +187,7 @@ test_dynamically_allocated_handlers (void)
     if (1) {
       cce_raise(L, NULL);
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == flag1);
   assert(true == flag2);

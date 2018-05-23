@@ -54,7 +54,7 @@ test_invalid_argument (void)
     error_flag = true;
   } else {
     cce_check_argument(L, false, 1);
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
@@ -77,7 +77,7 @@ test_math_error (void)
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_error()));
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
@@ -95,7 +95,7 @@ test_math_nan (void)
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_nan()));
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
@@ -113,7 +113,7 @@ test_math_infinity (void)
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_infinity()));
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
@@ -131,7 +131,7 @@ test_math_overflow (void)
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_overflow()));
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
@@ -149,7 +149,7 @@ test_math_underflow (void)
     error_flag = true;
   } else {
     cce_raise(L, cce_condition(cce_condition_new_math_underflow()));
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   assert(true == error_flag);
 }
