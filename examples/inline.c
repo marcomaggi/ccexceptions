@@ -70,7 +70,7 @@ main (void)
 	exit(EXIT_FAILURE);
       }
 
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
       cce_raise(L, my_condition_new_error_2(L, 123));
       cce_run_clean_handlers(L);
