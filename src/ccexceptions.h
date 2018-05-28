@@ -241,10 +241,10 @@ struct cce_error_handler_t {
   cce_handler_t		handler;
 };
 
-cce_decl void cce_register_clean_handler (cce_destination_t L, cce_handler_t * H)
+cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_register_error_handler (cce_destination_t L, cce_handler_t * H)
+cce_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
@@ -253,7 +253,7 @@ cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 #define cce_register_handler(L,H)					\
   _Generic((H),								\
 	   cce_clean_handler_t *: cce_register_clean_handler,		\
-	   cce_error_handler_t *: cce_register_error_handler)((L),&((H)->handler))
+	   cce_error_handler_t *: cce_register_error_handler)((L),(H))
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    clean handlers might modify data in the current compilation unit. */
@@ -1273,16 +1273,16 @@ cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsiz
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
+cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
-cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_handler_t * H, void * pointer)
+cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_error_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
-#define cce_handler_malloc_init(L,P_H,P) \
-  _Generic((P_H),								\
+#define cce_handler_malloc_init(L,P_H,P)				\
+  _Generic((P_H),							\
 	   cce_clean_handler_t	*: cce_clean_handler_malloc_init,	\
-	   cce_error_handler_t	*: cce_error_handler_malloc_init)(L,&(P_H->handler),P)
+	   cce_error_handler_t	*: cce_error_handler_malloc_init)((L),(P_H),(P))
 
 /* ------------------------------------------------------------------ */
 
@@ -1292,10 +1292,10 @@ cce_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_hand
 cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define cce_sys_malloc_guarded(L,P_H,size) \
-  _Generic((P_H),								\
+#define cce_sys_malloc_guarded(L,P_H,size)				\
+  _Generic((P_H),							\
 	   cce_clean_handler_t	*: cce_sys_malloc_guarded_clean,	\
-	   cce_error_handler_t	*: cce_sys_malloc_guarded_error)(L,P_H,size)
+	   cce_error_handler_t	*: cce_sys_malloc_guarded_error)((L),(P_H),(size))
 
 /* ------------------------------------------------------------------ */
 
@@ -1305,10 +1305,10 @@ cce_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_han
 cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, void * P, size_t newsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define cce_sys_realloc_guarded(L,P_H,old_P,newsize) \
-  _Generic((P_H),								\
+#define cce_sys_realloc_guarded(L,P_H,old_P,newsize)			\
+  _Generic((P_H),							\
 	   cce_clean_handler_t	*: cce_sys_realloc_guarded_clean,	\
-	   cce_error_handler_t	*: cce_sys_realloc_guarded_error)(L,P_H,old_P,newsize)
+	   cce_error_handler_t	*: cce_sys_realloc_guarded_error)((L),(P_H),(old_P),(newsize))
 
 /* ------------------------------------------------------------------ */
 
@@ -1318,10 +1318,10 @@ cce_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_hand
 cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define cce_sys_calloc_guarded(L,P_H,count,eltsize) \
-  _Generic((P_H),								\
+#define cce_sys_calloc_guarded(L,P_H,count,eltsize)			\
+  _Generic((P_H),							\
 	   cce_clean_handler_t	*: cce_sys_calloc_guarded_clean,	\
-	   cce_error_handler_t	*: cce_sys_calloc_guarded_error)(L,P_H,count,eltsize)
+	   cce_error_handler_t	*: cce_sys_calloc_guarded_error)((L),(P_H),(count),(eltsize))
 
 
 /** --------------------------------------------------------------------

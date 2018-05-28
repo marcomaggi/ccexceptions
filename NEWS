@@ -1,5 +1,12 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.8.0-devel.3
+--------------------------------
+
+* BACKWARDS  INCOMPATIBILITY More  strict  types  in exception  handlers
+  functions.
+
+
 Notes for revision 0.8.0-devel.2
 --------------------------------
 

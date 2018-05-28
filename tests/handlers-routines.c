@@ -61,9 +61,9 @@ test_just_run_body_handlers()
   bool			flag1 = false;
   bool			flag2 = false;
   bool			flag3 = false;
-  cce_handler_t		H1 = { .function = handler1, .pointer = &flag1 };
-  cce_handler_t		H2 = { .function = handler2, .pointer = &flag2 };
-  cce_handler_t		H3 = { .function = handler3, .pointer = &flag3 };
+  cce_clean_handler_t	H1 = { .handler.function = handler1, .handler.pointer = &flag1 };
+  cce_clean_handler_t	H2 = { .handler.function = handler2, .handler.pointer = &flag2 };
+  cce_clean_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
   cce_register_clean_handler(L, &H1);
@@ -85,9 +85,9 @@ test_just_run_catch_handlers (void)
   bool			flag1 = false;
   bool			flag2 = false;
   bool			flag3 = false;
-  cce_handler_t		H1 = { .function = handler1, .pointer = &flag1 };
-  cce_handler_t		H2 = { .function = handler2, .pointer = &flag2 };
-  cce_handler_t		H3 = { .function = handler3, .pointer = &flag3 };
+  cce_error_handler_t	H1 = { .handler.function = handler1, .handler.pointer = &flag1 };
+  cce_error_handler_t	H2 = { .handler.function = handler2, .handler.pointer = &flag2 };
+  cce_error_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
   cce_register_error_handler(L, &H1);
@@ -102,14 +102,14 @@ test_just_run_catch_handlers (void)
 
 
 typedef struct test_amse_t {
-  cce_handler_t	handler;
-  bool *	flagp;
+  cce_clean_handler_t	handler;
+  bool *		flagp;
 } test_amse_t;
 static void
 test_amse_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_amse_t *	H = (test_amse_t *)_H;
-  void *	P = H->handler.pointer;
+  void *	P = H->handler.handler.pointer;
   free(P);
   *(H->flagp) = true;
 }
@@ -121,9 +121,9 @@ test_allocating_memory_success_execution (void)
   void *		P = NULL;
   bool			flag = false;
   test_amse_t		H = {
-    .handler.function	= test_amse_handler,
-    .handler.pointer	= P,
-    .flagp		= &flag
+    .handler.handler.function	= test_amse_handler,
+    .handler.handler.pointer	= P,
+    .flagp			= &flag
   };
 
   switch (cce_location(L)) {
@@ -146,14 +146,14 @@ test_allocating_memory_success_execution (void)
 
 
 typedef struct test_amee_t {
-  cce_handler_t	handler;
-  bool *	flagp;
+  cce_clean_handler_t	handler;
+  bool *		flagp;
 } test_amee_t;
 static void
 test_amee_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_amee_t *	H = (test_amee_t *)_H;
-  void *	P = H->handler.pointer;
+  void *	P = H->handler.handler.pointer;
   free(P);
   *(H->flagp) = true;
 }
@@ -165,9 +165,9 @@ test_allocating_memory_exceptional_execution (void)
   void *		P = NULL;
   bool			flag = false;
   test_amee_t		H = {
-    .handler.function	= test_amee_handler,
-    .handler.pointer	= P,
-    .flagp		= &flag
+    .handler.handler.function	= test_amee_handler,
+    .handler.handler.pointer	= P,
+    .flagp			= &flag
   };
 
   switch (cce_location(L)) {
@@ -204,7 +204,10 @@ test_csse_constructor (cce_location_t * upper_L)
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  cce_handler_t		H = { .function = test_csse_constructor_handler, .pointer = &P};
+  cce_error_handler_t	H = {
+    .handler.function	= test_csse_constructor_handler,
+    .handler.pointer	= &P
+  };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -231,15 +234,15 @@ test_csse_constructor (cce_location_t * upper_L)
 /* ------------------------------------------------------------------ */
 
 typedef struct test_csse_t {
-  cce_handler_t	handler;
-  bool *	flagp;
+  cce_clean_handler_t	handler;
+  bool *		flagp;
 } test_csse_t;
 
 static void
 test_csse_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_csse_t *	H  = (test_csse_t *)_H;
-  void **	PP = H->handler.pointer;
+  void **	PP = H->handler.handler.pointer;
   void *	P  = *PP;
   free(P);
   *(H->flagp) = true;
@@ -251,9 +254,9 @@ test_csse_caller (void)
   void *		P;
   bool			flag = false;
   test_csse_t		H = {
-    .handler.function	= test_csse_caller_handler,
-    .handler.pointer	= &P,
-    .flagp		= &flag
+    .handler.handler.function	= test_csse_caller_handler,
+    .handler.handler.pointer	= &P,
+    .flagp			= &flag
   };
 
   switch (cce_location(L)) {
@@ -291,7 +294,10 @@ test_csee_constructor (cce_location_t * upper_L)
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  cce_handler_t		H = { .function = test_csee_constructor_handler, .pointer = &P };
+  cce_error_handler_t	H = {
+    .handler.function	= test_csee_constructor_handler,
+    .handler.pointer	= &P
+  };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -318,15 +324,15 @@ test_csee_constructor (cce_location_t * upper_L)
 /* ------------------------------------------------------------------ */
 
 typedef struct test_csee_t {
-  cce_handler_t	handler;
-  bool *	flagp;
+  cce_clean_handler_t	handler;
+  bool *		flagp;
 } test_csee_t;
 
 static void
 test_csee_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
   test_csee_t *	H  = (test_csee_t *)_H;
-  void **	PP = H->handler.pointer;
+  void **	PP = H->handler.handler.pointer;
   void *	P  = *PP;
   free(P);
   *(H->flagp) = true;
@@ -340,9 +346,9 @@ test_constructor_scheme_exceptional_execution (void)
   void *		P;
   bool			flag = false;
   test_csee_t		H = {
-    .handler.function	= test_csee_caller_handler,
-    .handler.pointer	= &P,
-    .flagp		= &flag
+    .handler.handler.function	= test_csee_caller_handler,
+    .handler.handler.pointer	= &P,
+    .flagp			= &flag
   };
 
   switch (cce_location(L)) {
@@ -374,18 +380,18 @@ test_handler_removal_1_0 (void)
 /* No handler removal in this function: it just tests the code logic. */
 {
   cce_location_t	L[1];
-  cce_handler_t		H1, H2, H3;
+  cce_clean_handler_t	H1, H2, H3;
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.function = handler_removal_function;
-    H2.function = handler_removal_function;
-    H3.function = handler_removal_function;
-    H1.pointer  = &flag1;
-    H2.pointer  = &flag2;
-    H3.pointer  = &flag3;
+    H1.handler.function = handler_removal_function;
+    H2.handler.function = handler_removal_function;
+    H3.handler.function = handler_removal_function;
+    H1.handler.pointer  = &flag1;
+    H2.handler.pointer  = &flag2;
+    H3.handler.pointer  = &flag3;
     cce_register_clean_handler(L, &H1);
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
@@ -402,22 +408,22 @@ test_handler_removal_1_1 (void)
 /* Remove the first handler. */
 {
   cce_location_t	L[1];
-  cce_handler_t		H1, H2, H3;
+  cce_clean_handler_t	H1, H2, H3;
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.function = handler_removal_function;
-    H2.function = handler_removal_function;
-    H3.function = handler_removal_function;
-    H1.pointer  = &flag1;
-    H2.pointer  = &flag2;
-    H3.pointer  = &flag3;
+    H1.handler.function = handler_removal_function;
+    H2.handler.function = handler_removal_function;
+    H3.handler.function = handler_removal_function;
+    H1.handler.pointer  = &flag1;
+    H2.handler.pointer  = &flag2;
+    H3.handler.pointer  = &flag3;
     cce_register_clean_handler(L, &H1);
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
-    cce_forget_handler(L, &H1);
+    cce_forget_handler(L, &H1.handler);
     cce_run_body_handlers(L);
   }
 
@@ -431,22 +437,22 @@ test_handler_removal_1_2 (void)
 /* Remove the second handler. */
 {
   cce_location_t	L[1];
-  cce_handler_t		H1, H2, H3;
+  cce_clean_handler_t	H1, H2, H3;
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.function = handler_removal_function;
-    H2.function = handler_removal_function;
-    H3.function = handler_removal_function;
-    H1.pointer  = &flag1;
-    H2.pointer  = &flag2;
-    H3.pointer  = &flag3;
+    H1.handler.function = handler_removal_function;
+    H2.handler.function = handler_removal_function;
+    H3.handler.function = handler_removal_function;
+    H1.handler.pointer  = &flag1;
+    H2.handler.pointer  = &flag2;
+    H3.handler.pointer  = &flag3;
     cce_register_clean_handler(L, &H1);
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
-    cce_forget_handler(L, &H2);
+    cce_forget_handler(L, &H2.handler);
     cce_run_body_handlers(L);
   }
 
@@ -460,22 +466,22 @@ test_handler_removal_1_3 (void)
 /* Remove the third handler. */
 {
   cce_location_t	L[1];
-  cce_handler_t		H1, H2, H3;
+  cce_clean_handler_t	H1, H2, H3;
   bool			flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.function = handler_removal_function;
-    H2.function = handler_removal_function;
-    H3.function = handler_removal_function;
-    H1.pointer  = &flag1;
-    H2.pointer  = &flag2;
-    H3.pointer  = &flag3;
+    H1.handler.function = handler_removal_function;
+    H2.handler.function = handler_removal_function;
+    H3.handler.function = handler_removal_function;
+    H1.handler.pointer  = &flag1;
+    H2.handler.pointer  = &flag2;
+    H3.handler.pointer  = &flag3;
     cce_register_clean_handler(L, &H1);
     cce_register_clean_handler(L, &H2);
     cce_register_clean_handler(L, &H3);
-    cce_forget_handler(L, &H3);
+    cce_forget_handler(L, &H3.handler);
     cce_run_body_handlers(L);
   }
 

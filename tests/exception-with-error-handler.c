@@ -27,43 +27,61 @@
 */
 
 
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
-typedef struct handler1_t {
-  cce_handler_t		exception_handler[1];
-  bool *		flagp;
-} handler1_t;
+
+/** --------------------------------------------------------------------
+ ** Handlers definitions.
+ ** ----------------------------------------------------------------- */
+
+typedef struct handler1_t	handler1_t;
+
+struct handler1_t {
+  cce_error_handler_t	handler;
+  bool volatile *	flagp;
+};
+
 static void
-handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
+handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
-  handler1_t *	data = (handler1_t*)_data;
-  *(data->flagp) = true;
+  CCE_PC(handler1_t, H, _H);
+  *(H->flagp) = true;
 }
 
-typedef struct handler2_t {
-  cce_handler_t		exception_handler[1];
-  bool *		flagp;
-} handler2_t;
+/* ------------------------------------------------------------------ */
+
+typedef struct handler2_t	handler2_t;
+
+struct handler2_t {
+  cce_error_handler_t	handler;
+  bool volatile *	flagp;
+};
+
 static void
-handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
+handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
-  handler1_t *	data = (handler1_t *)_data;
-  *(data->flagp) = true;
+  CCE_PC(handler1_t, H, _H);
+  *(H->flagp) = true;
 }
 
+
 int
-main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
+main (void)
 {
   /* no exception */
   {
     cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
+    bool volatile	flag1 = false;
+    bool volatile	flag2 = false;
+    handler1_t		H1 = { .handler.handler = { .function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .handler.handler = { .function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -71,8 +89,8 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       break;
 
     default:
-      cce_register_error_handler(L, H1.exception_handler);
-      cce_register_error_handler(L, H2.exception_handler);
+      cce_register_error_handler(L, &H1.handler);
+      cce_register_error_handler(L, &H2.handler);
       cce_run_body_handlers(L);
     }
     assert(false == flag1);
@@ -82,10 +100,10 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
   /* with error */
   {
     cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
+    bool volatile	flag1 = false;
+    bool volatile	flag2 = false;
+    handler1_t		H1 = { .handler.handler = { .function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .handler.handler = { .function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -93,8 +111,8 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
       break;
 
     default:
-      cce_register_error_handler(L, H1.exception_handler);
-      cce_register_error_handler(L, H2.exception_handler);
+      cce_register_error_handler(L, &H1.handler);
+      cce_register_error_handler(L, &H2.handler);
       if (1) {
 	cce_raise(L, NULL);
       }

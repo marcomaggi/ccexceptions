@@ -124,8 +124,8 @@ my_condition_new_error_2 (cce_destination_t upper_L, int the_data)
  * 3. Call the initialisation function for this type.
  */
 {
-  cce_location_t	L[1];
-  cce_handler_t		C_H[1];
+  cce_location_t		L[1];
+  cce_error_handler_t		C_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);

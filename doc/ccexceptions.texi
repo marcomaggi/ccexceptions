@@ -682,11 +682,9 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_handler_t
-Structure type representing an exception handler, either a clean handler or an error handler.
-Instances of this type are associated to a location by calling one of the functions:
-@cfunc{cce_register_clean_handler}, @cfunc{cce_register_error_handler}.  Handlers are invoked by
-calling one of the functions: @cfunc{cce_run_body_handlers}, @cfunc{cce_run_catch_handlers}.  Before
-terminating the use of a @objtype{cce_location_t} instance we must always call the handlers.
+Core structure type representing an exception handler, either a clean handler or an error handler.
+We should @strong{never} use this type directly, rather we should use the wrapper types
+@objtype{cce_clean_handler_t} and @objtype{cce_error_handler_t}.
 
 The structure has the following public fields:
 
@@ -714,24 +712,17 @@ An integer meant to be used for @posix{} file descriptors.
 @item int pipedes[2]
 Integers meant to be used for @posix{} pipe descriptors.
 @end table
-
-When needed, we are meant to wrap instances of this type into an enclosing struct definition as
-follows:
-
-@example
-struct resource_handler_t @{
-  cce_handler_t 	handler;
-  void *		resourcep;
-@};
-@end example
-
-@noindent
-in which the instance of @code{cce_handler_t} is the first field.
 @end deftp
 
 
 @deftp {Struct Typedef} cce_clean_handler_t
-Structure representing a clean handler.  It has the following public fields:
+Structure representing a clean handler.  Instances of this type are associated to a location by
+calling the function @cfunc{cce_register_clean_handler}.  Clean handlers are invoked by calling one
+of the functions: @cfunc{cce_run_body_handlers}, @cfunc{cce_run_catch_handlers} and its variants.
+Before terminating the use of a @objtype{cce_location_t} instance: we must always call the handlers,
+whether or not an exception was raised.
+
+It has the following public fields:
 
 @table @code
 @item cce_handler_t handler
@@ -741,13 +732,33 @@ The handler structure.
 
 
 @deftp {Struct Typedef} cce_error_handler_t
-Structure representing an error handler.  It has the following public fields:
+Structure representing an error handler.  Instances of this type are associated to a location by
+calling the function @cfunc{cce_register_error_handler}.  Error handlers are invoked by calling the
+function @cfunc{cce_run_catch_handlers} or one of its variants.  Before terminating the use of a
+@objtype{cce_location_t} instance: after an exception is raised we must always call the error
+handlers.
+
+It has the following public fields:
 
 @table @code
 @item cce_handler_t handler
 The handler structure.
 @end table
 @end deftp
+
+
+When needed, we are meant to wrap instances of @objtype{cce_clean_handler_t} and
+@objtype{cce_error_handler_t} into an enclosing struct definition as follows:
+
+@example
+struct resource_clean_handler_t @{
+  cce_clean_handler_t 	handler;
+  void *		resourcep;
+@};
+@end example
+
+@noindent
+in which the instance of @code{cce_clean_handler_t} is the first field.
 
 
 @deftypefn {Function Typedef} void cce_handler_fun_t (cce_condition_t const * @var{C}, cce_handler_t * @var{H})
@@ -771,24 +782,24 @@ to release its memory.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
+@deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_clean_handler_t * @var{H})
 Register the clean handler referenced by @var{H} in the list of handlers associated to the location
 @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
-structure of type @code{cce_handler_t}; such structure can either be allocated on the same stack
-frame of the function also defining the location object @var{L}, or be dynamically allocated on the
-heap.
+structure of type @code{cce_clean_handler_t}; such structure can either be allocated on the same
+stack frame of the function also defining the location object @var{L}, or be dynamically allocated
+on the heap.
 
 A clean handler is meant to be called whenever the execution flow leaves the dynamic extent of a
 location, whether with an exception or as part of the successful execution path.
 @end deftypefun
 
 
-@deftypefun void cce_register_error_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
+@deftypefun void cce_register_error_handler (cce_destination_t @var{L}, cce_error_handler_t * @var{H})
 Register the error handler referenced by @var{H} in the list of handlers associated to the location
 @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
-structure of type @code{cce_handler_t}; such structure can either be allocated on the same stack
-frame of the function also defining the location object @var{L}, or be dynamically allocated on the
-heap.
+structure of type @code{cce_error_handler_t}; such structure can either be allocated on the same
+stack frame of the function also defining the location object @var{L}, or be dynamically allocated
+on the heap.
 
 An error handler is meant to be called whenever the execution flow leaves the dynamic extent of a
 location in case of an exceptional condition; it must @strong{not} be called as part of the
@@ -1122,10 +1133,10 @@ handler3 (cce_condition_t const * C, cce_handler_t * H)
 void
 func (void)
 @{
-  cce_location_t L[1];
-  cce_handler_t  H1 = @{ .function = handler1 @};
-  cce_handler_t  H2 = @{ .function = handler2 @};
-  cce_handler_t  H3 = @{ .function = handler3 @};
+  cce_location_t       L[1];
+  cce_clean_handler_t  H1 = @{ .handler.function = handler1 @};
+  cce_clean_handler_t  H2 = @{ .handler.function = handler2 @};
+  cce_clean_handler_t  H3 = @{ .handler.function = handler3 @};
 
   cce_location_init(L);
   cce_register_clean_handler(L, &H1);
@@ -1158,10 +1169,10 @@ handler3 (cce_condition_t const * C, cce_handler_t * H)
 void
 func (void)
 @{
-  cce_location_t L[1];
-  cce_handler_t  H1 = @{ .function = handler1 @};
-  cce_handler_t  H2 = @{ .function = handler2 @};
-  cce_handler_t  H3 = @{ .function = handler3 @};
+  cce_location_t       L[1];
+  cce_error_handler_t  H1 = @{ .handler.function = handler1 @};
+  cce_error_handler_t  H2 = @{ .handler.function = handler2 @};
+  cce_error_handler_t  H3 = @{ .handler.function = handler3 @};
 
   cce_location_init(L);
   cce_register_error_handler(L, &H1);
@@ -1191,8 +1202,8 @@ P_handler (cce_condition_t const * C, cce_handler_t * H)
 void
 func (void)
 @{
-  cce_location_t  L[1];
-  cce_handler_t   P_H;
+  cce_location_t       L[1];
+  cce_clean_handler_t  P_H;
 
   if (cce_location(L)) @{
     cce_run_catch_handlers_final(L);
@@ -1202,8 +1213,8 @@ func (void)
     errno = 0;
     P = malloc(4096);
     if (P) @{
-      P_H.function = P_handler;
-      P_H.pointer  = P;
+      P_H.handler.function = P_handler;
+      P_H.handler.pointer  = P;
       cce_register_clean_handler(L, &P_H);
     @} else @{
       cce_raise(L, cce_condition_new_errno_clear(errno));
@@ -1246,8 +1257,8 @@ P_handler (cce_condition_t const * C, cce_handler_t * H)
 void *
 constructor (cce_destination_t upper_L)
 @{
-  cce_location_t  L;
-  cce_handler_t   P_H;
+  cce_location_t       L[1];
+  cce_error_handler_t  P_H;
 
   if (cce_location(L)) @{
     cce_run_catch_handlers_raise(L, upper_L);
@@ -1257,8 +1268,8 @@ constructor (cce_destination_t upper_L)
     errno = 0;
     P = malloc(4096);
     if (P) @{
-      P_H.function = P_handler;
-      P_H.pointer  = P;
+      P_H.handler.function = P_handler;
+      P_H.handler.pointer  = P;
       cce_register_error_handler(L, &P_H);
     @} else @{
       cce_raise(L, cce_condition_new_errno_clear(errno));
@@ -1275,8 +1286,8 @@ constructor (cce_destination_t upper_L)
 
 void caller (void)
 @{
-  cce_location_t    L[1];
-  cce_handler_t     P_H;
+  cce_location_t       L[1];
+  cce_clean-handler_t  P_H;
 
   if (cce_location(L)) @{
     cce_run_catch_handlers_final(L);
@@ -1285,8 +1296,8 @@ void caller (void)
 
     P = constructor(L);
     @{
-      P_H.function = P_handler;
-      P_H.pointer  = P;
+      P_H.handler.function = P_handler;
+      P_H.handler.pointer  = P;
       cce_register_clean_handler(L, &P_H);
     @}
     do_something_with(P);
@@ -3112,8 +3123,8 @@ Wrapper for @cfunc{calloc}.  This function never returns @cnull{}.
 We can handle memory that must be released with the standard function @cfunc{free} as follows:
 
 @example
-cce_location_t  L[1];
-cce_handler_t   P_H[1];
+cce_location_t       L[1];
+cce_clean_handler_t  P_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
@@ -3125,8 +3136,8 @@ if (cce_location(L)) @{
 @end example
 
 
-@deftypefun void cce_clean_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_destination_t @var{L}, cce_handler_t * @var{H}, void * @var{P})
+@deftypefun void cce_clean_handler_malloc_init (cce_destination_t @var{L}, cce_clean_handler_t * @var{H}, void * @var{P})
+@deftypefunx void cce_error_handler_malloc_init (cce_destination_t @var{L}, cce_error_handler_t * @var{H}, void * @var{P})
 Register @var{H} as clean or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
@@ -3186,12 +3197,7 @@ if (cce_location(L)) @{
 
 
 @deftypefun {void *} cce_sys_malloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{size})
-Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
-@var{P_H}.
-@end deftypefun
-
-
-@deftypefun {void *} cce_sys_malloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
+@deftypefunx {void *} cce_sys_malloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{size})
 Like @cfunc{cce_sys_malloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
@@ -3217,12 +3223,7 @@ The macro expands into a call to @cfunc{cce_sys_malloc_guarded_error}.
 
 
 @deftypefun {void *} cce_sys_calloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
-Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
-@var{P_H}.
-@end deftypefun
-
-
-@deftypefun {void *} cce_sys_calloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
+@deftypefunx {void *} cce_sys_calloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, size_t @var{count}, size_t @var{eltsize})
 Like @cfunc{cce_sys_calloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.
 @end deftypefun
@@ -3248,15 +3249,7 @@ The macro expands into a call to @cfunc{cce_sys_calloc_guarded_error}.
 
 
 @deftypefun {void *} cce_sys_realloc_guarded_clean (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
-Like @cfunc{cce_sys_realloc}, but register the resulting pointer in the handler referenced by
-@var{P_H}.  The handler is updated to reference the new memory pointer.  If, upon entering this
-function, the handler @var{P_H} does not reference the pointer @var{old_P}: raise an exception by
-performing a non--local exit to @var{L}, with condition object of type
-@objtype{cce_condition_invalid_argument_t}.
-@end deftypefun
-
-
-@deftypefun {void *} cce_sys_realloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
+@deftypefunx {void *} cce_sys_realloc_guarded_error (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{old_P}, size_t @var{newsize})
 Like @cfunc{cce_sys_realloc}, but register the resulting pointer in the handler referenced by
 @var{P_H}.  The handler is updated to reference the new memory pointer.  If, upon entering this
 function, the handler @var{P_H} does not reference the pointer @var{old_P}: raise an exception by

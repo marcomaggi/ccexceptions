@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -44,6 +44,11 @@ main (void)
 
   printf("size of cce_handler_t:  %lu, number of words: %lu\n",
 	 sizeof(cce_handler_t), sizeof(cce_handler_t)/sizeof(void *));
+  printf("size of cce_clean_handler_t:  %lu, number of words: %lu\n",
+	 sizeof(cce_clean_handler_t), sizeof(cce_clean_handler_t)/sizeof(void *));
+  printf("size of cce_error_handler_t:  %lu, number of words: %lu\n",
+	 sizeof(cce_error_handler_t), sizeof(cce_error_handler_t)/sizeof(void *));
+
   exit(EXIT_SUCCESS);
 }
 

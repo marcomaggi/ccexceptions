@@ -33,7 +33,7 @@
 #include <assert.h>
 
 typedef struct handler1_t {
-  cce_handler_t		exception_handler[1];
+  cce_clean_handler_t	exception_handler[1];
   bool *		flagp;
 } handler1_t;
 static void
@@ -44,7 +44,7 @@ handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
 }
 
 typedef struct handler2_t {
-  cce_handler_t		exception_handler[1];
+  cce_clean_handler_t	exception_handler[1];
   bool *		flagp;
 } handler2_t;
 static void
@@ -62,8 +62,8 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
+    handler1_t		H1 = { .exception_handler[0] = { .handler.function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .exception_handler[0] = { .handler.function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:
@@ -84,8 +84,8 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
     cce_location_t	L[1];
     bool		flag1 = false;
     bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .function = handler2 }, .flagp = &flag2 };
+    handler1_t		H1 = { .exception_handler[0] = { .handler.function = handler1 }, .flagp = &flag1 };
+    handler2_t		H2 = { .exception_handler[0] = { .handler.function = handler2 }, .flagp = &flag2 };
 
     switch (cce_location(L)) {
     case CCE_ERROR:

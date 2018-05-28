@@ -72,20 +72,20 @@ cce_p_retry (cce_location_t * L)
 
 __attribute__((__hot__))
 void
-cce_register_clean_handler (cce_location_t * L, cce_handler_t * H)
+cce_register_clean_handler (cce_location_t * L, cce_clean_handler_t * H)
 {
-  H->is_clean_handler = true;
-  H->next_handler	= L->first_handler;
-  L->first_handler	= H;
+  H->handler.is_clean_handler	= true;
+  H->handler.next_handler	= L->first_handler;
+  L->first_handler		= &(H->handler);
 }
 
 __attribute__((__hot__))
 void
-cce_register_error_handler (cce_location_t * L, cce_handler_t * H)
+cce_register_error_handler (cce_location_t * L, cce_error_handler_t * H)
 {
-  H->is_clean_handler = false;
-  H->next_handler	= L->first_handler;
-  L->first_handler	= H;
+  H->handler.is_clean_handler	= false;
+  H->handler.next_handler	= L->first_handler;
+  L->first_handler		= &(H->handler);
 }
 
 void
@@ -107,7 +107,7 @@ cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 __attribute__((__hot__))
 void
 cce_run_body_handlers (cce_location_t * L)
-/* Traverse the linked  list of registered handlers and  run the clean
+/* Traverse the  linked list  of registered handlers  and run  the clean
    ones.   This  is a  destructive  function:  once  the list  has  been
    traversed, it is not valid anymore.
 */
@@ -115,8 +115,11 @@ cce_run_body_handlers (cce_location_t * L)
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
   for (cce_handler_t * H = next; H && H->function; H = next) {
+    /* First acquire the next handler... */
     next = H->next_handler;
     if (true == H->is_clean_handler) {
+      /* ... then  run the current  handler.  Remember that  the current
+	 handler might release the memory referenced by "H". */
       H->function(L->condition, H);
     }
   }
@@ -133,21 +136,24 @@ cce_run_catch_handlers (cce_location_t * L)
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
   for (cce_handler_t * H = next; H && H->function; H = next) {
+    /* First acquire the next handler... */
     next = H->next_handler;
+    /* ...  then  run the  current handler.   Remember that  the current
+       handler might release the memory referenced by "H". */
     H->function(L->condition, H);
   }
 }
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__hot__))
+__attribute__((__hot__,__deprecated__))
 void
 cce_run_clean_handlers (cce_location_t * L)
 {
   cce_run_body_handlers(L);
 }
 
-__attribute__((__hot__))
+__attribute__((__hot__,__deprecated__))
 void
 cce_run_error_handlers (cce_location_t * L)
 {

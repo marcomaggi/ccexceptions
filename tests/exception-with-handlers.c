@@ -34,12 +34,12 @@
 
 
 typedef struct test_no_exception_handler1_t {
-  cce_handler_t		handler;
+  cce_clean_handler_t	handler;
   volatile bool *	flagp;
 } test_no_exception_handler1_t;
 
 typedef struct test_no_exception_handler2_t {
-  cce_handler_t		handler;
+  cce_error_handler_t	handler;
   volatile bool *	flagp;
 } test_no_exception_handler2_t;
 
@@ -63,8 +63,8 @@ test_no_exception (void)
   cce_location_t	L[1];
   volatile bool		flag1 = false;
   volatile bool		flag2 = false;
-  test_no_exception_handler1_t H1 = { .handler.function = test_no_exception_handler1 , .flagp = &flag1 };
-  test_no_exception_handler2_t H2 = { .handler.function = test_no_exception_handler2 , .flagp = &flag2 };
+  test_no_exception_handler1_t H1 = { .handler.handler.function = test_no_exception_handler1 , .flagp = &flag1 };
+  test_no_exception_handler2_t H2 = { .handler.handler.function = test_no_exception_handler2 , .flagp = &flag2 };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -83,12 +83,12 @@ test_no_exception (void)
 
 
 typedef struct test_with_error_handler1_t {
-  cce_handler_t		handler;
+  cce_clean_handler_t	handler;
   volatile bool *	flagp;
 } test_with_error_handler1_t;
 
 typedef struct test_with_error_handler2_t {
-  cce_handler_t		handler;
+  cce_error_handler_t	handler;
   volatile bool *	flagp;
 } test_with_error_handler2_t;
 
@@ -112,8 +112,8 @@ test_with_error (void)
   cce_location_t	L[1];
   volatile bool		flag1 = false;
   volatile bool		flag2 = false;
-  test_with_error_handler1_t H1 = { .handler.function = test_with_error_handler1 , .flagp = &flag1 };
-  test_with_error_handler2_t H2 = { .handler.function = test_with_error_handler2 , .flagp = &flag2 };
+  test_with_error_handler1_t H1 = { .handler.handler.function = test_with_error_handler1 , .flagp = &flag1 };
+  test_with_error_handler2_t H2 = { .handler.handler.function = test_with_error_handler2 , .flagp = &flag2 };
 
   switch (cce_location(L)) {
   case CCE_ERROR:
@@ -134,34 +134,68 @@ test_with_error (void)
 }
 
 
-typedef struct test_dynamically_allocated_handler_t {
-  cce_handler_t		handler;
-  volatile bool *	flagp;
-} test_dynamically_allocated_handler_t;
+/** --------------------------------------------------------------------
+ ** Dynamically allocated handlers.
+ ** ----------------------------------------------------------------- */
+
+typedef struct test_dynamically_allocated_clean_handler_t	test_dynamically_allocated_clean_handler_t;
+typedef struct test_dynamically_allocated_error_handler_t	test_dynamically_allocated_error_handler_t;
+
+struct test_dynamically_allocated_clean_handler_t {
+  cce_clean_handler_t	handler;
+  bool volatile *	flagp;
+};
+
+struct test_dynamically_allocated_error_handler_t {
+  cce_error_handler_t	handler;
+  bool volatile *	flagp;
+};
+
+/* ------------------------------------------------------------------ */
+/* Handler functions. */
 
 static void
 test_dynamically_allocated_clean_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
 {
-  test_dynamically_allocated_handler_t * H = (test_dynamically_allocated_handler_t *) _H;
-  free(H->handler.pointer);
+  CCE_PC(test_dynamically_allocated_clean_handler_t, H, _H);
+  free(H->handler.handler.pointer);
   *(H->flagp) = true;
+  free(H);
+  if (1) { fprintf(stderr, "%s: done\n", __func__); }
+}
+
+static void
+test_dynamically_allocated_error_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+{
+  CCE_PC(test_dynamically_allocated_error_handler_t, H, _H);
+  free(H->handler.handler.pointer);
+  *(H->flagp) = true;
+  free(H);
+  if (1) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
 
-static test_dynamically_allocated_handler_t *
-test_dynamically_allocated_alloc_handler (cce_location_t * there, cce_handler_fun_t * handler, volatile bool * flagp)
+static test_dynamically_allocated_clean_handler_t *
+test_dynamically_allocated_new_clean_handler (cce_location_t * upper_L, bool volatile * flagp)
 {
-  test_dynamically_allocated_handler_t *	H;
-  errno = 0;
-  H = malloc(sizeof(test_dynamically_allocated_handler_t));
-  if (NULL != H) {
-    H->handler.function	= handler;
-    H->flagp		= flagp;
-    return H;
-  } else {
-    cce_raise(there, cce_condition(cce_condition_new_errno(errno)));
-  }
+  test_dynamically_allocated_clean_handler_t *	H;
+
+  H = cce_sys_malloc(upper_L, sizeof(test_dynamically_allocated_clean_handler_t));
+  H->handler.handler.function	= test_dynamically_allocated_clean_handler;
+  H->flagp			= flagp;
+  return H;
+}
+
+static test_dynamically_allocated_error_handler_t *
+test_dynamically_allocated_new_error_handler (cce_location_t * upper_L, bool volatile * flagp)
+{
+  test_dynamically_allocated_error_handler_t *	H;
+
+  H = cce_sys_malloc(upper_L, sizeof(test_dynamically_allocated_error_handler_t));
+  H->handler.handler.function	= test_dynamically_allocated_error_handler;
+  H->flagp			= flagp;
+  return H;
 }
 
 /* ------------------------------------------------------------------ */
@@ -174,14 +208,13 @@ test_dynamically_allocated_handlers (void)
   volatile bool		flag2 = false;
 
   if (cce_location(L)) {
-    cce_run_catch_handlers(L);
-    cce_condition_delete(cce_condition(L));
+    cce_run_catch_handlers_final(L);
   } else {
-    test_dynamically_allocated_handler_t * H1;
-    test_dynamically_allocated_handler_t * H2;
+    test_dynamically_allocated_clean_handler_t * H1;
+    test_dynamically_allocated_error_handler_t * H2;
 
-    H1 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_clean_handler, &flag1);
-    H2 = test_dynamically_allocated_alloc_handler(L, test_dynamically_allocated_clean_handler, &flag2);
+    H1 = test_dynamically_allocated_new_clean_handler(L, &flag1);
+    H2 = test_dynamically_allocated_new_error_handler(L, &flag2);
     cce_register_clean_handler(L, &(H1->handler));
     cce_register_error_handler(L, &(H2->handler));
     if (1) {
