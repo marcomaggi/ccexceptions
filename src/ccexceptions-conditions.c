@@ -33,6 +33,7 @@
 
 #include "ccexceptions-internals.h"
 #include <limits.h>	// for INT_MAX
+#include <errno.h>
 
 
 /** --------------------------------------------------------------------

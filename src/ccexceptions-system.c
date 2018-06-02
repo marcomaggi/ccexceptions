@@ -33,6 +33,7 @@
 
 #include "ccexceptions-internals.h"
 #include <stdio.h>
+#include <errno.h>
 
 
 /** --------------------------------------------------------------------

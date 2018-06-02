@@ -41,7 +41,6 @@ extern "C" {
 #  include <config.h>
 #endif
 #include "ccexceptions.h"
-#include <errno.h>
 
 
 /** --------------------------------------------------------------------
