@@ -773,4 +773,12 @@ cce_condition_new_errno (int errnum)
   return &(errno_conditions[LAST_ERRNO_CONDITION].runtime_error.error.root.condition);
 }
 
+cce_condition_t const *
+cce_condition_new_errno_clear (void)
+{
+  int	errnum = errno;
+  errno = 0;
+  return cce_condition_new_errno(errnum);
+}
+
 /* end of file */

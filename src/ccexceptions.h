@@ -111,9 +111,7 @@ extern "C" {
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h> /* for offsetof() */
 #include <setjmp.h>
-#include <errno.h>
 #include <unistd.h>
 
 
@@ -683,7 +681,8 @@ cce_condition_new_unimplemented (void)
   return (cce_condition_t const *) cce_condition_unimplemented_ptr;
 }
 
-__attribute__((__pure__,__nonnull__(1),__always_inline__)) static inline bool
+__attribute__((__pure__,__nonnull__(1),__always_inline__))
+static inline bool
 cce_condition_is_unimplemented (cce_condition_t const * C)
 {
   return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->descriptor));
@@ -770,14 +769,8 @@ cce_decl cce_descriptor_errno_t const * const cce_descriptor_errno_ptr;
 cce_decl cce_condition_t const * cce_condition_new_errno (int code)
   __attribute__((__leaf__,__returns_nonnull__));
 
-__attribute__((__returns_nonnull__,__always_inline__))
-static inline cce_condition_t const *
-cce_condition_new_errno_clear (void)
-{
-  int	errnum = errno;
-  errno = 0;
-  return cce_condition_new_errno(errnum);
-}
+cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
+  __attribute__((__returns_nonnull__));
 
 __attribute__((__nonnull__(1),__always_inline__)) static inline bool
 cce_condition_is_errno (cce_condition_t const * C)
