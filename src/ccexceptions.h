@@ -363,7 +363,7 @@ struct cce_condition_unknown_t {
 };
 
 cce_decl cce_descriptor_unknown_t const * const	cce_descriptor_unknown_ptr;
-cce_decl cce_condition_unknown_t const  * const	cce_condition_unknown_ptr;
+cce_decl cce_condition_unknown_t  const * const	cce_condition_unknown_ptr;
 
 __attribute__((__always_inline__,__const__))
 static inline cce_condition_t const *
@@ -406,7 +406,7 @@ struct cce_condition_break_t {
 };
 
 cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
-cce_decl cce_condition_break_t  const  * const	cce_condition_break_ptr;
+cce_decl cce_condition_break_t  const * const	cce_condition_break_ptr;
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline void
@@ -1305,7 +1305,7 @@ cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_hand
 cce_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, void * P, size_t newsize)
+cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * P, size_t newsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_realloc_guarded(L,P_H,old_P,newsize)			\
@@ -1318,7 +1318,7 @@ cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_han
 cce_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t count, size_t eltsize)
+cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_calloc_guarded(L,P_H,count,eltsize)			\
