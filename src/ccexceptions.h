@@ -107,12 +107,9 @@ extern "C" {
 #undef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE		200809L
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <setjmp.h>
-#include <unistd.h>
 
 
 /** --------------------------------------------------------------------
