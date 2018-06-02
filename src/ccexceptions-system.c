@@ -108,20 +108,6 @@ cce_init_error_handler_malloc (cce_location_t * L, cce_error_handler_t * H, void
   cce_register_error_handler(L, H);
 }
 
-/* ------------------------------------------------------------------ */
-
-void
-cce_clean_handler_malloc_init (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
-{
-  cce_init_clean_handler_malloc(L, H, pointer);
-}
-
-void
-cce_error_handler_malloc_init (cce_location_t * L, cce_error_handler_t * H, void * pointer)
-{
-  cce_init_error_handler_malloc(L, H, pointer);
-}
-
 
 /** --------------------------------------------------------------------
  ** System wrappers: guarded memory allocation.

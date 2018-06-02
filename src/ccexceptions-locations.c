@@ -150,22 +150,6 @@ cce_run_catch_handlers (cce_location_t * L)
   }
 }
 
-/* ------------------------------------------------------------------ */
-
-__attribute__((__hot__,__deprecated__))
-void
-cce_run_clean_handlers (cce_location_t * L)
-{
-  cce_run_body_handlers(L);
-}
-
-__attribute__((__hot__,__deprecated__))
-void
-cce_run_error_handlers (cce_location_t * L)
-{
-  cce_run_catch_handlers(L);
-}
-
 
 /** --------------------------------------------------------------------
  ** Running handlers from a handler.
