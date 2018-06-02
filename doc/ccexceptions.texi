@@ -3136,24 +3136,24 @@ if (cce_location(L)) @{
 @end example
 
 
-@deftypefun void cce_clean_handler_malloc_init (cce_destination_t @var{L}, cce_clean_handler_t * @var{H}, void * @var{P})
-@deftypefunx void cce_error_handler_malloc_init (cce_destination_t @var{L}, cce_error_handler_t * @var{H}, void * @var{P})
+@deftypefun void cce_init_clean_handler_malloc (cce_destination_t @var{L}, cce_clean_handler_t * @var{H}, void * @var{P})
+@deftypefunx void cce_init_error_handler_malloc (cce_destination_t @var{L}, cce_error_handler_t * @var{H}, void * @var{P})
 Register @var{H} as clean or error handler in the context of @var{L}.  The handler function will
 release the memory block referenced by @var{P} using the standard function @cfunc{free}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} void cce_handler_malloc_init (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, void * @var{P})
-@deftypefnx {Preprocessor Macro} void cce_handler_malloc_init (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{P})
+@deftypefn {Preprocessor Macro} void cce_init_handler_malloc (cce_destination_t @var{L}, cce_clean_handler_t * @var{P_H}, void * @var{P})
+@deftypefnx {Preprocessor Macro} void cce_init_handler_malloc (cce_destination_t @var{L}, cce_error_handler_t * @var{P_H}, void * @var{P})
 This preprocessor macro uses @code{_Generic} to dispatch the call according to the type of the
 pointer @var{P_H}; if the type is:
 
 @table @code
 @item cce_clean_handler_t
-The macro expands into a call to @cfunc{cce_clean_handler_malloc_init}.
+The macro expands into a call to @cfunc{cce_init_clean_handler_malloc}.
 
 @item cce_error_handler_t
-The macro expands into a call to @cfunc{cce_error_handler_malloc_init}.
+The macro expands into a call to @cfunc{cce_init_error_handler_malloc}.
 @end table
 @end deftypefn
 

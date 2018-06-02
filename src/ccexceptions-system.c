@@ -91,7 +91,7 @@ cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t
 }
 
 void
-cce_clean_handler_malloc_init (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
+cce_init_clean_handler_malloc (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
 {
   H->handler.function	= cce_handler_malloc_function;
   H->handler.pointer	= pointer;
@@ -99,11 +99,25 @@ cce_clean_handler_malloc_init (cce_location_t * L, cce_clean_handler_t * H, void
 }
 
 void
-cce_error_handler_malloc_init (cce_location_t * L, cce_error_handler_t * H, void * pointer)
+cce_init_error_handler_malloc (cce_location_t * L, cce_error_handler_t * H, void * pointer)
 {
   H->handler.function	= cce_handler_malloc_function;
   H->handler.pointer	= pointer;
   cce_register_error_handler(L, H);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_clean_handler_malloc_init (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
+{
+  cce_init_clean_handler_malloc(L, H, pointer);
+}
+
+void
+cce_error_handler_malloc_init (cce_location_t * L, cce_error_handler_t * H, void * pointer)
+{
+  cce_init_error_handler_malloc(L, H, pointer);
 }
 
 
@@ -115,7 +129,7 @@ void *
 cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
 {
   void *	P = cce_sys_malloc(L, size);
-  cce_clean_handler_malloc_init(L, P_H, P);
+  cce_init_clean_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -123,7 +137,7 @@ void *
 cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t size)
 {
   void *	P = cce_sys_malloc(L, size);
-  cce_error_handler_malloc_init(L, P_H, P);
+  cce_init_error_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -159,7 +173,7 @@ void *
 cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
 {
   void *	P = cce_sys_calloc(L, count, eltsize);
-  cce_clean_handler_malloc_init(L, P_H, P);
+  cce_init_clean_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -167,7 +181,7 @@ void *
 cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
 {
   void *	P = cce_sys_calloc(L, count, eltsize);
-  cce_error_handler_malloc_init(L, P_H, P);
+  cce_init_error_handler_malloc(L, P_H, P);
   return P;
 }
 

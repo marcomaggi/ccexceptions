@@ -1273,11 +1273,24 @@ cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsiz
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
+cce_decl void cce_init_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
 
-cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_error_handler_t * H, void * pointer)
+cce_decl void cce_init_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
   __attribute__((__nonnull__(1,2,3)));
+
+#define cce_init_handler_malloc(L,P_H,P)				\
+  _Generic((P_H),							\
+	   cce_clean_handler_t	*: cce_init_clean_handler_malloc,	\
+	   cce_error_handler_t	*: cce_init_error_handler_malloc)((L),(P_H),(P))
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
+  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_clean_handler_malloc_init instead")));
+
+cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_error_handler_t * H, void * pointer)
+  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_error_handler_malloc_init instead")));
 
 #define cce_handler_malloc_init(L,P_H,P)				\
   _Generic((P_H),							\
