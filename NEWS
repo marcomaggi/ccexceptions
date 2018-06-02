@@ -6,8 +6,12 @@ Notes for revision 0.8.0-devel.4
 * Added aliases to functions and macros (the old names are deprecated):
 
     cce_clean_handler_malloc_init -> cce_init_clean_handler_malloc
-    cce_error_handler_malloc_init -> cce_error_clean_handler_malloc
+    cce_error_handler_malloc_init -> cce_init_error_handler_malloc
     cce_handler_malloc_init	  -> cce_init_handler_malloc
+
+* Cleanup of headers inclusion: less headers are included in the public
+  header file "ccexceptions.h".  Beware of code not working anymore
+  because of this.
 
 
 Notes for revision 0.8.0-devel.3
