@@ -248,6 +248,8 @@ examples_plain_SOURCES		=	\
 examples_plain_CPPFLAGS		= $(ccexceptions_examples_cppflags)
 examples_plain_LDADD		= $(ccexceptions_examples_ldadd)
 
+$(examples_plain_OBJECTS): libccexceptions.la
+
 ## --------------------------------------------------------------------
 
 examples_inline_SOURCES		=	\
@@ -257,6 +259,8 @@ examples_inline_SOURCES		=	\
 
 examples_inline_CPPFLAGS	= $(ccexceptions_examples_cppflags)
 examples_inline_LDADD		= $(ccexceptions_examples_ldadd)
+
+$(examples_inline_OBJECTS): libccexceptions.la
 
 #page
 #### Coverity support
