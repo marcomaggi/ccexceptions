@@ -72,7 +72,7 @@ cce_condition_static_message (cce_condition_t const * const C)
   return C->descriptor->static_message(C);
 }
 bool
-cce_is_condition (cce_condition_t const * const C, cce_descriptor_t const * const descriptor)
+cce_condition_is (cce_condition_t const * const C, cce_descriptor_t const * const descriptor)
 {
   return cce_descriptor_child_and_ancestor(C->descriptor, descriptor);
 }
@@ -118,7 +118,7 @@ cce_descriptor_set_root_parent (cce_descriptor_t * D)
 bool
 cce_condition_is_root (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_root_stru.descriptor));
+  return cce_condition_is(C, &(cce_descriptor_root_stru.descriptor));
 }
 
 

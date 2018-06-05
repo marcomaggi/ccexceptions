@@ -1699,7 +1699,7 @@ table.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition (cce_condition_t const * @var{C}, cce_descriptor_t const * @var{D})
+@deftypefun bool cce_condition_is (cce_condition_t const * @var{C}, cce_descriptor_t const * @var{D})
 Determine if an object is of a selected object--type.  Return @ctrue{} if the object referenced by
 @var{C} is an instance of the type whose descriptor is referenced by @var{D}, or an instance of a
 type that is an ancestor of such descriptor; otherwise return @cfalse{}.
@@ -2022,7 +2022,7 @@ exceptional--condition object.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_error (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_error (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references an @emph{error} exceptional--condition object; otherwise return
 @cfalse{}.
 @end deftypefun
@@ -2109,7 +2109,7 @@ error} exceptional--condition object.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_runtime_error (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_runtime_error (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{run--time error} exceptional--condition object; otherwise
 return @cfalse{}.
 @end deftypefun
@@ -2195,7 +2195,7 @@ error} exceptional--condition object.
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_logic_error (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_logic_error (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{logic error} exceptional--condition object; otherwise return
 @cfalse{}.
 @end deftypefun
@@ -2283,7 +2283,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_unimplemented (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_unimplemented (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references an @emph{unimplemented} exceptional--condition object; otherwise
 return @cfalse{}.
 @end deftypefun
@@ -2690,7 +2690,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_math_error (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_math_error (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{mathematical error} exceptional--condition object;
 otherwise return @cfalse{}.
 @end deftypefun
@@ -2774,7 +2774,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_math_nan (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_math_nan (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{mathematical not--a--number} exceptional--condition
 object; otherwise return @cfalse{}.
 @end deftypefun
@@ -2857,7 +2857,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_math_infinity (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_math_infinity (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{mathematical infinity} exceptional--condition object;
 otherwise return @cfalse{}.
 @end deftypefun
@@ -2940,7 +2940,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_math_overflow (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_math_overflow (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{mathematical overflow} exceptional--condition object;
 otherwise return @cfalse{}.
 @end deftypefun
@@ -3023,7 +3023,7 @@ Return a pointer to the statically allocated structure representing the predefin
 @end deftypefun
 
 
-@deftypefun bool cce_is_condition_math_underflow (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_math_underflow (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{mathematical underflow} exceptional--condition object;
 otherwise return @cfalse{}.
 @end deftypefun

@@ -148,7 +148,7 @@ my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
 bool
 my_condition_is_error_1 (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(my_descriptor_error_1_ptr->descriptor));
+  return cce_condition_is(C, &(my_descriptor_error_1_ptr->descriptor));
 }
 
 

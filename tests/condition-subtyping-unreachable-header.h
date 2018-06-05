@@ -7,7 +7,7 @@
 
 	Header definitions for subtyping of "test unreachable" conditions.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -61,7 +61,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 my_condition_is_unreachable_subtype (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(my_descriptor_unreachable_subtype_ptr->descriptor));
+  return cce_condition_is(C, &(my_descriptor_unreachable_subtype_ptr->descriptor));
 }
 
 cce_decl void condition_unreachable_subtyping_init_module (void);

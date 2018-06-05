@@ -35,6 +35,17 @@
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional-condition object-types.
+ ** ----------------------------------------------------------------- */
+
+bool
+cce_is_condition (cce_condition_t const * const C, cce_descriptor_t const * const descriptor)
+{
+  return cce_condition_is(C, descriptor);
+}
+
+
+/** --------------------------------------------------------------------
  ** Predefined POSIX exception handler: malloc pointer.
  ** ----------------------------------------------------------------- */
 

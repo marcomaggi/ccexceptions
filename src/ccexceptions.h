@@ -296,7 +296,7 @@ cce_decl void cce_condition_final (cce_condition_t * C)
 cce_decl void cce_condition_delete (cce_condition_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl bool cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * D)
+cce_decl bool cce_condition_is (cce_condition_t const * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl char const * cce_condition_static_message (cce_condition_t const * C)
@@ -364,7 +364,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_unknown (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_unknown_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_unknown_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -414,7 +414,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_break (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_break_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_break_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -464,7 +464,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_error (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_error_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_error_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -513,7 +513,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_runtime_error (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_runtime_error_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_runtime_error_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -562,7 +562,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_logic_error (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_logic_error_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_logic_error_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -620,7 +620,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_unreachable (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_unreachable_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_unreachable_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -670,7 +670,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_unimplemented (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_unimplemented_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_unimplemented_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -715,7 +715,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_invalid_argument (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_invalid_argument_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_invalid_argument_ptr->descriptor));
 }
 
 #define cce_check_argument(L,EXPR,ARGNUM) \
@@ -760,7 +760,7 @@ cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
 __attribute__((__nonnull__(1),__always_inline__)) static inline bool
 cce_condition_is_errno (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_errno_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_errno_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -828,7 +828,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_math_error (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_math_error_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_math_error_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -878,7 +878,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_math_nan (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_math_nan_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_math_nan_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -928,7 +928,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_math_infinity (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_math_infinity_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_math_infinity_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -978,7 +978,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_math_overflow (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_math_overflow_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_math_overflow_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -1028,7 +1028,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 cce_condition_is_math_underflow (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(cce_descriptor_math_underflow_ptr->descriptor));
+  return cce_condition_is(C, &(cce_descriptor_math_underflow_ptr->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -1445,13 +1445,14 @@ cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_hand
  ** Deprecated.
  ** ----------------------------------------------------------------- */
 
-/* We do *not*  set the "leaf" attribute for this  function, because the
-   clean handlers might modify data in the current compilation unit. */
+cce_decl bool cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * D)
+  __attribute__((__leaf__,__nonnull__(1,2),__deprecated__("use cce_condition_is instead")));
+
+/* ------------------------------------------------------------------ */
+
 cce_decl void cce_run_clean_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1),__deprecated__("use cce_run_body_handlers instead")));
 
-/* We do *not*  set the "leaf" attribute for this  function, because the
-   error handlers might modify data in the current compilation unit. */
 cce_decl void cce_run_error_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1),__deprecated__("use cce_run_catch_handlers instead")));
 

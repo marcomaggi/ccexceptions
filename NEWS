@@ -13,6 +13,10 @@ Notes for revision 0.8.0-devel.4
   header  file "ccexceptions.h".   Beware  of code  not working  anymore
   because of this.
 
+* Added alias to function (the old name is deprecated):
+
+    cce_is_condition -> cce_condition_is
+
 
 Notes for revision 0.8.0-devel.3
 --------------------------------

@@ -14,7 +14,7 @@
 	definition is a "inline" one: as much as possible it uses inline
 	functions; new condition objects allocated by a constructor.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -60,7 +60,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 my_condition_is_error_2 (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(my_descriptor_error_2_ptr->descriptor));
+  return cce_condition_is(C, &(my_descriptor_error_2_ptr->descriptor));
 }
 
 extern void inline_init_module (void);

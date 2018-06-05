@@ -108,7 +108,7 @@ condition_static_message_alpha (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_alpha (cce_condition_t const * condition)
 {
-  return cce_is_condition(condition, &descriptor_alpha.descriptor);
+  return cce_condition_is(condition, &descriptor_alpha.descriptor);
 }
 
 #define condition_alpha(S)						\
@@ -196,7 +196,7 @@ condition_static_message_beta (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_beta (cce_condition_t const * condition)
 {
-  return cce_is_condition(condition, &descriptor_beta.descriptor);
+  return cce_condition_is(condition, &descriptor_beta.descriptor);
 }
 
 #define condition_beta(S)						\
@@ -284,7 +284,7 @@ condition_static_message_gamma (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_gamma (cce_condition_t const * condition)
 {
-  return cce_is_condition(condition, &descriptor_gamma.descriptor);
+  return cce_condition_is(condition, &descriptor_gamma.descriptor);
 }
 
 #define condition_gamma(S)						\
