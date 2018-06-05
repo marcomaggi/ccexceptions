@@ -1850,10 +1850,10 @@ exceptional--condition object.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_unknown (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_unknown (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references an @emph{unknown} exceptional--condition object; otherwise return
 @cfalse{}.
-@end deftypefn
+@end deftypefun
 
 
 @deftypefn {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_destination_t @var{L})
@@ -1934,10 +1934,10 @@ exceptional--condition object.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_break (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_break (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references a @emph{break} exceptional--condition object; otherwise return
 @cfalse{}.
-@end deftypefn
+@end deftypefun
 
 
 @deftypefn {Generic Macro}  {cce_condition_break_t const *} cce_condition_break (cce_destination_t @var{L})
@@ -2387,10 +2387,10 @@ exception by jumping to @var{L}.
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_invalid_argument (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references an @emph{invalid argument} exceptional--condition object;
 otherwise return @cfalse{}.
-@end deftypefn
+@end deftypefun
 
 
 @deftypefn {Preprocessor Macro} void cce_check_argument (cce_destination_t @var{L}, bool @var{expr}, unsigned @var{argnum})
@@ -2583,10 +2583,10 @@ Consume the current value of @code{errno} and return the return value of
 @end deftypefun
 
 
-@deftypefn {Inline Function} bool cce_condition_is_errno (cce_condition_t const * @var{C})
+@deftypefun bool cce_condition_is_errno (cce_condition_t const * @var{C})
 Return @ctrue{} if @var{C} references an @code{errno} exceptional--condition object; otherwise
 return @cfalse{}.
-@end deftypefn
+@end deftypefun
 
 
 @deftypefn {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_destination_t @var{L})
