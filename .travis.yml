@@ -81,6 +81,7 @@ git:
 branches:
   only:
     - master
+    - osx-travis-debug.marcomaggi-2018-06-05
 
 # NOTE There must be only *one* env.global key!!!  Otherwise the earlier
 # settings will be ineffective.
