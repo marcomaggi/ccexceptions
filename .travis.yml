@@ -178,7 +178,7 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make tests/exception-with-handlers; ./tests/exception-with-handlers; make check;"
+      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
