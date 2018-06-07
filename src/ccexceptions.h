@@ -1515,10 +1515,10 @@ cce_p_run_clean_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_clean_handler_malloc_init instead")));
+  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_init_clean_handler_malloc instead")));
 
 cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_error_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_error_handler_malloc_init instead")));
+  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_init_error_handler_malloc instead")));
 
 #define cce_handler_malloc_init(L,P_H,P)				\
   _Generic((P_H),							\
