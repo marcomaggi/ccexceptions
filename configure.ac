@@ -1,5 +1,5 @@
-dnl @configure_input@
-dnl
+### @configure_input@
+#
 
 AC_PREREQ([2.69])
 MMUX_PKG_VERSIONS([0],[8],[0],[devel.5])
@@ -8,8 +8,7 @@ AC_INIT([CCExceptions],[MMUX_PACKAGE_VERSION],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 MMUX_INIT
 MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],8,0,0)
-dnl This is the revision number of this configure.ac
-AC_REVISION([0.1])
+AC_REVISION([1.0])
 AC_COPYRIGHT([Copyright (c) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
@@ -43,7 +42,7 @@ AC_PROG_MKDIR_P
 LT_PREREQ([2.4])
 LT_INIT
 
-dnl page
+
 #### basic system inspection
 
 MMUX_CHECK_TARGET_OS
@@ -67,7 +66,7 @@ AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Request enabling latest POSIX features.])
 
 AC_CACHE_SAVE
 
-dnl page
+
 #### errno values inspection
 
 CCE_ERRNO_TEST([E2BIG])
@@ -216,7 +215,7 @@ CCE_ERRNO_TEST([EWOULDBLOCK])
 CCE_ERRNO_TEST([EXDEV])
 CCE_ERRNO_TEST([EXFULL])
 
-dnl page
+
 #### finish
 
 AC_CONFIG_HEADERS([config.h])
@@ -228,7 +227,3 @@ MMUX_OUTPUT
 AC_OUTPUT
 
 ### end of file
-# Local Variables:
-# mode: autoconf
-# page-delimiter: "^dnl page"
-# End:
