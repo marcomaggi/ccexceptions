@@ -3,6 +3,9 @@
 Notes for revision 0.8.0-devel.5
 --------------------------------
 
+* Updated build infrastructure for better system inspection (especially
+  compiler support).
+
 * Fixed names in __deprecated__ messages.
 
 
