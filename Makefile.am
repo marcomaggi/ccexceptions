@@ -225,6 +225,21 @@ installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
 
+#### testing under GDB
+
+$(builddir)/.gdbinit:
+	ln -sv "$(top_srcdir)/gdbinit" "$(builddir)/.gdbinit"
+
+# This rule is meant to be used as:
+#
+#   $ make all gdb-test FILE=tests/inspection CFLAGS='-g'
+#
+# after having created an appropriate file "$(top_srcdir)/.gdbinit".
+#
+gdb-test: $(builddir)/.gdbinit
+	libtool --mode=execute gdb $$FILE
+
+
 ### examples
 
 noinst_PROGRAMS	= \
@@ -265,52 +280,6 @@ examples_inline_LDADD		= $(ccexceptions_examples_ldadd)
 $(examples_inline_OBJECTS): libccexceptions.la
 
 
-#### Coverity support
-#
-# First run  "make clean",  then run "make  coverity" to  generate the
-# report.  Remember  to put  in the  PATH the  directory in  which the
-# Coverity tools are installed.
-#
-# The tool  will use  a temporary directory  "$(builddir)/cov-int"; we
-# must *not* change this pathname.
-#
-# To generate and submit a report we must do:
-#
-#    $ make clean
-#    $ make coverity-scan
-#    $ make coverity-archive
-#    $ make coverity-upload
-#
-# after "make  coverity-scan" we should  check that the last  lines of
-# the file "cov-int/build-log.txt" report a successful build.
-#
-# Notice that if your Linux kernel is  at version 4.8 or above we have
-# to first issue the command:
-#
-#    $ sudo /sbin/sysctl vsyscall=emulate
-#
-# to make the Coverity tools work.
-#
-
-CCEXCEPTIONS_COVERITY_TOKEN_FILE = /home/unsafe-users/marco-devel/.coverity-ccexceptions-token
-
-.PHONY: coverity-scan coverity-archive coverity-upload
-
-coverity-scan:
-	cov-build --dir cov-int make -j 4
-
-coverity-archive:
-	tar caf ccexceptions.xz cov-int
-
-coverity-upload:
-	curl --form token=$$(<$(CCEXCEPTIONS_COVERITY_TOKEN_FILE)) \
-	     --form email='marco.maggi-ipsu@poste.it' \
-	     --form file='@ccexceptions.xz' \
-	     --form version="$(VERSION)" \
-	     --form description="A build description" \
-	     'https://scan.coverity.com/builds?project=marcomaggi%2Fccexceptions'
-
-
 #### Static analysis with Clang's Static Analyzer
 #
 # See the documentation for the command line tool at:
@@ -323,16 +292,12 @@ coverity-upload:
 #    $ make clang-static-analysis
 #
 # The  program  "scan-build"  works  by  overriding  the  CC  and  CXX
-# environment variables.  Automake defines CXX as:
-#
-#    CXX = g++ -std=c++11
-#
-# so we override CXXFLAGS to include the language specification.
+# environment variables.
 #
 
 .PHONY: clang-static-analysis
 
 clang-static-analysis:
-	scan-build make CXXFLAGS='-std=c++11'
+	scan-build make
 
 ### end of file
