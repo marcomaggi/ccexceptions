@@ -6,7 +6,7 @@ EXTRA_DIST		= INSTALL			\
 			  meta/slackstuff/config.in	\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= -I$(srcdir)/src -Wall $(AX_CFLAGS)
+AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
 
 ## --------------------------------------------------------------------
 
@@ -17,6 +17,8 @@ nodist_pkgconfig_DATA	= meta/scripts/ccexceptions.pc
 ## --------------------------------------------------------------------
 
 AM_MAKEINFOFLAGS	= --no-split
+AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 \
+	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/ccexceptions.texi
 doc_ccexceptions_TEXINFOS	= \
@@ -24,7 +26,7 @@ doc_ccexceptions_TEXINFOS	= \
 	doc/lgpl-3.0.texi	\
 	doc/fdl-1.3.texi
 
-#page
+
 #### libraries
 
 ccexceptions_CURRENT	= @ccexceptions_VERSION_INTERFACE_CURRENT@
@@ -44,7 +46,7 @@ libccexceptions_la_SOURCES= \
 	src/ccexceptions-deprecated.c		\
 	src/ccexceptions-version.c
 
-#page
+
 #### tests
 
 check_PROGRAMS	= \
@@ -222,7 +224,7 @@ tests_condition_subtyping_unreachable_SOURCES	= \
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
-#page
+
 ### examples
 
 noinst_PROGRAMS	= \
@@ -262,7 +264,7 @@ examples_inline_LDADD		= $(ccexceptions_examples_ldadd)
 
 $(examples_inline_OBJECTS): libccexceptions.la
 
-#page
+
 #### Coverity support
 #
 # First run  "make clean",  then run "make  coverity" to  generate the
@@ -308,7 +310,7 @@ coverity-upload:
 	     --form description="A build description" \
 	     'https://scan.coverity.com/builds?project=marcomaggi%2Fccexceptions'
 
-#page
+
 #### Static analysis with Clang's Static Analyzer
 #
 # See the documentation for the command line tool at:

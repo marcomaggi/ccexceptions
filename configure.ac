@@ -2,9 +2,12 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCExceptions],[0.8.0-devel.5],
+MMUX_PKG_VERSIONS([0],[8],[0],[devel.5])
+AC_INIT([CCExceptions],[MMUX_PACKAGE_VERSION],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
+MMUX_INIT
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],8,0,0)
 dnl This is the revision number of this configure.ac
 AC_REVISION([0.1])
 AC_COPYRIGHT([Copyright (c) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
@@ -41,24 +44,12 @@ LT_PREREQ([2.4])
 LT_INIT
 
 dnl page
-#### libraries interface version
-
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],8,0,0)
-
-dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCEXCEPTIONS_PKG_CONFIG_VERSION],[0.8.0])
-
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.8.0d5])
-AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
-
-dnl page
 #### basic system inspection
 
 MMUX_CHECK_TARGET_OS
 
 AC_LANG([C])
 MMUX_LANG_C11
-AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
 AM_PROG_CC_C_O
@@ -233,6 +224,7 @@ AC_CONFIG_FILES([Makefile]
    [meta/scripts/ccexceptions.pc]
    [meta/slackstuff/config]
    [meta/slackware/slack-desc])
+MMUX_OUTPUT
 AC_OUTPUT
 
 ### end of file
