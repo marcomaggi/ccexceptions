@@ -2,7 +2,31 @@
 #
 # Travis CI configuration for CCExceptions.
 
-#page
+
+#### about branch selection
+#
+# Travis-CI processes the file ".travis.yml" from the branch containing the git commit that triggers
+# the build.  The file ".travis.yml" needs to be  present on all active branches of the project.  It
+# is possible to select  which branches to process using a safelist (with  the keyword "only") and a
+# blocklist (with the keyword "except"):
+#
+#    branches:
+#      only:
+#      - master
+#      - stable
+#      except:
+#      - legacy
+#      - /^experimental-.*$/
+#
+# it is possible  to use regular expressions to  select branch names, by putting  the regexp between
+# slash characters.
+#
+# For details see (URL last verified Dec 21, 2018):
+#
+#    <https://docs.travis-ci.com/user/customizing-the-build/#building-specific-branches>
+#
+
+
 #### about compiler packages
 #
 # We select build  by build the packages to install;  it should speed up
@@ -10,7 +34,7 @@
 # would cause  all the compilers to  be installed for all  the builds in
 # the matrix; we do not want this.
 
-#page
+
 #### about compiler selection
 #
 # We select the  compiler we want with the "compiler"  key.  This should
@@ -28,7 +52,7 @@
 #      ./configure
 #
 
-#page
+
 #### about dependency packages
 #
 # We  install  dependency  packages under  "/tmp/mine",  so  appropriate
@@ -61,7 +85,7 @@
 #     ./configure
 #
 
-#page
+
 #### global configuration
 
 language: c
@@ -94,7 +118,7 @@ env:
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 
-#page
+
 #### dependencies management
 #
 # At present there are no depencencies for CCExceptions.
@@ -103,7 +127,7 @@ env:
 # install:
 #   - ./meta/travis-ci/install-some-dependency.sh
 
-#page
+
 #### build scripts
 
 before_script:
@@ -197,12 +221,7 @@ matrix:
       after_success:
         bash <(curl -s https://codecov.io/bash) -xgcov-7
 
-#page
+
 #### done
 
 ### end of file
-# Local Variables:
-# paragraph-start: "#[ \t].+\\|$"
-# paragraph-separate: "#[ \t]*$"
-# page-delimiter: "^#page"
-# End:
