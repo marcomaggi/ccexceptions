@@ -8,6 +8,8 @@ Notes for revision 0.8.0-devel.5
 
 * Fixed names in __deprecated__ messages.
 
+* Fixed errors in test file.
+
 
 Notes for revision 0.8.0-devel.4
 --------------------------------
