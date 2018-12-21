@@ -233,7 +233,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   if (1) test_no_exception();
   if (1) test_with_error();
-  if (1) test_dynamically_allocated_handlers();
+  if (0) test_dynamically_allocated_handlers();
   //
   exit(EXIT_SUCCESS);
 }
