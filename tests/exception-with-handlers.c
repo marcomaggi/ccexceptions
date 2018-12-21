@@ -204,8 +204,8 @@ static void
 test_dynamically_allocated_handlers (void)
 {
   cce_location_t	L[1];
-  volatile test_dynamically_allocated_clean_handler_t * H1;
-  volatile test_dynamically_allocated_error_handler_t * H2;
+  test_dynamically_allocated_clean_handler_t * volatile H1;
+  test_dynamically_allocated_error_handler_t * volatile H2;
   volatile bool		flag1 = false;
   volatile bool		flag2 = false;
 
@@ -233,7 +233,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
 {
   if (1) test_no_exception();
   if (1) test_with_error();
-  if (0) test_dynamically_allocated_handlers();
+  if (1) test_dynamically_allocated_handlers();
   //
   exit(EXIT_SUCCESS);
 }
