@@ -78,10 +78,12 @@ notifications:
 git:
   depth: 1
 
-branches:
-  only:
-    - master
-    - osx-travis-debug.marcomaggi-2018-06-05
+# It is possible to select which branches to process.
+#
+# branches:
+#   only:
+#     - master
+#     - osx-travis-debug.marcomaggi-2018-06-05
 
 # NOTE There must be only *one* env.global key!!!  Otherwise the earlier
 # settings will be ineffective.
@@ -202,6 +204,5 @@ matrix:
 # Local Variables:
 # paragraph-start: "#[ \t].+\\|$"
 # paragraph-separate: "#[ \t]*$"
-# fill-prefix: "# "
 # page-delimiter: "^#page"
 # End:
