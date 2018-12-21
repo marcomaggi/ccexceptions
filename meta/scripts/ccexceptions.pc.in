@@ -20,7 +20,7 @@ sysconfdir=@sysconfdir@
 
 Name: @PACKAGE_NAME@
 Description: exceptions handling for the C language
-Version: @CCEXCEPTIONS_PKG_CONFIG_VERSION@
+Version: @MMUX_PKG_CONFIG_VERSION@
 Libs: -L${libdir} -lccexceptions
 Cflags: -I${includedir}
 

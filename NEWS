@@ -5,6 +5,8 @@ Notes for revision 0.8.0-devel.6
 
 * Selected gzip as compressor for tarballs.
 
+* Fixed error in pkg-config module file.
+
 
 Notes for revision 0.8.0-devel.5
 --------------------------------
