@@ -3,7 +3,11 @@
 Notes for revision 0.8.0-devel.7
 --------------------------------
 
-* ...
+* Added functions:
+
+  cce_handler_set
+  cce_clean_handler_set
+  cce_error_handler_set
 
 
 Notes for revision 0.8.0-devel.6

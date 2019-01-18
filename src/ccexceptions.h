@@ -11,7 +11,7 @@
 
 	   #define _POSIX_C_SOURCE 200809L
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -235,6 +235,30 @@ struct cce_clean_handler_t {
 struct cce_error_handler_t {
   cce_handler_t		handler;
 };
+
+__attribute__((__always_inline__))
+static inline void
+cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  H->pointer	= pointer;
+  H->function	= fun;
+}
+
+__attribute__((__always_inline__))
+static inline void
+cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_handler_set(&(H->handler), pointer, fun);
+}
+
+__attribute__((__always_inline__))
+static inline void
+cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_handler_set(&(H->handler), pointer, fun);
+}
+
+/* ------------------------------------------------------------------ */
 
 cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));

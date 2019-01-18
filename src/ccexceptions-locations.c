@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -176,16 +176,14 @@ run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_
 void
 cce_register_clean_handler_to_run_body_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_body_handlers;
-  inner_H->handler.pointer	= outer_L;
+  cce_clean_handler_set(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_catch_handlers;
-  inner_H->handler.pointer	= outer_L;
+  cce_clean_handler_set(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -194,16 +192,14 @@ cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce
 void
 cce_register_error_handler_to_run_body_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_body_handlers;
-  inner_H->handler.pointer	= outer_L;
+  cce_error_handler_set(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  inner_H->handler.function	= run_catch_handlers;
-  inner_H->handler.pointer	= outer_L;
+  cce_error_handler_set(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 

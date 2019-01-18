@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -95,16 +95,14 @@ cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t
 void
 cce_init_clean_handler_malloc (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
 {
-  H->handler.function	= cce_handler_malloc_function;
-  H->handler.pointer	= pointer;
+  cce_clean_handler_set(H, pointer, cce_handler_malloc_function);
   cce_register_clean_handler(L, H);
 }
 
 void
 cce_init_error_handler_malloc (cce_location_t * L, cce_error_handler_t * H, void * pointer)
 {
-  H->handler.function	= cce_handler_malloc_function;
-  H->handler.pointer	= pointer;
+  cce_error_handler_set(H, pointer, cce_handler_malloc_function);
   cce_register_error_handler(L, H);
 }
 

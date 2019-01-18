@@ -782,6 +782,14 @@ to release its memory.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
+@deftypefun void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefunx void cce_clean_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefunx void cce_error_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+Set the fields @code{pointer} and @code{function} of the handler referenced by @var{H} to the values
+@var{pointer} and @var{fun}.
+@end deftypefun
+
+
 @deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_clean_handler_t * @var{H})
 Register the clean handler referenced by @var{H} in the list of handlers associated to the location
 @var{L}.  The pointer @var{H} must reference an instance of structure whose first field is a
