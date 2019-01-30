@@ -157,6 +157,7 @@ typedef struct cce_location_t			cce_location_t;
 typedef struct cce_handler_t			cce_handler_t;
 typedef struct cce_clean_handler_t		cce_clean_handler_t;
 typedef struct cce_error_handler_t		cce_error_handler_t;
+typedef cce_location_t *			cce_destination_t;
 
 typedef struct cce_descriptor_t			cce_descriptor_t;
 typedef struct cce_condition_t			cce_condition_t;
@@ -205,8 +206,6 @@ typedef struct cce_condition_math_underflow_t	cce_condition_math_underflow_t;
 
 typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
 typedef struct cce_condition_errno_t		cce_condition_errno_t;
-
-typedef cce_location_t *			cce_destination_t;
 
 
 /** --------------------------------------------------------------------
