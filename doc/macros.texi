@@ -341,6 +341,22 @@
 @code{\NAME\}
 @end macro
 
+@macro struct{}
+@code{struct}
+@end macro
+
+@macro stdin{}
+@code{stdin}
+@end macro
+
+@macro stdout{}
+@code{stdout}
+@end macro
+
+@macro stderr{}
+@code{stderr}
+@end macro
+
 @c page
 @c ------------------------------------------------------------
 @c Macros for references to external documents.

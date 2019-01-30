@@ -158,6 +158,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 
 Appendices
 
+* ccnames::                     Automatically generated @api{} names.
 * Package License::             GNU Lesser General Public License.
 * Documentation License::       GNU Free Documentation License.
 * references::                  Bibliography and references.
@@ -3440,6 +3441,7 @@ otherwise the expansion is the empty string.
 @c Appendices.
 @c ------------------------------------------------------------
 
+@include ccnames.texi
 @include lgpl-3.0.texi
 @include fdl-1.3.texi
 

@@ -23,6 +23,7 @@ AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 \
 info_TEXINFOS		= doc/ccexceptions.texi
 doc_ccexceptions_TEXINFOS	= \
 	doc/macros.texi		\
+	doc/ccnames.texi	\
 	doc/lgpl-3.0.texi	\
 	doc/fdl-1.3.texi
 
@@ -33,7 +34,7 @@ ccexceptions_CURRENT	= @ccexceptions_VERSION_INTERFACE_CURRENT@
 ccexceptions_REVISION	= @ccexceptions_VERSION_INTERFACE_REVISION@
 ccexceptions_AGE	= @ccexceptions_VERSION_INTERFACE_AGE@
 
-include_HEADERS		= src/ccexceptions.h
+include_HEADERS		= src/ccexceptions.h src/ccnames.h
 
 lib_LTLIBRARIES		= libccexceptions.la
 libccexceptions_la_LDFLAGS= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
