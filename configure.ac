@@ -2,12 +2,12 @@
 #
 
 AC_PREREQ([2.69])
-MMUX_PKG_VERSIONS([0],[8],[0],[devel.8])
+MMUX_PKG_VERSIONS([0],[9],[0],[devel.0])
 AC_INIT([CCExceptions],[MMUX_PACKAGE_VERSION],
   [marco.maggi-ipsu@poste.it],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 MMUX_INIT
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],8,0,0)
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],9,0,0)
 AC_REVISION([1.0])
 AC_COPYRIGHT([Copyright (c) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
