@@ -197,7 +197,8 @@ methods table for the @struct{} type.
 @end defmac
 
 
-@defmac ccname_method_type (@var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+@defmac ccname_method_type (@var{STRUCT_TYPE}, @var{METHOD_NAME})
+@defmacx ccname_method_type (@var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
 Given a @struct{} type name, an optional variant specification, and a method name: expand into the
 type name of that variant of the method function for the @struct{} type.
 @end defmac
