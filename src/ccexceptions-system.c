@@ -49,7 +49,7 @@ cce_sys_malloc (cce_location_t * L, size_t size)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_condition_new_errno_clear());
+    cce_raise(L, ccname_new(cce_condition_t, system_clear)());
   }
 }
 
@@ -62,7 +62,7 @@ cce_sys_realloc (cce_location_t * L, void * ptr, size_t newsize)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_condition_new_errno_clear());
+    cce_raise(L, ccname_new(cce_condition_t, system_clear)());
   }
 }
 
@@ -75,7 +75,7 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
   if (NULL != rv) {
     return rv;
   } else {
-    cce_raise(L, cce_condition_new_errno_clear());
+    cce_raise(L, ccname_new(cce_condition_t, system_clear)());
   }
 }
 
@@ -137,7 +137,7 @@ cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, vo
     P_H->handler.pointer = P;
     return P;
   } else {
-    cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
+    cce_raise(L, ccname_new(cce_condition_t, invalid_argument)(L, __func__, 2));
   }
 }
 
@@ -149,7 +149,7 @@ cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, vo
     P_H->handler.pointer = P;
     return P;
   } else {
-    cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
+    cce_raise(L, ccname_new(cce_condition_t, invalid_argument)(L, __func__, 2));
   }
 }
 

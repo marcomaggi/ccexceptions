@@ -7,7 +7,7 @@
 
 	This example is copied in the documentation.
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -45,7 +45,7 @@ typedef struct descriptor_alpha_t {
 } descriptor_alpha_t;
 
 typedef struct condition_alpha_t {
-  cce_condition_root_t	root;
+  ccname_type(cce_condition_t, root)	root;
   int			alpha;
 } condition_alpha_t;
 
@@ -53,7 +53,7 @@ cce_condition_t * condition_new_alpha (cce_location_t * L, int alpha);
 void condition_init_alpha (condition_alpha_t * C, int alpha);
 bool condition_is_alpha (cce_condition_t const * condition);
 
-static void condition_delete_alpha (cce_condition_t * C);
+static void condition_release_alpha (cce_condition_t * C);
 static void condition_final_alpha (cce_condition_t * C);
 static char const * condition_static_message_alpha (cce_condition_t const * C);
 
@@ -62,7 +62,7 @@ static char const * condition_static_message_alpha (cce_condition_t const * C);
    initialisation function. */
 static descriptor_alpha_t descriptor_alpha = {
   .descriptor.parent		= NULL,
-  .descriptor.delete		= condition_delete_alpha,
+  .descriptor.release		= condition_release_alpha,
   .descriptor.final		= condition_final_alpha,
   .descriptor.static_message	= condition_static_message_alpha
 };
@@ -72,13 +72,13 @@ condition_new_alpha (cce_location_t * L, int alpha)
 /* Allocate a condition object and initialise it. */
 {
   condition_alpha_t *	C = cce_sys_malloc(L, sizeof(condition_alpha_t));
-  cce_condition_init((cce_condition_t *)C, &descriptor_alpha.descriptor);
+  ccname_init(cce_condition_t)((cce_condition_t *)C, &descriptor_alpha.descriptor);
   condition_init_alpha(C, alpha);
   return (cce_condition_t *) C;
 }
 
 void
-condition_delete_alpha (cce_condition_t * C)
+condition_release_alpha (cce_condition_t * C)
 /* Release the condition object memory. */
 {
   fprintf(stderr, "%s\n\n", __func__);
@@ -108,7 +108,7 @@ condition_static_message_alpha (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_alpha (cce_condition_t const * condition)
 {
-  return cce_condition_is(condition, &descriptor_alpha.descriptor);
+  return ccname_is(cce_condition_t)(condition, &descriptor_alpha.descriptor);
 }
 
 #define condition_alpha(S)						\
@@ -140,7 +140,7 @@ cce_condition_t * condition_new_beta (cce_location_t * L, int alpha, int beta);
 void condition_init_beta (condition_beta_t * C, int alpha, int beta);
 bool condition_is_beta (cce_condition_t const * condition);
 
-static void condition_delete_beta  (cce_condition_t * C);
+static void condition_release_beta  (cce_condition_t * C);
 static void condition_final_beta (cce_condition_t * C);
 static char const * condition_static_message_beta (cce_condition_t const * C);
 
@@ -149,7 +149,7 @@ static char const * condition_static_message_beta (cce_condition_t const * C);
    initialisation function. */
 static descriptor_beta_t descriptor_beta = {
   .descriptor.parent		= &descriptor_alpha.descriptor,
-  .descriptor.delete		= condition_delete_beta,
+  .descriptor.release		= condition_release_beta,
   .descriptor.final		= condition_final_beta,
   .descriptor.static_message	= condition_static_message_beta
 };
@@ -159,13 +159,13 @@ condition_new_beta (cce_location_t * L, int alpha, int beta)
 /* Allocate a condition object and initialise it. */
 {
   condition_beta_t *	C = cce_sys_malloc(L, sizeof(condition_beta_t));
-  cce_condition_init((cce_condition_t *)C, &descriptor_beta.descriptor);
+  ccname_init(cce_condition_t)((cce_condition_t *)C, &descriptor_beta.descriptor);
   condition_init_beta(C, alpha, beta);
   return (cce_condition_t *) C;
 }
 
 void
-condition_delete_beta (cce_condition_t * C)
+condition_release_beta (cce_condition_t * C)
 /* Release the condition object memory. */
 {
   fprintf(stderr, "%s\n\n", __func__);
@@ -196,7 +196,7 @@ condition_static_message_beta (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_beta (cce_condition_t const * condition)
 {
-  return cce_condition_is(condition, &descriptor_beta.descriptor);
+  return ccname_is(cce_condition_t)(condition, &descriptor_beta.descriptor);
 }
 
 #define condition_beta(S)						\
@@ -228,7 +228,7 @@ cce_condition_t * condition_new_gamma (cce_location_t * L, int alpha, int beta, 
 void condition_init_gamma (condition_gamma_t * C, int alpha, int beta, int gamma);
 bool condition_is_gamma (cce_condition_t const * condition);
 
-static void condition_delete_gamma  (cce_condition_t * C);
+static void condition_release_gamma  (cce_condition_t * C);
 static void condition_final_gamma (cce_condition_t * C);
 static char const * condition_static_message_gamma (cce_condition_t const * C);
 
@@ -237,7 +237,7 @@ static char const * condition_static_message_gamma (cce_condition_t const * C);
    initialisation function. */
 static descriptor_gamma_t descriptor_gamma = {
   .descriptor.parent		= &descriptor_beta.descriptor,
-  .descriptor.delete		= condition_delete_gamma,
+  .descriptor.release		= condition_release_gamma,
   .descriptor.final		= condition_final_gamma,
   .descriptor.static_message	= condition_static_message_gamma
 };
@@ -247,13 +247,13 @@ condition_new_gamma (cce_location_t * L, int alpha, int beta, int gamma)
 /* Allocate a condition object and initialise it. */
 {
   condition_gamma_t *	C = cce_sys_malloc(L, sizeof(condition_gamma_t));
-  cce_condition_init((cce_condition_t *)C, &descriptor_gamma.descriptor);
+  ccname_init(cce_condition_t)((cce_condition_t *)C, &descriptor_gamma.descriptor);
   condition_init_gamma(C, alpha, beta, gamma);
   return (cce_condition_t *) C;
 }
 
 void
-condition_delete_gamma (cce_condition_t * C)
+condition_release_gamma (cce_condition_t * C)
 /* Release the condition object memory. */
 {
   fprintf(stderr, "%s\n\n", __func__);
@@ -284,7 +284,7 @@ condition_static_message_gamma (cce_condition_t const * C CCE_UNUSED)
 bool
 condition_is_gamma (cce_condition_t const * condition)
 {
-  return cce_condition_is(condition, &descriptor_gamma.descriptor);
+  return ccname_is(cce_condition_t)(condition, &descriptor_gamma.descriptor);
 }
 
 #define condition_gamma(S)						\

@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -49,7 +49,7 @@ test_tracing_sub_sub_sub (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    cce_raise(L, cce_condition_new_unknown());
+    cce_raise(L, ccname_new(cce_condition_t, unknown)());
     cce_run_body_handlers(L);
   }
 }

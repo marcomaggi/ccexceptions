@@ -7,7 +7,7 @@
 
 	Header definitions for subtyping of "logic error" conditions
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -37,7 +37,7 @@ struct my_descriptor_logic_error_subtype_t {
 };
 
 struct my_condition_logic_error_subtype_t {
-  cce_condition_logic_error_t	logic_error;
+  ccname_type(cce_condition_t, logic_error)	logic_error;
   int *				data;
 };
 
@@ -53,7 +53,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 my_condition_is_logic_error_subtype (cce_condition_t const * C)
 {
-  return cce_condition_is(C, &(my_descriptor_logic_error_subtype_ptr->descriptor));
+  return ccname_is(cce_condition_t)(C, &(my_descriptor_logic_error_subtype_ptr->descriptor));
 }
 
 extern void logic_error_subtyping_init_module (void);

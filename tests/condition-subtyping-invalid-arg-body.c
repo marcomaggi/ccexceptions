@@ -7,7 +7,7 @@
 
 	Body definitions of a subtype of "invalid argument".
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -27,15 +27,15 @@
  ** Condition type descriptor definition.
  ** ----------------------------------------------------------------- */
 
-static cce_condition_delete_fun_t		my_condition_delete_invalid_argument_subtype;
-static cce_condition_final_fun_t		my_condition_final_invalid_argument_subtype;
-static cce_condition_static_message_fun_t	my_condition_static_message_invalid_argument_subtype;
+static ccname_method_type(cce_condition_t, release)		my_condition_release_invalid_argument_subtype;
+static ccname_method_type(cce_condition_t, final)		my_condition_final_invalid_argument_subtype;
+static ccname_method_type(cce_condition_t, static_message)	my_condition_static_message_invalid_argument_subtype;
 
 static my_descriptor_invalid_argument_subtype_t my_descriptor_invalid_argument_subtype_stru = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
-  .descriptor.delete		= my_condition_delete_invalid_argument_subtype,
+  .descriptor.release		= my_condition_release_invalid_argument_subtype,
   .descriptor.final		= my_condition_final_invalid_argument_subtype,
   .descriptor.static_message	= my_condition_static_message_invalid_argument_subtype
 };
@@ -50,7 +50,7 @@ my_descriptor_invalid_argument_subtype_t const * const my_descriptor_invalid_arg
 void
 my_condition_final_invalid_argument_subtype (cce_condition_t * _C)
 /* Finalisation  functions are  called automatically  when the  function
-   "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
+   "ccname_final(cce_condition_t)()"  is  applied  to  the argument  C.   Here  we
    finalise only the fields of this type leaving untouched the fields of
    the parent type. */
 {
@@ -61,15 +61,15 @@ my_condition_final_invalid_argument_subtype (cce_condition_t * _C)
 }
 
 void
-my_condition_delete_invalid_argument_subtype (cce_condition_t * _C)
-/* The  delete function  is called  automatically when  the client  code
-   applies "cce_condition_delete()" to the  argument C.  Here we release
-   memory allocated for the condition object. */
+my_condition_release_invalid_argument_subtype (cce_condition_t * _C)
+/* The  release  function  is  called  automatically when  the  client  code  applies
+   "ccname_delete(cce_condition_t)()" to the argument C.   Here we release memory allocated for
+   the condition object. */
 {
   my_condition_invalid_argument_subtype_t * C = (my_condition_invalid_argument_subtype_t *) _C;
 
   free(C);
-  if (1) { fprintf(stderr, "%s: deleted %p\n", __func__, (void*)C); }
+  if (1) { fprintf(stderr, "%s: released %p\n", __func__, (void*)C); }
 }
 
 char const *
@@ -97,7 +97,7 @@ my_condition_init_invalid_argument_subtype (cce_destination_t L, my_condition_in
  * the fields of this type.
  */
 {
-  cce_condition_init_invalid_argument(&(C->invalid_argument), func, index);
+  ccname_init(cce_condition_t, invalid_argument)(&(C->invalid_argument), func, index);
   C->data = cce_sys_malloc(L, sizeof(int));
   *(C->data) = the_data;
   if (1) { fprintf(stderr, "%s: initialised %p\n", __func__, (void*)C); }
@@ -112,7 +112,7 @@ my_condition_new_invalid_argument_subtype (cce_destination_t upper_L, char const
  *
  * 1. Allocate memory for the condition object itself.
  *
- * 2. Initialise the descriptor field by calling "cce_condition_init()".
+ * 2. Initialise the descriptor field by calling "ccname_init(cce_condition_t)()".
  *
  * 3. Call the initialisation function for this type.
  */
@@ -125,7 +125,7 @@ my_condition_new_invalid_argument_subtype (cce_destination_t upper_L, char const
   } else {
     my_condition_invalid_argument_subtype_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_invalid_argument_subtype_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_invalid_argument_subtype_ptr->descriptor));
+    ccname_init(cce_condition_t)((cce_condition_t *) C, &(my_descriptor_invalid_argument_subtype_ptr->descriptor));
     my_condition_init_invalid_argument_subtype(L, C, func, index, the_data);
 
     cce_run_body_handlers(L);

@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -69,7 +69,7 @@ test_no_exception (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_catch_handlers(L);
-    cce_condition_delete(cce_condition(L));
+    ccname_delete(cce_condition_t)(cce_condition(L));
     break;
 
   default:
@@ -118,7 +118,7 @@ test_with_error (void)
   switch (cce_location(L)) {
   case CCE_ERROR:
     cce_run_catch_handlers(L);
-    cce_condition_delete(cce_condition(L));
+    ccname_delete(cce_condition_t)(cce_condition(L));
     break;
 
   default:

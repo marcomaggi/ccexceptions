@@ -5,16 +5,15 @@
 
   Abstract
 
-	This is the  header file of an example of  condition object type
-	definition;  it   goes  along  with  the   files  "plain.c"  and
-	"plain-body.c".
+	This is the header file of an example of condition object type definition; it
+	goes along with the files "plain.c" and "plain-body.c".
 
-	This file contains header definitions for a new condition object
-	type   derived    from   "cce_condition_runtime_error_t".    The
-	definition is a "plain" one:  no inline functions; new condition
-	objects allocated by a constructor.
+	This file contains header definitions for a new condition object type derived
+	from  "ccname_type(cce_condition_t,  runtime_error)".   The definition  is  a
+	"plain"  one: no  inline  functions;  new condition  objects  allocated by  a
+	constructor.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -44,7 +43,7 @@ struct my_descriptor_error_1_t {
 };
 
 struct my_condition_error_1_t {
-  cce_condition_runtime_error_t	runtime_error;
+  ccname_type(cce_condition_t, runtime_error)	runtime_error;
   int *				data;
 };
 

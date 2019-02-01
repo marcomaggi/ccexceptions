@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -122,7 +122,7 @@ test_retry_from_handler (void)
   } else {
     ++body_flag;
     if (0 == retry_flag) {
-      cce_raise(L, cce_condition_new_unknown());
+      cce_raise(L, ccname_new(cce_condition_t, unknown)());
     }
     cce_run_body_handlers(L);
   }
@@ -156,7 +156,7 @@ test_retry_from_handler_twice (void)
   } else {
     ++body_flag;
     if (2 > retry_flag) {
-      cce_raise(L, cce_condition_new_unknown());
+      cce_raise(L, ccname_new(cce_condition_t, unknown)());
     }
     cce_run_body_handlers(L);
   }

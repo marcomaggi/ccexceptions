@@ -345,6 +345,10 @@
 @code{struct}
 @end macro
 
+@macro method{NAME}
+@code{\NAME\}
+@end macro
+
 @macro stdin{}
 @code{stdin}
 @end macro

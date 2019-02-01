@@ -5,6 +5,8 @@ Notes for revision 0.9.0-devel.0
 
 * Imported header file "ccnames.h".
 
+* BACKWARDS INCOMPATIBILITY Total change of public API.
+
 
 Notes for revision 0.8.0-devel.8
 --------------------------------

@@ -21,10 +21,19 @@ The macros for ``well known functions'' define an @api{} for the basic operation
 @struct{}.  The following macros are defined in the header file @file{ccnames.h}.
 
 
+@defmac ccname_type (@var{STRUCT_TYPE})
+@defmacx ccname_type (@var{STRUCT_TYPE}, @var{VARIANT})
+@defmacx ccname_type (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT})
+@defmacx ccname_type (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT}, @variii{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of a derived
+type.  We can use this macro to define a type derived (specialised) from another one.
+@end defmac
+
+
 @defmac ccname_init (@var{STRUCT_TYPE})
 @defmacx ccname_init (@var{STRUCT_TYPE}, @var{VARIANT})
 @defmacx ccname_init (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT})
-@defmacx ccname_init (@var{STRUCT_TYPE}, @vari{VARIANT}, @variii{VARIANT})
+@defmacx ccname_init (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT}, @variii{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
 @api{} function @cfunc{init}.
 
@@ -62,7 +71,7 @@ might perform the release using the @api{} of the library CCMemory.
 @defmac ccname_new (@var{STRUCT_TYPE})
 @defmacx ccname_new (@var{STRUCT_TYPE}, @var{VARIANT})
 @defmacx ccname_new (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT})
-@defmacx ccname_new (@var{STRUCT_TYPE}, @vari{VARIANT}, @variii{VARIANT})
+@defmacx ccname_new (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT}, @variii{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
 @api{} function @cfunc{new}.
 
@@ -78,6 +87,15 @@ Given a @struct{} type name: expand into the name of the @api{} function @cfunc{
 Functions with this name are destructors for @struct{} instances allocated on the heap.  The
 finalisation of the fields is performed by calling the @cfunc{final} function.  The memory release
 is performed by calling the @cfunc{release} function.
+@end defmac
+
+
+@defmac ccname_is (@var{STRUCT_IS})
+@defmacx ccname_is (@var{STRUCT_IS}, @var{VARIANT})
+@defmacx ccname_is (@var{STRUCT_IS}, @vari{VARIANT}, @varii{VARIANT})
+@defmacx ccname_is (@var{STRUCT_IS}, @vari{VARIANT}, @varii{VARIANT}, @variii{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{is}.
 @end defmac
 
 

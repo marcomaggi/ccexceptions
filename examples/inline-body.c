@@ -5,17 +5,15 @@
 
   Abstract
 
-	This is  the body file  of an  example of condition  object type
-	definition;  it  goes  along   with  the  files  "inline.c"  and
-	"inline-header.h".
+	This is the body  file of an example of condition  object type definition; it
+	goes along with the files "inline.c" and "inline-header.h".
 
-	This file contains  body definitions for a  new condition object
-	type   derived    from   "cce_condition_runtime_error_t".    The
-	definition  is an  "inline" one:  as  much as  possible it  uses
-	inline  functions;   new  condition   objects  allocated   by  a
-	constructor.
+	This file contains  body definitions for a new condition  object type derived
+	from  "ccname_type(cce_condition_t, runtime_error)".   The  definition is  an
+	"inline" one:  as much as  possible it  uses inline functions;  new condition
+	objects allocated by a constructor.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -35,15 +33,15 @@
  ** Condition type descriptor definition.
  ** ----------------------------------------------------------------- */
 
-static cce_condition_delete_fun_t		my_condition_delete_error_2;
-static cce_condition_final_fun_t		my_condition_final_error_2;
-static cce_condition_static_message_fun_t	my_condition_static_message_error_2;
+static ccname_method_type(cce_condition_t, release)		my_condition_release_error_2;
+static ccname_method_type(cce_condition_t, final)		my_condition_final_error_2;
+static ccname_method_type(cce_condition_t, static_message)	my_condition_static_message_error_2;
 
 static my_descriptor_error_2_t my_descriptor_error_2_stru = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
-  .descriptor.delete		= my_condition_delete_error_2,
+  .descriptor.release		= my_condition_release_error_2,
   .descriptor.final		= my_condition_final_error_2,
   .descriptor.static_message	= my_condition_static_message_error_2
 };
@@ -58,7 +56,7 @@ my_descriptor_error_2_t const * const my_descriptor_error_2_ptr = &my_descriptor
 void
 my_condition_final_error_2 (cce_condition_t * _C)
 /* Finalisation  functions are  called automatically  when the  function
-   "cce_condition_final()"  is  applied  to  the argument  C.   Here  we
+   "ccname_final(cce_condition_t)()"  is  applied  to  the argument  C.   Here  we
    finalise only the fields of this type leaving untouched the fields of
    the parent type. */
 {
@@ -69,9 +67,9 @@ my_condition_final_error_2 (cce_condition_t * _C)
 }
 
 void
-my_condition_delete_error_2 (cce_condition_t * _C)
+my_condition_release_error_2 (cce_condition_t * _C)
 /* The  delete function  is called  automatically when  the client  code
-   applies "cce_condition_delete()" to the  argument C.  Here we release
+   applies "ccname_delete(cce_condition_t)()" to the  argument C.  Here we release
    memory allocated for the condition object. */
 {
   my_condition_error_2_t * C = (my_condition_error_2_t *) _C;
@@ -104,7 +102,7 @@ my_condition_init_error_2 (cce_destination_t L, my_condition_error_2_t * C, int 
  * the fields of this type.
  */
 {
-  cce_condition_init_runtime_error(&(C->runtime_error));
+  ccname_init(cce_condition_t, runtime_error)(&(C->runtime_error));
   C->data = cce_sys_malloc(L, sizeof(int));
   *(C->data) = the_data;
   if (1) { fprintf(stderr, "%s: initialised %p\n", __func__, (void*)C); }
@@ -119,7 +117,7 @@ my_condition_new_error_2 (cce_destination_t upper_L, int the_data)
  *
  * 1. Allocate memory for the condition object itself.
  *
- * 2. Initialise the descriptor field by calling "cce_condition_init()".
+ * 2. Initialise the descriptor field by calling "ccname_init(cce_condition_t)()".
  *
  * 3. Call the initialisation function for this type.
  */
@@ -132,7 +130,7 @@ my_condition_new_error_2 (cce_destination_t upper_L, int the_data)
   } else {
     my_condition_error_2_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_error_2_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_error_2_ptr->descriptor));
+    ccname_init(cce_condition_t)((cce_condition_t *) C, &(my_descriptor_error_2_ptr->descriptor));
     my_condition_init_error_2(L, C, the_data);
 
     cce_run_body_handlers(L);

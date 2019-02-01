@@ -5,16 +5,15 @@
 
   Abstract
 
-	This is the  header file of an example of  condition object type
-	definition;  it  goes  along   with  the  files  "inline.c"  and
-	"inline-body.c".
+	This is the header file of an example of condition object type definition; it
+	goes along with the files "inline.c" and "inline-body.c".
 
-	This file contains header definitions for a new condition object
-	type   derived    from   "cce_condition_runtime_error_t".    The
-	definition is a "inline" one: as much as possible it uses inline
-	functions; new condition objects allocated by a constructor.
+	This file contains header definitions for a new condition object type derived
+	from  "ccname_type(cce_condition_t,  runtime_error)".   The definition  is  a
+	"inline" one:  as much as  possible it  uses inline functions;  new condition
+	objects allocated by a constructor.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -44,7 +43,7 @@ struct my_descriptor_error_2_t {
 };
 
 struct my_condition_error_2_t {
-  cce_condition_runtime_error_t	runtime_error;
+  ccname_type(cce_condition_t, runtime_error)	runtime_error;
   int *				data;
 };
 
@@ -60,7 +59,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 my_condition_is_error_2 (cce_condition_t const * C)
 {
-  return cce_condition_is(C, &(my_descriptor_error_2_ptr->descriptor));
+  return ccname_is(cce_condition_t)(C, &(my_descriptor_error_2_ptr->descriptor));
 }
 
 extern void inline_init_module (void);

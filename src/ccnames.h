@@ -111,6 +111,10 @@ extern "C" {
  ** Construction of automatically generated names.
  ** ----------------------------------------------------------------- */
 
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of a derived type name. */
+#define _CCNAME_TYPE(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## _t
+
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
    specification: expand into the name of the API function "new()". */
 #define _CCNAME_NEW(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __new
@@ -134,6 +138,10 @@ extern "C" {
 /* Given a  struct type name: expand  into the name of  the API function
    "release()". */
 #define _CCNAME_RELEASE(STRUCT_TYPE)		STRUCT_TYPE ## __release
+
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of the API function "is()". */
+#define _CCNAME_IS(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __is
 
 /* Given a struct type name an a (possibly empty) variant specification:
    expand  into the  name  of  the methods  table  type  for the  struct
@@ -160,6 +168,19 @@ extern "C" {
 /** --------------------------------------------------------------------
  ** Automatically generated names API: data structs.
  ** ----------------------------------------------------------------- */
+
+/* Given a  struct type name and  an optional variant specification:  expand into the
+   name of a derived type name. */
+#define ccname_type_1(STRUCT_TYPE)		\
+  _CCNAME_TYPE(STRUCT_TYPE, )
+#define ccname_type_2(STRUCT_TYPE, VARIANT)	\
+  _CCNAME_TYPE(STRUCT_TYPE, VARIANT)
+#define ccname_type_3(STRUCT_TYPE, VARIANT1, VARIANT2)	\
+  _CCNAME_TYPE(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2)
+#define ccname_type_4(STRUCT_TYPE, VARIANT1, VARIANT2, VARIANT3)	\
+  _CCNAME_TYPE(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2 ## _ ## VARIANT3)
+#define ccname_type(...)			\
+  _CCNAMES_VFUNC(ccname_type, __VA_ARGS__)
 
 /* Given  a struct  type  name and  an  optional variant  specification:
    expand into the name of the API function "new()". */
@@ -202,6 +223,19 @@ extern "C" {
 /* Given a  struct type name: expand  into the name of  the API function
    "release()". */
 #define ccname_release(STRUCT_TYPE)		_CCNAME_RELEASE(STRUCT_TYPE)
+
+/* Given  a struct  type  name and  an  optional variant  specification:
+   expand into the name of the API function "is()". */
+#define ccname_is_1(STRUCT_TYPE)				\
+  _CCNAME_IS(STRUCT_TYPE, )
+#define ccname_is_2(STRUCT_TYPE, VARIANT)			\
+  _CCNAME_IS(STRUCT_TYPE, VARIANT)
+#define ccname_is_3(STRUCT_TYPE, VARIANT1, VARIANT2)		\
+  _CCNAME_IS(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2)
+#define ccname_is_4(STRUCT_TYPE, VARIANT1, VARIANT2, VARIANT3)	\
+  _CCNAME_IS(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2 ## _ ## VARIANT3)
+#define ccname_is(...)						\
+  _CCNAMES_VFUNC(ccname_is, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------

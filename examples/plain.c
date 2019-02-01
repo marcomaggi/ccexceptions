@@ -5,16 +5,15 @@
 
   Abstract
 
-	This is the main program of  an example of condition-object type
-	definition; it  goes along  with the files  "plain-header.h" and
-	"plain-body.c".
+	This is the  main program of an example of  condition-object type definition;
+	it goes along with the files "plain-header.h" and "plain-body.c".
 
-	The other files define a  new condition-object type derived from
-	"cce_condition_runtime_error_t" and  this program uses  it.  The
-	definition is a "plain" one:  no inline functions; new condition
-	objects allocated by a constructor.
+	The   other  files   define  a   new  condition-object   type  derived   from
+	"ccname_type(cce_condition_t, runtime_error)" and this  program uses it.  The
+	definition  is a  "plain" one:  no  inline functions;  new condition  objects
+	allocated by a constructor.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -49,21 +48,21 @@ main (void)
 	exit(EXIT_FAILURE);
       }
 
-      if (cce_condition_is_runtime_error(cce_condition(L))) {
+      if (ccname_is(cce_condition_t, runtime_error)(cce_condition(L))) {
 	fprintf(stderr, "%s: is runtime error condition\n", __func__);
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
       }
 
-      if (cce_condition_is_error(cce_condition(L))) {
+      if (ccname_is(cce_condition_t, error)(cce_condition(L))) {
 	fprintf(stderr, "%s: is error condition\n", __func__);
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
       }
 
-      if (cce_condition_is_root(cce_condition(L))) {
+      if (ccname_is(cce_condition_t, root)(cce_condition(L))) {
 	fprintf(stderr, "%s: is root condition\n", __func__);
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);

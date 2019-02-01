@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -61,7 +61,7 @@ test_1_2 (void)
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -101,7 +101,7 @@ test_2_2 (void)
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -144,7 +144,7 @@ test_3_2 (void)
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -184,7 +184,7 @@ test_4_2 (void)
   } else {
     void *	P = cce_sys_calloc_guarded(L, P_H, 4, 1024);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -231,7 +231,7 @@ test_5_2 (void)
     assert(NULL != P);
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -275,7 +275,7 @@ test_6_2 (void)
     assert(NULL != P);
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, ccname_new(cce_condition_t, error)());
   }
 }
 
@@ -291,7 +291,7 @@ test_7_1 (void)
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: all right, got exception: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    if (! cce_condition_is_invalid_argument(cce_condition(L))) {
+    if (! ccname_is(cce_condition_t, invalid_argument)(cce_condition(L))) {
       exit(EXIT_FAILURE);
     }
     cce_run_catch_handlers_final(L);

@@ -63,7 +63,7 @@ __attribute__((__hot__))
 void
 cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 {
-  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
+  if (L->condition) { ccname_delete(cce_condition_t)((cce_condition_t*)L->condition); }
   L->condition = cce_condition_or_default(C);
   siglongjmp(L->buffer, (int)CCE_EXCEPT);
 }
@@ -71,7 +71,7 @@ cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 void
 cce_p_retry (cce_location_t * L)
 {
-  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
+  if (L->condition) { ccname_delete(cce_condition_t)((cce_condition_t*)L->condition); }
   L->condition = &(cce_condition_unknown_ptr->root.condition);
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
@@ -160,7 +160,7 @@ static void
 run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
 {
   cce_run_body_handlers(inner_H->location);
-  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+  ccname_delete(cce_condition_t)((cce_condition_t *)(inner_H->location->condition));
 }
 
 __attribute__((__nonnull__(1,2)))
@@ -168,7 +168,7 @@ static void
 run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
 {
   cce_run_catch_handlers(inner_H->location);
-  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+  ccname_delete(cce_condition_t)((cce_condition_t *)(inner_H->location->condition));
 }
 
 /* ------------------------------------------------------------------ */

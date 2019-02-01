@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -47,10 +47,10 @@ test_invalid_argument (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_invalid_argument(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, invalid_argument)(cce_condition(L)));
     assert(0 == strcmp(__func__, cce_condition_invalid_argument(L)->funcname));
     cce_run_catch_handlers(L);
-    cce_condition_delete(cce_condition(L));
+    ccname_delete(cce_condition_t)(cce_condition(L));
     error_flag = true;
   } else {
     cce_check_argument(L, false, 1);
@@ -71,12 +71,12 @@ test_math_error (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_runtime_error(cce_condition(L)));
-    assert(cce_condition_is_math_error(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, runtime_error)(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_error)(cce_condition(L)));
     cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_new_math_error()));
+    cce_raise(L, cce_condition(ccname_new(cce_condition_t, math_error)()));
     cce_run_body_handlers(L);
   }
   assert(true == error_flag);
@@ -89,12 +89,12 @@ test_math_nan (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_math_error(cce_condition(L)));
-    assert(cce_condition_is_math_nan(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_error)(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_nan)(cce_condition(L)));
     cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_new_math_nan()));
+    cce_raise(L, cce_condition(ccname_new(cce_condition_t, math_nan)()));
     cce_run_body_handlers(L);
   }
   assert(true == error_flag);
@@ -107,12 +107,12 @@ test_math_infinity (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_math_error(cce_condition(L)));
-    assert(cce_condition_is_math_infinity(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_error)(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_infinity)(cce_condition(L)));
     cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_new_math_infinity()));
+    cce_raise(L, cce_condition(ccname_new(cce_condition_t, math_infinity)()));
     cce_run_body_handlers(L);
   }
   assert(true == error_flag);
@@ -125,12 +125,12 @@ test_math_overflow (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_math_error(cce_condition(L)));
-    assert(cce_condition_is_math_overflow(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_error)(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_overflow)(cce_condition(L)));
     cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_new_math_overflow()));
+    cce_raise(L, cce_condition(ccname_new(cce_condition_t, math_overflow)()));
     cce_run_body_handlers(L);
   }
   assert(true == error_flag);
@@ -143,12 +143,12 @@ test_math_underflow (void)
   bool			error_flag = false;
 
   if (cce_location(L)) {
-    assert(cce_condition_is_math_error(cce_condition(L)));
-    assert(cce_condition_is_math_underflow(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_error)(cce_condition(L)));
+    assert(ccname_is(cce_condition_t, math_underflow)(cce_condition(L)));
     cce_run_catch_handlers_final(L);
     error_flag = true;
   } else {
-    cce_raise(L, cce_condition(cce_condition_new_math_underflow()));
+    cce_raise(L, cce_condition(ccname_new(cce_condition_t, math_underflow)()));
     cce_run_body_handlers(L);
   }
   assert(true == error_flag);
