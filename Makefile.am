@@ -44,7 +44,6 @@ libccexceptions_la_SOURCES= \
 	src/ccexceptions-locations.c		\
 	src/ccexceptions-conditions.c		\
 	src/ccexceptions-system.c		\
-	src/ccexceptions-deprecated.c		\
 	src/ccexceptions-version.c
 
 
