@@ -977,21 +977,11 @@ cce_code (int const code)
  ** Running handlers and catching exceptions as final step.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1),__always_inline__))
-static inline void
-cce_p_run_catch_handlers_final (cce_destination_t L)
-{
-  cce_run_catch_handlers(L);
-  ccname_delete(cce_condition_t)((cce_condition_t *)(L->condition));
-}
+cce_decl void cce_p_run_catch_handlers_final (cce_destination_t L)
+  __attribute__((__nonnull__(1)));
 
-__attribute__((__nonnull__(1),__always_inline__))
-static inline void
-cce_p_run_body_handlers_final (cce_destination_t L)
-{
-  cce_run_body_handlers(L);
-  ccname_delete(cce_condition_t)((cce_condition_t *)(L->condition));
-}
+cce_decl void cce_p_run_body_handlers_final (cce_destination_t L)
+  __attribute__((__nonnull__(1)));
 
 cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,2,3)));

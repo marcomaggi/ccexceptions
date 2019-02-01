@@ -150,6 +150,22 @@ cce_run_catch_handlers (cce_location_t * L)
   }
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_p_run_catch_handlers_final (cce_destination_t L)
+{
+  cce_run_catch_handlers(L);
+  ccname_delete(cce_condition_t)((cce_condition_t *)(L->condition));
+}
+
+void
+cce_p_run_body_handlers_final (cce_destination_t L)
+{
+  cce_run_body_handlers(L);
+  ccname_delete(cce_condition_t)((cce_condition_t *)(L->condition));
+}
+
 
 /** --------------------------------------------------------------------
  ** Running handlers from a handler.
