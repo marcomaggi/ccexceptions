@@ -7,23 +7,19 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This is free software; you can  redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
-
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 */
 
 
@@ -98,8 +94,7 @@ cce_condition_root_static_message_fun (cce_condition_t const * C CCE_UNUSED)
   return "Root exceptional condition";
 }
 
-/* This  condition descriptor  is  the  root of  the  tree of  condition
-   descriptors. */
+/* This condition descriptor is the root of the tree of condition descriptors. */
 static ccname_type(cce_descriptor_t, root) const cce_descriptor_root_stru = {
   .descriptor.parent		= NULL,
   .descriptor.release		= NULL,
@@ -142,9 +137,9 @@ cce_condition_unknown_static_message_fun (cce_condition_t const * C CCE_UNUSED)
   return "Unknown exceptional condition";
 }
 
-/* This   condition  descriptor   represents   an  unknown   exceptional
-   condition.   This   descriptor  has  only  one   instance  statically
-   allocated below: "cce_condition_unknown". */
+/* This  condition  descriptor represents  an  unknown  exceptional condition.   This
+   descriptor    has    only    one     instance    statically    allocated    below:
+   "cce_condition_unknown". */
 static ccname_type(cce_descriptor_t, unknown) const cce_descriptor_unknown_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
   .descriptor.release		= NULL,
@@ -154,8 +149,8 @@ static ccname_type(cce_descriptor_t, unknown) const cce_descriptor_unknown_stru 
 
 ccname_type(cce_descriptor_t, unknown) const * const cce_descriptor_unknown_ptr = &cce_descriptor_unknown_stru;
 
-/* This is the single instance  of unknown exceptional condition.  It is
-   used by "cce_raise()". */
+/* This  is the  single instance  of unknown  exceptional condition.   It is  used by
+   "cce_raise()". */
 static ccname_type(cce_condition_t, unknown) const cce_condition_unknown_stru = {
   .root.condition.descriptor = &(cce_descriptor_unknown_stru.descriptor)
 };
@@ -187,8 +182,8 @@ cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
   return "Break exceptional condition";
 }
 
-/* This condition descriptor represents  an break exceptional condition.
-   This  descriptor has  only one  instance statically  allocated below:
+/* This  condition  descriptor  represents  an  break  exceptional  condition.   This
+   descriptor    has    only    one     instance    statically    allocated    below:
    "cce_condition_break". */
 static ccname_type(cce_descriptor_t, break) const cce_descriptor_break_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
@@ -199,8 +194,8 @@ static ccname_type(cce_descriptor_t, break) const cce_descriptor_break_stru = {
 
 ccname_type(cce_descriptor_t, break) const * const cce_descriptor_break_ptr = &cce_descriptor_break_stru;
 
-/* This is  the single instance  of break exceptional condition.   It is
-   used by "cce_raise()". */
+/* This  is the  single  instance of  break  exceptional condition.   It  is used  by
+   "cce_raise()". */
 static ccname_type(cce_condition_t, break) const cce_condition_break_stru = {
   .root.condition.descriptor = &(cce_descriptor_break_stru.descriptor)
 };
@@ -238,9 +233,9 @@ cce_condition_error_static_message_fun (cce_condition_t const * C CCE_UNUSED)
   return "Unspecified error exceptional condition";
 }
 
-/* This   condition  descriptor   represents   an  "unspecified   error"
-   exceptional  condition.   This  descriptor   has  only  one  instance
-   statically allocated below: "cce_condition_error". */
+/* This condition descriptor represents an "unspecified error" exceptional condition.
+   This   descriptor   has   only    one   instance   statically   allocated   below:
+   "cce_condition_error". */
 static ccname_type(cce_descriptor_t, error) const cce_descriptor_error_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
   .descriptor.release		= NULL,
@@ -250,8 +245,8 @@ static ccname_type(cce_descriptor_t, error) const cce_descriptor_error_stru = {
 
 ccname_type(cce_descriptor_t, error) const * const cce_descriptor_error_ptr = &cce_descriptor_error_stru;
 
-/* This  is  the  single  instance of  "unspecified  error"  exceptional
-   condition.  It is used by "cce_raise()". */
+/* This is the  single instance of "unspecified error" exceptional  condition.  It is
+   used by "cce_raise()". */
 static ccname_type(cce_condition_t, error) const cce_condition_error_stru = {
   .root.condition.descriptor = &(cce_descriptor_error_stru.descriptor)
 };

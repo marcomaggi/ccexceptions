@@ -9,21 +9,17 @@
 
   Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This is free software; you  can redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
-
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 */
 
 
@@ -113,9 +109,8 @@ cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 __attribute__((__hot__))
 void
 cce_run_body_handlers (cce_location_t * L)
-/* Traverse the  linked list  of registered handlers  and run  the clean
-   ones.   This  is a  destructive  function:  once  the list  has  been
-   traversed, it is not valid anymore.
+/* Traverse the linked list of registered handlers and run the clean ones.  This is a
+   destructive function: once the list has been traversed, it is not valid anymore.
 */
 {
   cce_handler_t *	next = L->first_handler;
@@ -124,8 +119,8 @@ cce_run_body_handlers (cce_location_t * L)
     /* First acquire the next handler... */
     next = H->next_handler;
     if (true == H->is_clean_handler) {
-      /* ... then  run the current  handler.  Remember that  the current
-	 handler might release the memory referenced by "H". */
+      /* ... then run  the current handler.  Remember that the  current handler might
+	 release the memory referenced by "H". */
       H->function(L->condition, H);
     }
   }
@@ -134,9 +129,8 @@ cce_run_body_handlers (cce_location_t * L)
 __attribute__((__hot__))
 void
 cce_run_catch_handlers (cce_location_t * L)
-/* Traverse the  linked list  of registered handlers  and run  the error
-   ones.   This  is a  destructive  function:  once  the list  has  been
-   traversed, it is not valid anymore.
+/* Traverse the linked list of registered handlers and run the error ones.  This is a
+   destructive function: once the list has been traversed, it is not valid anymore.
 */
 {
   cce_handler_t *	next = L->first_handler;
@@ -144,8 +138,8 @@ cce_run_catch_handlers (cce_location_t * L)
   for (cce_handler_t * H = next; H && H->function; H = next) {
     /* First acquire the next handler... */
     next = H->next_handler;
-    /* ...  then  run the  current handler.   Remember that  the current
-       handler might release the memory referenced by "H". */
+    /* ...  then  run the current handler.   Remember that the current  handler might
+       release the memory referenced by "H". */
     H->function(L->condition, H);
   }
 }
