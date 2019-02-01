@@ -1001,21 +1001,11 @@ cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char 
  ** Running handlers and re-raising exceptions.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
-static inline void
-cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_catch_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
+cce_decl void cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+  __attribute__((__nonnull__(1,2),__noreturn__));
 
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
-static inline void
-cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_body_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
+cce_decl void cce_p_run_body_handlers_raise  (cce_destination_t L, cce_destination_t upper_L)
+  __attribute__((__nonnull__(1,2),__noreturn__));
 
 /* ------------------------------------------------------------------ */
 

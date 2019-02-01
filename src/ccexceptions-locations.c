@@ -166,6 +166,22 @@ cce_p_run_body_handlers_final (cce_destination_t L)
   ccname_delete(cce_condition_t)((cce_condition_t *)(L->condition));
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+{
+  cce_run_catch_handlers(L);
+  cce_p_raise(upper_L, L->condition);
+}
+
+void
+cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+{
+  cce_run_body_handlers(L);
+  cce_p_raise(upper_L, L->condition);
+}
+
 
 /** --------------------------------------------------------------------
  ** Running handlers from a handler.
