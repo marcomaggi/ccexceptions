@@ -6,7 +6,7 @@
 #
 
 AM_ETAGSFLAGS		= $(MMUX_DEPENDENCIES_INCLUDES) \
-	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|tabl\\(?:e_typ\\)?\\)e\\)\\)\\_>"/'
+	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\|s\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|t\\(?:abl\\(?:e_typ\\)?\\|yp\\)\\)e\\)\\)\\_>"/'
 
 
 #### testing under GDB
