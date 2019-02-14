@@ -5,7 +5,8 @@ AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
+AM_CFLAGS		= $(MMUX_CFLAGS)
+AM_CPPFLAGS		= -I$(srcdir)/src
 
 ## --------------------------------------------------------------------
 
@@ -85,7 +86,7 @@ endif
 
 TESTS				= $(check_PROGRAMS)
 
-ccexceptions_tests_cppflags	= -I$(srcdir)/src -I$(srcdir)/tests
+ccexceptions_tests_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/tests
 ccexceptions_tests_ldadd	= libccexceptions.la
 
 ## --------------------------------------------------------------------
@@ -231,7 +232,7 @@ noinst_PROGRAMS	= \
 	examples/plain		\
 	examples/inline
 
-ccexceptions_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples
+ccexceptions_examples_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/examples
 ccexceptions_examples_ldadd	= libccexceptions.la
 
 .PHONY: examples
