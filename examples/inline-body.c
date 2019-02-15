@@ -50,6 +50,12 @@ static my_descriptor_error_2_t my_descriptor_error_2_stru = {
 
 my_descriptor_error_2_t const * const my_descriptor_error_2_ptr = &my_descriptor_error_2_stru;
 
+void
+cce_descriptor_set_parent_to(my_descriptor_error_2_t) (cce_descriptor_t * const D)
+{
+  D->parent = &my_descriptor_error_2_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Condition type descriptor: protocol functions.

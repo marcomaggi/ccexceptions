@@ -14,7 +14,7 @@
 	definition is a "plain" one:  no inline functions; new condition
 	objects allocated by a constructor.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -49,6 +49,9 @@ struct my_condition_error_1_t {
 };
 
 extern my_descriptor_error_1_t const * const	my_descriptor_error_1_ptr;
+
+extern void cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * D)
+  __attribute__((__nonnull__(1)));
 
 extern void my_condition_init_error_1 (cce_destination_t L, my_condition_error_1_t * C, int the_data)
   __attribute__((__nonnull__(1)));
