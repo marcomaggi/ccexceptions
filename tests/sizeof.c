@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -34,21 +34,21 @@
 int
 main (void)
 {
-  printf("machine word size: %lu\n", sizeof(void *));
-  printf("sizeof(int): %lu\n", sizeof(int));
-  printf("sizeof(long): %lu\n", sizeof(long));
-  printf("sizeof(void *): %lu\n", sizeof(void *));
-  printf("sizeof(uintptr_t): %lu\n", sizeof(uintptr_t));
+  printf("machine word size: %lu\n", (unsigned long)sizeof(void *));
+  printf("sizeof(int): %lu\n", (unsigned long)sizeof(int));
+  printf("sizeof(long): %lu\n", (unsigned long)sizeof(long));
+  printf("sizeof(void *): %lu\n", (unsigned long)sizeof(void *));
+  printf("sizeof(uintptr_t): %lu\n", (unsigned long)sizeof(uintptr_t));
 
   printf("size of cce_location_t: %lu, number of words: %lu\n",
-	 sizeof(cce_location_t), sizeof(cce_location_t)/sizeof(void *));
+	 sizeof(cce_location_t), (unsigned long)sizeof(cce_location_t)/sizeof(void *));
 
   printf("size of cce_handler_t:  %lu, number of words: %lu\n",
-	 sizeof(cce_handler_t), sizeof(cce_handler_t)/sizeof(void *));
+	 sizeof(cce_handler_t), (unsigned long)sizeof(cce_handler_t)/sizeof(void *));
   printf("size of cce_clean_handler_t:  %lu, number of words: %lu\n",
-	 sizeof(cce_clean_handler_t), sizeof(cce_clean_handler_t)/sizeof(void *));
+	 sizeof(cce_clean_handler_t), (unsigned long)sizeof(cce_clean_handler_t)/sizeof(void *));
   printf("size of cce_error_handler_t:  %lu, number of words: %lu\n",
-	 sizeof(cce_error_handler_t), sizeof(cce_error_handler_t)/sizeof(void *));
+	 sizeof(cce_error_handler_t), (unsigned long)sizeof(cce_error_handler_t)/sizeof(void *));
 
   exit(EXIT_SUCCESS);
 }
