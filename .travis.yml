@@ -206,20 +206,20 @@ matrix:
       compiler: clang
       script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
+    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
       dist: trusty
-      compiler: gcc-7
+      compiler: gcc-8
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - texinfo
-            - gcc-7
+            - gcc-8
       script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-7
+        bash <(curl -s https://codecov.io/bash) -xgcov-8
 
 #page
 #### done
