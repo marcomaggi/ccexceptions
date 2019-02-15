@@ -50,8 +50,12 @@ struct my_condition_error_2_t {
 
 extern my_descriptor_error_2_t const * const	my_descriptor_error_2_ptr;
 
-extern void cce_descriptor_set_parent_to(my_descriptor_error_2_t) (cce_descriptor_t * D)
-  __attribute__((__nonnull__(1)));
+__attribute__((__nonnull__(1),__always_inline__))
+static inline void
+cce_descriptor_set_parent_to(my_descriptor_error_2_t) (cce_descriptor_t * const D)
+{
+  D->parent = &(my_descriptor_error_2_ptr->descriptor);
+}
 
 extern void my_condition_init_error_2 (cce_destination_t L, my_condition_error_2_t * C, int the_data)
   __attribute__((__nonnull__(1)));
