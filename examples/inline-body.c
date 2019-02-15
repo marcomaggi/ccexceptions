@@ -15,7 +15,7 @@
 	inline  functions;   new  condition   objects  allocated   by  a
 	constructor.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -149,7 +149,7 @@ my_condition_new_error_2 (cce_destination_t upper_L, int the_data)
 void
 inline_init_module (void)
 {
-  my_descriptor_error_2_stru.descriptor.parent = &(cce_descriptor_runtime_error_ptr->descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(&my_descriptor_error_2_stru.descriptor);
 }
 
 /* end of file */

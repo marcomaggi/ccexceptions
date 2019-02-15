@@ -7,7 +7,7 @@
 
 	Body definitions of a subtype of "test unreachable".
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -146,7 +146,7 @@ my_condition_new_unreachable_subtype (cce_destination_t upper_L,
 void
 condition_unreachable_subtyping_init_module (void)
 {
-  my_descriptor_unreachable_subtype_stru.descriptor.parent = &(cce_descriptor_unreachable_ptr->descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_unreachable_t)(&my_descriptor_unreachable_subtype_stru.descriptor);
 }
 
 /* end of file */

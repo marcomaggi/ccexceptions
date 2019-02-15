@@ -14,7 +14,7 @@
 	definition is a "plain" one:  no inline functions; new condition
 	objects allocated by a constructor.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -159,7 +159,7 @@ my_condition_is_error_1 (cce_condition_t const * C)
 void
 plain_init_module (void)
 {
-  my_descriptor_error_1_stru.descriptor.parent = &(cce_descriptor_runtime_error_ptr->descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(&my_descriptor_error_1_stru.descriptor);
 }
 
 /* end of file */

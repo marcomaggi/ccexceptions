@@ -7,7 +7,7 @@
 
 	Body definitions of a subtype of "logic error".
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -137,7 +137,7 @@ my_condition_new_logic_error_subtype (cce_destination_t upper_L, int the_data)
 void
 logic_error_subtyping_init_module (void)
 {
-  my_descriptor_logic_error_subtype_stru.descriptor.parent = &(cce_descriptor_logic_error_ptr->descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_logic_error_t)(&my_descriptor_logic_error_subtype_stru.descriptor);
 }
 
 /* end of file */

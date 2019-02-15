@@ -5,24 +5,21 @@
 
   Abstract
 
+	This module implements the exceptional-condition object-types.
 
+  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This is free software; you can  redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
-
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 
 */
 
@@ -110,6 +107,12 @@ static cce_descriptor_root_t const cce_descriptor_root_stru = {
 cce_descriptor_root_t const * const cce_descriptor_root_ptr = &cce_descriptor_root_stru;
 
 void
+cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_root_stru.descriptor;
+}
+
+void
 cce_descriptor_set_root_parent (cce_descriptor_t * D)
 {
   D->parent = &(cce_descriptor_root_stru.descriptor);
@@ -152,6 +155,12 @@ static cce_condition_unknown_t const cce_condition_unknown_stru = {
 
 cce_condition_unknown_t const * const cce_condition_unknown_ptr = &cce_condition_unknown_stru;
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_unknown_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Break condition.
@@ -163,8 +172,8 @@ cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
   return "Break exceptional condition";
 }
 
-/* This condition descriptor represents  an break exceptional condition.
-   This  descriptor has  only one  instance statically  allocated below:
+/* This  condition  descriptor  represents  an  break  exceptional  condition.   This
+   descriptor    has    only    one     instance    statically    allocated    below:
    "cce_condition_break". */
 static cce_descriptor_break_t const cce_descriptor_break_stru = {
   .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
@@ -175,13 +184,19 @@ static cce_descriptor_break_t const cce_descriptor_break_stru = {
 
 cce_descriptor_break_t const * const cce_descriptor_break_ptr = &cce_descriptor_break_stru;
 
-/* This is  the single instance  of break exceptional condition.   It is
-   used by "cce_raise()". */
+/* This  is the  single  instance of  break  exceptional condition.   It  is used  by
+   "cce_raise()". */
 static cce_condition_break_t const cce_condition_break_stru = {
   .root.condition.descriptor = &(cce_descriptor_break_stru.descriptor)
 };
 
 cce_condition_break_t const * const cce_condition_break_ptr = &cce_condition_break_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_break_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -214,6 +229,12 @@ static cce_condition_error_t const cce_condition_error_stru = {
 
 cce_condition_error_t const * const cce_condition_error_ptr = &cce_condition_error_stru;
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_error_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Runtime error condition.
@@ -245,6 +266,12 @@ static cce_condition_runtime_error_t const cce_condition_runtime_error_stru = {
 
 cce_condition_runtime_error_t const * const cce_condition_runtime_error_ptr = &cce_condition_runtime_error_stru;
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_runtime_error_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Logic error condition.
@@ -275,6 +302,12 @@ static cce_condition_logic_error_t const cce_condition_logic_error_stru = {
 };
 
 cce_condition_logic_error_t const * const cce_condition_logic_error_ptr = &cce_condition_logic_error_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_logic_error_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -338,6 +371,12 @@ cce_condition_new_unreachable (cce_destination_t L,
   return (cce_condition_t const *)C;
 }
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_unreachable_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Unimplemented condition.
@@ -368,6 +407,12 @@ static cce_condition_unimplemented_t const cce_condition_unimplemented_stru = {
 };
 
 cce_condition_unimplemented_t const * const cce_condition_unimplemented_ptr = &cce_condition_unimplemented_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_unimplemented_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -420,6 +465,12 @@ cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsig
   return &(C->logic_error.error.root.condition);
 }
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_invalid_argument_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Mathematical error condition.
@@ -450,6 +501,12 @@ static cce_condition_math_error_t const cce_condition_math_error_stru = {
 };
 
 cce_condition_math_error_t const * const cce_condition_math_error_ptr = &cce_condition_math_error_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_math_error_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -482,6 +539,12 @@ static cce_condition_math_nan_t const cce_condition_math_nan_stru = {
 
 cce_condition_math_nan_t const * const cce_condition_math_nan_ptr = &cce_condition_math_nan_stru;
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_math_nan_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Mathematical infinity error condition.
@@ -512,6 +575,12 @@ static cce_condition_math_infinity_t const cce_condition_math_infinity_stru = {
 };
 
 cce_condition_math_infinity_t const * const cce_condition_math_infinity_ptr = &cce_condition_math_infinity_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_math_infinity_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -544,6 +613,12 @@ static cce_condition_math_overflow_t const cce_condition_math_overflow_stru = {
 
 cce_condition_math_overflow_t const * const cce_condition_math_overflow_ptr = &cce_condition_math_overflow_stru;
 
+void
+cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_math_overflow_stru.descriptor;
+}
+
 
 /** --------------------------------------------------------------------
  ** Mathematical underflow error condition.
@@ -574,6 +649,12 @@ static cce_condition_math_underflow_t const cce_condition_math_underflow_stru = 
 };
 
 cce_condition_math_underflow_t const * const cce_condition_math_underflow_ptr = &cce_condition_math_underflow_stru;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_math_underflow_stru.descriptor;
+}
 
 
 /** --------------------------------------------------------------------
@@ -780,6 +861,12 @@ cce_condition_new_errno_clear (void)
   int	errnum = errno;
   errno = 0;
   return cce_condition_new_errno(errnum);
+}
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
+{
+  D->parent = &cce_descriptor_errno_stru.descriptor;
 }
 
 /* end of file */

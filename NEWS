@@ -5,6 +5,9 @@ Notes for revision 0.8.0-devel.9
 
 * Packaging infrastructure development.
 
+* Development of  exceptional-condition object-types API:  new functions
+  to set the parent of a descriptor to a selected descriptor type.
+
 
 Notes for revision 0.8.0-devel.8
 --------------------------------
