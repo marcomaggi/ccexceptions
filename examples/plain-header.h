@@ -48,8 +48,6 @@ struct my_condition_error_1_t {
   int *				data;
 };
 
-extern my_descriptor_error_1_t const * const	my_descriptor_error_1_ptr;
-
 extern void cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * D)
   __attribute__((__nonnull__(1)));
 
