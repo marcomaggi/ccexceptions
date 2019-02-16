@@ -68,6 +68,12 @@ AC_DEFINE([_POSIX_C_SOURCE],[200809L],[Request enabling latest POSIX features.])
 AC_CACHE_SAVE
 
 
+#### external libraries
+
+MMUX_CHECK_PKG_CONFIG_MACROS
+PKG_INSTALLDIR
+
+
 #### errno values inspection
 
 CCE_ERRNO_TEST([E2BIG])
