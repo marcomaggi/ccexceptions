@@ -121,11 +121,9 @@ env:
 #page
 #### dependencies management
 #
-# At present there are no depencencies for CCExceptions.
-#
 
-# install:
-#   - ./meta/travis-ci/install-some-dependency.sh
+install:
+  - ./meta/travis-ci/install-pkg-config.sh
 
 #page
 #### build scripts
