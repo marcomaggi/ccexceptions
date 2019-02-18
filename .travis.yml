@@ -149,7 +149,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - automake-1.16.1
+            - automake-1.16
             - texinfo
             - gcc-5
       script: "./configure --enable-maintainer-mode; make all; make check;"
@@ -163,7 +163,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - automake-1.16.1
+            - automake-1.16
             - texinfo
             - gcc-6
       script: "./configure --enable-maintainer-mode; make all; make check;"
@@ -177,9 +177,23 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - automake-1.16.1
+            - automake-1.16
             - texinfo
             - gcc-7
+      script: "./configure --enable-maintainer-mode; make all; make check;"
+
+    # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
+    - os: linux
+      dist: trusty
+      compiler: gcc-8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - automake-1.16
+            - texinfo
+            - gcc-8
       script: "./configure --enable-maintainer-mode; make all; make check;"
 
     # Plain build  under Ubuntu GNU+Linux "trusty",  CLang automatically
@@ -218,7 +232,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - automake-1.16.1
+            - automake-1.16
             - texinfo
             - gcc-8
       script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
