@@ -117,13 +117,16 @@ env:
     - PATH=$PATH:/tmp/mine/bin;
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+    - ACLOCAL_PATH=/tmp/mine/share/aclocal:ACLOCAL_PATH;
 
 #page
 #### dependencies management
 #
 
 install:
-  - if test "$TRAVIS_OS_NAME" = linux ; then ./meta/travis-ci/install-pkg-config.sh; fi
+  - ./meta/travis-ci/install-pkg-config.sh;
+  - ./meta/travis-ci/install-autoconf.sh;
+  - ./meta/travis-ci/install-automake.sh;
 
 #page
 #### build scripts
