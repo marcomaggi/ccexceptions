@@ -70,8 +70,9 @@ AC_CACHE_SAVE
 
 #### external libraries
 
-MMUX_CHECK_PKG_CONFIG_MACROS
+PKG_PREREQ([0.29])
 PKG_INSTALLDIR
+#MMUX_CHECK_PKG_CONFIG_MACROS
 
 
 #### errno values inspection
