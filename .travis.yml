@@ -116,7 +116,8 @@ git:
 env:
   global:
     - MAKEFLAGS="-j 2"
-    - PATH=$PATH:/tmp/mine/bin;
+#    - PATH=$PATH:/tmp/mine/bin;
+    - PATH=/tmp/mine/bin;$PATH
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
     - ACLOCAL_PATH=/tmp/mine/share/aclocal:ACLOCAL_PATH;
