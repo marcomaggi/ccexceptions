@@ -3,54 +3,52 @@
 # Installation  script  to  run  from  the  Travis  config  file  before
 # attempting a build.
 #
-# Install Automake 1.15 under the  directory "/tmp/mine".  We assume the
+# Install GNU Automake under the  directory "/usr/local".  We assume the
 # script is run from the top directory of the build tree.
 
-PROGNAME=install-automake.sh
+PROGNAME="${0##*/}"
 STEM=automake-1.16.1
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="http://marcomaggi.github.io/binaries/${ARCHIVE}"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
+prefix=/usr/local
 
-test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
+function script_error () {
+    local TEMPLATE="${1:?missing template argument to '$FUNCNAME'}"
+    shift
+    {
+	printf '%s: ' "$PROGNAME"
+	printf "$TEMPLATE" "$@"
+	printf '\n'
+    } >&2
+    exit 1
+}
 
 if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
-then
-    printf '%s: error downloading %s\n' "$PROGNAME" "${ARCHIVE}" >&2
-    exit 1
+then script_error 'error downloading %s' "$ARCHIVE"
 fi
 
 cd /tmp
 
-if ! tar -xzf "$LOCAL_ARCHIVE"
-then
-    printf '%s: error unpacking %s\n' "$PROGNAME" "$LOCAL_ARCHIVE" >&2
-    exit 1
+if ! tar --extract --gzip --file="$LOCAL_ARCHIVE"
+then script_error 'error unpacking %s' "$LOCAL_ARCHIVE"
 fi
 
 cd "$TOP_SRCDIR"
 
-if ! ./configure --prefix=/tmp/mine
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
+if ! ./configure --prefix="$prefix"
+then script_error 'error configuring %s' "$STEM"
 fi
 
 if ! make -j2 all
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
+then script_error 'error building all %s' "$STEM"
 fi
 
-if ! make install
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
+if ! (umask 0; sudo make install)
+then script_error 'error installing %s' "$STEM"
 fi
 
 exit 0
 
-# Local Variables:
-# mode: sh
-# End:
+### end of file
