@@ -45,7 +45,7 @@ if ! make -j2 all
 then script_error 'error building all %s' "$STEM"
 fi
 
-if ! make install
+if ! (umask 0; sudo make install)
 then script_error 'error installing %s' "$STEM"
 fi
 
