@@ -80,7 +80,7 @@
 
 language: c
 
-#sudo: true
+sudo: true
 
 # Let's just look at the project's dashboard at Travis CI's site.
 #
