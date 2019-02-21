@@ -104,9 +104,14 @@ git:
 # NOTE  There  must  be only  *one*  env.global  key!!!   Otherwise  the earlier  settings  will  be
 # ineffective.
 #
+# Setting the variable VERBOSE causes "make check" to output the file "test-suite.log".
+#
 env:
   global:
     - MAKEFLAGS="-j 2"
+    - VERBOSE=1
+    - LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH;
+    - LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH;
     - PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH;
     - ACLOCAL_PATH=/usr/local/share/aclocal:$ACLOCAL_PATH;
 
@@ -118,6 +123,7 @@ install:
   - ./meta/travis-ci/install-pkg-config.sh;
   - ./meta/travis-ci/install-autoconf.sh;
   - ./meta/travis-ci/install-automake.sh;
+  - ./meta/travis-ci/install-texinfo.sh;
 
 #page
 #### build scripts
@@ -225,8 +231,5 @@ matrix:
       script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
       after_success:
         bash <(curl -s https://codecov.io/bash) -xgcov-8
-
-#page
-#### done
 
 ### end of file
