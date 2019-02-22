@@ -63,22 +63,22 @@ exceptional--condition object--type @objtype{my_condition_\TYPESTEM\_subtype_t}.
 
 @c ------------------------------------------------------------
 
-@set PACKAGE_AUTOCONF_PREFIX            CCEXCEPTIONS
-@set PACKAGE_PKGCONFIG_MODULE           ccexceptions
-@set PACKAGE_LIBS_VAR                   @env{CCEXCEPTIONS_LIBS}
-@set PACKAGE_CFLAGS_VAR                 @env{CCEXCEPTIONS_CFLAGS}
+@set PackageAutoconfPrefix            CCEXCEPTIONS
+@set PackagePkgconfigModule           ccexceptions
+@set PackageLibsVar                   @env{CCEXCEPTIONS_LIBS}
+@set PackageCflagsVar                 @env{CCEXCEPTIONS_CFLAGS}
 @c This is the stem of the library in "libccexceptions.so".
-@set PACKAGE_LIBSTEM                    ccexceptions
-@set PACKAGE_API_PREFIX_LOWER           cce_
-@set PACKAGE_API_PREFIX_UPPER           CCE_
+@set PackageLibstem                    ccexceptions
+@set PackageApiPrefixLower           cce_
+@set PackageApiPrefixUpper           CCE_
 
-@set PACKAGE_HEADER                     ccexceptions.h
-@set PACKAGE_HEADER_FILE                @file{@value{PACKAGE_HEADER}}
+@set PackageHeader                     ccexceptions.h
+@set PackageHeader_FILE                @file{@value{PackageHeader}}
 
-@set GITHUB_URL                 @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
-@set BITBUCKET_URL              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
-@set DOWNLOAD_URL               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
-@set DOCUMENTATION_URL          @url{http://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
+@set GithubUrl                 @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set BitbucketUrl              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set DownloadUrl               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
+@set DocumentationUrl          @url{http://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
 
 @c page
 @c ------------------------------------------------------------
@@ -94,17 +94,17 @@ The package is distributed under the terms of the @gnu{} Lesser General Public L
 
 The latest release can be downloaded from:
 
-@center @value{DOWNLOAD_URL}
+@center @value{DownloadUrl}
 
 @noindent
 development takes place at:
 
-@center @value{GITHUB_URL}
+@center @value{GithubUrl}
 
 @noindent
 and as backup at:
 
-@center @value{BITBUCKET_URL}
+@center @value{BitbucketUrl}
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
@@ -212,12 +212,12 @@ Implement a simple architecture for exceptional--condition descriptors.
 these features come at the cost of slowing down execution in a possibly sensible way (with respect
 to, for example, hand--coded @code{goto} instructions that jump to labels).
 
-@cindex @value{PACKAGE_HEADER_FILE}, header file
-@cindex Header file @value{PACKAGE_HEADER_FILE}
-@value{PACKAGE} installs the single header file @value{PACKAGE_HEADER_FILE}.  All the function names
-in the @api{} are prefixed with @code{@value{PACKAGE_API_PREFIX_LOWER}}; all the preprocessor symbol
-names are prefixed with @code{@value{PACKAGE_API_PREFIX_UPPER}}; all the type names are prefixed
-with @code{@value{PACKAGE_API_PREFIX_LOWER}} and suffixed with @code{_t}.
+@cindex @value{PackageHeader_FILE}, header file
+@cindex Header file @value{PackageHeader_FILE}
+@value{PACKAGE} installs the single header file @value{PackageHeader_FILE}.  All the function names
+in the @api{} are prefixed with @code{@value{PackageApiPrefixLower}}; all the preprocessor symbol
+names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed
+with @code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
 
 @strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
 standard header files; so either we include @file{ccexceptions.h} as first header, or we include the
@@ -3517,22 +3517,22 @@ otherwise the expansion is the empty string.
 
 The documentation of @value{PACKAGE} is available online:
 
-@center @value{DOCUMENTATION_URL}
+@center @value{DocumentationUrl}
 
 @noindent
 the latest release of this package can be downloaded from:
 
-@center @value{DOWNLOAD_URL}
+@center @value{DownloadUrl}
 
 @noindent
 development takes place at:
 
-@center @value{GITHUB_URL}
+@center @value{GithubUrl}
 
 @noindent
 and as backup at:
 
-@center @value{BITBUCKET_URL}
+@center @value{BitbucketUrl}
 
 @c page
 @node concept index

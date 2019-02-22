@@ -6,11 +6,11 @@ This package installs a data file for @command{pkg-config}, so when searching fo
 library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
 
 @example
-PKG_CHECK_MODULES([@value{PACKAGE_AUTOCONF_PREFIX}],[@value{PACKAGE_PKGCONFIG_MODULE} >= 0.1.0])
+PKG_CHECK_MODULES([@value{PackageAutoconfPrefix}],[@value{PackagePkgconfigModule} >= 0.1.0])
 @end example
 
 @noindent
-which will set the variables @value{PACKAGE_LIBS_VAR} and @value{PACKAGE_CFLAGS_VAR}.  To avoid
+which will set the variables @value{PackageLibsVar} and @value{PackageCflagsVar}.  To avoid
 problems with @command{pkg-config}, we need to remember that:
 
 @itemize
@@ -81,9 +81,9 @@ export PKG_CONFIG_PATH
 Alternatively we can use the raw @gnu{} Autoconf macros:
 
 @example
-AC_CHECK_LIB([@value{PACKAGE_LIBSTEM}],[@value{PACKAGE_API_PREFIX_LOWER}version_string],,
+AC_CHECK_LIB([@value{PackageLibstem}],[@value{PackageApiPrefixLower}version_string],,
   [AC_MSG_FAILURE([test for @value{TITLE} library failed])])
-AC_CHECK_HEADERS([@value{PACKAGE_HEADER}],,
+AC_CHECK_HEADERS([@value{PackageHeader}],,
   [AC_MSG_FAILURE([test for @value{TITLE} header failed])])
 @end example
 
