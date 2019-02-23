@@ -63,17 +63,17 @@ exceptional--condition object--type @objtype{my_condition_\TYPESTEM\_subtype_t}.
 
 @c ------------------------------------------------------------
 
-@set PackageAutoconfPrefix            CCEXCEPTIONS
-@set PackagePkgconfigModule           ccexceptions
-@set PackageLibsVar                   @env{CCEXCEPTIONS_LIBS}
-@set PackageCflagsVar                 @env{CCEXCEPTIONS_CFLAGS}
+@set PackageAutoconfPrefix              CCEXCEPTIONS
+@set PackagePkgconfigModule             ccexceptions
+@set PackageLibsVar                     @env{CCEXCEPTIONS_LIBS}
+@set PackageCflagsVar                   @env{CCEXCEPTIONS_CFLAGS}
 @c This is the stem of the library in "libccexceptions.so".
-@set PackageLibstem                    ccexceptions
-@set PackageApiPrefixLower           cce_
-@set PackageApiPrefixUpper           CCE_
+@set PackageLibstem                     ccexceptions
+@set PackageApiPrefixLower              cce_
+@set PackageApiPrefixUpper              CCE_
 
-@set PackageHeader                     ccexceptions.h
-@set PackageHeader_FILE                @file{@value{PackageHeader}}
+@set PackageHeader                      ccexceptions.h
+@set PackageHeaderFile                  @file{@value{PackageHeader}}
 
 @set GithubUrl                 @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set BitbucketUrl              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
@@ -212,12 +212,12 @@ Implement a simple architecture for exceptional--condition descriptors.
 these features come at the cost of slowing down execution in a possibly sensible way (with respect
 to, for example, hand--coded @code{goto} instructions that jump to labels).
 
-@cindex @value{PackageHeader_FILE}, header file
-@cindex Header file @value{PackageHeader_FILE}
-@value{PACKAGE} installs the single header file @value{PackageHeader_FILE}.  All the function names
+@cindex @value{PackageHeaderFile}, header file
+@cindex Header file @value{PackageHeaderFile}
+@value{PACKAGE} installs the single header file @value{PackageHeaderFile}.  All the function names
 in the @api{} are prefixed with @code{@value{PackageApiPrefixLower}}; all the preprocessor symbol
-names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed
-with @code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
+names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed with
+@code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
 
 @strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
 standard header files; so either we include @file{ccexceptions.h} as first header, or we include the
