@@ -29,15 +29,16 @@ doc_ccexceptions_TEXINFOS	= \
 
 #### libraries
 
-ccexceptions_CURRENT	= @ccexceptions_VERSION_INTERFACE_CURRENT@
-ccexceptions_REVISION	= @ccexceptions_VERSION_INTERFACE_REVISION@
-ccexceptions_AGE	= @ccexceptions_VERSION_INTERFACE_AGE@
+ccexceptions_CURRENT		= @ccexceptions_VERSION_INTERFACE_CURRENT@
+ccexceptions_REVISION		= @ccexceptions_VERSION_INTERFACE_REVISION@
+ccexceptions_AGE		= @ccexceptions_VERSION_INTERFACE_AGE@
+ccexceptions_LINKER_VERSION	= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
 
-include_HEADERS		= src/ccexceptions.h
+include_HEADERS			= src/ccexceptions.h
 
-lib_LTLIBRARIES		= libccexceptions.la
-libccexceptions_la_LDFLAGS= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
-libccexceptions_la_SOURCES= \
+lib_LTLIBRARIES			= libccexceptions.la
+libccexceptions_la_LDFLAGS	= $(ccexceptions_LINKER_VERSION)
+libccexceptions_la_SOURCES	= \
 	src/ccexceptions.h			\
 	src/ccexceptions-internals.h		\
 	src/ccexceptions-locations.c		\
@@ -86,7 +87,7 @@ endif
 TESTS				= $(check_PROGRAMS)
 
 ccexceptions_tests_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/tests
-ccexceptions_tests_ldadd	= libccexceptions.la
+ccexceptions_tests_ldadd	= $(AM_LDFLAGS) libccexceptions.la
 
 ## --------------------------------------------------------------------
 
