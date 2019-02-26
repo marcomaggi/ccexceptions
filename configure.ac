@@ -72,7 +72,6 @@ AC_CACHE_SAVE
 
 PKG_PREREQ([0.29])
 PKG_INSTALLDIR
-#MMUX_CHECK_PKG_CONFIG_MACROS
 
 
 #### errno values inspection
