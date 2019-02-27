@@ -75,6 +75,23 @@
 #     export ACLOCAL_PATH=/usr/local/share/aclocal:$ACLOCAL_PATH;
 #     ./configure
 #
+# To install dependency packages on Ubuntu we can do this:
+#
+#    addons:
+#      apt:
+#        sources:
+#        - ubuntu-toolchain-r-test
+#        packages:
+#        - texinfo
+#        - gcc-8
+#
+# To install dependency packages on OS X we can do this:
+#
+#    addons:
+#      homebrew:
+#        packages:
+#        - texinfo
+#
 
 #page
 #### global configuration
@@ -148,11 +165,15 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+          - ubuntu-toolchain-r-test
           packages:
-            - texinfo
-            - gcc-5
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+          - gcc-5
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 6.
     - os: linux
@@ -161,11 +182,15 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+          - ubuntu-toolchain-r-test
           packages:
-            - texinfo
-            - gcc-6
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+          - gcc-6
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
@@ -174,11 +199,15 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+          - ubuntu-toolchain-r-test
           packages:
-            - texinfo
-            - gcc-7
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+          - gcc-7
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
@@ -187,11 +216,15 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+          - ubuntu-toolchain-r-test
           packages:
-            - texinfo
-            - gcc-8
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+          - gcc-8
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck
 
     # Plain build under Ubuntu GNU+Linux "trusty", CLang automatically selected by Travis CI.
     - os: linux
@@ -199,23 +232,58 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - texinfo
+          - ubuntu-toolchain-r-test
       compiler: clang
-      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck;
 
     # Plain build under OS X, XCode 7.3, CLang automatically selected by Travis CI.
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck;
 
     # Plain build under OS X, XCode 8.3, CLang automatically selected by Travis CI.
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck;
+
+    # Plain build under OS X, XCode 9.4, CLang automatically selected by Travis CI.
+    - os: osx
+      osx_image: xcode9.4
+      compiler: clang
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck;
+
+    # Plain build under OS X, XCode 10.1, CLang automatically selected by Travis CI.
+    - os: osx
+      osx_image: xcode10.1
+      compiler: clang
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        make all;
+        make check;
+        (umask 0; sudo make install);
+        make installcheck;
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
@@ -226,9 +294,11 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-8
-      script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
+      script: |
+        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage';
+        make all;
+        make check;
       after_success:
         bash <(curl -s https://codecov.io/bash) -xgcov-8
 
