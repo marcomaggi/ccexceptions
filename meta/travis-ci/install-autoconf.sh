@@ -19,7 +19,7 @@ prefix=/usr/local
 
 function main () {
     # We install the new package only if it is not already installed.
-    if type -p "$PACKAGE_NAME"
+    if type -p "$VERSION_EXECUTABLE"
     then
 	if "$VERSION_EXECUTABLE" --version | fgrep "$REQUIRED_PACKAGE_VERSION"
 	then exit 0
