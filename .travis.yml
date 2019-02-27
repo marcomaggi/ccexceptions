@@ -85,6 +85,9 @@
 #        - texinfo
 #        - gcc-8
 #
+# where the "sources:" block  tells Travis CI that some of the packages  under "packages:" are found
+# in the package repository "ubuntu-toolchain-r-test".
+#
 # To install dependency packages on OS X we can do this:
 #
 #    addons:
@@ -148,70 +151,18 @@ install:
 before_script:
   # On Linux the GNU  Libtool preparation script is called "libtoolize", while on  OS X it is called
   # "glibtoolize".
-  - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi
   - echo pkg-config --version ; pkg-config --version;
   - echo autoconf --version ; autoconf --version;
   - echo automake --version ; automake --version;
-  - sh ./autogen.sh;
+  - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi; sh ./autogen.sh;
 
 matrix:
   fast_finish: true
 
   include:
-    # Plain build under Ubuntu GNU+Linux "trusty", GCC 5.
+    # Plain build under Ubuntu GNU+Linux "xenial", GCC 8.
     - os: linux
-      dist: trusty
-      compiler: gcc-5
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - gcc-5
-      script: |
-        ./configure --enable-maintainer-mode;
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck
-
-    # Plain build under Ubuntu GNU+Linux "trusty", GCC 6.
-    - os: linux
-      dist: trusty
-      compiler: gcc-6
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - gcc-6
-      script: |
-        ./configure --enable-maintainer-mode;
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck
-
-    # Plain build under Ubuntu GNU+Linux "trusty", GCC 7.
-    - os: linux
-      dist: trusty
-      compiler: gcc-7
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - gcc-7
-      script: |
-        ./configure --enable-maintainer-mode;
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck
-
-    # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
-    - os: linux
-      dist: trusty
+      dist: xenial
       compiler: gcc-8
       addons:
         apt:
@@ -226,46 +177,9 @@ matrix:
         (umask 0; sudo make install);
         make installcheck
 
-    # Plain build under Ubuntu GNU+Linux "trusty", CLang automatically selected by Travis CI.
+    # Plain build under Ubuntu GNU+Linux "xenial", CLang automatically selected by Travis CI.
     - os: linux
-      dist: trusty
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-      compiler: clang
-      script: |
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck;
-
-    # Plain build under OS X, XCode 7.3, CLang automatically selected by Travis CI.
-    - os: osx
-      osx_image: xcode7.3
-      compiler: clang
-      script: |
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck;
-
-    # Plain build under OS X, XCode 8.3, CLang automatically selected by Travis CI.
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      script: |
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
-        (umask 0; sudo make install);
-        make installcheck;
-
-    # Plain build under OS X, XCode 9.4, CLang automatically selected by Travis CI.
-    - os: osx
-      osx_image: xcode9.4
+      dist: xenial
       compiler: clang
       script: |
         ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
@@ -285,9 +199,9 @@ matrix:
         (umask 0; sudo make install);
         make installcheck;
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
+    # Codecov support under Ubuntu GNU+Linux "xenial", GCC 8.
     - os: linux
-      dist: trusty
+      dist: xenial
       compiler: gcc-8
       addons:
         apt:
