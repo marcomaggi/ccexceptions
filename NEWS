@@ -5,6 +5,9 @@ Notes for revision 0.8.0-devel.12
 
 * Introduced macro "cce_descriptor_pointer".
 
+* Removed the variables "_var" from the API.  Some definitions are still
+  there for backwards compatibility, but they are deprecated.
+
 
 Notes for revision 0.8.0-devel.11
 ---------------------------------
