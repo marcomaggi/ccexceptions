@@ -31,7 +31,7 @@ static cce_condition_delete_fun_t		my_condition_delete_invalid_argument_subtype;
 static cce_condition_final_fun_t		my_condition_final_invalid_argument_subtype;
 static cce_condition_static_message_fun_t	my_condition_static_message_invalid_argument_subtype;
 
-static my_descriptor_invalid_argument_subtype_t my_descriptor_invalid_argument_subtype_stru = {
+static my_descriptor_invalid_argument_subtype_t my_descriptor_invalid_argument_subtype = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
@@ -39,8 +39,6 @@ static my_descriptor_invalid_argument_subtype_t my_descriptor_invalid_argument_s
   .descriptor.final		= my_condition_final_invalid_argument_subtype,
   .descriptor.static_message	= my_condition_static_message_invalid_argument_subtype
 };
-
-my_descriptor_invalid_argument_subtype_t const * const my_descriptor_invalid_argument_subtype_ptr = &my_descriptor_invalid_argument_subtype_stru;
 
 
 /** --------------------------------------------------------------------
@@ -125,7 +123,7 @@ my_condition_new_invalid_argument_subtype (cce_destination_t upper_L, char const
   } else {
     my_condition_invalid_argument_subtype_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_invalid_argument_subtype_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_invalid_argument_subtype_ptr->descriptor));
+    cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(my_descriptor_invalid_argument_subtype));
     my_condition_init_invalid_argument_subtype(L, C, func, index, the_data);
 
     cce_run_body_handlers(L);
@@ -134,11 +132,17 @@ my_condition_new_invalid_argument_subtype (cce_destination_t upper_L, char const
   }
 }
 
+bool
+my_condition_is_invalid_argument_subtype (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(my_descriptor_invalid_argument_subtype));
+}
+
 
 void
 invalid_argument_subtyping_init_module (void)
 {
-  cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t)(&my_descriptor_invalid_argument_subtype_stru.descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t)(cce_descriptor_pointer(my_descriptor_invalid_argument_subtype));
 }
 
 /* end of file */

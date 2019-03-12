@@ -31,7 +31,7 @@ static cce_condition_delete_fun_t		my_condition_delete_unreachable_subtype;
 static cce_condition_final_fun_t		my_condition_final_unreachable_subtype;
 static cce_condition_static_message_fun_t	my_condition_static_message_unreachable_subtype;
 
-static my_descriptor_unreachable_subtype_t my_descriptor_unreachable_subtype_stru = {
+static my_descriptor_unreachable_subtype_t my_descriptor_unreachable_subtype = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
@@ -39,8 +39,6 @@ static my_descriptor_unreachable_subtype_t my_descriptor_unreachable_subtype_str
   .descriptor.final		= my_condition_final_unreachable_subtype,
   .descriptor.static_message	= my_condition_static_message_unreachable_subtype
 };
-
-my_descriptor_unreachable_subtype_t const * const my_descriptor_unreachable_subtype_ptr = &my_descriptor_unreachable_subtype_stru;
 
 
 /** --------------------------------------------------------------------
@@ -133,7 +131,7 @@ my_condition_new_unreachable_subtype (cce_destination_t upper_L,
   } else {
     my_condition_unreachable_subtype_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_unreachable_subtype_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_unreachable_subtype_ptr->descriptor));
+    cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(my_descriptor_unreachable_subtype));
     my_condition_init_unreachable_subtype(L, C, filename, funcname, linenum, the_data);
 
     cce_run_body_handlers(L);
@@ -142,11 +140,17 @@ my_condition_new_unreachable_subtype (cce_destination_t upper_L,
   }
 }
 
+bool
+my_condition_is_unreachable_subtype (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(my_descriptor_unreachable_subtype));
+}
+
 
 void
 condition_unreachable_subtyping_init_module (void)
 {
-  cce_descriptor_set_parent_to(cce_descriptor_unreachable_t)(&my_descriptor_unreachable_subtype_stru.descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_unreachable_t)(cce_descriptor_pointer(my_descriptor_unreachable_subtype));
 }
 
 /* end of file */

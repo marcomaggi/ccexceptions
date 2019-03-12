@@ -7,7 +7,7 @@
 
 	Header definitions for subtyping of "test unreachable" conditions.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -26,6 +26,13 @@
 
 
 /** --------------------------------------------------------------------
+ ** Module initialisation.
+ ** ----------------------------------------------------------------- */
+
+extern void condition_unreachable_subtyping_init_module (void);
+
+
+/** --------------------------------------------------------------------
  ** Header definitions.
  ** ----------------------------------------------------------------- */
 
@@ -41,30 +48,22 @@ struct my_condition_unreachable_subtype_t {
   int *				data;
 };
 
-cce_decl my_descriptor_unreachable_subtype_t const * const	my_descriptor_unreachable_subtype_ptr;
-
-cce_decl void my_condition_init_unreachable_subtype (cce_destination_t L, my_condition_unreachable_subtype_t * C,
-							 char const * const filename,
-							 char const * const funcname,
-							 int const linenum,
-							 int the_data)
+extern void my_condition_init_unreachable_subtype (cce_destination_t L, my_condition_unreachable_subtype_t * C,
+						   char const * const filename,
+						   char const * const funcname,
+						   int const linenum,
+						   int the_data)
   __attribute__((__nonnull__(1,2,3,4)));
 
-cce_decl cce_condition_t const * my_condition_new_unreachable_subtype (cce_destination_t L,
-									   char const * const filename,
-									   char const * const funcname,
-									   int const linenum,
-									   int the_data)
+extern cce_condition_t const * my_condition_new_unreachable_subtype (cce_destination_t L,
+								     char const * const filename,
+								     char const * const funcname,
+								     int const linenum,
+								     int the_data)
   __attribute__((__nonnull__(1,2,3),__returns_nonnull__));
 
-__attribute__((__pure__,__nonnull__(1),__always_inline__))
-static inline bool
-my_condition_is_unreachable_subtype (cce_condition_t const * C)
-{
-  return cce_condition_is(C, &(my_descriptor_unreachable_subtype_ptr->descriptor));
-}
-
-cce_decl void condition_unreachable_subtyping_init_module (void);
+extern bool my_condition_is_unreachable_subtype (cce_condition_t const * C)
+  __attribute__((__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------

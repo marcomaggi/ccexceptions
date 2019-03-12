@@ -31,7 +31,7 @@ static cce_condition_delete_fun_t		my_condition_delete_runtime_error_subtype;
 static cce_condition_final_fun_t		my_condition_final_runtime_error_subtype;
 static cce_condition_static_message_fun_t	my_condition_static_message_runtime_error_subtype;
 
-static my_descriptor_runtime_error_subtype_t my_descriptor_runtime_error_subtype_stru = {
+static my_descriptor_runtime_error_subtype_t my_descriptor_runtime_error_subtype = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
@@ -39,8 +39,6 @@ static my_descriptor_runtime_error_subtype_t my_descriptor_runtime_error_subtype
   .descriptor.final		= my_condition_final_runtime_error_subtype,
   .descriptor.static_message	= my_condition_static_message_runtime_error_subtype
 };
-
-my_descriptor_runtime_error_subtype_t const * const my_descriptor_runtime_error_subtype_ptr = &my_descriptor_runtime_error_subtype_stru;
 
 
 /** --------------------------------------------------------------------
@@ -124,7 +122,7 @@ my_condition_new_runtime_error_subtype (cce_destination_t upper_L, int the_data)
   } else {
     my_condition_runtime_error_subtype_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_runtime_error_subtype_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_runtime_error_subtype_ptr->descriptor));
+    cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(my_descriptor_runtime_error_subtype));
     my_condition_init_runtime_error_subtype(L, C, the_data);
 
     cce_run_body_handlers(L);
@@ -133,11 +131,17 @@ my_condition_new_runtime_error_subtype (cce_destination_t upper_L, int the_data)
   }
 }
 
+bool
+my_condition_is_runtime_error_subtype (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(my_descriptor_runtime_error_subtype));
+}
+
 
 void
 runtime_error_subtyping_init_module (void)
 {
-  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(&my_descriptor_runtime_error_subtype_stru.descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(cce_descriptor_pointer(my_descriptor_runtime_error_subtype));
 }
 
 /* end of file */
