@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -80,6 +80,18 @@ void
 cce_run_error_handlers (cce_location_t * L)
 {
   cce_run_catch_handlers(L);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Miscellaneous.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__deprecated__))
+void
+cce_descriptor_set_root_parent (cce_descriptor_t * D)
+{
+  cce_descriptor_set_parent_to(cce_descriptor_root_t)(D);
 }
 
 /* end of file */

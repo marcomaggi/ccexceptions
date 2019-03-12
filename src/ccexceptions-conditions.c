@@ -34,7 +34,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Condition objects operations.
+ ** Exceptional-condition objects operations.
  ** ----------------------------------------------------------------- */
 
 void
@@ -113,9 +113,11 @@ cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
 }
 
 void
-cce_descriptor_set_root_parent (cce_descriptor_t * D)
+cce_condition_init_root (cce_condition_root_t * C CCE_UNUSED)
 {
-  D->parent = cce_descriptor_pointer(cce_descriptor_root);
+  /* We do  nothing here.  We  need to remember that  the true initialisation  of the
+     field "condition" is  performed by "cce_condition_init()", which  must be always
+     called by the "condition_new" function. */
 }
 
 bool
@@ -161,6 +163,20 @@ cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const
   D->parent = cce_descriptor_pointer(cce_descriptor_unknown);
 }
 
+/* ------------------------------------------------------------------ */
+
+cce_condition_t const *
+cce_condition_new_unknown (void)
+{
+  return (cce_condition_t const *) &cce_condition_unknown;
+}
+
+bool
+cce_condition_is_unknown (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_unknown));
+}
+
 
 /** --------------------------------------------------------------------
  ** Break condition.
@@ -196,6 +212,26 @@ void
 cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
 {
   D->parent = cce_descriptor_pointer(cce_descriptor_break);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_break (cce_condition_break_t * C)
+{
+  cce_condition_init_root(&(C->root));
+}
+
+cce_condition_t const *
+cce_condition_new_break (void)
+{
+  return (cce_condition_t const *) &cce_condition_break;
+}
+
+bool
+cce_condition_is_break (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_break));
 }
 
 
@@ -235,6 +271,26 @@ cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D
   D->parent = cce_descriptor_pointer(cce_descriptor_error);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_error (cce_condition_error_t * C)
+{
+  cce_condition_init_root(&(C->root));
+}
+
+cce_condition_t const *
+cce_condition_new_error (void)
+{
+  return (cce_condition_t const *) &cce_condition_error;
+}
+
+bool
+cce_condition_is_error (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_error));
+}
+
 
 /** --------------------------------------------------------------------
  ** Runtime error condition.
@@ -270,6 +326,25 @@ void
 cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
 {
   D->parent = cce_descriptor_pointer(cce_descriptor_runtime_error);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCE_UNUSED)
+{
+}
+
+cce_condition_t const *
+cce_condition_new_runtime_error (void)
+{
+  return (cce_condition_t const *) &cce_condition_runtime_error;
+}
+
+bool
+cce_condition_is_runtime_error (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_runtime_error));
 }
 
 
@@ -309,6 +384,25 @@ cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * c
   D->parent = cce_descriptor_pointer(cce_descriptor_logic_error);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_logic_error (cce_condition_logic_error_t * C CCE_UNUSED)
+{
+}
+
+cce_condition_t const *
+cce_condition_new_logic_error (void)
+{
+  return (cce_condition_t const *) &cce_condition_logic_error;
+}
+
+bool
+cce_condition_is_logic_error (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_logic_error));
+}
+
 
 /** --------------------------------------------------------------------
  ** Exceptional condition descriptor: unreachable code.
@@ -325,6 +419,12 @@ static cce_descriptor_unreachable_t const cce_descriptor_unreachable = {
 };
 
 cce_descriptor_unreachable_t const * const cce_descriptor_unreachable_ptr = &cce_descriptor_unreachable;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
+{
+  D->parent = cce_descriptor_pointer(cce_descriptor_unreachable);
+}
 
 /* ------------------------------------------------------------------ */
 
@@ -371,10 +471,10 @@ cce_condition_new_unreachable (cce_destination_t L,
   return (cce_condition_t const *)C;
 }
 
-void
-cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
+bool
+cce_condition_is_unreachable (cce_condition_t const * C)
 {
-  D->parent = cce_descriptor_pointer(cce_descriptor_unreachable);
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_unreachable));
 }
 
 
@@ -414,6 +514,26 @@ cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t *
   D->parent = cce_descriptor_pointer(cce_descriptor_unimplemented);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
+{
+  cce_condition_init_logic_error(&(C->logic_error));
+}
+
+cce_condition_t const *
+cce_condition_new_unimplemented (void)
+{
+  return (cce_condition_t const *) &cce_condition_unimplemented;
+}
+
+bool
+cce_condition_is_unimplemented (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_unimplemented));
+}
+
 
 /** --------------------------------------------------------------------
  ** Invalid function argument condition.
@@ -430,6 +550,12 @@ static cce_descriptor_invalid_argument_t const cce_descriptor_invalid_argument =
 };
 
 cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr = &cce_descriptor_invalid_argument;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
+{
+  D->parent = cce_descriptor_pointer(cce_descriptor_invalid_argument);
+}
 
 /* ------------------------------------------------------------------ */
 
@@ -465,10 +591,10 @@ cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsig
   return &(C->logic_error.error.root.condition);
 }
 
-void
-cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
+bool
+cce_condition_is_invalid_argument (cce_condition_t const * C)
 {
-  D->parent = cce_descriptor_pointer(cce_descriptor_invalid_argument);
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_invalid_argument));
 }
 
 
@@ -508,6 +634,26 @@ cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * co
   D->parent = cce_descriptor_pointer(cce_descriptor_math_error);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_math_error (cce_condition_math_error_t * C)
+{
+  cce_condition_init_runtime_error(&(C->runtime_error));
+}
+
+cce_condition_t const *
+cce_condition_new_math_error (void)
+{
+  return (cce_condition_t const *) &cce_condition_math_error;
+}
+
+bool
+cce_condition_is_math_error (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_math_error));
+}
+
 
 /** --------------------------------------------------------------------
  ** Mathematical not-a-number error condition.
@@ -543,6 +689,26 @@ void
 cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
 {
   D->parent = cce_descriptor_pointer(cce_descriptor_math_nan);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_math_nan (cce_condition_math_nan_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+cce_condition_t const *
+cce_condition_new_math_nan (void)
+{
+  return (cce_condition_t const *) &cce_condition_math_nan;
+}
+
+bool
+cce_condition_is_math_nan (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_math_nan));
 }
 
 
@@ -582,6 +748,26 @@ cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t *
   D->parent = cce_descriptor_pointer(cce_descriptor_math_infinity);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+cce_condition_t const *
+cce_condition_new_math_infinity (void)
+{
+  return (cce_condition_t const *) &cce_condition_math_infinity;
+}
+
+bool
+cce_condition_is_math_infinity (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_math_infinity));
+}
+
 
 /** --------------------------------------------------------------------
  ** Mathematical overflow error condition.
@@ -617,6 +803,26 @@ void
 cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
 {
   D->parent = cce_descriptor_pointer(cce_descriptor_math_overflow);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+cce_condition_t const *
+cce_condition_new_math_overflow (void)
+{
+  return (cce_condition_t const *) &cce_condition_math_overflow;
+}
+
+bool
+cce_condition_is_math_overflow (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_math_overflow));
 }
 
 
@@ -656,6 +862,26 @@ cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t 
   D->parent = cce_descriptor_pointer(cce_descriptor_math_underflow);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
+{
+  cce_condition_init_math_error(&(C->math_error));
+}
+
+cce_condition_t const *
+cce_condition_new_math_underflow (void)
+{
+  return (cce_condition_t const *) &cce_condition_math_underflow;
+}
+
+bool
+cce_condition_is_math_underflow (cce_condition_t const * C)
+{
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_math_underflow));
+}
+
 
 /** --------------------------------------------------------------------
  ** Errno condition.
@@ -678,6 +904,13 @@ cce_descriptor_errno_t const cce_descriptor_errno = {
 };
 
 cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_errno_t const *) &cce_descriptor_errno;
+
+void
+cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
+{
+  D->parent = cce_descriptor_pointer(cce_descriptor_errno);
+}
+/* ------------------------------------------------------------------ */
 
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
   { .runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_errno), .errnum = ERRNO, .message = MESSAGE }
@@ -842,6 +1075,8 @@ errno_conditions[ERRNO_CONDITIONS_NUM] = {
   /* 147 */ CCE_DECLARE_ERRNO_CONDITION(INT_MAX,		"Unknown errno code")
 };
 
+/* ------------------------------------------------------------------ */
+
 cce_condition_t const *
 cce_condition_new_errno (int errnum)
 {
@@ -863,10 +1098,10 @@ cce_condition_new_errno_clear (void)
   return cce_condition_new_errno(errnum);
 }
 
-void
-cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
+bool
+cce_condition_is_errno (cce_condition_t const * C)
 {
-  D->parent = cce_descriptor_pointer(cce_descriptor_errno);
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_errno));
 }
 
 /* end of file */

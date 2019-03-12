@@ -5,8 +5,14 @@ Notes for revision 0.8.0-devel.12
 
 * Introduced macro "cce_descriptor_pointer".
 
-* Removed the variables "_var" from the API.  Some definitions are still
+* Removed the variables "_ptr" from the API.  Some definitions are still
   there for backwards compatibility, but they are deprecated.
+
+* Make  "cce_descriptor_set_root_parent"  deprecated.    We  should  use
+  "cce_descriptor_set_parent_to(cce_descriptor_root_t)".
+
+* Made many inline function internal, as part of the process or removing
+  "_ptr" variables from the API.
 
 
 Notes for revision 0.8.0-devel.11

@@ -1799,7 +1799,6 @@ Core values of the exceptional--condition object.
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_root_t)} (cce_descriptor_t * @var{D})
-@deftypefunx void cce_descriptor_set_root_parent (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the unique @emph{root} descriptor.
 @end deftypefun
 

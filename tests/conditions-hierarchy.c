@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -82,7 +82,7 @@ main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
   cce_location_t	L[1];
 
   /* Dynamic initialisation. */
-  cce_descriptor_set_root_parent(&alpha_D);
+  cce_descriptor_set_parent_to(cce_descriptor_root_t)(&alpha_D);
 
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_unknown())));
   assert(true  == cce_condition_is_root(cce_condition(cce_condition_new_break())));

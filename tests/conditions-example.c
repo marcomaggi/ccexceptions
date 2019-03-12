@@ -7,7 +7,7 @@
 
 	This example is copied in the documentation.
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -333,7 +333,7 @@ main (void)
   cce_location_t	L[1];
 
   /* Dynamic initialisation. */
-  cce_descriptor_set_root_parent(&descriptor_alpha.descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_root_t)(&descriptor_alpha.descriptor);
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
