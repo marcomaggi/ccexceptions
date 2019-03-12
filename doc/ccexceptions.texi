@@ -1456,8 +1456,6 @@ struct my_condition_error_t @{
   cce_condition_root_t  root;
   /* Put some custom fields here. */
 @};
-
-extern my_descriptor_error_t const * const my_descriptor_error_ptr;
 @end smallexample
 
 @noindent
@@ -1819,11 +1817,6 @@ return @cfalse{}.  With a correctly built conditions hierarchy: this function al
 @ctrue{}.
 @end deftypefun
 
-
-@deftypevr {Dynamic Constant} {cce_descriptor_root_t const * const} cce_descriptor_root_ptr
-Pointer to the statically allocated structure representing the @emph{root} descriptor.
-@end deftypevr
-
 @c ------------------------------------------------------------------------
 
 @ConditionSubtypingExample{root, root}
@@ -1894,18 +1887,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_unknown_t const * const} cce_descriptor_unknown_ptr
-Pointer to a statically allocated structure representing the @emph{unknown}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_unknown_t const * const} cce_condition_unknown_ptr
-Pointer to a statically allocated structure representing the @emph{unknown}
-exceptional--condition object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unknown_t)} (cce_descriptor_t * @var{D})
@@ -1986,18 +1967,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_break_t const * const} cce_descriptor_break_ptr
-Pointer to a statically allocated structure representing the @emph{break} exceptional--condition
-object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_break_t const * const} cce_condition_break_ptr
-Pointer to a statically allocated structure representing the @emph{break} exceptional--condition
-object.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_break_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2076,18 +2045,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_error_t const * const} cce_descriptor_error_ptr
-Pointer to a statically allocated structure representing the @emph{error} exceptional--condition
-object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_error_t const * const} cce_condition_error_ptr
-Pointer to a statically allocated structure representing the @emph{error} exceptional--condition
-object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_error_t)} (cce_descriptor_t * @var{D})
@@ -2171,18 +2128,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_runtime_error_t const * const} cce_descriptor_runtime_error_ptr
-Pointer to a statically allocated structure representing the @emph{run--time error}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_runtime_error_t const * const} cce_condition_runtime_error_ptr
-Pointer to a statically allocated structure representing the @emph{run--time error}
-exceptional--condition object.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2261,18 +2206,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_logic_error_t const * const} cce_descriptor_logic_error_ptr
-Pointer to a statically allocated structure representing the @emph{logic error}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_logic_error_t const * const} cce_condition_logic_error_ptr
-Pointer to a statically allocated structure representing the @emph{logic error}
-exceptional--condition object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_logic_error_t)} (cce_descriptor_t * @var{D})
@@ -2355,18 +2288,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_unimplemented_t const * const} cce_descriptor_unimplemented_ptr
-Pointer to a statically allocated structure representing the @emph{unimplemented}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_unimplemented_t const * const} cce_condition_unimplemented_ptr
-Pointer to a statically allocated structure representing the @emph{unimplemented}
-exceptional--condition object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t)} (cce_descriptor_t * @var{D})
@@ -2583,12 +2504,6 @@ nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_unreachable_t const * const} cce_descriptor_unreachable_ptr
-Pointer to a statically allocated structure representing the @emph{unreachable code}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unreachable_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2675,12 +2590,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_errno_t const * const} cce_descriptor_errno_ptr
-Pointer to a statically allocated structure representing the @code{errno} exceptional--condition
-object--type descriptor.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_errno_t)} (cce_descriptor_t * @var{D})
@@ -2788,18 +2697,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_math_error_t const * const} cce_descriptor_math_error_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical error}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_math_error_t const * const} cce_condition_math_error_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical error}
-exceptional--condition object.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_error_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2876,18 +2773,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_math_nan_t const * const} cce_descriptor_math_nan_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical not--a--number}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_math_nan_t const * const} cce_condition_math_nan_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical not--a--number}
-exceptional--condition object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_nan_t)} (cce_descriptor_t * @var{D})
@@ -2967,18 +2852,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_math_infinity_t const * const} cce_descriptor_math_infinity_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical infinity}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_math_infinity_t const * const} cce_condition_math_infinity_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical infinity}
-exceptional--condition object.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -3056,18 +2929,6 @@ values of suitable types; we can apply this macro to pointers of all the types d
 @end deftypefn
 
 
-@deftypevr {Dynamic Constant} {cce_descriptor_math_overflow_t const * const} cce_descriptor_math_overflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical overflow}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_math_overflow_t const * const} cce_condition_math_overflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical overflow}
-exceptional--condition object.
-@end deftypevr
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -3143,18 +3004,6 @@ This macro performs compile--time type--checking so that the cast operation is a
 values of suitable types; we can apply this macro to pointers of all the types defined by
 @value{PACKAGE} for which it makes sense.
 @end deftypefn
-
-
-@deftypevr {Dynamic Constant} {cce_descriptor_math_underflow_t const * const} cce_descriptor_math_underflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical underflow}
-exceptional--condition object--type descriptor.
-@end deftypevr
-
-
-@deftypevr {Dynamic Constant} {cce_condition_math_underflow_t const * const} cce_condition_math_underflow_ptr
-Pointer to a statically allocated structure representing the @emph{mathematical underflow}
-exceptional--condition object.
-@end deftypevr
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t)} (cce_descriptor_t * @var{D})
