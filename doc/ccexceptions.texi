@@ -1641,6 +1641,41 @@ Expand into the name of a function that we can use to set the parent of a descri
 @var{TYPE} descriptor.
 @end defmac
 
+
+@defmac cce_descriptor_pointer (@var{EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE})
+Expand into:
+
+@example
+&((@var{EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE}).descriptor)
+@end example
+
+Given an exceptional-condition descriptor @struct{} defined as:
+
+@example
+typedef struct descr_t  descr_t;
+
+struct descr_t @{
+  cce_descriptor_t      descriptor;
+@};
+
+descr_t my_descriptor_descr = @{ ... @};
+@end example
+
+@noindent
+this macro is used as:
+
+@example
+cce_descriptor_pointer(my_descriptor_descr)
+@end example
+
+@noindent
+to expand into:
+
+@example
+&((my_descriptor_descr).descriptor)
+@end example
+@end defmac
+
 @c page
 @node conditions objects
 @section Exceptional-condition objects

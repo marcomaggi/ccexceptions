@@ -3,7 +3,7 @@
 Notes for revision 0.8.0-devel.12
 ---------------------------------
 
-* ...
+* Introduced macro "cce_descriptor_pointer".
 
 
 Notes for revision 0.8.0-devel.11

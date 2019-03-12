@@ -115,13 +115,13 @@ cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
 void
 cce_descriptor_set_root_parent (cce_descriptor_t * D)
 {
-  D->parent = &(cce_descriptor_root_stru.descriptor);
+  D->parent = cce_descriptor_pointer(cce_descriptor_root_stru);
 }
 
 bool
 cce_condition_is_root (cce_condition_t const * C)
 {
-  return cce_condition_is(C, &(cce_descriptor_root_stru.descriptor));
+  return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_root_stru));
 }
 
 
@@ -139,7 +139,7 @@ cce_condition_unknown_static_message_fun (cce_condition_t const * C CCE_UNUSED)
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_unknown". */
 static cce_descriptor_unknown_t const cce_descriptor_unknown_stru = {
-  .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_root_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_unknown_static_message_fun
@@ -150,7 +150,7 @@ cce_descriptor_unknown_t const * const cce_descriptor_unknown_ptr = &cce_descrip
 /* This is the single instance  of unknown exceptional condition.  It is
    used by "cce_raise()". */
 static cce_condition_unknown_t const cce_condition_unknown_stru = {
-  .root.condition.descriptor = &(cce_descriptor_unknown_stru.descriptor)
+  .root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_unknown_stru)
 };
 
 cce_condition_unknown_t const * const cce_condition_unknown_ptr = &cce_condition_unknown_stru;
@@ -176,7 +176,7 @@ cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
    descriptor    has    only    one     instance    statically    allocated    below:
    "cce_condition_break". */
 static cce_descriptor_break_t const cce_descriptor_break_stru = {
-  .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_root_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_break_static_message_fun
@@ -187,7 +187,7 @@ cce_descriptor_break_t const * const cce_descriptor_break_ptr = &cce_descriptor_
 /* This  is the  single  instance of  break  exceptional condition.   It  is used  by
    "cce_raise()". */
 static cce_condition_break_t const cce_condition_break_stru = {
-  .root.condition.descriptor = &(cce_descriptor_break_stru.descriptor)
+  .root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_break_stru)
 };
 
 cce_condition_break_t const * const cce_condition_break_ptr = &cce_condition_break_stru;
@@ -213,7 +213,7 @@ cce_condition_error_static_message_fun (cce_condition_t const * C CCE_UNUSED)
    exceptional  condition.   This  descriptor   has  only  one  instance
    statically allocated below: "cce_condition_error". */
 static cce_descriptor_error_t const cce_descriptor_error_stru = {
-  .descriptor.parent		= &(cce_descriptor_root_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_root_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_error_static_message_fun
@@ -224,7 +224,7 @@ cce_descriptor_error_t const * const cce_descriptor_error_ptr = &cce_descriptor_
 /* This  is  the  single  instance of  "unspecified  error"  exceptional
    condition.  It is used by "cce_raise()". */
 static cce_condition_error_t const cce_condition_error_stru = {
-  .root.condition.descriptor = &(cce_descriptor_error_stru.descriptor)
+  .root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_error_stru)
 };
 
 cce_condition_error_t const * const cce_condition_error_ptr = &cce_condition_error_stru;
@@ -250,7 +250,7 @@ cce_condition_runtime_error_static_message_fun (cce_condition_t const * C CCE_UN
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_runtime_error". */
 static cce_descriptor_runtime_error_t const cce_descriptor_runtime_error_stru = {
-  .descriptor.parent		= &(cce_descriptor_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_runtime_error_static_message_fun
@@ -261,7 +261,7 @@ cce_descriptor_runtime_error_t const * const cce_descriptor_runtime_error_ptr = 
 /* This is the single instance of "runtime error" exceptional condition.
    It is used by "cce_raise()". */
 static cce_condition_runtime_error_t const cce_condition_runtime_error_stru = {
-  .error.root.condition.descriptor = &(cce_descriptor_runtime_error_stru.descriptor)
+  .error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_runtime_error_stru)
 };
 
 cce_condition_runtime_error_t const * const cce_condition_runtime_error_ptr = &cce_condition_runtime_error_stru;
@@ -287,7 +287,7 @@ cce_condition_logic_error_static_message_fun (cce_condition_t const * C CCE_UNUS
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_logic_error". */
 static cce_descriptor_logic_error_t const cce_descriptor_logic_error_stru = {
-  .descriptor.parent		= &(cce_descriptor_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_logic_error_static_message_fun
@@ -298,7 +298,7 @@ cce_descriptor_logic_error_t const * const cce_descriptor_logic_error_ptr = &cce
 /* This is the  single instance of "logic  error" exceptional condition.
    It is used by "cce_raise()". */
 static cce_condition_logic_error_t const cce_condition_logic_error_stru = {
-  .error.root.condition.descriptor = &(cce_descriptor_logic_error_stru.descriptor)
+  .error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_logic_error_stru)
 };
 
 cce_condition_logic_error_t const * const cce_condition_logic_error_ptr = &cce_condition_logic_error_stru;
@@ -392,7 +392,7 @@ cce_condition_unimplemented_static_message_fun (cce_condition_t const * C CCE_UN
    condition.   This   descriptor  has  only  one   instance  statically
    allocated below: "cce_condition_unimplemented". */
 static cce_descriptor_unimplemented_t const cce_descriptor_unimplemented_stru = {
-  .descriptor.parent		= &(cce_descriptor_logic_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_logic_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_unimplemented_static_message_fun
@@ -403,7 +403,7 @@ cce_descriptor_unimplemented_t const * const cce_descriptor_unimplemented_ptr = 
 /* This is  the single instance of  unimplemented exceptional condition.
    It is used by "cce_raise()". */
 static cce_condition_unimplemented_t const cce_condition_unimplemented_stru = {
-  .logic_error.error.root.condition.descriptor = &(cce_descriptor_unimplemented_stru.descriptor)
+  .logic_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_unimplemented_stru)
 };
 
 cce_condition_unimplemented_t const * const cce_condition_unimplemented_ptr = &cce_condition_unimplemented_stru;
@@ -423,7 +423,7 @@ static cce_condition_delete_fun_t		cce_condition_delete_invalid_argument;
 static cce_condition_static_message_fun_t	cce_condition_static_message_invalid_argument;
 
 static cce_descriptor_invalid_argument_t const cce_descriptor_invalid_argument_stru = {
-  .descriptor.parent		= &(cce_descriptor_logic_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_logic_error_stru),
   .descriptor.delete		= cce_condition_delete_invalid_argument,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_invalid_argument
@@ -460,7 +460,7 @@ cce_condition_new_invalid_argument (cce_location_t * L, char const * func, unsig
 {
   cce_condition_invalid_argument_t *	C = cce_sys_malloc(L, sizeof(cce_condition_invalid_argument_t));
 
-  cce_condition_init((cce_condition_t *) C, &(cce_descriptor_invalid_argument_stru.descriptor));
+  cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(cce_descriptor_invalid_argument_stru));
   cce_condition_init_invalid_argument(C, func, index);
   return &(C->logic_error.error.root.condition);
 }
@@ -486,7 +486,7 @@ cce_condition_static_message_math_error (cce_condition_t const * C CCE_UNUSED)
    exceptional  condition.   This  descriptor   has  only  one  instance
    statically allocated below: "cce_condition_math_error". */
 static cce_descriptor_math_error_t const cce_descriptor_math_error_stru = {
-  .descriptor.parent		= &(cce_descriptor_runtime_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_runtime_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_math_error
@@ -497,7 +497,7 @@ cce_descriptor_math_error_t const * const cce_descriptor_math_error_ptr = &cce_d
 /* This is  the single instance  of "math error"  exceptional condition.
    It is used by "cce_raise()". */
 static cce_condition_math_error_t const cce_condition_math_error_stru = {
-  .runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_error_stru.descriptor)
+  .runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_math_error_stru)
 };
 
 cce_condition_math_error_t const * const cce_condition_math_error_ptr = &cce_condition_math_error_stru;
@@ -523,7 +523,7 @@ cce_condition_static_message_math_nan (cce_condition_t const * C CCE_UNUSED)
    error exceptional  condition.  This descriptor has  only one instance
    statically allocated below: "cce_condition_math_nan". */
 static cce_descriptor_math_nan_t const cce_descriptor_math_nan_stru = {
-  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_math_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_math_nan
@@ -534,7 +534,7 @@ cce_descriptor_math_nan_t const * const cce_descriptor_math_nan_ptr = &cce_descr
 /* This  is  the  single  instance   of  "math  nan  error"  exceptional
    condition.  It is used by "cce_raise()". */
 static cce_condition_math_nan_t const cce_condition_math_nan_stru = {
-  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_nan_stru.descriptor)
+  .math_error.runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_math_nan_stru)
 };
 
 cce_condition_math_nan_t const * const cce_condition_math_nan_ptr = &cce_condition_math_nan_stru;
@@ -560,7 +560,7 @@ cce_condition_static_message_math_infinity (cce_condition_t const * C CCE_UNUSED
    error exceptional  condition.  This descriptor has  only one instance
    statically allocated below: "cce_condition_math_infinity". */
 static cce_descriptor_math_infinity_t const cce_descriptor_math_infinity_stru = {
-  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_math_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_math_infinity
@@ -571,7 +571,7 @@ cce_descriptor_math_infinity_t const * const cce_descriptor_math_infinity_ptr = 
 /* This  is the  single instance  of "math  infinity error"  exceptional
    condition.  It is used by "cce_raise()". */
 static cce_condition_math_infinity_t const cce_condition_math_infinity_stru = {
-  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_infinity_stru.descriptor)
+  .math_error.runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_math_infinity_stru)
 };
 
 cce_condition_math_infinity_t const * const cce_condition_math_infinity_ptr = &cce_condition_math_infinity_stru;
@@ -597,7 +597,7 @@ cce_condition_static_message_math_overflow (cce_condition_t const * C CCE_UNUSED
    exceptional  condition.   This  descriptor   has  only  one  instance
    statically allocated below: "cce_condition_math_overflow". */
 static cce_descriptor_math_overflow_t const cce_descriptor_math_overflow_stru = {
-  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_math_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_math_overflow
@@ -608,7 +608,7 @@ cce_descriptor_math_overflow_t const * const cce_descriptor_math_overflow_ptr = 
 /* This  is the  single instance  of "math  overflow error"  exceptional
    condition.  It is used by "cce_raise()". */
 static cce_condition_math_overflow_t const cce_condition_math_overflow_stru = {
-  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_overflow_stru.descriptor)
+  .math_error.runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_math_overflow_stru)
 };
 
 cce_condition_math_overflow_t const * const cce_condition_math_overflow_ptr = &cce_condition_math_overflow_stru;
@@ -634,7 +634,7 @@ cce_condition_static_message_math_underflow (cce_condition_t const * C CCE_UNUSE
    exceptional  condition.   This  descriptor   has  only  one  instance
    statically allocated below: "cce_condition_math_underflow". */
 static cce_descriptor_math_underflow_t const cce_descriptor_math_underflow_stru = {
-  .descriptor.parent		= &(cce_descriptor_math_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_math_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_static_message_math_underflow
@@ -645,7 +645,7 @@ cce_descriptor_math_underflow_t const * const cce_descriptor_math_underflow_ptr 
 /* This is  the single  instance of  "math underflow  error" exceptional
    condition.  It is used by "cce_raise()". */
 static cce_condition_math_underflow_t const cce_condition_math_underflow_stru = {
-  .math_error.runtime_error.error.root.condition.descriptor = &(cce_descriptor_math_underflow_stru.descriptor)
+  .math_error.runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_math_underflow_stru)
 };
 
 cce_condition_math_underflow_t const * const cce_condition_math_underflow_ptr = &cce_condition_math_underflow_stru;
@@ -671,7 +671,7 @@ cce_condition_errno_static_message_fun (cce_condition_t const * C)
 /* This condition descriptor  represents "errno" exceptional conditions.
    It is a child of the "runtime error" descriptor. */
 cce_descriptor_errno_t const cce_descriptor_errno_stru = {
-  .descriptor.parent		= &(cce_descriptor_runtime_error_stru.descriptor),
+  .descriptor.parent		= cce_descriptor_pointer(cce_descriptor_runtime_error_stru),
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= cce_condition_errno_static_message_fun
@@ -680,7 +680,7 @@ cce_descriptor_errno_t const cce_descriptor_errno_stru = {
 cce_descriptor_errno_t const * const cce_descriptor_errno_ptr = (cce_descriptor_errno_t const *) &cce_descriptor_errno_stru;
 
 #define CCE_DECLARE_ERRNO_CONDITION(ERRNO,MESSAGE)			\
-  { .runtime_error.error.root.condition.descriptor = &(cce_descriptor_errno_stru.descriptor), .errnum = ERRNO, .message = MESSAGE }
+  { .runtime_error.error.root.condition.descriptor = cce_descriptor_pointer(cce_descriptor_errno_stru), .errnum = ERRNO, .message = MESSAGE }
 
 #define ERRNO_CONDITIONS_NUM		148
 #define LAST_ERRNO_CONDITION		147

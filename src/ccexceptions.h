@@ -333,6 +333,9 @@ cce_decl bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * child,
 
 #define cce_descriptor_set_parent_to(TYPE)	cce_descriptor_set_parent_to ## TYPE
 
+#define cce_descriptor_pointer(EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE)	\
+  &((EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE).descriptor)
+
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: root exception.
