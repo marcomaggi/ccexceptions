@@ -2655,6 +2655,10 @@ Configure the descriptor @var{D} so that its parent is the descriptor of the giv
 exceptional--condition object--type.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@ConditionSubtypingExample{math-nan, math_nan}
+
 @c page
 @node conditions math infinity
 @subsection Mathematical infinity error
