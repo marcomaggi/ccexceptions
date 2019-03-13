@@ -40,6 +40,12 @@ static my_descriptor_invalid_argument_subtype_t my_descriptor_invalid_argument_s
   .descriptor.static_message	= my_condition_static_message_invalid_argument_subtype
 };
 
+void
+cce_descriptor_set_parent_to(my_descriptor_invalid_argument_subtype_t) (cce_descriptor_t * const D)
+{
+  D->parent = cce_descriptor_pointer(my_descriptor_invalid_argument_subtype);
+}
+
 
 /** --------------------------------------------------------------------
  ** Condition type descriptor: protocol functions.

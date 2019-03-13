@@ -40,6 +40,12 @@ static my_descriptor_root_subtype_t my_descriptor_root_subtype = {
   .descriptor.static_message	= my_condition_static_message_root_subtype
 };
 
+void
+cce_descriptor_set_parent_to(my_descriptor_root_subtype_t) (cce_descriptor_t * const D)
+{
+  D->parent = cce_descriptor_pointer(my_descriptor_root_subtype);
+}
+
 
 /** --------------------------------------------------------------------
  ** Condition type descriptor: protocol functions.

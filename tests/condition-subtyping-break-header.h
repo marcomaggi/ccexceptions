@@ -48,6 +48,11 @@ struct my_condition_break_subtype_t {
   int *				data;
 };
 
+extern void cce_descriptor_set_parent_to(my_descriptor_break_subtype_t) (cce_descriptor_t * const D)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
 extern void my_condition_init_break_subtype (cce_destination_t L, my_condition_break_subtype_t * C, int the_data)
   __attribute__((__nonnull__(1)));
 
