@@ -112,6 +112,8 @@ cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
   D->parent = cce_descriptor_pointer(cce_descriptor_root);
 }
 
+/* ------------------------------------------------------------------ */
+
 void
 cce_condition_init_root (cce_condition_root_t * C CCE_UNUSED)
 {
