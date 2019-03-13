@@ -2793,6 +2793,10 @@ Configure the descriptor @var{D} so that its parent is the descriptor of the giv
 exceptional--condition object--type.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@ConditionSubtypingExample{math-overflow, math_overflow}
+
 @c page
 @node conditions math underflow
 @subsection Mathematical underflow error
@@ -2857,6 +2861,10 @@ otherwise return @cfalse{}.
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
 @end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@ConditionSubtypingExample{math-underflow, math_underflow}
 
 @c page
 @node conditions custom

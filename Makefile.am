@@ -79,7 +79,9 @@ check_PROGRAMS	= \
 	tests/condition-subtyping-unreachable		\
 	tests/condition-subtyping-math-error		\
 	tests/condition-subtyping-math-nan		\
-	tests/condition-subtyping-math-infinity
+	tests/condition-subtyping-math-infinity		\
+	tests/condition-subtyping-math-overflow		\
+	tests/condition-subtyping-math-underflow
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -249,6 +251,24 @@ tests_condition_subtyping_math_infinity_SOURCES	= \
 	tests/condition-subtyping-math-infinity.c		\
 	tests/condition-subtyping-math-infinity-body.c	\
 	tests/condition-subtyping-math-infinity-header.h
+
+## --------------------------------------------------------------------
+
+tests_condition_subtyping_math_overflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_math_overflow_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_math_overflow_SOURCES	= \
+	tests/condition-subtyping-math-overflow.c		\
+	tests/condition-subtyping-math-overflow-body.c	\
+	tests/condition-subtyping-math-overflow-header.h
+
+## --------------------------------------------------------------------
+
+tests_condition_subtyping_math_underflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_math_underflow_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_math_underflow_SOURCES	= \
+	tests/condition-subtyping-math-underflow.c		\
+	tests/condition-subtyping-math-underflow-body.c	\
+	tests/condition-subtyping-math-underflow-header.h
 
 ## --------------------------------------------------------------------
 
