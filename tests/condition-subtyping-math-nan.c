@@ -49,6 +49,27 @@ main (void)
 	exit(EXIT_FAILURE);
       }
 
+      if (cce_condition_is_math_error(cce_condition(L))) {
+	fprintf(stderr, "%s: is math_error condition\n", __func__);
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
+	exit(EXIT_FAILURE);
+      }
+
+      if (cce_condition_is_runtime_error(cce_condition(L))) {
+	fprintf(stderr, "%s: is runtime_error condition\n", __func__);
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
+	exit(EXIT_FAILURE);
+      }
+
+      if (cce_condition_is_error(cce_condition(L))) {
+	fprintf(stderr, "%s: is error condition\n", __func__);
+      } else {
+	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
+	exit(EXIT_FAILURE);
+      }
+
       if (cce_condition_is_root(cce_condition(L))) {
 	fprintf(stderr, "%s: is root condition\n", __func__);
       } else {
