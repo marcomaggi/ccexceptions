@@ -1874,20 +1874,6 @@ Return @ctrue{} if @var{C} references an @emph{unknown} exceptional--condition o
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_unknown_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_unknown_t const *} cce_condition_unknown (cce_condition_unknown_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
-pointer to @objtype{cce_condition_unknown_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unknown_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -1950,20 +1936,6 @@ exceptional--condition object.
 Return @ctrue{} if @var{C} references a @emph{break} exceptional--condition object; otherwise return
 @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro}  {cce_condition_break_t const *} cce_condition_break (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_break_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_break_t const *} cce_condition_break (cce_condition_break_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
-pointer to @objtype{cce_condition_break_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_break_t)} (cce_descriptor_t * @var{D})
@@ -2032,18 +2004,6 @@ exceptional--condition object.
 Return @ctrue{} if @var{C} references an @emph{error} exceptional--condition object; otherwise return
 @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_error_t const *} cce_condition_error (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_error_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_error_t)} (cce_descriptor_t * @var{D})
@@ -2115,18 +2075,6 @@ return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_runtime_error_t const *} cce_condition_runtime_error (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_runtime_error_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2193,18 +2141,6 @@ error} exceptional--condition object.
 Return @ctrue{} if @var{C} references a @emph{logic error} exceptional--condition object; otherwise return
 @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_logic_error_t const *} cce_condition_logic_error (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_logic_error_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_logic_error_t)} (cce_descriptor_t * @var{D})
@@ -2275,18 +2211,6 @@ Return a pointer to the statically allocated structure representing the predefin
 Return @ctrue{} if @var{C} references an @emph{unimplemented} exceptional--condition object; otherwise
 return @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_unimplemented_t const *} cce_condition_unimplemented (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_unimplemented_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t)} (cce_descriptor_t * @var{D})
@@ -2387,20 +2311,6 @@ if (! (@var{expr})) @{
 
 @noindent
 where @var{expr} is an expression evaluating to @ctrue{} if the argument is @strong{valid}.
-@end deftypefn
-
-
-@deftypefn {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_invalid_argument_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_invalid_argument_t const *} cce_condition_invalid_argument (cce_condition_invalid_argument_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
-pointer to @objtype{cce_condition_invalid_argument_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
 @end deftypefn
 
 
@@ -2577,20 +2487,6 @@ return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_errno_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_t const * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_errno_t const *} cce_condition_errno (cce_condition_errno_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to a
-pointer to @objtype{cce_condition_errno_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_errno_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2684,18 +2580,6 @@ otherwise return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_math_error_t const *} cce_condition_math_error (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_math_error_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_error_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2760,18 +2644,6 @@ Return a pointer to the statically allocated structure representing the predefin
 Return @ctrue{} if @var{C} references a @emph{mathematical not--a--number} exceptional--condition
 object; otherwise return @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_math_nan_t const *} cce_condition_math_nan (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_math_nan_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_nan_t)} (cce_descriptor_t * @var{D})
@@ -2839,18 +2711,6 @@ otherwise return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_math_infinity_t const *} cce_condition_math_infinity (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_math_infinity_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2916,18 +2776,6 @@ otherwise return @cfalse{}.
 @end deftypefun
 
 
-@deftypefn {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_math_overflow_t const *} cce_condition_math_overflow (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_math_overflow_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
-
-
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t)} (cce_descriptor_t * @var{D})
 Configure the descriptor @var{D} so that its parent is the descriptor of the given
 exceptional--condition object--type.
@@ -2991,18 +2839,6 @@ Return a pointer to the statically allocated structure representing the predefin
 Return @ctrue{} if @var{C} references a @emph{mathematical underflow} exceptional--condition object;
 otherwise return @cfalse{}.
 @end deftypefun
-
-
-@deftypefn {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_destination_t @var{L})
-@deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t * @var{C})
-@deftypefnx {Generic Macro} {cce_condition_math_underflow_t const *} cce_condition_math_underflow (cce_condition_t const * @var{C})
-This generic macro dispatches its expansion according to its argument's type.  Cast a pointer to
-@objtype{cce_condition_math_underflow_t}.
-
-This macro performs compile--time type--checking so that the cast operation is applied only to
-values of suitable types; we can apply this macro to pointers of all the types defined by
-@value{PACKAGE} for which it makes sense.
-@end deftypefn
 
 
 @deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t)} (cce_descriptor_t * @var{D})

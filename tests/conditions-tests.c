@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -48,7 +48,10 @@ test_invalid_argument (void)
 
   if (cce_location(L)) {
     assert(cce_condition_is_invalid_argument(cce_condition(L)));
-    assert(0 == strcmp(__func__, cce_condition_invalid_argument(L)->funcname));
+    {
+      CCE_PC(cce_condition_invalid_argument_t, C, cce_condition(L));
+      assert(0 == strcmp(__func__, C->funcname));
+    }
     cce_run_catch_handlers(L);
     cce_condition_delete(cce_condition(L));
     error_flag = true;

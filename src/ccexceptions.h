@@ -389,19 +389,6 @@ cce_decl cce_condition_t const * cce_condition_new_unknown (void)
 cce_decl bool cce_condition_is_unknown (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_unknown(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_unknown_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_unknown_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_unknown_t		*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_unknown_t	const	*: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_unknown_t const *)(S), \
-	   cce_condition_unknown_t	const	* const: (cce_condition_unknown_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: break exception.
@@ -432,19 +419,6 @@ cce_decl cce_condition_t const * cce_condition_new_break (void)
 cce_decl bool cce_condition_is_break (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_break(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_break_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_break_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_break_t const *)(S), \
-	   cce_condition_break_t		*: (cce_condition_break_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_break_t const *)(S), \
-	   cce_condition_break_t	const	*: (cce_condition_break_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_break_t const *)(S), \
-	   cce_condition_break_t	const	* const: (cce_condition_break_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: generic error exception.
@@ -472,19 +446,6 @@ cce_decl cce_condition_t const * cce_condition_new_error (void)
 
 cce_decl bool cce_condition_is_error (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_error(S)						\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_error_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_error_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_error_t const *)(S), \
-	   cce_condition_error_t		*: (cce_condition_error_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_error_t const *)(S), \
-	   cce_condition_error_t	const	*: (cce_condition_error_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_error_t const *)(S), \
-	   cce_condition_error_t	const	* const: (cce_condition_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -516,19 +477,6 @@ cce_decl cce_condition_t const * cce_condition_new_runtime_error (void)
 cce_decl bool cce_condition_is_runtime_error (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_runtime_error(S)					\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_runtime_error_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_runtime_error_t		*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_runtime_error_t	const	*: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_runtime_error_t const *)(S), \
-	   cce_condition_runtime_error_t	const	* const: (cce_condition_runtime_error_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: logic error exception.
@@ -558,19 +506,6 @@ cce_decl cce_condition_t const * cce_condition_new_logic_error (void)
 
 cce_decl bool cce_condition_is_logic_error (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_logic_error(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_logic_error_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_logic_error_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_logic_error_t		*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_logic_error_t	const	*: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_logic_error_t const *)(S), \
-	   cce_condition_logic_error_t	const	* const: (cce_condition_logic_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -616,19 +551,6 @@ cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_
 cce_decl bool cce_condition_is_unreachable (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_unreachable(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_unreachable_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_unreachable_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_unreachable_t const *)(S), \
-	   cce_condition_unreachable_t		*: (cce_condition_unreachable_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_unreachable_t const *)(S), \
-	   cce_condition_unreachable_t	const	*: (cce_condition_unreachable_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_unreachable_t const *)(S), \
-	   cce_condition_unreachable_t	const	* const: (cce_condition_unreachable_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: unimplemented exception.
@@ -658,19 +580,6 @@ cce_decl cce_condition_t const * cce_condition_new_unimplemented (void)
 
 cce_decl bool cce_condition_is_unimplemented (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_unimplemented(S)					\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_unimplemented_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_unimplemented_t		*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_unimplemented_t	const	*: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_unimplemented_t const *)(S), \
-	   cce_condition_unimplemented_t	const	* const: (cce_condition_unimplemented_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -708,19 +617,6 @@ cce_decl bool cce_condition_is_invalid_argument (cce_condition_t const * C)
 #define cce_check_argument(L,EXPR,ARGNUM) \
   if (! (EXPR)) { cce_raise((L), cce_condition_new_invalid_argument((L), __func__, (ARGNUM))); }
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_invalid_argument(S)				\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_invalid_argument_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_invalid_argument_t		*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_invalid_argument_t	const	*: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_invalid_argument_t const *)(S), \
-	   cce_condition_invalid_argument_t	const	* const: (cce_condition_invalid_argument_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: mathematical error exception.
@@ -750,19 +646,6 @@ cce_decl cce_condition_t const * cce_condition_new_math_error (void)
 
 cce_decl bool cce_condition_is_math_error (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_math_error(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_math_error_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_math_error_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_math_error_t const *)(S), \
-	   cce_condition_math_error_t		*: (cce_condition_math_error_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_math_error_t const *)(S), \
-	   cce_condition_math_error_t	const	*: (cce_condition_math_error_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_math_error_t const *)(S), \
-	   cce_condition_math_error_t	const	* const: (cce_condition_math_error_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -794,22 +677,9 @@ cce_decl cce_condition_t const * cce_condition_new_math_nan (void)
 cce_decl bool cce_condition_is_math_nan (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_math_nan(S)					\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_math_nan_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_math_nan_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_math_nan_t const *)(S), \
-	   cce_condition_math_nan_t		*: (cce_condition_math_nan_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_math_nan_t const *)(S), \
-	   cce_condition_math_nan_t	const	*: (cce_condition_math_nan_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_math_nan_t const *)(S), \
-	   cce_condition_math_nan_t	const	* const: (cce_condition_math_nan_t const *)(S))
-
 
 /** --------------------------------------------------------------------
- ** Exceptional condition objects: mathematical not-a-number exception.
+ ** Exceptional condition objects: mathematical infinity exception.
  ** ----------------------------------------------------------------- */
 
 struct cce_descriptor_math_infinity_t {
@@ -836,19 +706,6 @@ cce_decl cce_condition_t const * cce_condition_new_math_infinity (void)
 
 cce_decl bool cce_condition_is_math_infinity (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_math_infinity(S)					\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_math_infinity_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_math_infinity_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_math_infinity_t const *)(S), \
-	   cce_condition_math_infinity_t		*: (cce_condition_math_infinity_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_math_infinity_t const *)(S), \
-	   cce_condition_math_infinity_t	const	*: (cce_condition_math_infinity_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_math_infinity_t const *)(S), \
-	   cce_condition_math_infinity_t	const	* const: (cce_condition_math_infinity_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -880,19 +737,6 @@ cce_decl cce_condition_t const * cce_condition_new_math_overflow (void)
 cce_decl bool cce_condition_is_math_overflow (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
 
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_math_overflow(S)					\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_math_overflow_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_math_overflow_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_math_overflow_t const *)(S), \
-	   cce_condition_math_overflow_t		*: (cce_condition_math_overflow_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_math_overflow_t const *)(S), \
-	   cce_condition_math_overflow_t	const	*: (cce_condition_math_overflow_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_math_overflow_t const *)(S), \
-	   cce_condition_math_overflow_t	const	* const: (cce_condition_math_overflow_t const *)(S))
-
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: mathematical underflow exception.
@@ -922,19 +766,6 @@ cce_decl cce_condition_t const * cce_condition_new_math_underflow (void)
 
 cce_decl bool cce_condition_is_math_underflow (cce_condition_t const * C)
   __attribute__((__pure__,__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_math_underflow(S)					\
-  _Generic((S),								\
-	   cce_location_t				*: (cce_condition_math_underflow_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]				 : (cce_condition_math_underflow_t const *)CCE_CLOC(S), \
-	   cce_condition_t				*: (cce_condition_math_underflow_t const *)(S), \
-	   cce_condition_math_underflow_t		*: (cce_condition_math_underflow_t const *)(S), \
-	   cce_condition_t			const	*: (cce_condition_math_underflow_t const *)(S), \
-	   cce_condition_math_underflow_t	const	*: (cce_condition_math_underflow_t const *)(S), \
-	   cce_condition_t			const	* const: (cce_condition_math_underflow_t const *)(S), \
-	   cce_condition_math_underflow_t	const	* const: (cce_condition_math_underflow_t const *)(S))
 
 
 /** --------------------------------------------------------------------
@@ -966,19 +797,6 @@ cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
 
 cce_decl bool cce_condition_is_errno (cce_condition_t const * C)
   __attribute__((__nonnull__(1)));
-
-/* ------------------------------------------------------------------ */
-
-#define cce_condition_errno(S)						\
-  _Generic((S),								\
-	   cce_location_t			*: (cce_condition_errno_t const *)CCE_CLOC(S), \
-	   cce_location_t[1]			 : (cce_condition_errno_t const *)CCE_CLOC(S), \
-	   cce_condition_t			*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_errno_t		*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_t		const	*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_errno_t	const	*: (cce_condition_errno_t const *)(S), \
-	   cce_condition_t		const	* const: (cce_condition_errno_t const *)(S), \
-	   cce_condition_errno_t	const	* const: (cce_condition_errno_t const *)(S))
 
 /* ------------------------------------------------------------------ */
 
