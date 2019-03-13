@@ -78,7 +78,8 @@ check_PROGRAMS	= \
 	tests/condition-subtyping-invalid-arg		\
 	tests/condition-subtyping-unreachable		\
 	tests/condition-subtyping-math-error		\
-	tests/condition-subtyping-math-nan
+	tests/condition-subtyping-math-nan		\
+	tests/condition-subtyping-math-infinity
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -239,6 +240,15 @@ tests_condition_subtyping_math_nan_SOURCES	= \
 	tests/condition-subtyping-math-nan.c		\
 	tests/condition-subtyping-math-nan-body.c	\
 	tests/condition-subtyping-math-nan-header.h
+
+## --------------------------------------------------------------------
+
+tests_condition_subtyping_math_infinity_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_condition_subtyping_math_infinity_LDADD	= $(ccexceptions_tests_ldadd)
+tests_condition_subtyping_math_infinity_SOURCES	= \
+	tests/condition-subtyping-math-infinity.c		\
+	tests/condition-subtyping-math-infinity-body.c	\
+	tests/condition-subtyping-math-infinity-header.h
 
 ## --------------------------------------------------------------------
 
