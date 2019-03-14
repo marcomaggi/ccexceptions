@@ -22,9 +22,12 @@ AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 \
 info_TEXINFOS		= doc/ccexceptions.texi
 doc_ccexceptions_TEXINFOS	= \
 	doc/macros.texi			\
+	doc/ccexceptions-macros.texi	\
 	doc/overview-linking.texi	\
 	doc/lgpl-3.0.texi		\
-	doc/fdl-1.3.texi
+	doc/fdl-1.3.texi		\
+	\
+	doc/condition-example-plain.texi
 
 
 #### libraries

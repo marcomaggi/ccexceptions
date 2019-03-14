@@ -1,0 +1,54 @@
+@c @node conditions plain
+@c @section Plain exceptional--conditions object--types
+
+
+The @dfn{error_1} exceptional--condition object--type descriptor has the purpose of describing an
+error.  The descriptor of this type has @objtype{cce_condition_runtime_error_t} as parent.
+
+@quotation
+@strong{NOTE} This is the documentation of the example code under the directory @file{examples} of
+the source distribution of CCExceptions, defining a new exceptional--condition object--type.  We can
+take the source of this section from the source distribution of CCExceptions.
+@end quotation
+
+
+@CCEDescriptorTypedef{my,error_1,cce_descriptor_runtime_error_t}
+
+
+@deftp {Struct Typedef} cce_condition_error_1_t
+Structure type representing the exceptional--condition object; this @code{struct} type can be
+instantiated and subtyped.  It has the following public fields:
+
+@table @code
+@item cce_condition_runtime_error_t runtime_error
+The runtime exceptional--condition object.
+
+@item int * data
+Pointer to the data.
+@end table
+@end deftp
+
+
+@CCEConditionObjectNewNoArgs{my,error_1}
+
+
+@CCEConditionObjectPredicate{my,error_1}
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{my,error_1} we need the following
+functions.
+
+
+@CCEDescriptorSetParentTo{my,error_1}
+
+
+@CCEConditionObjectInitNoArgs{my,error_1}
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

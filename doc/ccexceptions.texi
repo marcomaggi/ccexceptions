@@ -6,11 +6,26 @@
 
 @include version.texi
 @include macros.texi
+@include ccexceptions-macros.texi
 
 @c page
 @c ------------------------------------------------------------
 @c Document specific macros.
 @c ------------------------------------------------------------
+
+@macro ConditionSubtypingFacilities{LIBPREFIX,TYPESTEM}
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
+following functions.
+
+
+@CCEDescriptorSetParentTo{\LIBPREFIX\,\TYPESTEM\}
+
+
+@CCEConditionObjectInitNoArgs{\LIBPREFIX\,\TYPESTEM\}
+@end macro
+
 
 @macro ConditionSubtypingExample{FILESTEM, TYPESTEM}
 @subsubheading Subtyping example
@@ -1296,7 +1311,7 @@ void caller (void)
 
 In the context of the @value{PACKAGE} framework, we represent exceptional conditions with a tree
 hierarchy of data structures; this way it is possible to react to a raised exception by branching at
-run--time according to the type of raised structure.
+runtime according to the type of raised structure.
 
 @menu
 * conditions intro::            Introduction to exceptional-condition objects.
@@ -1306,7 +1321,7 @@ run--time according to the type of raised structure.
 * conditions unknown::          The @emph{unknown} exceptional-condition object.
 * conditions break::            The @emph{break} exceptional-condition object.
 * conditions error::            The @emph{error} exceptional-condition object.
-* conditions run-time error::   The @emph{run-time error} exceptional-condition
+* conditions runtime error::    The @emph{runtime error} exceptional-condition
                                 object.
 * conditions logic error::      The @emph{logic error} exceptional-condition
                                 object.
@@ -1394,7 +1409,7 @@ lower_function (cce_location_t * upper_L)
 @}
 @end example
 
-From the point of view of our ability to react to an exception at run--time: a flexible situation is
+From the point of view of our ability to react to an exception at runtime: a flexible situation is
 the one in which the exceptional--condition object--types are organised in a tree hierarchy.  It
 allows us to select the level of granularity we desire in the branching logic.  The tree hierarchy
 implemented by @value{PACKAGE} uses single inheritance; multiple inheritance would be more general,
@@ -1414,7 +1429,7 @@ which must be its first field.  The instances of @objtype{cce_descriptor_t} hold
 define the tree hierarchy; every type descriptor can be referenced by multiple
 exceptional--condition objects: it can represent the type of multiple objects; every type descriptor
 has a single parent and can have zero, one or more children.  Each pointer to
-@objtype{cce_descriptor_t} is a unique run--time value identifying the type of
+@objtype{cce_descriptor_t} is a unique runtime value identifying the type of
 exceptional--condition objects.
 
 Every exceptional--condition object's data structure encloses a data structure of type
@@ -1798,23 +1813,15 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_root_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the unique @emph{root} descriptor.
-@end deftypefun
-
-
-@deftypefun void cce_condition_init_root (cce_condition_root_t * @var{C})
-Initialisation function for the object referenced by @var{C}.  This function must be called by all
-the initialisation functions of exceptional--condition object--types derived from
-@objtype{cce_condition_root_t}.
-@end deftypefun
-
-
 @deftypefun bool cce_condition_is_root (cce_condition_t const * @var{C})
 Return @ctrue{} if the object referenced by @var{C} is derived from the @emph{root} type; otherwise
 return @cfalse{}.  With a correctly built conditions hierarchy: this function always returns
 @ctrue{}.
 @end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@ConditionSubtypingFacilities{cce,root}
 
 @c ------------------------------------------------------------------------
 
@@ -1839,21 +1846,11 @@ There should be only one @emph{unknown} exceptional--condition object: the one p
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_unknown_t
-Structure type representing the @emph{unknown} exceptional--condition object--type
-descriptor.  This descriptor has the @emph{root} descriptor as parent.  It has the following public
-fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,unknown,cce_descriptor_root_t}
 
 
-@deftp {Struct Typedef} cce_condition_unknown_t
-Structure type representing the @emph{unknown} exceptional--condition object.  It has the
-following public fields:
+@deftp {Struct Typedef} @CCEConditionObjectType{cce,unknown}
+Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
 @item cce_condition_root_t root
@@ -1862,22 +1859,14 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_unknown (void)
-Return a pointer to the statically allocated structure representing the predefined @emph{unknown}
-exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,unknown}
 
 
-@deftypefun bool cce_condition_is_unknown (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references an @emph{unknown} exceptional--condition object; otherwise return
-@cfalse{}.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,unknown}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unknown_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,unknown}
 
 @c page
 @node conditions break
@@ -1898,20 +1887,11 @@ object--type is fine to represent different reasons for escaping.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_break_t
-Structure type representing the @emph{break} exceptional--condition object--type descriptor.
-This descriptor has the @emph{root} descriptor as parent.  It has the following public fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,break,cce_descriptor_root_t}
 
 
 @deftp {Struct Typedef} cce_condition_break_t
-Structure type representing the @emph{break} exceptional--condition object.  It has the following
-public fields:
+Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
 @item cce_condition_root_t root
@@ -1920,28 +1900,14 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_init_break (cce_condition_break_t * @var{C})
-Initialise an already allocated exceptional--condition object.  This function exists to allow
-subtyping from @objtype{cce_condition_break_t}.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,break}
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_break (void)
-Return a pointer to the statically allocated structure representing the predefined @emph{break}
-exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,break}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun bool cce_condition_is_break (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references a @emph{break} exceptional--condition object; otherwise return
-@cfalse{}.
-@end deftypefun
-
-
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_break_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,break}
 
 @c ------------------------------------------------------------------------
 
@@ -1966,20 +1932,11 @@ object--type is fine.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_error_t
-Structure type representing the @emph{error} exceptional--condition object--type descriptor.  This
-descriptor has the @emph{root} descriptor as parent.  It has the following public fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,error,cce_descriptor_root_t}
 
 
 @deftp {Struct Typedef} cce_condition_error_t
-Structure type representing a @emph{error} exceptional--condition object.  It has the following
-public fields:
+Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
 @item cce_condition_root_t root
@@ -1988,66 +1945,43 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_init_error (cce_condition_error_t * @var{C})
-Initialise an already allocated exceptional--condition object.  This function exists to allow
-subtyping from @objtype{cce_condition_error_t}.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,error}
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_error (void)
-Return a pointer to the statically allocated structure representing the predefined @emph{error}
-exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,error}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun bool cce_condition_is_error (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references an @emph{error} exceptional--condition object; otherwise return
-@cfalse{}.
-@end deftypefun
-
-
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_error_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,error}
 
 @c ------------------------------------------------------------------------
 
 @ConditionSubtypingExample{error, error}
 
 @c page
-@node conditions run-time error
-@section The @emph{run--time error} exceptional--condition object
+@node conditions runtime error
+@section The @emph{runtime error} exceptional--condition object
 
 
-@ExceptionalConditionIndexEntries{run--time error}
+@ExceptionalConditionIndexEntries{runtime error}
 
 
-The @dfn{run--time error} exceptional--condition object--type has the purpose of describing an
-exceptional condition caused by a run--time error; these are mostly synchronisation errors like
+The @dfn{runtime error} exceptional--condition object--type has the purpose of describing an
+exceptional condition caused by a runtime error; these are mostly synchronisation errors like
 failures to open a file or allocate memory.
 
-There should be only one @emph{run--time error} exceptional--condition object: the one predefined by
+There should be only one @emph{runtime error} exceptional--condition object: the one predefined by
 @value{PACKAGE} and built into the library as statically allocated structure.  Subtyping from this
 object--type is fine.
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_runtime_error_t
-Structure type representing the @emph{run--time error} exceptional--condition object--type
-descriptor.  This descriptor has the @emph{error} descriptor as parent.  It has the following public
-fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,runtime_error,cce_descriptor_error_t}
 
 
 @deftp {Struct Typedef} cce_condition_runtime_error_t
-Structure type representing a @emph{run--time error} exceptional--condition object.  It has the
+Structure type representing a @emph{runtime error} exceptional--condition object.  It has the
 following public fields:
 
 @table @code
@@ -2057,28 +1991,14 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_init_runtime_error (cce_condition_runtime_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow subtyping from
-@objtype{cce_condition_runtime_error_t}.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,runtime_error}
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_runtime_error (void)
-Return a pointer to the statically allocated structure representing the predefined @emph{run--time
-error} exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,runtime_error}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun bool cce_condition_is_runtime_error (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references a @emph{run--time error} exceptional--condition object; otherwise
-return @cfalse{}.
-@end deftypefun
-
-
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,runtime_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2103,15 +2023,7 @@ object--type is fine.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_logic_error_t
-Structure type representing the @emph{logic error} exceptional--condition object--type descriptor.
-This descriptor has the @emph{error} descriptor as parent.  It has the following public fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,logic_error,cce_descriptor_error_t}
 
 
 @deftp {Struct Typedef} cce_condition_logic_error_t
@@ -2125,28 +2037,14 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_init_logic_error (cce_condition_logic_error_t * @var{C})
-Initialise an already allocated condition object.  This function exists to allow subtyping from
-@objtype{cce_condition_logic_error_t}.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,logic_error}
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_logic_error (void)
-Return a pointer to the statically allocated structure representing the predefined @emph{logic
-error} exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,logic_error}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun bool cce_condition_is_logic_error (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references a @emph{logic error} exceptional--condition object; otherwise return
-@cfalse{}.
-@end deftypefun
-
-
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_logic_error_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,logic_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2172,16 +2070,7 @@ object--type is fine.
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
 
 
-@deftp {Struct Typedef} cce_descriptor_unimplemented_t
-Structure type representing the @emph{unimplemented} exceptional--condition object--type descriptor.
-This descriptor has the @emph{logic error} descriptor as parent.  It has the following public
-fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-Core values of the exceptional--condition object--type descriptor.
-@end table
-@end deftp
+@CCEDescriptorTypedef{cce,unimplemented,cce_descriptor_logic_error_t}
 
 
 @deftp {Struct Typedef} cce_condition_unimplemented_t
@@ -2195,28 +2084,14 @@ Core values of the exceptional--condition object.
 @end deftp
 
 
-@deftypefun void cce_condition_init_unimplemented (cce_condition_unimplemented_t * @var{C})
-Initialise an already allocated exceptional--condition object.  This function exists to allow
-subtyping from @objtype{cce_condition_unimplemented_t}.
-@end deftypefun
+@CCEConditionObjectNewNoArgsStatic{cce,logic_error}
 
 
-@deftypefun {cce_condition_t const *} cce_condition_new_unimplemented (void)
-Return a pointer to the statically allocated structure representing the predefined
-@emph{unimplemented} exceptional--condition object.
-@end deftypefun
+@CCEConditionObjectPredicate{cce,logic_error}
 
+@c ------------------------------------------------------------------------
 
-@deftypefun bool cce_condition_is_unimplemented (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} references an @emph{unimplemented} exceptional--condition object; otherwise
-return @cfalse{}.
-@end deftypefun
-
-
-@deftypefun void {cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t)} (cce_descriptor_t * @var{D})
-Configure the descriptor @var{D} so that its parent is the descriptor of the given
-exceptional--condition object--type.
-@end deftypefun
+@ConditionSubtypingFacilities{cce,logic_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2439,7 +2314,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 @deftp {Struct Typedef} cce_descriptor_errno_t
 Structure type representing the @emph{errno} exceptional--condition object--type descriptor.  This
-descriptor has the @emph{run--time error} descriptor as parent.  It has the following public fields:
+descriptor has the @emph{runtime error} descriptor as parent.  It has the following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
@@ -2873,6 +2748,17 @@ exceptional--condition object--type.
 
 The source distribution of @value{PACKAGE} comes with coding examples under the @file{examples}
 directory of the source tree; we can take that code and use it as a starting point.
+
+@menu
+* conditions custom plain::     Plain exceptional-condition objects.
+@end menu
+
+@c page
+@node conditions custom plain
+@subsection Plain exceptional-condition objects
+
+
+@include condition-example-plain.texi
 
 @c page
 @node system
