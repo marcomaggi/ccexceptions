@@ -383,6 +383,9 @@ cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descri
 
 /* ------------------------------------------------------------------ */
 
+cce_decl void cce_condition_init_unknown (cce_condition_unknown_t * C)
+  __attribute__((__nonnull__(1)));
+
 cce_decl cce_condition_t const * cce_condition_new_unknown (void)
   __attribute__((__returns_nonnull__,__const__));
 

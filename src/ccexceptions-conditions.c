@@ -167,6 +167,12 @@ cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const
 
 /* ------------------------------------------------------------------ */
 
+void
+cce_condition_init_unknown (cce_condition_unknown_t * C)
+{
+  cce_condition_init_root(&(C->root));
+}
+
 cce_condition_t const *
 cce_condition_new_unknown (void)
 {
