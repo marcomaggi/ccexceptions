@@ -16,7 +16,25 @@
 
   Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  See the COPYING file.
+  The author  hereby grant permission to  use, copy, modify, distribute,  and license
+  this  software  and its  documentation  for  any  purpose, provided  that  existing
+  copyright  notices are  retained in  all copies  and that  this notice  is included
+  verbatim in  any distributions. No  written agreement,  license, or royalty  fee is
+  required for  any of the  authorized uses.  Modifications  to this software  may be
+  copyrighted by  their authors  and need  not follow  the licensing  terms described
+  here, provided that the  new terms are clearly indicated on the  first page of each
+  file where they apply.
+
+  IN NO  EVENT SHALL THE AUTHOR  OR DISTRIBUTORS BE  LIABLE TO ANY PARTY  FOR DIRECT,
+  INDIRECT, SPECIAL, INCIDENTAL,  OR CONSEQUENTIAL DAMAGES ARISING OUT OF  THE USE OF
+  THIS SOFTWARE,  ITS DOCUMENTATION, OR ANY  DERIVATIVES THEREOF, EVEN IF  THE AUTHOR
+  HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  THE AUTHOR  AND DISTRIBUTORS SPECIFICALLY  DISCLAIM ANY WARRANTIES,  INCLUDING, BUT
+  NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+  PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE IS  PROVIDED ON AN "AS IS" BASIS, AND
+  THE AUTHOR  AND DISTRIBUTORS  HAVE NO OBLIGATION  TO PROVIDE  MAINTENANCE, SUPPORT,
+  UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
 
@@ -38,7 +56,7 @@ static cce_condition_delete_fun_t		my_condition_delete_error_1;
 static cce_condition_final_fun_t		my_condition_final_error_1;
 static cce_condition_static_message_fun_t	my_condition_static_message_error_1;
 
-static my_descriptor_error_1_t my_descriptor_error_1_stru = {
+static my_descriptor_error_1_t my_descriptor_error_1 = {
   /* This  "parent" field  is  set below  by  the module  initialisation
      function. */
   .descriptor.parent		= NULL,
@@ -47,12 +65,10 @@ static my_descriptor_error_1_t my_descriptor_error_1_stru = {
   .descriptor.static_message	= my_condition_static_message_error_1
 };
 
-my_descriptor_error_1_t const * const my_descriptor_error_1_ptr = &my_descriptor_error_1_stru;
-
 void
 cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * const D)
 {
-  D->parent = &my_descriptor_error_1_stru.descriptor;
+  D->parent = cce_descriptor_pointer(my_descriptor_error_1);
 }
 
 
@@ -137,7 +153,7 @@ my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
   } else {
     my_condition_error_1_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_error_1_t));
 
-    cce_condition_init((cce_condition_t *) C, &(my_descriptor_error_1_ptr->descriptor));
+    cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(my_descriptor_error_1));
     my_condition_init_error_1(L, C, the_data);
 
     cce_run_body_handlers(L);
@@ -154,7 +170,7 @@ my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
 bool
 my_condition_is_error_1 (cce_condition_t const * C)
 {
-  return cce_condition_is(C, &(my_descriptor_error_1_ptr->descriptor));
+  return cce_condition_is(C, cce_descriptor_pointer(my_descriptor_error_1));
 }
 
 
@@ -163,9 +179,9 @@ my_condition_is_error_1 (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 void
-plain_init_module (void)
+my_plain_init_module (void)
 {
-  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(&my_descriptor_error_1_stru.descriptor);
+  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(cce_descriptor_pointer(my_descriptor_error_1));
 }
 
 /* end of file */
