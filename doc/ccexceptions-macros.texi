@@ -98,8 +98,29 @@ Return a pointer to a newly built exceptional--condition object of type
 @end macro
 
 
+@c Format the exceptional-condition  object initialisation function, for the special  case in which:
+@c there are no additional arguments.
+@c
+@macro CCEConditionObjectNew{LIBPREFIX,TYPESTEM,ARGS}
+@deftypefun {cce_condition_t const *} \LIBPREFIX\_condition_new_\TYPESTEM\ (cce_destination_t @var{L}, \ARGS\)
+Return a pointer to a newly built exceptional--condition object of type
+@CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\}.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
+@end deftypefun
+@end macro
+
+@c ------------------------------------------------------------------------
+
 @macro CCEConditionObjectInitNoArgs{LIBPREFIX,TYPESTEM}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
+Initialise an already allocated exceptional--condition object.  We should call this function from
+the initialisation function of the derived type.
+@end deftypefun
+@end macro
+
+
+@macro CCEConditionObjectInit{LIBPREFIX,TYPESTEM,ARGS}
+@deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.
 @end deftypefun
@@ -134,6 +155,23 @@ Mutate the exceptional--condition object--type descriptor referenced by @var{D} 
 is the descriptor of @CCEDescriptorTypeCode{\LIBPREFIX\,\TYPESTEM\}.  We should call this function
 in the initialisation module of the derived type.
 @end deftypefun
+@end macro
+
+
+@c Insert a whole section of documentation describing the subtyping facilities for the special case
+@c in which the initialisation function has no additional arguments.
+@c
+@macro CCEConditionSubtypingFacilities{LIBPREFIX,TYPESTEM}
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
+following functions.
+
+
+@CCEDescriptorSetParentTo{\LIBPREFIX\,\TYPESTEM\}
+
+
+@CCEConditionObjectInitNoArgs{\LIBPREFIX\,\TYPESTEM\}
 @end macro
 
 
