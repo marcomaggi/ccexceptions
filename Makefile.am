@@ -282,8 +282,7 @@ installcheck-local: $(TESTS)
 ### examples
 
 noinst_PROGRAMS	= \
-	examples/plain		\
-	examples/inline
+	examples/plain
 
 ccexceptions_examples_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/examples
 ccexceptions_examples_ldadd	= libccexceptions.la
@@ -292,7 +291,6 @@ ccexceptions_examples_ldadd	= libccexceptions.la
 
 examples: $(noinst_PROGRAMS)
 	-./examples/plain
-	-./examples/inline
 
 ## --------------------------------------------------------------------
 
@@ -305,18 +303,6 @@ examples_plain_CPPFLAGS		= $(ccexceptions_examples_cppflags)
 examples_plain_LDADD		= $(ccexceptions_examples_ldadd)
 
 $(examples_plain_OBJECTS): libccexceptions.la
-
-## --------------------------------------------------------------------
-
-examples_inline_SOURCES		=	\
-	examples/inline.c		\
-	examples/inline-header.h	\
-	examples/inline-body.c
-
-examples_inline_CPPFLAGS	= $(ccexceptions_examples_cppflags)
-examples_inline_LDADD		= $(ccexceptions_examples_ldadd)
-
-$(examples_inline_OBJECTS): libccexceptions.la
 
 
 #### common rules
