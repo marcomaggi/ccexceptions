@@ -2301,6 +2301,13 @@ Consume the current value of @code{errno} and return the return value of
 
 @CCEConditionObjectPredicate{cce,errno}
 
+
+@deftypefun bool cce_condition_is_errno_with_code (cce_condition_t const * @var{C}, int @var{errnum})
+Return @code{true} if the exceptional--condition object referenced by @var{C} is of type
+@CCEConditionObjectTypeCode{cce,errno}, or it is derived from it, and its error code equals
+@var{errnum}; otherwise return @code{false}.
+@end deftypefun
+
 @c ------------------------------------------------------------------------
 
 @subsubheading Facilities to derive an exceptional--condition object subtype

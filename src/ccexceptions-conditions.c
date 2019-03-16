@@ -1107,9 +1107,19 @@ cce_condition_new_errno_clear (void)
 }
 
 bool
-cce_condition_is_errno (cce_condition_t const * C)
+cce_condition_is_errno (cce_condition_t const * const C)
 {
   return cce_condition_is(C, cce_descriptor_pointer(cce_descriptor_errno));
+}
+
+bool
+cce_condition_is_errno_with_code (cce_condition_t const * const C, int const errnum)
+{
+  if (cce_condition_is_errno(C)) {
+    return ((errnum == cce_condition_ref_errno_errnum(C))? true : false);
+  } else {
+    return false;
+  }
 }
 
 /* end of file */

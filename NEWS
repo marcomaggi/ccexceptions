@@ -3,7 +3,7 @@
 Notes for revision 0.8.0-devel.13
 ---------------------------------
 
-* ...
+* Added function "cce_condition_is_errno_with_code()".
 
 
 Notes for revision 0.8.0-devel.12

@@ -801,6 +801,9 @@ cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
 cce_decl bool cce_condition_is_errno (cce_condition_t const * C)
   __attribute__((__nonnull__(1)));
 
+cce_decl bool cce_condition_is_errno_with_code (cce_condition_t const * C, int errnum)
+  __attribute__((__nonnull__(1)));
+
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__pure__))
