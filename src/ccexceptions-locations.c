@@ -159,16 +159,20 @@ __attribute__((__nonnull__(1,2)))
 static void
 run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
 {
-  cce_run_body_handlers(inner_H->location);
-  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+  CCE_PC(cce_location_t, L, inner_H->pointer);
+
+  cce_run_body_handlers(L);
+  cce_condition_delete(cce_condition(L));
 }
 
 __attribute__((__nonnull__(1,2)))
 static void
 run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
 {
-  cce_run_catch_handlers(inner_H->location);
-  cce_condition_delete((cce_condition_t *)(inner_H->location->condition));
+  CCE_PC(cce_location_t, L, inner_H->pointer);
+
+  cce_run_catch_handlers(L);
+  cce_condition_delete(cce_condition(L));
 }
 
 /* ------------------------------------------------------------------ */

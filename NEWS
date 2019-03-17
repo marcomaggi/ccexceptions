@@ -5,6 +5,14 @@ Notes for revision 0.8.0-devel.13
 
 * Added function "cce_condition_is_errno_with_code()".
 
+* Added functions:
+
+    cce_clean_handler_handler()
+    cce_error_handler_handler()
+
+* BACKWARDS    INCOMPATIBILITY    Reimplemented   the    internals    of
+  "cce_handler_t".
+
 
 Notes for revision 0.8.0-devel.12
 ---------------------------------

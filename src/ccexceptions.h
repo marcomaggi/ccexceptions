@@ -216,16 +216,10 @@ typedef cce_location_t *			cce_destination_t;
 typedef void cce_handler_fun_t (cce_condition_t const * C, cce_handler_t * H);
 
 struct cce_handler_t {
+  cce_handler_t *	next_handler;
   bool			is_clean_handler;
   cce_handler_fun_t *	function;
-  cce_handler_t *	next_handler;
-  union {
-    void *		pointer;
-    char *		pathname;
-    cce_destination_t	location;
-    int			filedes;
-    int			pipedes[2];
-  };
+  void *		pointer;
 };
 
 struct cce_clean_handler_t {
@@ -236,7 +230,9 @@ struct cce_error_handler_t {
   cce_handler_t		handler;
 };
 
-__attribute__((__always_inline__))
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
 cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
@@ -244,14 +240,37 @@ cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
   H->function	= fun;
 }
 
-__attribute__((__always_inline__))
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_t *
+cce_clean_handler_handler (cce_clean_handler_t * H)
+{
+  return &(H->handler);
+}
+
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_t *
+cce_error_handler_handler (cce_error_handler_t * H)
+{
+  return &(H->handler);
+}
+
+#define cce_handler_handler(H)					\
+  _Generic((H),							\
+	   cce_clean_handler_t *: cce_clean_handler_handler,	\
+	   cce_error_handler_t *: cce_error_handler_handler)(H)
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
 cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
   cce_handler_set(&(H->handler), pointer, fun);
 }
 
-__attribute__((__always_inline__))
+__attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
 cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
