@@ -232,16 +232,6 @@ struct cce_error_handler_t {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  H->pointer	= pointer;
-  H->function	= fun;
-}
-
-/* ------------------------------------------------------------------ */
-
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
 cce_clean_handler_handler (cce_clean_handler_t * H)
@@ -265,16 +255,24 @@ cce_error_handler_handler (cce_error_handler_t * H)
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
+cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  H->pointer	= pointer;
+  H->function	= fun;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
 cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_handler_set(&(H->handler), pointer, fun);
+  cce_handler_set(cce_clean_handler_handler(H), pointer, fun);
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
 cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_handler_set(&(H->handler), pointer, fun);
+  cce_handler_set(cce_error_handler_handler(H), pointer, fun);
 }
 
 /* ------------------------------------------------------------------ */
@@ -368,7 +366,7 @@ struct cce_condition_root_t {
   cce_condition_t	condition;
 };
 
-cce_decl cce_descriptor_root_t const * const cce_descriptor_root_ptr;
+cce_decl cce_descriptor_root_t const * const cce_descriptor_root_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -394,8 +392,8 @@ struct cce_condition_unknown_t {
   cce_condition_root_t	root;
 };
 
-cce_decl cce_descriptor_unknown_t const * const	cce_descriptor_unknown_ptr;
-cce_decl cce_condition_unknown_t  const * const	cce_condition_unknown_ptr;
+cce_decl cce_descriptor_unknown_t const * const	cce_descriptor_unknown_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_unknown_t  const * const	cce_condition_unknown_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -424,8 +422,8 @@ struct cce_condition_break_t {
   cce_condition_root_t	root;
 };
 
-cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr;
-cce_decl cce_condition_break_t  const * const	cce_condition_break_ptr;
+cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_break_t  const * const	cce_condition_break_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -454,8 +452,8 @@ struct cce_condition_error_t {
   cce_condition_root_t	root;
 };
 
-cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr;
-cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr;
+cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -482,8 +480,8 @@ struct cce_condition_runtime_error_t {
   cce_condition_error_t	error;
 };
 
-cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr;
-cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr;
+cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -512,8 +510,8 @@ struct cce_condition_logic_error_t {
   cce_condition_error_t	error;
 };
 
-cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr;
-cce_decl cce_condition_logic_error_t  const * const	cce_condition_logic_error_ptr;
+cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_logic_error_t  const * const	cce_condition_logic_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -545,8 +543,8 @@ struct cce_condition_unreachable_t {
   int				linenum;
 };
 
-cce_decl cce_descriptor_unreachable_t const * const	cce_descriptor_unreachable_ptr;
-cce_decl cce_condition_unreachable_t  const * const	cce_condition_unreachable_ptr;
+cce_decl cce_descriptor_unreachable_t const * const	cce_descriptor_unreachable_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_unreachable_t  const * const	cce_condition_unreachable_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -586,8 +584,8 @@ struct cce_condition_unimplemented_t {
   cce_condition_logic_error_t	logic_error;
 };
 
-cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr;
-cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr;
+cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -621,7 +619,7 @@ struct cce_condition_invalid_argument_t {
   unsigned		index;
 };
 
-cce_decl cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr;
+cce_decl cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -652,8 +650,8 @@ struct cce_condition_math_error_t {
   cce_condition_runtime_error_t	runtime_error;
 };
 
-cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr;
-cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr;
+cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -682,8 +680,8 @@ struct cce_condition_math_nan_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr;
-cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr;
+cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -712,8 +710,8 @@ struct cce_condition_math_infinity_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infinity_ptr;
-cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr;
+cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infinity_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -742,8 +740,8 @@ struct cce_condition_math_overflow_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overflow_ptr;
-cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr;
+cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overflow_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -772,8 +770,8 @@ struct cce_condition_math_underflow_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_underflow_ptr;
-cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr;
+cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_underflow_ptr __attribute__((__deprecated__));
+cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));
@@ -804,7 +802,7 @@ struct cce_condition_errno_t {
   char const *		message;
 };
 
-cce_decl cce_descriptor_errno_t const * const cce_descriptor_errno_ptr;
+cce_decl cce_descriptor_errno_t const * const cce_descriptor_errno_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
   __attribute__((__nonnull__(1)));

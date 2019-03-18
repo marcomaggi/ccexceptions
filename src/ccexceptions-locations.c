@@ -43,7 +43,7 @@ __attribute__((__always_inline__,__returns_nonnull__))
 static inline cce_condition_t const *
 cce_condition_or_default (cce_condition_t const * C)
 {
-  return ((C)? C : &(cce_condition_unknown_ptr->root.condition));
+  return ((C)? C : cce_condition_new_unknown());
 }
 
 
@@ -56,14 +56,14 @@ void
 cce_location_init (cce_location_t * L)
 {
   L->first_handler	= NULL;
-  L->condition		= &(cce_condition_unknown_ptr->root.condition);
+  L->condition		= cce_condition_new_unknown();
 }
 
 __attribute__((__hot__))
 void
 cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 {
-  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
+  if (cce_condition(L)) { cce_condition_delete(cce_condition(L)); }
   L->condition = cce_condition_or_default(C);
   siglongjmp(L->buffer, (int)CCE_EXCEPT);
 }
@@ -71,8 +71,8 @@ cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 void
 cce_p_retry (cce_location_t * L)
 {
-  if (L->condition) { cce_condition_delete((cce_condition_t*)L->condition); }
-  L->condition = &(cce_condition_unknown_ptr->root.condition);
+  if (cce_condition(L)) { cce_condition_delete(cce_condition(L)); }
+  L->condition = cce_condition_new_unknown();
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 
@@ -82,7 +82,7 @@ cce_register_clean_handler (cce_location_t * L, cce_clean_handler_t * H)
 {
   H->handler.is_clean_handler	= true;
   H->handler.next_handler	= L->first_handler;
-  L->first_handler		= &(H->handler);
+  L->first_handler		= cce_clean_handler_handler(H);
 }
 
 __attribute__((__hot__))
@@ -91,7 +91,7 @@ cce_register_error_handler (cce_location_t * L, cce_error_handler_t * H)
 {
   H->handler.is_clean_handler	= false;
   H->handler.next_handler	= L->first_handler;
-  L->first_handler		= &(H->handler);
+  L->first_handler		= cce_error_handler_handler(H);
 }
 
 void
@@ -217,7 +217,7 @@ cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const
 {
   if (CCE_EXCEPT == rv) {
     fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "catching:", filename, linenum, funcname,
-	    cce_condition_static_message(L->condition));
+	    cce_condition_static_message(cce_condition(L)));
   }
   return rv;
 }
@@ -241,7 +241,7 @@ cce_trace_retry (cce_destination_t L, char const * filename, char const * funcna
 void
 cce_trace_reraise (cce_destination_t L, char const * filename, char const * funcname, int linenum)
 {
-  cce_condition_t const * C = L->condition;
+  cce_condition_t const * C = cce_condition(L);
   cce_condition_t const * K = cce_condition_or_default(C);
   fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "re-raising:", filename, linenum, funcname,
 	  cce_condition_static_message(K));
@@ -250,7 +250,7 @@ cce_trace_reraise (cce_destination_t L, char const * filename, char const * func
 void
 cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
 {
-  cce_condition_t const * C = L->condition;
+  cce_condition_t const * C = cce_condition(L);
   cce_condition_t const * K = cce_condition_or_default(C);
   fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "finalising:", filename, linenum, funcname,
 	  cce_condition_static_message(K));
