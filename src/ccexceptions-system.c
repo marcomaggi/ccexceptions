@@ -95,14 +95,14 @@ cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t
 void
 cce_init_clean_handler_malloc (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
 {
-  cce_clean_handler_set(H, pointer, cce_handler_malloc_function);
+  cce_init_clean_handler(H, pointer, cce_handler_malloc_function);
   cce_register_clean_handler(L, H);
 }
 
 void
 cce_init_error_handler_malloc (cce_location_t * L, cce_error_handler_t * H, void * pointer)
 {
-  cce_error_handler_set(H, pointer, cce_handler_malloc_function);
+  cce_init_error_handler(H, pointer, cce_handler_malloc_function);
   cce_register_error_handler(L, H);
 }
 

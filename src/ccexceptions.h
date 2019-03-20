@@ -313,7 +313,7 @@ cce_error_handler_handler (cce_error_handler_t * H)
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_handler_set_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_init_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
   H->pointer	= pointer;
   H->function	= fun;
@@ -322,50 +322,50 @@ cce_handler_set_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 
 __attribute__((__always_inline__,__nonnull__(1,3,4)))
 static inline void
-cce_handler_set_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
 {
   H->pointer	= pointer;
   H->function	= fun;
   H->destructor	= destructor;
 }
 
-#define cce_handler_set(...)	_CCE_VFUNC(cce_handler_set,__VA_ARGS__)
+#define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_clean_handler_set_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_init_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_handler_set(cce_clean_handler_handler(H), pointer, fun);
+  cce_init_handler(cce_clean_handler_handler(H), pointer, fun);
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3,4)))
 static inline void
-cce_clean_handler_set_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
 {
-  cce_handler_set(cce_clean_handler_handler(H), pointer, fun, destructor);
+  cce_init_handler(cce_clean_handler_handler(H), pointer, fun, destructor);
 }
 
-#define cce_clean_handler_set(...)	_CCE_VFUNC(cce_clean_handler_set,__VA_ARGS__)
+#define cce_init_clean_handler(...)	_CCE_VFUNC(cce_init_clean_handler,__VA_ARGS__)
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_error_handler_set_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_init_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_handler_set(cce_error_handler_handler(H), pointer, fun);
+  cce_init_handler(cce_error_handler_handler(H), pointer, fun);
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3,4)))
 static inline void
-cce_error_handler_set_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
 {
-  cce_handler_set(cce_error_handler_handler(H), pointer, fun, destructor);
+  cce_init_handler(cce_error_handler_handler(H), pointer, fun, destructor);
 }
 
-#define cce_error_handler_set(...)	_CCE_VFUNC(cce_error_handler_set,__VA_ARGS__)
+#define cce_init_error_handler(...)	_CCE_VFUNC(cce_init_error_handler,__VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -1337,6 +1337,29 @@ cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_hand
 /** --------------------------------------------------------------------
  ** Deprecated.
  ** ----------------------------------------------------------------- */
+
+__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_handler instead")))
+static inline void
+cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_init_handler(H, pointer, fun);
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_clean_handler instead")))
+static inline void
+cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_init_clean_handler(H, pointer, fun);
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_error_handler instead")))
+static inline void
+cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_init_error_handler(H, pointer, fun);
+}
+
+/* ------------------------------------------------------------------ */
 
 cce_decl bool cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2),__deprecated__("use cce_condition_is instead")));

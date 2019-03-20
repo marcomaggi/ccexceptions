@@ -11,6 +11,18 @@ Notes for revision 0.8.0-devel.14
 
 * Added API to use client data destructor functions in handlers.
 
+* Deprecated functions:
+
+  cce_handler_set
+  cce_clean_handler_set
+  cce_error_handler_set
+
+* Added macros:
+
+  cce_init_handler
+  cce_init_clean_handler
+  cce_init_error_handler
+
 
 Notes for revision 0.8.0-devel.13
 ---------------------------------

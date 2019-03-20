@@ -755,24 +755,24 @@ to the caller, it must @strong{not} raise an exceptional condition and jump to a
 @section Initialising location handlers
 
 
-@deftypefn {Preprocessor Macro} void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-@deftypefnx {Preprocessor Macro} void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+@deftypefn {Preprocessor Macro} void cce_init_handler (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_init_handler (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
 Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
 @var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
 used: it defaults to @cnull{}.
 @end deftypefn
 
 
-@deftypefn {Preprocessor Macro} void cce_clean_handler_set (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-@deftypefnx {Preprocessor Macro} void cce_clean_handler_set (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+@deftypefn {Preprocessor Macro} void cce_init_clean_handler (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_init_clean_handler (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
 Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
 @var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
 used: it defaults to @cnull{}.
 @end deftypefn
 
 
-@deftypefn {Preprocessor Macro} void cce_error_handler_set (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-@deftypefnx {Preprocessor Macro} void cce_error_handler_set (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+@deftypefn {Preprocessor Macro} void cce_init_error_handler (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_init_error_handler (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
 Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
 @var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
 used: it defaults to @cnull{}.

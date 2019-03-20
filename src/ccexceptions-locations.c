@@ -264,14 +264,14 @@ run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_
 void
 cce_register_clean_handler_to_run_body_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_clean_handler_set(inner_H, outer_L, run_body_handlers);
+  cce_init_clean_handler(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_clean_handler_set(inner_H, outer_L, run_catch_handlers);
+  cce_init_clean_handler(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -280,14 +280,14 @@ cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce
 void
 cce_register_error_handler_to_run_body_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_error_handler_set(inner_H, outer_L, run_body_handlers);
+  cce_init_error_handler(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_error_handler_set(inner_H, outer_L, run_catch_handlers);
+  cce_init_error_handler(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
