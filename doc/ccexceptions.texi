@@ -643,8 +643,9 @@ exception-reaction handlers.
 
 @menu
 * handlers typedefs::           Handlers type definitions.
+* handlers init::               Initialising location handlers.
+* handlers accessors::          Accessing location handlers.
 * handlers registering::        Registering location handlers.
-* handlers accessing::          Accessing location handlers.
 * handlers running::            Running location handlers.
 * handlers handlers::           Running handlers from handlers.
 * handlers examples::           Examples of location handlers usage.
@@ -671,6 +672,10 @@ Pointer to the callback function implementing the exception handler.
 
 @item void * pointer
 Pointer available to the client code.
+
+@item cce_destructor_fun_t * destructor
+Pointer to the destructor function we can use from the handler to destroy the client data referenced
+by the field @code{pointer}.  This field can be set to @cnull{}.
 @end table
 @end deftp
 
@@ -727,6 +732,8 @@ Type of exception handler functions meant to release some asynchronous resource.
 must leave it untouched, it must @strong{not} mutate or release it.  The argument @var{H} references
 the handler context.
 
+This function might call the destructor function registered in @var{H}, if any.
+
 If an error occurs: the handler function must take care of itself and return to the caller, it must
 @strong{not} raise an exceptional condition and jump to a remote location.
 
@@ -734,20 +741,80 @@ If the structure referenced by @var{H} is dynamically allocated: the handler fun
 to release its memory.
 @end deftypefn
 
+
+@deftypefn {Function Typedef} void cce_destructor_fun_t (void * @var{pointer})
+Type of client data destructor functions meant to destroy some ansynchronous resource.  The argument
+@var{pointer} references the client data to destroy.
+
+If an error occurs destroying some data: the destructor function must take care of itself and return
+to the caller, it must @strong{not} raise an exceptional condition and jump to a remote location.
+@end deftypefn
+
+@c page
+@node handlers init
+@section Initialising location handlers
+
+
+@deftypefn {Preprocessor Macro} void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
+@var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
+used: it defaults to @cnull{}.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} void cce_clean_handler_set (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_clean_handler_set (cce_clean_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
+@var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
+used: it defaults to @cnull{}.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} void cce_error_handler_set (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
+@deftypefnx {Preprocessor Macro} void cce_error_handler_set (cce_error_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun}, cce_destructor_fun_t * @var{destructor})
+Set the fields @code{pointer}, @code{function} and @code{destructor} of the handler referenced by
+@var{H} to the values @var{pointer} and @var{fun}, @var{destructor}.  When @var{destructor} is not
+used: it defaults to @cnull{}.
+@end deftypefn
+
+
+@deftypefun void cce_default_destructor_handler (cce_condition_t const * @var{C}, cce_handler_t * @var{H})
+Handler function that tests if the handler referenced by @var{H} holds a pointer to a destructor
+function, if it is: just apply the destructor to the pointer; otherwise do nothing.
+@end deftypefun
+
+@c page
+@node handlers accessors
+@section Accessing location handlers
+
+
+@deftypefun {cce_handler_t *} cce_clean_handler_handler (cce_clean_handler_t * @var{H})
+@deftypefunx {cce_handler_t *} cce_error_handler_handler (cce_error_handler_t * @var{H})
+Given a pointer to clean or error handler, return a pointer to the embedded handler.
+@end deftypefun
+
+
+@defmac cce_handler_handler (cce_clean_handler_t * @var{H})
+@defmacx cce_handler_handler (cce_error_handler_t * @var{H})
+Generic macro which using @code{_Generic} to dispatch its expansion depending on the type of the
+argument @var{H}.  If the type of structure referenced by @var{H} is:
+
+@table @objtype
+@item cce_clean_handler_t
+The macro expands into a call to @cfunc{cce_clean_handler_handler}.
+
+@item cce_error_handler_t
+The macro expands into a call to @cfunc{cce_error_handler_handler}.
+@end table
+@end defmac
+
 @c page
 @node handlers registering
 @section Registering location handlers
 
 
 All the following definitions are accessible from the header file @file{ccexceptions.h}.
-
-
-@deftypefun void cce_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-@deftypefunx void cce_clean_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-@deftypefunx void cce_error_handler_set (cce_handler_t * @var{H}, void * @var{pointer}, cce_handler_fun_t * @var{fun})
-Set the fields @code{pointer} and @code{function} of the handler referenced by @var{H} to the values
-@var{pointer} and @var{fun}.
-@end deftypefun
 
 
 @deftypefun void cce_register_clean_handler (cce_destination_t @var{L}, cce_clean_handler_t * @var{H})
@@ -794,31 +861,6 @@ The macro expands into a call to @cfunc{cce_register_error_handler}.
 Remove the handler @var{H} from the context of the location @var{L}.  If @var{H} is not registered
 in @var{L}: nothing happens.
 @end deftypefun
-
-@c page
-@node handlers accessing
-@section Accessing location handlers
-
-
-@deftypefun {cce_handler_t *} cce_clean_handler_handler (cce_clean_handler_t * @var{H})
-@deftypefunx {cce_handler_t *} cce_error_handler_handler (cce_error_handler_t * @var{H})
-Given a pointer to clean or error handler, return a pointer to the embedded handler.
-@end deftypefun
-
-
-@defmac cce_handler_handler (cce_clean_handler_t * @var{H})
-@defmacx cce_handler_handler (cce_error_handler_t * @var{H})
-Generic macro which using @code{_Generic} to dispatch its expansion depending on the type of the
-argument @var{H}.  If the type of structure referenced by @var{H} is:
-
-@table @objtype
-@item cce_clean_handler_t
-The macro expands into a call to @cfunc{cce_clean_handler_handler}.
-
-@item cce_error_handler_t
-The macro expands into a call to @cfunc{cce_error_handler_handler}.
-@end table
-@end defmac
 
 @c page
 @node handlers running

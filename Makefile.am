@@ -70,6 +70,7 @@ check_PROGRAMS	= \
 	tests/tracing					\
 	tests/retry					\
 	tests/system-memory				\
+	tests/destructors				\
 	tests/sizeof					\
 	\
 	tests/condition-subtyping-root			\
@@ -149,6 +150,9 @@ tests_tracing_LDADD				= $(ccexceptions_tests_ldadd)
 
 tests_retry_CPPFLAGS				= $(ccexceptions_tests_cppflags)
 tests_retry_LDADD				= $(ccexceptions_tests_ldadd)
+
+tests_destructors_CPPFLAGS			= $(ccexceptions_tests_cppflags)
+tests_destructors_LDADD				= $(ccexceptions_tests_ldadd)
 
 tests_system_memory_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_system_memory_LDADD			= $(ccexceptions_tests_ldadd)

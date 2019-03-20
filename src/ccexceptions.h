@@ -100,6 +100,57 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
+ ** Variadic macros mechanism.
+ ** ----------------------------------------------------------------- */
+
+/* The  following  macros are  adapted  from  Stack Overflow  (URL  last
+ * accessed Jan 2, 2019):
+ *
+ *   <https://stackoverflow.com/a/26408195>
+ */
+
+/* The macro use:
+ *
+ *   _CCE__NARG__(__VA_ARGS__)
+ *
+ * expands into the number of arguments in __VA_ARGS__.
+ */
+#define _CCE__NARG__(...)	_CCE__NARG_I_(__VA_ARGS__,_CCE__RSEQ_N())
+#define _CCE__NARG_I_(...)	_CCE__ARG_N(__VA_ARGS__)
+#define _CCE__ARG_N( \
+      _1, _2, _3, _4, _5, _6, _7, _8, _9,_10, \
+     _11,_12,_13,_14,_15,_16,_17,_18,_19,_20, \
+     _21,_22,_23,_24,_25,_26,_27,_28,_29,_30, \
+     _31,_32,_33,_34,_35,_36,_37,_38,_39,_40, \
+     _41,_42,_43,_44,_45,_46,_47,_48,_49,_50, \
+     _51,_52,_53,_54,_55,_56,_57,_58,_59,_60, \
+     _61,_62,_63,N,...)		N
+#define _CCE__RSEQ_N() \
+     63,62,61,60,                   \
+     59,58,57,56,55,54,53,52,51,50, \
+     49,48,47,46,45,44,43,42,41,40, \
+     39,38,37,36,35,34,33,32,31,30, \
+     29,28,27,26,25,24,23,22,21,20, \
+     19,18,17,16,15,14,13,12,11,10, \
+     9,8,7,6,5,4,3,2,1,0
+
+/* The macro uses:
+ *
+ *    _CCE_VFUNC(cce_new, alpha)
+ *    _CCE_VFUNC(cce_new, alpha, beta)
+ *
+ * respectively expand into:
+ *
+ *    cce_new_1(alpha)
+ *    cce_new_2(alpha, beta)
+ *
+ */
+#define _CCE___VFUNC(NAME, N)	NAME ## _ ## N
+#define _CCE__VFUNC(NAME, N)	_CCE___VFUNC(NAME, N)
+#define _CCE_VFUNC(FUNC, ...)	_CCE__VFUNC(FUNC, _CCE__NARG__(__VA_ARGS__))(__VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
  ** Headers.
  ** ----------------------------------------------------------------- */
 
@@ -210,16 +261,20 @@ typedef cce_location_t *			cce_destination_t;
 
 
 /** --------------------------------------------------------------------
- ** Error and clean handlers.
+ ** Exception handlers: type definitions.
  ** ----------------------------------------------------------------- */
 
-typedef void cce_handler_fun_t (cce_condition_t const * C, cce_handler_t * H);
+typedef void cce_handler_fun_t    (cce_condition_t const * C, cce_handler_t * H);
+typedef void cce_destructor_fun_t (void * pointer);
 
 struct cce_handler_t {
-  cce_handler_t *	next_handler;
+  cce_handler_t		*next_handler;
+  cce_handler_fun_t	*function;
+  void			*pointer;
+  cce_destructor_fun_t	*destructor;
+#if (defined CCE_DONT_USE_TAGGED_POINTERS)
   bool			is_clean_handler;
-  cce_handler_fun_t *	function;
-  void *		pointer;
+#endif
 };
 
 struct cce_clean_handler_t {
@@ -230,7 +285,10 @@ struct cce_error_handler_t {
   cce_handler_t		handler;
 };
 
-/* ------------------------------------------------------------------ */
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: accessors.
+ ** ----------------------------------------------------------------- */
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
@@ -255,27 +313,67 @@ cce_error_handler_handler (cce_error_handler_t * H)
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_handler_set_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
   H->pointer	= pointer;
   H->function	= fun;
+  H->destructor	= NULL;
 }
+
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_handler_set_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  H->pointer	= pointer;
+  H->function	= fun;
+  H->destructor	= destructor;
+}
+
+#define cce_handler_set(...)	_CCE_VFUNC(cce_handler_set,__VA_ARGS__)
+
+/* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_clean_handler_set_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
   cce_handler_set(cce_clean_handler_handler(H), pointer, fun);
 }
 
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_clean_handler_set_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_handler_set(cce_clean_handler_handler(H), pointer, fun, destructor);
+}
+
+#define cce_clean_handler_set(...)	_CCE_VFUNC(cce_clean_handler_set,__VA_ARGS__)
+
+/* ------------------------------------------------------------------ */
+
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_error_handler_set_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
   cce_handler_set(cce_error_handler_handler(H), pointer, fun);
 }
 
-/* ------------------------------------------------------------------ */
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_error_handler_set_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_handler_set(cce_error_handler_handler(H), pointer, fun, destructor);
+}
+
+#define cce_error_handler_set(...)	_CCE_VFUNC(cce_error_handler_set,__VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: registration and execution.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_default_destructor_handler (cce_condition_t const * C, cce_handler_t * H)
+  __attribute__((__nonnull__(1,2)));
 
 cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));

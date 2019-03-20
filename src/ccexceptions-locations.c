@@ -33,6 +33,7 @@
 
 #include "ccexceptions-internals.h"
 #include <stdio.h>
+#include <stdint.h>
 
 
 /** --------------------------------------------------------------------
@@ -46,6 +47,85 @@ cce_condition_or_default (cce_condition_t const * C)
   return ((C)? C : cce_condition_new_unknown());
 }
 
+#if (! (defined CCE_DONT_USE_TAGGED_POINTERS))
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline bool
+cce_handler_is_error (cce_handler_t const * const H)
+{
+  return ((((uintptr_t)(H->function)) & 1)? true : false);
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline bool
+cce_handler_is_clean (cce_handler_t const * const H)
+{
+  return (! cce_handler_is_error(H));
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline void
+cce_error_handler_mark_as_clean (cce_clean_handler_t const * const H CCE_UNUSED)
+{
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline void
+cce_error_handler_mark_as_error (cce_error_handler_t * const H)
+{
+  H->handler.function = (cce_handler_fun_t *)(((uintptr_t)(H->handler.function)) | 1);
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_fun_t *
+cce_handler_get_function (cce_handler_t const * const H)
+{
+  return (cce_handler_fun_t *)((((uintptr_t)(H->function)) >> 1) << 1);
+}
+
+#else
+
+/* Some CPU do not allow function pointers to be tagged in the least significant bit;
+   for example ARM processors.  So we also  support using a boolean field to indicate
+   if a handler is "clean" or "error". */
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline bool
+cce_handler_is_error (cce_handler_t const * const H)
+{
+  return (! H->is_clean_handler);
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline bool
+cce_handler_is_clean (cce_handler_t const * const H)
+{
+  return H->is_clean_handler;
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline void
+cce_error_handler_mark_as_clean (cce_error_handler_t * const H)
+{
+  H->is_clean_handler = false;
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline void
+cce_error_handler_mark_as_error (cce_error_handler_t * const H)
+{
+  H->is_clean_handler = true;
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_fun_t *
+cce_handler_get_function (cce_handler_t const * const H)
+{
+  return H->function;
+}
+
+#endif
+
 
 /** --------------------------------------------------------------------
  ** Mechanism.
@@ -53,7 +133,7 @@ cce_condition_or_default (cce_condition_t const * C)
 
 __attribute__((__hot__))
 void
-cce_location_init (cce_location_t * L)
+cce_location_init (cce_destination_t L)
 {
   L->first_handler	= NULL;
   L->condition		= cce_condition_new_unknown();
@@ -61,7 +141,7 @@ cce_location_init (cce_location_t * L)
 
 __attribute__((__hot__))
 void
-cce_p_raise (cce_location_t * L, cce_condition_t const * C)
+cce_p_raise (cce_destination_t L, cce_condition_t const * C)
 {
   if (cce_condition(L)) { cce_condition_delete(cce_condition(L)); }
   L->condition = cce_condition_or_default(C);
@@ -69,7 +149,7 @@ cce_p_raise (cce_location_t * L, cce_condition_t const * C)
 }
 
 void
-cce_p_retry (cce_location_t * L)
+cce_p_retry (cce_destination_t L)
 {
   if (cce_condition(L)) { cce_condition_delete(cce_condition(L)); }
   L->condition = cce_condition_new_unknown();
@@ -78,18 +158,18 @@ cce_p_retry (cce_location_t * L)
 
 __attribute__((__hot__))
 void
-cce_register_clean_handler (cce_location_t * L, cce_clean_handler_t * H)
+cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
 {
-  H->handler.is_clean_handler	= true;
+  cce_error_handler_mark_as_clean(H);
   H->handler.next_handler	= L->first_handler;
   L->first_handler		= cce_clean_handler_handler(H);
 }
 
 __attribute__((__hot__))
 void
-cce_register_error_handler (cce_location_t * L, cce_error_handler_t * H)
+cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 {
-  H->handler.is_clean_handler	= false;
+  cce_error_handler_mark_as_error(H);
   H->handler.next_handler	= L->first_handler;
   L->first_handler		= cce_error_handler_handler(H);
 }
@@ -112,7 +192,7 @@ cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 
 __attribute__((__hot__))
 void
-cce_run_body_handlers (cce_location_t * L)
+cce_run_body_handlers (cce_destination_t L)
 /* Traverse the  linked list  of registered handlers  and run  the clean
    ones.   This  is a  destructive  function:  once  the list  has  been
    traversed, it is not valid anymore.
@@ -123,17 +203,18 @@ cce_run_body_handlers (cce_location_t * L)
   for (cce_handler_t * H = next; H && H->function; H = next) {
     /* First acquire the next handler... */
     next = H->next_handler;
-    if (true == H->is_clean_handler) {
+    if (cce_handler_is_clean(H)) {
       /* ... then  run the current  handler.  Remember that  the current
 	 handler might release the memory referenced by "H". */
-      H->function(L->condition, H);
+      cce_handler_fun_t	*fun = cce_handler_get_function(H);
+      fun(L->condition, H);
     }
   }
 }
 
 __attribute__((__hot__))
 void
-cce_run_catch_handlers (cce_location_t * L)
+cce_run_catch_handlers (cce_destination_t L)
 /* Traverse the  linked list  of registered handlers  and run  the error
    ones.   This  is a  destructive  function:  once  the list  has  been
    traversed, it is not valid anymore.
@@ -146,7 +227,10 @@ cce_run_catch_handlers (cce_location_t * L)
     next = H->next_handler;
     /* ...  then  run the  current handler.   Remember that  the current
        handler might release the memory referenced by "H". */
-    H->function(L->condition, H);
+    {
+      cce_handler_fun_t	*fun = cce_handler_get_function(H);
+      fun(L->condition, H);
+    }
   }
 }
 
@@ -254,6 +338,19 @@ cce_trace_final (cce_destination_t L, char const * filename, char const * funcna
   cce_condition_t const * K = cce_condition_or_default(C);
   fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "finalising:", filename, linenum, funcname,
 	  cce_condition_static_message(K));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Miscellaneous.
+ ** ----------------------------------------------------------------- */
+
+void
+cce_default_destructor_handler (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * H)
+{
+  if (H->destructor) {
+    H->destructor(H->pointer);
+  }
 }
 
 /* end of file */

@@ -3,7 +3,13 @@
 Notes for revision 0.8.0-devel.14
 ---------------------------------
 
-* ...
+* ABI  BACKWARDS  INCOMPATIBILITY  Changed  internal  representation  of
+  "cce_location_t".
+
+* Implemented distinction  between "clean" and "error"  handlers through
+  tagging pointers.
+
+* Added API to use client data destructor functions in handlers.
 
 
 Notes for revision 0.8.0-devel.13
