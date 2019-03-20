@@ -5,96 +5,102 @@
 
   Abstract
 
+	Test raising an exception with a clean handler.
 
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This is free software; you can  redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
-
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
-
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 */
 
 
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
-typedef struct handler1_t {
-  cce_clean_handler_t	exception_handler[1];
-  bool *		flagp;
-} handler1_t;
+
+/** --------------------------------------------------------------------
+ ** Handlers.
+ ** ----------------------------------------------------------------- */
+
 static void
-handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
+handler1 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
 {
-  handler1_t *	data = (handler1_t *)_data;
-  *(data->flagp) = true;
+  CCE_PC(cce_clean_handler_t const, const H, _H);
+  bool	* flagp = cce_handler_handler(H)->pointer;
+
+  *flagp = true;
 }
 
-typedef struct handler2_t {
-  cce_clean_handler_t	exception_handler[1];
-  bool *		flagp;
-} handler2_t;
 static void
-handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _data)
+handler2 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
 {
-  handler1_t *	data = (handler1_t *)_data;
-  *(data->flagp) = true;
+  CCE_PC(cce_clean_handler_t const , const H, _H);
+  bool	* flagp = cce_handler_handler(H)->pointer;
+
+  *flagp = true;
 }
+
+
+/** --------------------------------------------------------------------
+ ** Let's go.
+ ** ----------------------------------------------------------------- */
 
 int
-main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
+main (void)
 {
   /* no exception */
   {
     cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .handler.function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .handler.function = handler2 }, .flagp = &flag2 };
+    bool	flag1 = false;
+    bool	flag2 = false;
+    cce_clean_handler_t	H1[1];
+    cce_clean_handler_t	H2[1];
 
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_catch_handlers(L);
-      break;
+    if (cce_location(L)) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_init_clean_handler(H1, &flag1, handler1);
+      cce_init_clean_handler(H2, &flag2, handler2);
 
-    default:
-      cce_register_clean_handler(L, H1.exception_handler);
-      cce_register_clean_handler(L, H2.exception_handler);
+      cce_register_clean_handler(L, H1);
+      cce_register_clean_handler(L, H2);
       cce_run_body_handlers(L);
     }
     assert(true == flag1);
     assert(true == flag2);
   }
 
-  /* with error */
+  /* raise an exception */
   {
     cce_location_t	L[1];
-    bool		flag1 = false;
-    bool		flag2 = false;
-    handler1_t		H1 = { .exception_handler[0] = { .handler.function = handler1 }, .flagp = &flag1 };
-    handler2_t		H2 = { .exception_handler[0] = { .handler.function = handler2 }, .flagp = &flag2 };
+    bool	flag1 = false;
+    bool	flag2 = false;
+    cce_clean_handler_t	H1[1];
+    cce_clean_handler_t	H2[1];
 
-    switch (cce_location(L)) {
-    case CCE_ERROR:
-      cce_run_catch_handlers(L);
-      break;
+    if (cce_location(L)) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_init_clean_handler(H1, &flag1, handler1);
+      cce_init_clean_handler(H2, &flag2, handler2);
 
-    default:
-      cce_register_clean_handler(L, H1.exception_handler);
-      cce_register_clean_handler(L, H2.exception_handler);
+      cce_register_clean_handler(L, H1);
+      cce_register_clean_handler(L, H2);
       cce_raise(L, NULL);
       cce_run_body_handlers(L);
     }

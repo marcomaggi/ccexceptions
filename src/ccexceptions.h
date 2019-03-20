@@ -292,22 +292,38 @@ struct cce_error_handler_t {
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
-cce_clean_handler_handler (cce_clean_handler_t * H)
+cce_clean_handler_handler (cce_clean_handler_t * const H)
 {
   return &(H->handler);
 }
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
-cce_error_handler_handler (cce_error_handler_t * H)
+cce_error_handler_handler (cce_error_handler_t * const H)
 {
   return &(H->handler);
 }
 
-#define cce_handler_handler(H)					\
-  _Generic((H),							\
-	   cce_clean_handler_t *: cce_clean_handler_handler,	\
-	   cce_error_handler_t *: cce_error_handler_handler)(H)
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_t const *
+cce_clean_handler_const_handler (cce_clean_handler_t const * const H)
+{
+  return &(H->handler);
+}
+
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_handler_t const *
+cce_error_handler_const_handler (cce_error_handler_t const * const H)
+{
+  return &(H->handler);
+}
+
+#define cce_handler_handler(H)						\
+  _Generic((H),								\
+	   cce_clean_handler_t *: cce_clean_handler_handler,		\
+	   cce_error_handler_t *: cce_error_handler_handler,		\
+	   cce_clean_handler_t const *: cce_clean_handler_const_handler, \
+	   cce_error_handler_t const *: cce_error_handler_const_handler)(H)
 
 /* ------------------------------------------------------------------ */
 

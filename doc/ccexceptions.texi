@@ -795,8 +795,16 @@ Given a pointer to clean or error handler, return a pointer to the embedded hand
 @end deftypefun
 
 
+@deftypefun {cce_handler_t const *} cce_clean_handler_const_handler (cce_clean_handler_t const * @var{H})
+@deftypefunx {cce_handler_t const *} cce_error_handler_const_handler (cce_error_handler_t const * @var{H})
+Given a pointer to clean or error handler, return a pointer to the embedded handler.
+@end deftypefun
+
+
 @defmac cce_handler_handler (cce_clean_handler_t * @var{H})
 @defmacx cce_handler_handler (cce_error_handler_t * @var{H})
+@defmacx cce_handler_handler (cce_clean_handler_t const * @var{H})
+@defmacx cce_handler_handler (cce_error_handler_t const * @var{H})
 Generic macro which using @code{_Generic} to dispatch its expansion depending on the type of the
 argument @var{H}.  If the type of structure referenced by @var{H} is:
 
@@ -806,6 +814,12 @@ The macro expands into a call to @cfunc{cce_clean_handler_handler}.
 
 @item cce_error_handler_t
 The macro expands into a call to @cfunc{cce_error_handler_handler}.
+
+@item cce_clean_handler_t const
+The macro expands into a call to @cfunc{cce_clean_handler_const_handler}.
+
+@item cce_error_handler_t const
+The macro expands into a call to @cfunc{cce_error_handler_const_handler}.
 @end table
 @end defmac
 
