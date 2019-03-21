@@ -264,14 +264,14 @@ run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_
 void
 cce_register_clean_handler_to_run_body_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_clean_handler(inner_H, outer_L, run_body_handlers);
+  cce_init_handler(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_clean_handler(inner_H, outer_L, run_catch_handlers);
+  cce_init_handler(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -280,14 +280,14 @@ cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce
 void
 cce_register_error_handler_to_run_body_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_error_handler(inner_H, outer_L, run_body_handlers);
+  cce_init_handler(inner_H, outer_L, run_body_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_error_handler(inner_H, outer_L, run_catch_handlers);
+  cce_init_handler(inner_H, outer_L, run_catch_handlers);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -338,6 +338,43 @@ cce_trace_final (cce_destination_t L, char const * filename, char const * funcna
   cce_condition_t const * K = cce_condition_or_default(C);
   fprintf(stderr, "%-11s %s:%d, %s(): %s\n", "finalising:", filename, linenum, funcname,
 	  cce_condition_static_message(K));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: initialisation and registration.
+ ** ----------------------------------------------------------------- */
+
+void
+cce_init_and_register_clean_handler_4 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
+				       cce_handler_fun_t * fun)
+{
+  cce_init_only_clean_handler_3(H, pointer, fun);
+  cce_register_clean_handler(L, H);
+}
+void
+cce_init_and_register_clean_handler_5 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
+				       cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_init_only_clean_handler_4(H, pointer, fun, destructor);
+  cce_register_clean_handler(L, H);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_init_and_register_error_handler_4 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
+				       cce_handler_fun_t * fun)
+{
+  cce_init_only_error_handler_3(H, pointer, fun);
+  cce_register_error_handler(L, H);
+}
+void
+cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
+				       cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_init_only_error_handler_4(H, pointer, fun, destructor);
+  cce_register_error_handler(L, H);
 }
 
 

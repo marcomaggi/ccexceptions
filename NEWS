@@ -20,8 +20,6 @@ Notes for revision 0.8.0-devel.14
 * Added macros:
 
   cce_init_handler
-  cce_init_clean_handler
-  cce_init_error_handler
 
 
 Notes for revision 0.8.0-devel.13

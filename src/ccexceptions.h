@@ -5,27 +5,24 @@
 
   Abstract
 
-	This is the  main header: it must be included  in all the source
-	files using CCExceptions.  Notice that  the code needs the POSIX
-	features, so it defines the following symbol:
+	This is the  main header: it must  be included in all the  source files using
+	CCExceptions.  Notice that  the code needs the POSIX features,  so it defines
+	the following symbol:
 
 	   #define _POSIX_C_SOURCE 200809L
 
   Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This program is  free software: you can redistribute  it and/or modify
-  it  under the  terms  of  the GNU  Lesser  General  Public License  as
-  published by  the Free  Software Foundation, either  version 3  of the
-  License, or (at your option) any later version.
+  This program is free  software: you can redistribute it and/or  modify it under the
+  terms of the  GNU Lesser General Public  License as published by  the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
 
-  This program  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  General Public License for more details.
+  This program  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser General  Public
-  License     along    with     this    program.      If    not,     see
-  <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CCEXCEPTIONS_H
@@ -325,64 +322,6 @@ cce_error_handler_const_handler (cce_error_handler_t const * const H)
 	   cce_clean_handler_t const *: cce_clean_handler_const_handler, \
 	   cce_error_handler_t const *: cce_error_handler_const_handler)(H)
 
-/* ------------------------------------------------------------------ */
-
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= NULL;
-}
-
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= destructor;
-}
-
-#define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
-
-/* ------------------------------------------------------------------ */
-
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_handler(cce_clean_handler_handler(H), pointer, fun);
-}
-
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  cce_init_handler(cce_clean_handler_handler(H), pointer, fun, destructor);
-}
-
-#define cce_init_clean_handler(...)	_CCE_VFUNC(cce_init_clean_handler,__VA_ARGS__)
-
-/* ------------------------------------------------------------------ */
-
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_handler(cce_error_handler_handler(H), pointer, fun);
-}
-
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  cce_init_handler(cce_error_handler_handler(H), pointer, fun, destructor);
-}
-
-#define cce_init_error_handler(...)	_CCE_VFUNC(cce_init_error_handler,__VA_ARGS__)
-
 
 /** --------------------------------------------------------------------
  ** Exception handlers: registration and execution.
@@ -404,6 +343,123 @@ cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
   _Generic((H),								\
 	   cce_clean_handler_t *: cce_register_clean_handler,		\
 	   cce_error_handler_t *: cce_register_error_handler)((L),(H))
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: initialisation only.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
+cce_init_only_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  H->pointer	= pointer;
+  H->function	= fun;
+  H->destructor	= NULL;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_init_only_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  H->pointer	= pointer;
+  H->function	= fun;
+  H->destructor	= destructor;
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
+cce_init_only_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_init_only_handler_3(cce_clean_handler_handler(H), pointer, fun);
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_init_only_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_init_only_handler_4(cce_clean_handler_handler(H), pointer, fun, destructor);
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
+cce_init_only_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+{
+  cce_init_only_handler_3(cce_error_handler_handler(H), pointer, fun);
+}
+
+__attribute__((__always_inline__,__nonnull__(1,3,4)))
+static inline void
+cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+{
+  cce_init_only_handler_4(cce_error_handler_handler(H), pointer, fun, destructor);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: initialisation and registration.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
+						     cce_handler_fun_t * fun)
+  __attribute__((__nonnull__(1,2,4)));
+
+cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
+						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+  __attribute__((__nonnull__(1,2,4)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
+						     cce_handler_fun_t * fun)
+  __attribute__((__nonnull__(1,2,4)));
+
+cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
+						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+  __attribute__((__nonnull__(1,2,4)));
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: initialisation dispatching macros.
+ ** ----------------------------------------------------------------- */
+
+/* This  prototype  exists   only  to  signal  an  invalid  dispatch   in  the  macro
+   "cce_init_handler_4". */
+cce_decl void cce_invalid_dispatch (void);
+
+#define cce_init_handler_3(H,POINTER,FUNCTION)				\
+  _Generic((H),								\
+	   cce_handler_t	*:	cce_init_only_handler_3,	\
+	   cce_clean_handler_t	*:	cce_init_only_clean_handler_3,	\
+	   cce_error_handler_t	*:	cce_init_only_error_handler_3)(H,POINTER,FUNCTION)
+
+#define cce_init_handler_4(FIRST,SECOND,THIRD,FOURTH)			\
+  _Generic((FIRST),							\
+	   cce_destination_t	 :	_Generic((SECOND),		\
+						 cce_clean_handler_t	*:	cce_init_and_register_clean_handler_4, \
+						 cce_error_handler_t	*:	cce_init_and_register_error_handler_4, \
+						 cce_handler_t		*:	cce_invalid_dispatch, \
+						 void			*:	cce_invalid_dispatch), \
+	   cce_handler_t	*:	cce_init_only_handler_4,	\
+	   cce_clean_handler_t	*:	cce_init_only_clean_handler_4,	\
+	   cce_error_handler_t	*:	cce_init_only_error_handler_4)(FIRST,SECOND,THIRD,FOURTH)
+
+#define cce_init_handler_5(L,H,POINTER,FUNCTION,DESTRUCTOR)		\
+  _Generic((H),								\
+	   cce_handler_t	*:	cce_init_and_register_handler_5, \
+	   cce_clean_handler_t	*:	cce_init_and_register_clean_handler_5, \
+	   cce_error_handler_t	*:	cce_init_and_register_error_handler_5)(L,H,POINTER,FUNCTION,DESTRUCTOR)
+
+#define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: execution.
+ ** ----------------------------------------------------------------- */
 
 /* We do *not*  set the "leaf" attribute for this  function, because the
    clean handlers might modify data in the current compilation unit. */
@@ -1365,14 +1421,14 @@ __attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_c
 static inline void
 cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_init_clean_handler(H, pointer, fun);
+  cce_init_handler(H, pointer, fun);
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_error_handler instead")))
 static inline void
 cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
 {
-  cce_init_error_handler(H, pointer, fun);
+  cce_init_handler(H, pointer, fun);
 }
 
 /* ------------------------------------------------------------------ */

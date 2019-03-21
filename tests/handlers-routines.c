@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -66,9 +66,9 @@ test_just_run_body_handlers()
   cce_clean_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
-  cce_register_clean_handler(L, &H1);
-  cce_register_clean_handler(L, &H2);
-  cce_register_clean_handler(L, &H3);
+  cce_register_handler(L, &H1);
+  cce_register_handler(L, &H2);
+  cce_register_handler(L, &H3);
   cce_run_body_handlers(L);
 
   assert(true == flag1);
@@ -90,9 +90,9 @@ test_just_run_catch_handlers (void)
   cce_error_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
-  cce_register_error_handler(L, &H1);
-  cce_register_error_handler(L, &H2);
-  cce_register_error_handler(L, &H3);
+  cce_register_handler(L, &H1);
+  cce_register_handler(L, &H2);
+  cce_register_handler(L, &H3);
   cce_run_catch_handlers(L);
 
   assert(true == flag1);
@@ -134,7 +134,7 @@ test_allocating_memory_success_execution (void)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_clean_handler(L, &H.handler);
+      cce_register_handler(L, &H.handler);
     } else {
       cce_raise(L, NULL);
     }
@@ -178,7 +178,7 @@ test_allocating_memory_exceptional_execution (void)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_clean_handler(L, &H.handler);
+      cce_register_handler(L, &H.handler);
     } else {
       cce_raise(L, NULL);
     }
@@ -218,7 +218,7 @@ test_csse_constructor (cce_location_t * upper_L)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_error_handler(L, &H);
+      cce_register_handler(L, &H);
     } else {
       cce_raise(L, NULL);
     }
@@ -267,7 +267,7 @@ test_csse_caller (void)
   default:
     P = test_csse_constructor(L);
     assert(NULL != P);
-    cce_register_clean_handler(L, &H.handler);
+    cce_register_handler(L, &H.handler);
     // do_something_with(P);
     cce_run_body_handlers(L);
   }
@@ -308,7 +308,7 @@ test_csee_constructor (cce_location_t * upper_L)
   default:
     P = malloc(4096);
     if (P) {
-      cce_register_error_handler(L, &H);
+      cce_register_handler(L, &H);
     } else {
       cce_raise(L, NULL);
     }
@@ -360,7 +360,7 @@ test_constructor_scheme_exceptional_execution (void)
   default:
     P = test_csee_constructor(L);
     assert(NULL != P);
-    cce_register_clean_handler(L, &H.handler);
+    cce_register_handler(L, &H.handler);
     // do_something_with(P);
     cce_run_body_handlers(L);
   }
@@ -392,9 +392,9 @@ test_handler_removal_1_0 (void)
     H1.handler.pointer  = &flag1;
     H2.handler.pointer  = &flag2;
     H3.handler.pointer  = &flag3;
-    cce_register_clean_handler(L, &H1);
-    cce_register_clean_handler(L, &H2);
-    cce_register_clean_handler(L, &H3);
+    cce_register_handler(L, &H1);
+    cce_register_handler(L, &H2);
+    cce_register_handler(L, &H3);
     cce_run_body_handlers(L);
   }
 
@@ -420,9 +420,9 @@ test_handler_removal_1_1 (void)
     H1.handler.pointer  = &flag1;
     H2.handler.pointer  = &flag2;
     H3.handler.pointer  = &flag3;
-    cce_register_clean_handler(L, &H1);
-    cce_register_clean_handler(L, &H2);
-    cce_register_clean_handler(L, &H3);
+    cce_register_handler(L, &H1);
+    cce_register_handler(L, &H2);
+    cce_register_handler(L, &H3);
     cce_forget_handler(L, &H1.handler);
     cce_run_body_handlers(L);
   }
@@ -449,9 +449,9 @@ test_handler_removal_1_2 (void)
     H1.handler.pointer  = &flag1;
     H2.handler.pointer  = &flag2;
     H3.handler.pointer  = &flag3;
-    cce_register_clean_handler(L, &H1);
-    cce_register_clean_handler(L, &H2);
-    cce_register_clean_handler(L, &H3);
+    cce_register_handler(L, &H1);
+    cce_register_handler(L, &H2);
+    cce_register_handler(L, &H3);
     cce_forget_handler(L, &H2.handler);
     cce_run_body_handlers(L);
   }
@@ -478,9 +478,9 @@ test_handler_removal_1_3 (void)
     H1.handler.pointer  = &flag1;
     H2.handler.pointer  = &flag2;
     H3.handler.pointer  = &flag3;
-    cce_register_clean_handler(L, &H1);
-    cce_register_clean_handler(L, &H2);
-    cce_register_clean_handler(L, &H3);
+    cce_register_handler(L, &H1);
+    cce_register_handler(L, &H2);
+    cce_register_handler(L, &H3);
     cce_forget_handler(L, &H3.handler);
     cce_run_body_handlers(L);
   }

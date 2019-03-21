@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can  redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -73,8 +73,8 @@ test_no_exception (void)
     break;
 
   default:
-    cce_register_clean_handler(L, &H1.handler);
-    cce_register_error_handler(L, &H2.handler);
+    cce_register_handler(L, &H1.handler);
+    cce_register_handler(L, &H2.handler);
     cce_run_body_handlers(L);
   }
   assert(true  == flag1);
@@ -122,8 +122,8 @@ test_with_error (void)
     break;
 
   default:
-    cce_register_clean_handler(L, &H1.handler);
-    cce_register_error_handler(L, &H2.handler);
+    cce_register_handler(L, &H1.handler);
+    cce_register_handler(L, &H2.handler);
     if (1) {
       cce_raise(L, NULL);
     }
@@ -211,10 +211,10 @@ test_dynamically_allocated_handlers (void)
     cce_run_catch_handlers_final(L);
   } else {
     H1 = test_dynamically_allocated_new_clean_handler(L, &flag1);
-    cce_register_clean_handler(L, &(H1->handler));
+    cce_register_handler(L, &(H1->handler));
 
     H2 = test_dynamically_allocated_new_error_handler(L, &flag2);
-    cce_register_error_handler(L, &(H2->handler));
+    cce_register_handler(L, &(H2->handler));
 
     if (1) {
       cce_raise(L, NULL);
