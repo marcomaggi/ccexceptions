@@ -637,6 +637,9 @@ if (cce_location(L)) @{
 @}
 @end example
 
+@noindent
+it is good idea to configure our source code editor to automatically insert this template.
+
 @value{PACKAGE} defines @dfn{clean handlers}, which are run as both normal--execution and
 exception-reaction handlers; it also defines @dfn{error handlers}, which are run only as
 exception-reaction handlers.
