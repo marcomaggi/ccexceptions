@@ -423,7 +423,7 @@ test_handler_removal_1_1 (void)
     cce_register_handler(L, &H1);
     cce_register_handler(L, &H2);
     cce_register_handler(L, &H3);
-    cce_forget_handler(L, &H1.handler);
+    cce_forget_clean_handler(L, &H1);
     cce_run_body_handlers(L);
   }
 
@@ -452,7 +452,7 @@ test_handler_removal_1_2 (void)
     cce_register_handler(L, &H1);
     cce_register_handler(L, &H2);
     cce_register_handler(L, &H3);
-    cce_forget_handler(L, &H2.handler);
+    cce_forget_clean_handler(L, &H2);
     cce_run_body_handlers(L);
   }
 
@@ -481,7 +481,7 @@ test_handler_removal_1_3 (void)
     cce_register_handler(L, &H1);
     cce_register_handler(L, &H2);
     cce_register_handler(L, &H3);
-    cce_forget_handler(L, &H3.handler);
+    cce_forget_clean_handler(L, &H3);
     cce_run_body_handlers(L);
   }
 

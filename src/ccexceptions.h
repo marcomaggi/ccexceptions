@@ -287,28 +287,28 @@ struct cce_error_handler_t {
  ** Exception handlers: accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
 cce_clean_handler_handler (cce_clean_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t *
 cce_error_handler_handler (cce_error_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t const *
 cce_clean_handler_const_handler (cce_clean_handler_t const * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_t const *
 cce_error_handler_const_handler (cce_error_handler_t const * const H)
 {
@@ -336,7 +336,10 @@ cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler
 cce_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
+cce_decl void cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
+cce_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 #define cce_register_handler(L,H)					\
@@ -349,55 +352,29 @@ cce_decl void cce_forget_handler (cce_destination_t L, cce_handler_t * H)
  ** Exception handlers: initialisation only.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_only_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= NULL;
-}
+cce_decl void cce_init_only_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+  __attribute__((__leaf__,__nonnull__(1,3)));
 
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_only_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= destructor;
-}
+cce_decl void cce_init_only_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+  __attribute__((__leaf__,__nonnull__(1,3,4)));
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_only_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_only_handler_3(cce_clean_handler_handler(H), pointer, fun);
-}
+cce_decl void cce_init_only_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+  __attribute__((__leaf__,__nonnull__(1,3)));
 
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_only_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  cce_init_only_handler_4(cce_clean_handler_handler(H), pointer, fun, destructor);
-}
+cce_decl void cce_init_only_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun,
+					     cce_destructor_fun_t * destructor)
+  __attribute__((__leaf__,__nonnull__(1,3,4)));
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
-static inline void
-cce_init_only_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_only_handler_3(cce_error_handler_handler(H), pointer, fun);
-}
+cce_decl void cce_init_only_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+  __attribute__((__leaf__,__nonnull__(1,3)));
 
-__attribute__((__always_inline__,__nonnull__(1,3,4)))
-static inline void
-cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  cce_init_only_handler_4(cce_error_handler_handler(H), pointer, fun, destructor);
-}
+cce_decl void cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun,
+					     cce_destructor_fun_t * destructor)
+  __attribute__((__leaf__,__nonnull__(1,3,4)));
 
 
 /** --------------------------------------------------------------------
@@ -406,21 +383,21 @@ cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_hand
 
 cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
 						     cce_handler_fun_t * fun)
-  __attribute__((__nonnull__(1,2,4)));
+  __attribute__((__leaf__,__nonnull__(1,2,4)));
 
 cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
 						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-  __attribute__((__nonnull__(1,2,4)));
+  __attribute__((__leaf__,__nonnull__(1,2,4)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
 						     cce_handler_fun_t * fun)
-  __attribute__((__nonnull__(1,2,4)));
+  __attribute__((__leaf__,__nonnull__(1,2,4)));
 
 cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
 						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-  __attribute__((__nonnull__(1,2,4)));
+  __attribute__((__leaf__,__nonnull__(1,2,4)));
 
 
 /** --------------------------------------------------------------------
@@ -461,13 +438,13 @@ cce_decl void cce_invalid_macro_dispatch_over_argument_type (void);
  ** Exception handlers: execution.
  ** ----------------------------------------------------------------- */
 
-/* We do *not*  set the "leaf" attribute for this  function, because the
-   clean handlers might modify data in the current compilation unit. */
+/* We do *not* set the "leaf" attribute for this function, because the clean handlers
+   might modify data in the current compilation unit. */
 cce_decl void cce_run_body_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
-/* We do *not*  set the "leaf" attribute for this  function, because the
-   error handlers might modify data in the current compilation unit. */
+/* We do *not* set the "leaf" attribute for this function, because the error handlers
+   might modify data in the current compilation unit. */
 cce_decl void cce_run_catch_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
@@ -539,15 +516,15 @@ struct cce_condition_root_t {
 cce_decl cce_descriptor_root_t const * const cce_descriptor_root_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_root (cce_condition_root_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl bool cce_condition_is_root (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -566,18 +543,18 @@ cce_decl cce_descriptor_unknown_t const * const	cce_descriptor_unknown_ptr __att
 cce_decl cce_condition_unknown_t  const * const	cce_condition_unknown_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_unknown (cce_condition_unknown_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_unknown (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_unknown (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -596,18 +573,18 @@ cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr __attribu
 cce_decl cce_condition_break_t  const * const	cce_condition_break_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_break (cce_condition_break_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_break (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_break (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -626,16 +603,18 @@ cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr __attribu
 cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_error (cce_condition_error_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_error (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_error (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -654,18 +633,18 @@ cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_err
 cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_runtime_error (cce_condition_runtime_error_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_runtime_error (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_runtime_error (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -684,18 +663,18 @@ cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_p
 cce_decl cce_condition_logic_error_t  const * const	cce_condition_logic_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_logic_error (cce_condition_logic_error_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_logic_error (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_logic_error (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -717,19 +696,21 @@ cce_decl cce_descriptor_unreachable_t const * const	cce_descriptor_unreachable_p
 cce_decl cce_condition_unreachable_t  const * const	cce_condition_unreachable_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
 					      char const * const filename,
 					      char const * const funcname,
 					      int const linenum)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
 								char const * const filename,
 								char const * const funcname,
 								int const linenum)
-  __attribute__((__nonnull__(1,2,3),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2,3),__returns_nonnull__));
 
 #if (defined CCEXCEPTIONS_EXCLUDE_UNREACHABLE)
 #  define cce_raise_unreachable(L)		/* empty */
@@ -739,7 +720,7 @@ cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_
 #endif
 
 cce_decl bool cce_condition_is_unreachable (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -758,18 +739,18 @@ cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplement
 cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_unimplemented (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_unimplemented (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -792,17 +773,17 @@ struct cce_condition_invalid_argument_t {
 cce_decl cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index);
 
 cce_decl cce_condition_t const * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 cce_decl bool cce_condition_is_invalid_argument (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 #define cce_check_argument(L,EXPR,ARGNUM) \
   if (! (EXPR)) { cce_raise((L), cce_condition_new_invalid_argument((L), __func__, (ARGNUM))); }
@@ -824,18 +805,18 @@ cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr
 cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_math_error (cce_condition_math_error_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_math_error (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_math_error (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -854,18 +835,18 @@ cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr __a
 cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_math_nan (cce_condition_math_nan_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_math_nan (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_math_nan (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -884,18 +865,18 @@ cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infini
 cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_math_infinity (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_math_infinity (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -914,18 +895,18 @@ cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overfl
 cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_math_overflow (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_math_overflow (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -944,18 +925,18 @@ cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_under
 cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 cce_decl cce_condition_t const * cce_condition_new_math_underflow (void)
-  __attribute__((__returns_nonnull__,__const__));
+  __attribute__((__leaf__,__const__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_math_underflow (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -975,7 +956,7 @@ struct cce_condition_errno_t {
 cce_decl cce_descriptor_errno_t const * const cce_descriptor_errno_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
@@ -983,13 +964,13 @@ cce_decl cce_condition_t const * cce_condition_new_errno (int code)
   __attribute__((__leaf__,__returns_nonnull__));
 
 cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
-  __attribute__((__returns_nonnull__));
+  __attribute__((__leaf__,__returns_nonnull__));
 
 cce_decl bool cce_condition_is_errno (cce_condition_t const * C)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 cce_decl bool cce_condition_is_errno_with_code (cce_condition_t const * C, int errnum)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
@@ -1068,21 +1049,11 @@ cce_code (int const code)
  ** Running handlers and catching exceptions as final step.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1),__always_inline__))
-static inline void
-cce_p_run_catch_handlers_final (cce_destination_t L)
-{
-  cce_run_catch_handlers(L);
-  cce_condition_delete((cce_condition_t *)(L->condition));
-}
+cce_decl void cce_p_run_catch_handlers_final (cce_destination_t L)
+  __attribute__((__nonnull__(1)));
 
-__attribute__((__nonnull__(1),__always_inline__))
-static inline void
-cce_p_run_body_handlers_final (cce_destination_t L)
-{
-  cce_run_body_handlers(L);
-  cce_condition_delete((cce_condition_t *)(L->condition));
-}
+cce_decl void cce_p_run_body_handlers_final (cce_destination_t L)
+  __attribute__((__nonnull__(1)));
 
 cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,2,3)));
@@ -1102,21 +1073,11 @@ cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char 
  ** Running handlers and re-raising exceptions.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
-static inline void
-cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_catch_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
+cce_decl void cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+  __attribute__((__nonnull__(1,2),__noreturn__));
 
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__))
-static inline void
-cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_body_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
+cce_decl void cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+  __attribute__((__nonnull__(1,2),__noreturn__));
 
 /* ------------------------------------------------------------------ */
 
@@ -1140,19 +1101,19 @@ cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, cha
 
 cce_decl void cce_register_clean_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
 								cce_destination_t outer_L)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
 								cce_destination_t outer_L)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_register_error_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_error_handler_t * inner_H,
 								cce_destination_t outer_L)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
 								cce_destination_t outer_L)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------
@@ -1160,21 +1121,21 @@ cce_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_
  ** ----------------------------------------------------------------- */
 
 cce_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
 cce_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
 cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_init_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_init_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3)));
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 #define cce_init_handler_malloc(L,P_H,P)				\
   _Generic((P_H),							\
@@ -1184,10 +1145,10 @@ cce_decl void cce_init_error_handler_malloc (cce_destination_t L, cce_error_hand
 /* ------------------------------------------------------------------ */
 
 cce_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_malloc_guarded(L,P_H,size)				\
   _Generic((P_H),							\
@@ -1197,10 +1158,10 @@ cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_hand
 /* ------------------------------------------------------------------ */
 
 cce_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * P, size_t newsize)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_realloc_guarded(L,P_H,old_P,newsize)			\
   _Generic((P_H),							\
@@ -1210,10 +1171,10 @@ cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_han
 /* ------------------------------------------------------------------ */
 
 cce_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_calloc_guarded(L,P_H,count,eltsize)			\
   _Generic((P_H),							\

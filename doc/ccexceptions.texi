@@ -879,7 +879,8 @@ The macro expands into a call to @cfunc{cce_register_error_handler}.
 @end deftypefn
 
 
-@deftypefun void cce_forget_handler (cce_destination_t @var{L}, cce_handler_t * @var{H})
+@deftypefun void cce_forget_clean_handler (cce_destination_t @var{L}, cce_clean_handler_t * @var{H})
+@deftypefunx void cce_forget_error_handler (cce_destination_t @var{L}, cce_error_handler_t * @var{H})
 Remove the handler @var{H} from the context of the location @var{L}.  If @var{H} is not registered
 in @var{L}: nothing happens.
 @end deftypefun
