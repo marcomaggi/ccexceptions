@@ -429,7 +429,7 @@ cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L, cce_er
 
 /* This  prototype  exists   only  to  signal  an  invalid  dispatch   in  the  macro
    "cce_init_handler_4". */
-cce_decl void cce_invalid_dispatch (void);
+cce_decl void cce_invalid_macro_dispatch_over_argument_type (void);
 
 #define cce_init_handler_3(H,POINTER,FUNCTION)				\
   _Generic((H),								\
@@ -442,8 +442,8 @@ cce_decl void cce_invalid_dispatch (void);
 	   cce_destination_t	 :	_Generic((SECOND),		\
 						 cce_clean_handler_t	*:	cce_init_and_register_clean_handler_4, \
 						 cce_error_handler_t	*:	cce_init_and_register_error_handler_4, \
-						 cce_handler_t		*:	cce_invalid_dispatch, \
-						 void			*:	cce_invalid_dispatch), \
+						 cce_handler_t		*:	cce_invalid_macro_dispatch_over_argument_type, \
+						 void			*:	cce_invalid_macro_dispatch_over_argument_type), \
 	   cce_handler_t	*:	cce_init_only_handler_4,	\
 	   cce_clean_handler_t	*:	cce_init_only_clean_handler_4,	\
 	   cce_error_handler_t	*:	cce_init_only_error_handler_4)(FIRST,SECOND,THIRD,FOURTH)
