@@ -151,6 +151,43 @@ test_dynamic_memory_error_handler_default_destructor (void)
   assert(true == dynamic_memory_destroyed);
 }
 
+/* ------------------------------------------------------------------ */
+
+void
+test_dynamic_memory_init_and_register_clean_handler_default_destructor (void)
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	P_H[1];
+
+  if (1) { fprintf(stderr, "%s: enter\n", __func__); }
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
+    void	*P = cce_sys_malloc(L, 256);
+    cce_init_handler(L, P_H, P, cce_default_destructor_handler, free);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_dynamic_memory_init_and_register_error_handler_default_destructor (void)
+{
+  cce_location_t	L[1];
+  cce_error_handler_t	P_H[1];
+
+  if (1) { fprintf(stderr, "%s: enter\n", __func__); }
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
+    void	*P = cce_sys_malloc(L, 256);
+    cce_init_handler(L, P_H, P, cce_default_destructor_handler, free);
+    cce_raise(L, NULL);
+    cce_run_body_handlers(L);
+  }
+}
+
 
 int
 main (void)
@@ -159,6 +196,8 @@ main (void)
   if (1) { test_dynamic_memory_error_handler(); }
   if (1) { test_dynamic_memory_clean_handler_default_destructor(); }
   if (1) { test_dynamic_memory_error_handler_default_destructor(); }
+  if (1) { test_dynamic_memory_init_and_register_clean_handler_default_destructor(); }
+  if (1) { test_dynamic_memory_init_and_register_error_handler_default_destructor(); }
 
   exit(EXIT_SUCCESS);
 }
