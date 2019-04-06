@@ -415,25 +415,9 @@ The main usage pattern for this module is the following:
 @example
 cce_location_t  L[1];
 
-if (CCE_ENTER == cce_location(L)) @{
-  /* do something useful here */
-  cce_run_body_handlers(L);
-@} else @{
-  /* handle the exception here */
-  cce_run_catch_handlers(L);
-  cce_condition_delete(cce_condition(L));
-@}
-@end example
-
-@noindent
-or alternatively the following:
-
-@example
-cce_location_t  L[1];
-
 if (cce_location(L)) @{
   /* handle the exception here */
-  cce_run_catch_handlers(L);
+  cce_run_catch_handlers_(L);
   cce_condition_delete(cce_condition(L));
 @} else @{
   /* do something useful here */
@@ -441,22 +425,8 @@ if (cce_location(L)) @{
 @}
 @end example
 
-We can use the slightly shorter versions:
-
-@example
-cce_location_t  L[1];
-
-if (CCE_ENTER == cce_location(L)) @{
-  /* do something useful here */
-  cce_run_body_handlers(L);
-@} else @{
-  /* handle the exception here */
-  cce_run_catch_handlers_final(L);
-@}
-@end example
-
 @noindent
-and:
+We can use the slightly shorter versions:
 
 @example
 cce_location_t  L[1];
@@ -622,23 +592,6 @@ by normal execution or by raising an exception.  Normal--execution handlers are 
 function @cfunc{cce_run_body_handlers}; exception--reaction handlers are run by calling the function
 @cfunc{cce_run_catch_handlers}, but we should use the more useful functions
 @cfunc{cce_run_catch_handlers_final} and @cfunc{cce_run_catch_handlers_raise}.
-
-The basic code template is the following:
-
-@example
-cce_location_t  L[1];
-
-if (cce_location(L)) @{
-  /* location handler */
-  cce_run_catch_handlers_final(L);
-@} else @{
-  /* location body */
-  cce_run_body_handlers(L);
-@}
-@end example
-
-@noindent
-it is good idea to configure our source code editor to automatically insert this template.
 
 @value{PACKAGE} defines @dfn{clean handlers}, which are run as both normal--execution and
 exception-reaction handlers; it also defines @dfn{error handlers}, which are run only as
