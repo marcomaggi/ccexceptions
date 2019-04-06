@@ -427,9 +427,9 @@ cce_decl void cce_invalid_macro_dispatch_over_argument_type (void);
 
 #define cce_init_handler_5(L,H,POINTER,FUNCTION,DESTRUCTOR)		\
   _Generic((H),								\
-	   cce_handler_t	*:	cce_init_and_register_handler_5, \
 	   cce_clean_handler_t	*:	cce_init_and_register_clean_handler_5, \
-	   cce_error_handler_t	*:	cce_init_and_register_error_handler_5)(L,H,POINTER,FUNCTION,DESTRUCTOR)
+	   cce_error_handler_t	*:	cce_init_and_register_error_handler_5, \
+	   cce_handler_t	*:	cce_invalid_macro_dispatch_over_argument_type)(L,H,POINTER,FUNCTION,DESTRUCTOR)
 
 #define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
 
