@@ -274,12 +274,19 @@ cce_init_and_register_error_handler_5 (cce_destination_t L,
  ** ----------------------------------------------------------------- */
 
 static void
-forget_handler (cce_handler_t * first_handler, cce_handler_t * H)
+forget_handler (cce_handler_t ** first_handler_p, cce_handler_t * H)
 {
-  for (cce_handler_t * iter = first_handler; iter; iter = iter->next_handler) {
-    if (iter->next_handler == H) {
-      iter->next_handler = H->next_handler;
-      H->next_handler    = NULL;
+  cce_handler_t * first_handler = *first_handler_p;
+
+  if (first_handler == H) {
+    *first_handler_p = H->next_handler;
+    H->next_handler  = NULL;
+  } else {
+    for (cce_handler_t * iter = first_handler; iter; iter = iter->next_handler) {
+      if (iter->next_handler == H) {
+	iter->next_handler = H->next_handler;
+	H->next_handler    = NULL;
+      }
     }
   }
 }
@@ -287,27 +294,13 @@ forget_handler (cce_handler_t * first_handler, cce_handler_t * H)
 void
 cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * target_handler)
 {
-  cce_handler_t	* H = cce_handler_handler(target_handler);
-
-  if (L->first_clean_handler == H) {
-    L->first_clean_handler = H->next_handler;
-    H->next_handler  = NULL;
-  } else {
-    forget_handler(L->first_clean_handler, H);
-  }
+  forget_handler(&(L->first_clean_handler), cce_handler_handler(target_handler));
 }
 
 void
 cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * target_handler)
 {
-  cce_handler_t	* H = cce_handler_handler(target_handler);
-
-  if (L->first_error_handler == H) {
-    L->first_error_handler = H->next_handler;
-    H->next_handler  = NULL;
-  } else {
-    forget_handler(L->first_error_handler, H);
-  }
+  forget_handler(&(L->first_error_handler), cce_handler_handler(target_handler));
 }
 
 
