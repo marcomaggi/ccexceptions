@@ -1,7 +1,7 @@
 -*- coding: utf-8-unix -*-
 
-Notes for revision 0.8.0-devel.14
----------------------------------
+Notes for revision 0.9.0-devel.0
+--------------------------------
 
 * ABI  BACKWARDS  INCOMPATIBILITY  Changed  internal  representation  of
   "cce_location_t".
