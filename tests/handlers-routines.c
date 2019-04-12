@@ -74,9 +74,9 @@ test_just_run_body_handlers()
   bool			flag3 = false;
 
   cce_location_init(L);
-  cce_init_handler(&H1, just_run_body_handler1, (cce_resource_data_t *)&flag1);
-  cce_init_handler(&H2, just_run_body_handler2, (cce_resource_data_t *)&flag2);
-  cce_init_handler(&H3, just_run_body_handler3, (cce_resource_data_t *)&flag3);
+  cce_init_handler(&H1, just_run_body_handler1, cce_resource_pointer(&flag1));
+  cce_init_handler(&H2, just_run_body_handler2, cce_resource_pointer(&flag2));
+  cce_init_handler(&H3, just_run_body_handler3, cce_resource_pointer(&flag3));
   cce_register_handler(L, &H1);
   cce_register_handler(L, &H2);
   cce_register_handler(L, &H3);
@@ -128,9 +128,9 @@ test_just_run_catch_handlers (void)
   bool			flag3 = false;
 
   cce_location_init(L);
-  cce_init_handler(&H1, just_run_catch_handler1, (cce_resource_data_t *)&flag1);
-  cce_init_handler(&H2, just_run_catch_handler2, (cce_resource_data_t *)&flag2);
-  cce_init_handler(&H3, just_run_catch_handler3, (cce_resource_data_t *)&flag3);
+  cce_init_handler(&H1, just_run_catch_handler1, cce_resource_pointer(&flag1));
+  cce_init_handler(&H2, just_run_catch_handler2, cce_resource_pointer(&flag2));
+  cce_init_handler(&H3, just_run_catch_handler3, cce_resource_pointer(&flag3));
   cce_register_handler(L, &H1);
   cce_register_handler(L, &H2);
   cce_register_handler(L, &H3);
@@ -256,7 +256,7 @@ test_csse_constructor (cce_location_t * upper_L)
   } else {
     P = malloc(4096);
     if (P) {
-      cce_init_and_register_handler(L, H, test_csse_constructor_handler, (cce_resource_data_t *)&P);
+      cce_init_and_register_handler(L, H, test_csse_constructor_handler, cce_resource_pointer(&P));
     } else {
       cce_raise(L, NULL);
     }
@@ -339,7 +339,7 @@ test_csee_constructor (cce_location_t * upper_L)
   } else {
     P = malloc(4096);
     if (P) {
-      cce_init_and_register_handler(L, H, test_csee_constructor_handler, (cce_resource_data_t *)&P);
+      cce_init_and_register_handler(L, H, test_csee_constructor_handler, cce_resource_pointer(&P));
     } else {
       cce_raise(L, NULL);
     }
@@ -414,9 +414,9 @@ test_handler_removal_1_0 (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
-    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
-    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_init_handler(H1, handler_removal_function, cce_resource_pointer(&flag1));
+    cce_init_handler(H2, handler_removal_function, cce_resource_pointer(&flag2));
+    cce_init_handler(H3, handler_removal_function, cce_resource_pointer(&flag3));
     cce_register_handler(L, H1);
     cce_register_handler(L, H2);
     cce_register_handler(L, H3);
@@ -439,9 +439,9 @@ test_handler_removal_1_1 (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
-    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
-    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_init_handler(H1, handler_removal_function, cce_resource_pointer(&flag1));
+    cce_init_handler(H2, handler_removal_function, cce_resource_pointer(&flag2));
+    cce_init_handler(H3, handler_removal_function, cce_resource_pointer(&flag3));
     cce_register_handler(L, H1);
     cce_register_handler(L, H2);
     cce_register_handler(L, H3);
@@ -465,9 +465,9 @@ test_handler_removal_1_2 (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
-    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
-    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_init_handler(H1, handler_removal_function, cce_resource_pointer(&flag1));
+    cce_init_handler(H2, handler_removal_function, cce_resource_pointer(&flag2));
+    cce_init_handler(H3, handler_removal_function, cce_resource_pointer(&flag3));
     cce_register_handler(L, H1);
     cce_register_handler(L, H2);
     cce_register_handler(L, H3);
@@ -491,9 +491,9 @@ test_handler_removal_1_3 (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
-    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
-    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_init_handler(H1, handler_removal_function, cce_resource_pointer(&flag1));
+    cce_init_handler(H2, handler_removal_function, cce_resource_pointer(&flag2));
+    cce_init_handler(H3, handler_removal_function, cce_resource_pointer(&flag3));
     cce_register_handler(L, H1);
     cce_register_handler(L, H2);
     cce_register_handler(L, H3);

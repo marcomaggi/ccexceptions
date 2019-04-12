@@ -58,13 +58,13 @@ flag_error_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t co
 void
 register_clean_flag_handler (cce_destination_t L, cce_clean_handler_t * H, bool volatile * flagp)
 {
-  cce_init_and_register_handler(L, H, flag_clean_handler, (cce_resource_data_t *)flagp);
+  cce_init_and_register_handler(L, H, flag_clean_handler, cce_resource_pointer(flagp));
 }
 
 void
 register_error_flag_handler (cce_destination_t L, cce_error_handler_t * H, bool volatile * flagp)
 {
-  cce_init_and_register_handler(L, H, flag_error_handler, (cce_resource_data_t *)flagp);
+  cce_init_and_register_handler(L, H, flag_error_handler, cce_resource_pointer(flagp));
 }
 
 

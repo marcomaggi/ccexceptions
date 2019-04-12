@@ -65,8 +65,8 @@ test_no_exception (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_and_register_handler(L, H1, test_no_exception_handler1, (cce_resource_data_t *)&flag1);
-    cce_init_and_register_handler(L, H2, test_no_exception_handler2, (cce_resource_data_t *)&flag2);
+    cce_init_and_register_handler(L, H1, test_no_exception_handler1, cce_resource_pointer(&flag1));
+    cce_init_and_register_handler(L, H2, test_no_exception_handler2, cce_resource_pointer(&flag2));
     cce_run_body_handlers(L);
   }
   assert(true  == flag1);
@@ -104,8 +104,8 @@ test_with_error (void)
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    cce_init_and_register_handler(L, H1, test_with_error_handler1, (cce_resource_data_t *)&flag1);
-    cce_init_and_register_handler(L, H2, test_with_error_handler2, (cce_resource_data_t *)&flag2);
+    cce_init_and_register_handler(L, H1, test_with_error_handler1, cce_resource_pointer(&flag1));
+    cce_init_and_register_handler(L, H2, test_with_error_handler2, cce_resource_pointer(&flag2));
     cce_raise(L, NULL);
   }
   assert(true == flag1);

@@ -72,8 +72,8 @@ main (void)
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
-      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
+      cce_init_handler(H1, handler1, cce_resource_pointer(&flag1));
+      cce_init_handler(H2, handler2, cce_resource_pointer(&flag2));
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);
@@ -94,8 +94,8 @@ main (void)
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
-      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
+      cce_init_handler(H1, handler1, cce_resource_pointer(&flag1));
+      cce_init_handler(H2, handler2, cce_resource_pointer(&flag2));
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);

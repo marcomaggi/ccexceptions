@@ -3,6 +3,8 @@
 Notes for revision 0.9.0-devel.1
 --------------------------------
 
+* Added preprocessor macro "cce_resource_pointer()".
+
 * Changed the order in which the handlers are called.  When an exception
   is raised: both the clean handlers and the error handlers are invoked;
   the clean handlers are invoked first, in reverse order with respect of

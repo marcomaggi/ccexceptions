@@ -657,6 +657,12 @@ An alias for @code{void}.  We can use it in pointer cast operations to make the 
 @end deftp
 
 
+@deftypefn {Preprocessor Macro} {cce_resource_data_t *} cce_resource_pointer (@var{POINTER})
+Cast the @var{POINTER} to @code{cce_resource_data_t *} and return it.  We can use this macro to make
+the code more readable when initialising exception handlers.
+@end deftypefn
+
+
 @deftypefn {Function Typedef} void cce_resource_destructor_fun_t (cce_resource_data_t * @var{pointer})
 Type of client data destructor functions meant to destroy some ansynchronous resource.  The argument
 @var{pointer} references the client data to destroy.
@@ -731,7 +737,7 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_handler(P_H, clean_handler, P);
+    cce_init_handler(P_H, clean_handler, cce_resource_pointer(P));
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -762,7 +768,7 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_handler(P_H, clean_handler, P, free);
+    cce_init_handler(P_H, clean_handler, cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -786,7 +792,7 @@ main (void)
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
     cce_init_handler(P_H, cce_default_clean_handler_function,
-                     P, free);
+                     cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -842,7 +848,7 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_handler(P_H, error_handler, P);
+    cce_init_handler(P_H, error_handler, cce_resource_pointer(P));
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -873,7 +879,7 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_handler(P_H, error_handler, P, free);
+    cce_init_handler(P_H, error_handler, cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -897,7 +903,7 @@ main (void)
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
     cce_init_handler(P_H, cce_default_error_handler_function,
-                     P, free);
+                     cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -1127,7 +1133,8 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_and_register_handler(L, P_H, clean_handler, P);
+    cce_init_and_register_handler(L, P_H, clean_handler,
+      cce_resource_pointer(P));
 
     /* Do something with "P". */
     cce_run_body_handlers(L);
@@ -1157,7 +1164,8 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_and_register_handler(L, P_H, clean_handler, P, free);
+    cce_init_and_register_handler(L, P_H, clean_handler,
+      cce_resource_pointerP, free);
 
     /* Do something with "P". */
     cce_run_body_handlers(L);
@@ -1181,7 +1189,7 @@ main (void)
     void *  P = cce_sys_malloc(L, 4096);
     cce_init_and_register_handler(L,
       P_H, cce_default_clean_handler_function,
-      P, free);
+      cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -1239,7 +1247,8 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_and_register_handler(L, P_H, error_handler, P);
+    cce_init_and_register_handler(L, P_H, error_handler,
+      cce_resource_pointer(P));
 
     /* Do something with "P". */
     cce_run_body_handlers(L);
@@ -1269,7 +1278,8 @@ main (void)
     cce_run_catch_handlers_final(L);
   @} else @{
     void *  P = cce_sys_malloc(L, 4096);
-    cce_init_and_register_handler(L, P_H, error_handler, P, free);
+    cce_init_and_register_handler(L, P_H, error_handler,
+      cce_resource_pointer(P), free);
 
     /* Do something with "P". */
     cce_run_body_handlers(L);
@@ -1293,7 +1303,7 @@ main (void)
     void *  P = cce_sys_malloc(L, 4096);
     cce_init_and_register_handler(L,
       P_H, cce_default_error_handler_function,
-      P, free);
+      cce_resource_pointer(P), free);
     cce_register_handler(L, P_H);
 
     /* Do something with "P". */
@@ -1576,7 +1586,8 @@ if (cce_location(outer_L)) @{
     /* inner exception handler */
     cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_clean_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
+    cce_register_clean_handler_to_run_body_handlers(inner_L, inner_H,
+      cce_resource_pointer(outer_L));
     /* inner body */
     cce_run_body_handlers(inner_L);
   @}
@@ -1612,7 +1623,8 @@ if (cce_location(outer_L)) @{
     /* inner exception handler */
     cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_clean_handler_to_run_catch_handlers(inner_L, inner_H, outer_L);
+    cce_register_clean_handler_to_run_catch_handlers(inner_L, inner_H,
+      cce_resource_pointer(outer_L));
     /* inner body */
     cce_run_body_handlers(inner_L);
   @}
@@ -1648,7 +1660,8 @@ if (cce_location(outer_L)) @{
     /* inner exception handler */
     cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_error_handler_to_run_body_handlers(inner_L, inner_H, outer_L);
+    cce_register_error_handler_to_run_body_handlers(inner_L, inner_H,
+      cce_resource_pointer(outer_L));
     /* inner body */
     cce_run_body_handlers(inner_L);
   @}
@@ -1684,7 +1697,8 @@ if (cce_location(outer_L)) @{
     /* inner exception handler */
     cce_run_catch_handlers_final(inner_L);
   @} else @{
-    cce_register_error_handler_to_run_catch_handlers(inner_L, inner_H, outer_L);
+    cce_register_error_handler_to_run_catch_handlers(inner_L, inner_H,
+      cce_resource_pointer(outer_L));
     /* inner body */
     cce_run_body_handlers(inner_L);
   @}
