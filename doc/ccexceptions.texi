@@ -583,8 +583,8 @@ should use the more useful functions @cfunc{cce_run_catch_handlers_final} and
 @cfunc{cce_run_catch_handlers_raise}.
 
 @value{PACKAGE} defines @dfn{clean handlers}, which are run as both normal--execution and
-exception-reaction handlers; it also defines @dfn{error handlers}, which are run only as
-exception-reaction handlers.
+exception--reaction handlers; it also defines @dfn{error handlers}, which are run only as
+exception--reaction handlers.
 
 @menu
 * handlers typedefs::           Handlers type definitions.
@@ -628,8 +628,12 @@ Clean handlers are invoked by calling one of the functions: @cfunc{cce_run_body_
 Error handlers are invoked by calling the function @cfunc{cce_run_catch_handlers} or one of its
 variants, @cfunc{cce_run_catch_handlers_final} and @cfunc{cce_run_catch_handlers_raise}.
 
+When an exception is raised: both the clean handlers and the error handlers are invoked; the clean
+handlers are invoked first, in reverse order with respect of their registration; the error handlers
+are invoked last, in reverse order with respect of their registration.
+
 It is strongly advised to allocate instances of these types on the call stack, near the associated
-location instance, rather than to put them into dynamically allocated memory.
+@objtype{cce_location_t} instance, rather than to put them into dynamically allocated memory.
 @end deftp
 
 @c ------------------------------------------------------------------------
@@ -1457,6 +1461,9 @@ allocation.  Handlers are called starting from the last registered one.
 This is a destructive function: once the list has been traversed, it is not valid anymore.  When the
 handler function is applied to the handler structure: the handler structure is completely detached
 from the context of @var{L}, so it can be finalised and its memory released.
+
+The clean handlers are invoked first, in reverse order with respect of their registration; the error
+handlers are invoked last, in reverse order with respect of their registration.
 
 @strong{NOTE} This function must assume that an error handler might access the
 exceptional--condition object associated to @var{L} upon raising the exception, so this function

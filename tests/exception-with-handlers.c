@@ -42,14 +42,14 @@
 static void
 test_no_exception_handler1 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  bool *	flagp = cce_handler_resource_pointer(H);
+  bool volatile *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
 test_no_exception_handler2 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
 {
-  bool *	flagp = cce_handler_resource_pointer(H);
+  bool volatile *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 

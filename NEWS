@@ -1,5 +1,15 @@
 -*- coding: utf-8-unix -*-
 
+Notes for revision 0.9.0-devel.1
+--------------------------------
+
+* Changed the order in which the handlers are called.  When an exception
+  is raised: both the clean handlers and the error handlers are invoked;
+  the clean handlers are invoked first, in reverse order with respect of
+  their registration;  the error handlers  are invoked last,  in reverse
+  order with respect of their registration.
+
+
 Notes for revision 0.9.0-devel.0
 --------------------------------
 

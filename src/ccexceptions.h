@@ -272,9 +272,6 @@ struct cce_handler_t {
   cce_handler_fun_t		*handler_function;
   cce_resource_data_t		*resource_pointer;
   cce_resource_destructor_fun_t	*resource_destructor;
-#if (defined CCE_DONT_USE_TAGGED_POINTERS)
-  bool				is_clean_handler;
-#endif
 };
 
 struct cce_clean_handler_t {
@@ -394,21 +391,21 @@ cce_decl void cce_default_error_handler_function (cce_condition_t const * C, cce
  ** ----------------------------------------------------------------- */
 
 cce_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-					void * resource_pointer)
+					cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-					void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-					void * resource_pointer)
+					cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-					void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 /* ------------------------------------------------------------------ */
@@ -463,24 +460,24 @@ cce_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t
 
 cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-						     void * resource_pointer)
+						     cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-						     void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 /* ------------------------------------------------------------------ */
 
 cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-						     void * resource_pointer)
+						     cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-						     void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 /* ------------------------------------------------------------------ */
@@ -1023,7 +1020,8 @@ struct cce_location_t {
   /* The buffer must be the first member of this struct. */
   sigjmp_buf			buffer;
   cce_condition_t const *	condition;
-  cce_handler_t *		first_handler;
+  cce_handler_t *		first_clean_handler;
+  cce_handler_t *		first_error_handler;
 };
 
 cce_decl void cce_location_init	(cce_destination_t here)
