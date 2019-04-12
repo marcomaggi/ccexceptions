@@ -7,65 +7,76 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This is free software; you can  redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 
 */
 
 
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
 
+/** --------------------------------------------------------------------
+ ** Just run body handlers.
+ ** ----------------------------------------------------------------- */
+
 static void
-handler1 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+just_run_body_handler1 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  bool *	flagp = H->pointer;
-  *flagp = true;
-}
-static void
-handler2 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
-{
-  bool *	flagp = H->pointer;
-  *flagp = true;
-}
-static void
-handler3 (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
-{
-  bool *	flagp = H->pointer;
+  bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
-
+static void
+just_run_body_handler2 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+{
+  bool *	flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+static void
+just_run_body_handler3 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+{
+  bool *	flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+/* ------------------------------------------------------------------ */
+
 static void
 test_just_run_body_handlers()
 /* Just run clean handlers. */
 {
   cce_location_t	L[1];
+  cce_clean_handler_t	H1;
+  cce_clean_handler_t	H2;
+  cce_clean_handler_t	H3;
   bool			flag1 = false;
   bool			flag2 = false;
   bool			flag3 = false;
-  cce_clean_handler_t	H1 = { .handler.function = handler1, .handler.pointer = &flag1 };
-  cce_clean_handler_t	H2 = { .handler.function = handler2, .handler.pointer = &flag2 };
-  cce_clean_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
+  cce_init_handler(&H1, just_run_body_handler1, (cce_resource_data_t *)&flag1);
+  cce_init_handler(&H2, just_run_body_handler2, (cce_resource_data_t *)&flag2);
+  cce_init_handler(&H3, just_run_body_handler3, (cce_resource_data_t *)&flag3);
   cce_register_handler(L, &H1);
   cce_register_handler(L, &H2);
   cce_register_handler(L, &H3);
@@ -77,19 +88,49 @@ test_just_run_body_handlers()
 }
 
 
+/** --------------------------------------------------------------------
+ ** Just run body handlers.
+ ** ----------------------------------------------------------------- */
+
+static void
+just_run_catch_handler1 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+{
+  bool *	flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+static void
+just_run_catch_handler2 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+{
+  bool *	flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+static void
+just_run_catch_handler3 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+{
+  bool *	flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+/* ------------------------------------------------------------------ */
+
 static void
 test_just_run_catch_handlers (void)
 /* Just run clean handlers. */
 {
   cce_location_t	L[1];
+  cce_error_handler_t	H1;
+  cce_error_handler_t	H2;
+  cce_error_handler_t	H3;
   bool			flag1 = false;
   bool			flag2 = false;
   bool			flag3 = false;
-  cce_error_handler_t	H1 = { .handler.function = handler1, .handler.pointer = &flag1 };
-  cce_error_handler_t	H2 = { .handler.function = handler2, .handler.pointer = &flag2 };
-  cce_error_handler_t	H3 = { .handler.function = handler3, .handler.pointer = &flag3 };
 
   cce_location_init(L);
+  cce_init_handler(&H1, just_run_catch_handler1, (cce_resource_data_t *)&flag1);
+  cce_init_handler(&H2, just_run_catch_handler2, (cce_resource_data_t *)&flag2);
+  cce_init_handler(&H3, just_run_catch_handler3, (cce_resource_data_t *)&flag3);
   cce_register_handler(L, &H1);
   cce_register_handler(L, &H2);
   cce_register_handler(L, &H3);
@@ -101,40 +142,41 @@ test_just_run_catch_handlers (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Allocating memory with successful execution.
+ ** ----------------------------------------------------------------- */
+
 typedef struct test_amse_t {
   cce_clean_handler_t	handler;
-  bool *		flagp;
+  bool volatile *	flagp;
 } test_amse_t;
+
 static void
-test_amse_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+test_amse_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  test_amse_t *	H = (test_amse_t *)_H;
-  void *	P = H->handler.handler.pointer;
+  void *	P = cce_handler_resource_pointer(H);
   free(P);
-  *(H->flagp) = true;
+  {
+    CCE_PC(test_amse_t, W, H);
+    *(W->flagp) = true;
+  }
 }
+
 static void
 test_allocating_memory_success_execution (void)
 /* Allocating memory: success execution path. */
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  bool			flag = false;
-  test_amse_t		H = {
-    .handler.handler.function	= test_amse_handler,
-    .handler.handler.pointer	= P,
-    .flagp			= &flag
-  };
+  bool volatile		flag = false;
+  test_amse_t		H = { .flagp = &flag };
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    break;
-
-  default:
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
     P = malloc(4096);
     if (P) {
-      cce_register_handler(L, &H.handler);
+      cce_init_and_register_handler(L, &(H.handler), test_amse_handler, P);
     } else {
       cce_raise(L, NULL);
     }
@@ -145,84 +187,80 @@ test_allocating_memory_success_execution (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Allocating memory with error execution.
+ ** ----------------------------------------------------------------- */
+
 typedef struct test_amee_t {
   cce_clean_handler_t	handler;
-  bool *		flagp;
+  bool volatile *	flagp;
 } test_amee_t;
+
 static void
-test_amee_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+test_amee_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  test_amee_t *	H = (test_amee_t *)_H;
-  void *	P = H->handler.handler.pointer;
+  void *	P = cce_handler_resource_pointer(H);
   free(P);
-  *(H->flagp) = true;
+  {
+    CCE_PC(test_amee_t, W, H);
+    *(W->flagp) = true;
+  }
 }
+
 static void
 test_allocating_memory_exceptional_execution (void)
 /* Allocating memory: exceptional execution path. */
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  bool			flag = false;
-  test_amee_t		H = {
-    .handler.handler.function	= test_amee_handler,
-    .handler.handler.pointer	= P,
-    .flagp			= &flag
-  };
+  bool volatile		flag = false;
+  test_amee_t		H = { .flagp = &flag };
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    break;
-
-  default:
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
     P = malloc(4096);
     if (P) {
-      cce_register_handler(L, &H.handler);
+      cce_init_and_register_handler(L, &(H.handler), test_amee_handler, P);
     } else {
       cce_raise(L, NULL);
     }
     // do something here
-    if (1) {
-      cce_raise(L, NULL);
-    }
-    cce_run_body_handlers(L);
+    cce_raise(L, NULL);
   }
   assert(true == flag);
 }
 
 
+/** --------------------------------------------------------------------
+ ** Constructor scheme with successful execution.
+ ** ----------------------------------------------------------------- */
+
 static void
-test_csse_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+test_csse_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
 {
-  void **	PP = H->pointer;
+  void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
 }
+
 static void *
 test_csse_constructor (cce_location_t * upper_L)
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  cce_error_handler_t	H = {
-    .handler.function	= test_csse_constructor_handler,
-    .handler.pointer	= &P
-  };
+  cce_error_handler_t	H[1];
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    cce_raise(upper_L, NULL);
-    break;
-
-  default:
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(upper_L, L);
+  } else {
     P = malloc(4096);
     if (P) {
-      cce_register_handler(L, &H);
+      cce_init_and_register_handler(L, H, test_csse_constructor_handler, (cce_resource_data_t *)&P);
     } else {
       cce_raise(L, NULL);
     }
-    // do something here
+    // do_something_with(P);
     if (0) {
       cce_raise(L, NULL);
     }
@@ -235,39 +273,34 @@ test_csse_constructor (cce_location_t * upper_L)
 
 typedef struct test_csse_t {
   cce_clean_handler_t	handler;
-  bool *		flagp;
+  bool volatile *	flagp;
 } test_csse_t;
 
 static void
-test_csse_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+test_csse_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  test_csse_t *	H  = (test_csse_t *)_H;
-  void **	PP = H->handler.handler.pointer;
+  void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
-  *(H->flagp) = true;
+  {
+    CCE_PC(test_csse_t, W, H);
+    *(W->flagp) = true;
+  }
 }
+
 static void
 test_csse_caller (void)
 {
   cce_location_t	L[1];
-  void *		P;
-  bool			flag = false;
-  test_csse_t		H = {
-    .handler.handler.function	= test_csse_caller_handler,
-    .handler.handler.pointer	= &P,
-    .flagp			= &flag
-  };
+  bool volatile		flag = false;
+  test_csse_t		H = { .flagp = &flag };
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    break;
-
-  default:
-    P = test_csse_constructor(L);
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
+    void *	P = test_csse_constructor(L);
     assert(NULL != P);
-    cce_register_handler(L, &H.handler);
+    cce_init_and_register_handler(L, &H.handler, test_csse_caller_handler, P);
     // do_something_with(P);
     cce_run_body_handlers(L);
   }
@@ -282,38 +315,36 @@ test_constructor_scheme_success_execution (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Constructor scheme with error execution.
+ ** ----------------------------------------------------------------- */
+
 static void
-test_csee_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+test_csee_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
 {
-  void **	PP = H->pointer;
+  void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
 }
+
 static void *
 test_csee_constructor (cce_location_t * upper_L)
 {
   cce_location_t	L[1];
   void *		P = NULL;
-  cce_error_handler_t	H = {
-    .handler.function	= test_csee_constructor_handler,
-    .handler.pointer	= &P
-  };
+  cce_error_handler_t	H[1];
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    cce_raise(upper_L, NULL);
-    break;
-
-  default:
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(upper_L, L);
+  } else {
     P = malloc(4096);
     if (P) {
-      cce_register_handler(L, &H);
+      cce_init_and_register_handler(L, H, test_csee_constructor_handler, (cce_resource_data_t *)&P);
     } else {
       cce_raise(L, NULL);
     }
-    // do something here
-    if (1) {
+    // do_something_with(P);
+    if (0) {
       cce_raise(L, NULL);
     }
     cce_run_body_handlers(L);
@@ -325,17 +356,19 @@ test_csee_constructor (cce_location_t * upper_L)
 
 typedef struct test_csee_t {
   cce_clean_handler_t	handler;
-  bool *		flagp;
+  bool volatile *	flagp;
 } test_csee_t;
 
 static void
-test_csee_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * _H)
+test_csee_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  test_csee_t *	H  = (test_csee_t *)_H;
-  void **	PP = H->handler.handler.pointer;
+  void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
-  *(H->flagp) = true;
+  {
+    CCE_PC(test_csee_t, W, H);
+    *(W->flagp) = true;
+  }
 }
 
 static void
@@ -343,24 +376,15 @@ test_constructor_scheme_exceptional_execution (void)
 /* Constructor scheme: exceptional path. */
 {
   cce_location_t	L[1];
-  void *		P;
-  bool			flag = false;
-  test_csee_t		H = {
-    .handler.handler.function	= test_csee_caller_handler,
-    .handler.handler.pointer	= &P,
-    .flagp			= &flag
-  };
+  bool volatile		flag = false;
+  test_csee_t		H = { .flagp = &flag };
 
-  switch (cce_location(L)) {
-  case CCE_ERROR:
-    cce_run_catch_handlers(L);
-    flag = true;
-    break;
-
-  default:
-    P = test_csee_constructor(L);
+  if (cce_location(L)) {
+    cce_run_catch_handlers_final(L);
+  } else {
+    void *	P = test_csee_constructor(L);
     assert(NULL != P);
-    cce_register_handler(L, &H.handler);
+    cce_init_and_register_handler(L, &H.handler, test_csee_caller_handler, P);
     // do_something_with(P);
     cce_run_body_handlers(L);
   }
@@ -368,10 +392,14 @@ test_constructor_scheme_exceptional_execution (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Handler removal.
+ ** ----------------------------------------------------------------- */
+
 static void
-handler_removal_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+handler_removal_function (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  bool	* flag = H->pointer;
+  bool	* flag = cce_handler_resource_pointer(H);
   *flag = true;
 }
 
@@ -380,21 +408,18 @@ test_handler_removal_1_0 (void)
 /* No handler removal in this function: it just tests the code logic. */
 {
   cce_location_t	L[1];
-  cce_clean_handler_t	H1, H2, H3;
-  bool			flag1 = false, flag2 = false, flag3 = false;
+  cce_clean_handler_t	H1[1], H2[1], H3[1];
+  bool volatile		flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.handler.function = handler_removal_function;
-    H2.handler.function = handler_removal_function;
-    H3.handler.function = handler_removal_function;
-    H1.handler.pointer  = &flag1;
-    H2.handler.pointer  = &flag2;
-    H3.handler.pointer  = &flag3;
-    cce_register_handler(L, &H1);
-    cce_register_handler(L, &H2);
-    cce_register_handler(L, &H3);
+    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
+    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
+    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_register_handler(L, H1);
+    cce_register_handler(L, H2);
+    cce_register_handler(L, H3);
     cce_run_body_handlers(L);
   }
 
@@ -408,22 +433,19 @@ test_handler_removal_1_1 (void)
 /* Remove the first handler. */
 {
   cce_location_t	L[1];
-  cce_clean_handler_t	H1, H2, H3;
-  bool			flag1 = false, flag2 = false, flag3 = false;
+  cce_clean_handler_t	H1[1], H2[1], H3[1];
+  bool volatile		flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.handler.function = handler_removal_function;
-    H2.handler.function = handler_removal_function;
-    H3.handler.function = handler_removal_function;
-    H1.handler.pointer  = &flag1;
-    H2.handler.pointer  = &flag2;
-    H3.handler.pointer  = &flag3;
-    cce_register_handler(L, &H1);
-    cce_register_handler(L, &H2);
-    cce_register_handler(L, &H3);
-    cce_forget_clean_handler(L, &H1);
+    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
+    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
+    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_register_handler(L, H1);
+    cce_register_handler(L, H2);
+    cce_register_handler(L, H3);
+    cce_forget_handler(L, H1);
     cce_run_body_handlers(L);
   }
 
@@ -437,22 +459,19 @@ test_handler_removal_1_2 (void)
 /* Remove the second handler. */
 {
   cce_location_t	L[1];
-  cce_clean_handler_t	H1, H2, H3;
-  bool			flag1 = false, flag2 = false, flag3 = false;
+  cce_clean_handler_t	H1[1], H2[1], H3[1];
+  bool volatile		flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.handler.function = handler_removal_function;
-    H2.handler.function = handler_removal_function;
-    H3.handler.function = handler_removal_function;
-    H1.handler.pointer  = &flag1;
-    H2.handler.pointer  = &flag2;
-    H3.handler.pointer  = &flag3;
-    cce_register_handler(L, &H1);
-    cce_register_handler(L, &H2);
-    cce_register_handler(L, &H3);
-    cce_forget_clean_handler(L, &H2);
+    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
+    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
+    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_register_handler(L, H1);
+    cce_register_handler(L, H2);
+    cce_register_handler(L, H3);
+    cce_forget_handler(L, H2);
     cce_run_body_handlers(L);
   }
 
@@ -466,22 +485,19 @@ test_handler_removal_1_3 (void)
 /* Remove the third handler. */
 {
   cce_location_t	L[1];
-  cce_clean_handler_t	H1, H2, H3;
-  bool			flag1 = false, flag2 = false, flag3 = false;
+  cce_clean_handler_t	H1[1], H2[1], H3[1];
+  bool volatile		flag1 = false, flag2 = false, flag3 = false;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    H1.handler.function = handler_removal_function;
-    H2.handler.function = handler_removal_function;
-    H3.handler.function = handler_removal_function;
-    H1.handler.pointer  = &flag1;
-    H2.handler.pointer  = &flag2;
-    H3.handler.pointer  = &flag3;
-    cce_register_handler(L, &H1);
-    cce_register_handler(L, &H2);
-    cce_register_handler(L, &H3);
-    cce_forget_clean_handler(L, &H3);
+    cce_init_handler(H1, handler_removal_function, (cce_resource_data_t *)&flag1);
+    cce_init_handler(H2, handler_removal_function, (cce_resource_data_t *)&flag2);
+    cce_init_handler(H3, handler_removal_function, (cce_resource_data_t *)&flag3);
+    cce_register_handler(L, H1);
+    cce_register_handler(L, H2);
+    cce_register_handler(L, H3);
+    cce_forget_handler(L, H3);
     cce_run_body_handlers(L);
   }
 
@@ -491,8 +507,12 @@ test_handler_removal_1_3 (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Let's go.
+ ** ----------------------------------------------------------------- */
+
 int
-main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
+main (void)
 {
   test_just_run_body_handlers();
   test_just_run_catch_handlers();

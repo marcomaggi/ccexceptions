@@ -33,65 +33,5 @@
 
 #include "ccexceptions-internals.h"
 
-
-/** --------------------------------------------------------------------
- ** Exceptional-condition object-types.
- ** ----------------------------------------------------------------- */
-
-bool
-cce_is_condition (cce_condition_t const * const C, cce_descriptor_t const * const descriptor)
-{
-  return cce_condition_is(C, descriptor);
-}
-
-
-/** --------------------------------------------------------------------
- ** Predefined POSIX exception handler: malloc pointer.
- ** ----------------------------------------------------------------- */
-
-__attribute__((__deprecated__))
-void
-cce_clean_handler_malloc_init (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
-{
-  cce_init_clean_handler_malloc(L, H, pointer);
-}
-
-__attribute__((__deprecated__))
-void
-cce_error_handler_malloc_init (cce_location_t * L, cce_error_handler_t * H, void * pointer)
-{
-  cce_init_error_handler_malloc(L, H, pointer);
-}
-
-
-/** --------------------------------------------------------------------
- ** Locations API.
- ** ----------------------------------------------------------------- */
-
-__attribute__((__deprecated__))
-void
-cce_run_clean_handlers (cce_location_t * L)
-{
-  cce_run_body_handlers(L);
-}
-
-__attribute__((__deprecated__))
-void
-cce_run_error_handlers (cce_location_t * L)
-{
-  cce_run_catch_handlers(L);
-}
-
-
-/** --------------------------------------------------------------------
- ** Miscellaneous.
- ** ----------------------------------------------------------------- */
-
-__attribute__((__deprecated__))
-void
-cce_descriptor_set_root_parent (cce_descriptor_t * D)
-{
-  cce_descriptor_set_parent_to(cce_descriptor_root_t)(D);
-}
 
 /* end of file */

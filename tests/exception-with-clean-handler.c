@@ -38,19 +38,17 @@
  ** ----------------------------------------------------------------- */
 
 static void
-handler1 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
+handler1 (cce_condition_t const * const C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  CCE_PC(cce_clean_handler_t const, const H, _H);
-  bool	* flagp = cce_handler_handler(H)->pointer;
+  bool	* flagp = cce_handler_resource_pointer(H);
 
   *flagp = true;
 }
 
 static void
-handler2 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
+handler2 (cce_condition_t const * const C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  CCE_PC(cce_clean_handler_t const , const H, _H);
-  bool	* flagp = cce_handler_handler(H)->pointer;
+  bool	* flagp = cce_handler_resource_pointer(H);
 
   *flagp = true;
 }
@@ -66,16 +64,16 @@ main (void)
   /* no exception */
   {
     cce_location_t	L[1];
-    bool	flag1 = false;
-    bool	flag2 = false;
     cce_clean_handler_t	H1[1];
     cce_clean_handler_t	H2[1];
+    volatile bool	flag1 = false;
+    volatile bool	flag2 = false;
 
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, &flag1, handler1);
-      cce_init_handler(H2, &flag2, handler2);
+      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
+      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);
@@ -88,16 +86,16 @@ main (void)
   /* raise an exception */
   {
     cce_location_t	L[1];
-    bool	flag1 = false;
-    bool	flag2 = false;
     cce_clean_handler_t	H1[1];
     cce_clean_handler_t	H2[1];
+    volatile bool	flag1 = false;
+    volatile bool	flag2 = false;
 
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, &flag1, handler1);
-      cce_init_handler(H2, &flag2, handler2);
+      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
+      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);

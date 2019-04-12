@@ -9,20 +9,17 @@
 
   Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This is free software; you  can redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 
 */
 
@@ -84,24 +81,16 @@ cce_sys_calloc (cce_location_t * L, size_t count, size_t eltsize)
  ** Predefined POSIX exception handler: malloc pointer.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1,2)))
-static void
-cce_handler_malloc_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+void
+cce_init_and_register_clean_handler_malloc (cce_location_t * L, cce_clean_handler_t * const H, void * const pointer)
 {
-  free(H->pointer);
-  if (0) { fprintf(stderr, "%s: done\n", __func__); }
+  cce_init_and_register_handler(L, H, cce_default_clean_handler_function, pointer, free);
 }
 
 void
-cce_init_clean_handler_malloc (cce_location_t * L, cce_clean_handler_t * H, void * pointer)
+cce_init_and_register_error_handler_malloc (cce_location_t * L, cce_error_handler_t * const H, void * const pointer)
 {
-  cce_init_handler(L, H, pointer, cce_handler_malloc_function);
-}
-
-void
-cce_init_error_handler_malloc (cce_location_t * L, cce_error_handler_t * H, void * pointer)
-{
-  cce_init_handler(L, H, pointer, cce_handler_malloc_function);
+  cce_init_and_register_handler(L, H, cce_default_error_handler_function, pointer, free);
 }
 
 
@@ -113,7 +102,7 @@ void *
 cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
 {
   void *	P = cce_sys_malloc(L, size);
-  cce_init_clean_handler_malloc(L, P_H, P);
+  cce_init_and_register_clean_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -121,7 +110,7 @@ void *
 cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t size)
 {
   void *	P = cce_sys_malloc(L, size);
-  cce_init_error_handler_malloc(L, P_H, P);
+  cce_init_and_register_error_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -130,9 +119,9 @@ cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, siz
 void *
 cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * old_P, size_t newsize)
 {
-  if (cce_handler_handler(P_H)->pointer == old_P) {
+  if (cce_handler_handler(P_H)->resource_pointer == old_P) {
     void *	P = cce_sys_realloc(L, old_P, newsize);
-    cce_handler_handler(P_H)->pointer = P;
+    P_H->handler.resource_pointer = P;
     return P;
   } else {
     cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
@@ -142,9 +131,9 @@ cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, vo
 void *
 cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * old_P, size_t newsize)
 {
-  if (cce_handler_handler(P_H)->pointer == old_P) {
+  if (cce_handler_handler(P_H)->resource_pointer == old_P) {
     void *	P = cce_sys_realloc(L, old_P, newsize);
-    cce_handler_handler(P_H)->pointer = P;
+    P_H->handler.resource_pointer = P;
     return P;
   } else {
     cce_raise(L, cce_condition_new_invalid_argument(L, __func__, 2));
@@ -157,7 +146,7 @@ void *
 cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
 {
   void *	P = cce_sys_calloc(L, count, eltsize);
-  cce_init_clean_handler_malloc(L, P_H, P);
+  cce_init_and_register_clean_handler_malloc(L, P_H, P);
   return P;
 }
 
@@ -165,7 +154,7 @@ void *
 cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
 {
   void *	P = cce_sys_calloc(L, count, eltsize);
-  cce_init_error_handler_malloc(L, P_H, P);
+  cce_init_and_register_error_handler_malloc(L, P_H, P);
   return P;
 }
 

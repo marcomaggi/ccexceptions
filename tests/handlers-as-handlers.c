@@ -7,22 +7,19 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This is free software; you can  redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 
 */
 
@@ -43,26 +40,31 @@
  ** ----------------------------------------------------------------- */
 
 static void
-flag_handler (cce_condition_t const * C CCE_UNUSED, cce_handler_t * H)
+flag_clean_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
 {
-  CCE_PC(bool volatile, flagp, H->pointer);
+  bool volatile	*flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
+
+static void
+flag_error_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+{
+  bool volatile	*flagp = cce_handler_resource_pointer(H);
+  *flagp = true;
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 register_clean_flag_handler (cce_destination_t L, cce_clean_handler_t * H, bool volatile * flagp)
 {
-  H->handler.function	= flag_handler;
-  H->handler.pointer	= (void *)flagp;
-  cce_register_handler(L, H);
+  cce_init_and_register_handler(L, H, flag_clean_handler, (cce_resource_data_t *)flagp);
 }
 
 void
 register_error_flag_handler (cce_destination_t L, cce_error_handler_t * H, bool volatile * flagp)
 {
-  H->handler.function	= flag_handler;
-  H->handler.pointer	= (void *)flagp;
-  cce_register_handler(L, H);
+  cce_init_and_register_handler(L, H, flag_error_handler, (cce_resource_data_t *)flagp);
 }
 
 

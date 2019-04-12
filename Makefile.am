@@ -58,13 +58,12 @@ check_PROGRAMS	= \
 	tests/setjmp					\
 	tests/no-exceptions				\
 	tests/exception-no-handlers			\
-	tests/exception-with-cleanup-handler		\
+	tests/exception-with-clean-handler		\
 	tests/exception-with-error-handler		\
 	tests/exception-with-handlers			\
 	tests/handlers-routines				\
 	tests/handlers-as-handlers			\
 	tests/conditions-raising			\
-	tests/conditions-hierarchy			\
 	tests/conditions-example			\
 	tests/conditions-tests				\
 	tests/tracing					\
@@ -115,8 +114,8 @@ tests_no_exceptions_LDADD			= $(ccexceptions_tests_ldadd)
 tests_exception_no_handlers_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_exception_no_handlers_LDADD		= $(ccexceptions_tests_ldadd)
 
-tests_exception_with_cleanup_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_exception_with_cleanup_handler_LDADD	= $(ccexceptions_tests_ldadd)
+tests_exception_with_clean_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_exception_with_clean_handler_LDADD	= $(ccexceptions_tests_ldadd)
 
 tests_exception_with_error_handler_CPPFLAGS	= $(ccexceptions_tests_cppflags)
 tests_exception_with_error_handler_LDADD	= $(ccexceptions_tests_ldadd)
@@ -135,9 +134,6 @@ tests_handlers_as_handlers_LDADD		= $(ccexceptions_tests_ldadd)
 
 tests_conditions_raising_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_conditions_raising_LDADD			= $(ccexceptions_tests_ldadd)
-
-tests_conditions_hierarchy_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_conditions_hierarchy_LDADD		= $(ccexceptions_tests_ldadd)
 
 tests_conditions_example_CPPFLAGS		= $(ccexceptions_tests_cppflags)
 tests_conditions_example_LDADD			= $(ccexceptions_tests_ldadd)

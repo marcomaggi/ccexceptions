@@ -50,10 +50,22 @@ dynamic_memory_destructor (void * pointer)
 }
 
 static void
-dynamic_memory_handler (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * H)
+dynamic_memory_clean_handler (cce_condition_t const * const C CCE_UNUSED, cce_clean_handler_t const * H)
 {
+  cce_resource_destructor_fun_t *	destructor = cce_handler_resource_destructor(H);
+
   dynamic_memory_handled = true;
-  H->destructor(H->pointer);
+  destructor(cce_handler_resource_pointer(H));
+  if (1) { fprintf(stderr, "%s: done\n", __func__); }
+}
+
+static void
+dynamic_memory_error_handler (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * H)
+{
+  cce_resource_destructor_fun_t *	destructor = cce_handler_resource_destructor(H);
+
+  dynamic_memory_handled = true;
+  destructor(cce_handler_resource_pointer(H));
   if (1) { fprintf(stderr, "%s: done\n", __func__); }
 }
 
@@ -73,7 +85,7 @@ test_dynamic_memory_clean_handler (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(P_H, P, dynamic_memory_handler, dynamic_memory_destructor);
+    cce_init_handler(P_H, dynamic_memory_clean_handler, P, dynamic_memory_destructor);
     cce_register_handler(L, P_H);
 
     cce_run_body_handlers(L);
@@ -96,7 +108,7 @@ test_dynamic_memory_error_handler (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(P_H, P, dynamic_memory_handler, dynamic_memory_destructor);
+    cce_init_handler(P_H, dynamic_memory_error_handler, P, dynamic_memory_destructor);
     cce_register_handler(L, P_H);
 
     cce_raise(L, NULL);
@@ -121,7 +133,7 @@ test_dynamic_memory_clean_handler_default_destructor (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(P_H, P, cce_default_destructor_handler, dynamic_memory_destructor);
+    cce_init_handler(P_H, dynamic_memory_clean_handler, P, dynamic_memory_destructor);
     cce_register_handler(L, P_H);
 
     cce_run_body_handlers(L);
@@ -142,7 +154,7 @@ test_dynamic_memory_error_handler_default_destructor (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(P_H, P, cce_default_destructor_handler, dynamic_memory_destructor);
+    cce_init_handler(P_H, dynamic_memory_error_handler, P, dynamic_memory_destructor);
     cce_register_handler(L, P_H);
 
     cce_raise(L, NULL);
@@ -165,7 +177,7 @@ test_dynamic_memory_init_and_register_clean_handler_default_destructor (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(L, P_H, P, cce_default_destructor_handler, free);
+    cce_init_and_register_handler(L, P_H, cce_default_clean_handler_function, P, free);
     cce_run_body_handlers(L);
   }
 }
@@ -182,7 +194,7 @@ test_dynamic_memory_init_and_register_error_handler_default_destructor (void)
     cce_run_catch_handlers_final(L);
   } else {
     void	*P = cce_sys_malloc(L, 256);
-    cce_init_handler(L, P_H, P, cce_default_destructor_handler, free);
+    cce_init_and_register_handler(L, P_H, cce_default_error_handler_function, P, free);
     cce_raise(L, NULL);
     cce_run_body_handlers(L);
   }

@@ -20,6 +20,14 @@ Notes for revision 0.8.0-devel.14
 * Added macros:
 
   cce_init_handler
+  cce_init_and_register_handler
+
+  and related functions.
+
+* BACKWARDS  INCOMPATIBILITY Removed  all the  deprecated functions  and
+  macros.
+
+* BACKWARDS INCOMPATIBILITY General overhaul of handlers API.
 
 
 Notes for revision 0.8.0-devel.13

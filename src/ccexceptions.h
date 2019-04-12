@@ -261,16 +261,19 @@ typedef cce_location_t *			cce_destination_t;
  ** Exception handlers: type definitions.
  ** ----------------------------------------------------------------- */
 
-typedef void cce_handler_fun_t    (cce_condition_t const * C, cce_handler_t * H);
-typedef void cce_destructor_fun_t (void * pointer);
+typedef void cce_handler_fun_t       (cce_condition_t const * C, cce_handler_t       const * H);
+typedef void cce_clean_handler_fun_t (cce_condition_t const * C, cce_clean_handler_t const * H);
+typedef void cce_error_handler_fun_t (cce_condition_t const * C, cce_error_handler_t const * H);
+typedef void	cce_resource_data_t;
+typedef void cce_resource_destructor_fun_t (cce_resource_data_t * pointer);
 
 struct cce_handler_t {
-  cce_handler_t		*next_handler;
-  cce_handler_fun_t	*function;
-  void			*pointer;
-  cce_destructor_fun_t	*destructor;
+  cce_handler_t			*next_handler;
+  cce_handler_fun_t		*handler_function;
+  cce_resource_data_t		*resource_pointer;
+  cce_resource_destructor_fun_t	*resource_destructor;
 #if (defined CCE_DONT_USE_TAGGED_POINTERS)
-  bool			is_clean_handler;
+  bool				is_clean_handler;
 #endif
 };
 
@@ -284,7 +287,7 @@ struct cce_error_handler_t {
 
 
 /** --------------------------------------------------------------------
- ** Exception handlers: accessors.
+ ** Exception handlers: core handler accessors.
  ** ----------------------------------------------------------------- */
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
@@ -324,11 +327,110 @@ cce_error_handler_const_handler (cce_error_handler_t const * const H)
 
 
 /** --------------------------------------------------------------------
- ** Exception handlers: registration and execution.
+ ** Exception handlers: resource pointer accessors.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_default_destructor_handler (cce_condition_t const * C, cce_handler_t * H)
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+static inline void *
+cce_clean_handler_resource_pointer (cce_clean_handler_t const * const H)
+{
+  return H->handler.resource_pointer;
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+static inline void *
+cce_error_handler_resource_pointer (cce_error_handler_t const * const H)
+{
+  return H->handler.resource_pointer;
+}
+
+#define cce_handler_resource_pointer(H)					\
+  _Generic((H),								\
+	   cce_clean_handler_t       *: cce_clean_handler_resource_pointer, \
+	   cce_error_handler_t       *: cce_error_handler_resource_pointer, \
+	   cce_clean_handler_t const *: cce_clean_handler_resource_pointer, \
+	   cce_error_handler_t const *: cce_error_handler_resource_pointer)(H)
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: resource destructor accessors.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline cce_resource_destructor_fun_t *
+cce_clean_handler_resource_destructor (cce_clean_handler_t const * const H)
+{
+  return H->handler.resource_destructor;
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline cce_resource_destructor_fun_t *
+cce_error_handler_resource_destructor (cce_error_handler_t const * const H)
+{
+  return H->handler.resource_destructor;
+}
+
+#define cce_handler_resource_destructor(H)				\
+  _Generic((H),								\
+	   cce_clean_handler_t       *: cce_clean_handler_resource_destructor, \
+	   cce_error_handler_t       *: cce_error_handler_resource_destructor, \
+	   cce_clean_handler_t const *: cce_clean_handler_resource_destructor, \
+	   cce_error_handler_t const *: cce_error_handler_resource_destructor)(H)
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: default handler functions.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_default_clean_handler_function (cce_condition_t const * C, cce_clean_handler_t const * H)
   __attribute__((__nonnull__(1,2)));
+
+cce_decl void cce_default_error_handler_function (cce_condition_t const * C, cce_error_handler_t const * H)
+  __attribute__((__nonnull__(1,2)));
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: initialisation only.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+					void * resource_pointer)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
+cce_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+					void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
+/* ------------------------------------------------------------------ */
+
+cce_decl void cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+					void * resource_pointer)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
+cce_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+					void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+  __attribute__((__leaf__,__nonnull__(1,2)));
+
+/* ------------------------------------------------------------------ */
+
+#define cce_init_handler_3(HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER) \
+  _Generic((HANDLER_STRUCT),						\
+	   cce_clean_handler_t	*:	cce_init_clean_handler_3,	\
+	   cce_error_handler_t	*:	cce_init_error_handler_3)	\
+  (HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER)
+
+#define cce_init_handler_4(HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR) \
+  _Generic((HANDLER_STRUCT),						\
+	   cce_clean_handler_t	*:	cce_init_clean_handler_4,	\
+	   cce_error_handler_t	*:	cce_init_error_handler_4)	\
+  (HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR)
+
+#define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
+ ** Exception handlers: registration.
+ ** ----------------------------------------------------------------- */
 
 cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
@@ -336,102 +438,66 @@ cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler
 cce_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
+#define cce_register_handler(L,H)					\
+  _Generic((H),								\
+	   cce_clean_handler_t *: cce_register_clean_handler,		\
+	   cce_error_handler_t *: cce_register_error_handler)(L,H)
+
+/* ------------------------------------------------------------------ */
+
 cce_decl void cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 cce_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-#define cce_register_handler(L,H)					\
+#define cce_forget_handler(L,H)						\
   _Generic((H),								\
-	   cce_clean_handler_t *: cce_register_clean_handler,		\
-	   cce_error_handler_t *: cce_register_error_handler)((L),(H))
-
-
-/** --------------------------------------------------------------------
- ** Exception handlers: initialisation only.
- ** ----------------------------------------------------------------- */
-
-cce_decl void cce_init_only_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-  __attribute__((__leaf__,__nonnull__(1,3)));
-
-cce_decl void cce_init_only_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-  __attribute__((__leaf__,__nonnull__(1,3,4)));
-
-/* ------------------------------------------------------------------ */
-
-cce_decl void cce_init_only_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-  __attribute__((__leaf__,__nonnull__(1,3)));
-
-cce_decl void cce_init_only_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun,
-					     cce_destructor_fun_t * destructor)
-  __attribute__((__leaf__,__nonnull__(1,3,4)));
-
-/* ------------------------------------------------------------------ */
-
-cce_decl void cce_init_only_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-  __attribute__((__leaf__,__nonnull__(1,3)));
-
-cce_decl void cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun,
-					     cce_destructor_fun_t * destructor)
-  __attribute__((__leaf__,__nonnull__(1,3,4)));
+	   cce_clean_handler_t *: cce_forget_clean_handler,		\
+	   cce_error_handler_t *: cce_forget_error_handler)(L,H)
 
 
 /** --------------------------------------------------------------------
  ** Exception handlers: initialisation and registration.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
-						     cce_handler_fun_t * fun)
-  __attribute__((__leaf__,__nonnull__(1,2,4)));
+cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L,
+						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+						     void * resource_pointer)
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
-						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-  __attribute__((__leaf__,__nonnull__(1,2,4)));
+cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L,
+						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+						     void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
-						     cce_handler_fun_t * fun)
-  __attribute__((__leaf__,__nonnull__(1,2,4)));
+cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L,
+						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+						     void * resource_pointer)
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
-						     cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-  __attribute__((__leaf__,__nonnull__(1,2,4)));
+cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
+						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+						     void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+  __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-
-/** --------------------------------------------------------------------
- ** Exception handlers: initialisation dispatching macros.
- ** ----------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
 
-/* This  prototype  exists   only  to  signal  an  invalid  dispatch   in  the  macro
-   "cce_init_handler_4". */
-cce_decl void cce_invalid_macro_dispatch_over_argument_type (void);
+#define cce_init_and_register_handler_4(LOCATION,HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER) \
+  _Generic((HANDLER_STRUCT),						\
+	   cce_clean_handler_t	*:	cce_init_and_register_clean_handler_4, \
+	   cce_error_handler_t	*:	cce_init_and_register_error_handler_4) \
+  (LOCATION, HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER)
 
-#define cce_init_handler_3(H,POINTER,FUNCTION)				\
-  _Generic((H),								\
-	   cce_handler_t	*:	cce_init_only_handler_3,	\
-	   cce_clean_handler_t	*:	cce_init_only_clean_handler_3,	\
-	   cce_error_handler_t	*:	cce_init_only_error_handler_3)(H,POINTER,FUNCTION)
+#define cce_init_and_register_handler_5(LOCATION,HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR) \
+  _Generic((HANDLER_STRUCT),						\
+	   cce_clean_handler_t *: cce_init_and_register_clean_handler_5, \
+	   cce_error_handler_t *: cce_init_and_register_error_handler_5) \
+  (LOCATION, HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR)
 
-#define cce_init_handler_4(FIRST,SECOND,THIRD,FOURTH)			\
-  _Generic((FIRST),							\
-	   cce_destination_t	 :	_Generic((SECOND),		\
-						 cce_clean_handler_t	*:	cce_init_and_register_clean_handler_4, \
-						 cce_error_handler_t	*:	cce_init_and_register_error_handler_4, \
-						 cce_handler_t		*:	cce_invalid_macro_dispatch_over_argument_type, \
-						 void			*:	cce_invalid_macro_dispatch_over_argument_type), \
-	   cce_handler_t	*:	cce_init_only_handler_4,	\
-	   cce_clean_handler_t	*:	cce_init_only_clean_handler_4,	\
-	   cce_error_handler_t	*:	cce_init_only_error_handler_4)(FIRST,SECOND,THIRD,FOURTH)
-
-#define cce_init_handler_5(L,H,POINTER,FUNCTION,DESTRUCTOR)		\
-  _Generic((H),								\
-	   cce_clean_handler_t	*:	cce_init_and_register_clean_handler_5, \
-	   cce_error_handler_t	*:	cce_init_and_register_error_handler_5, \
-	   cce_handler_t	*:	cce_invalid_macro_dispatch_over_argument_type)(L,H,POINTER,FUNCTION,DESTRUCTOR)
-
-#define cce_init_handler(...)	_CCE_VFUNC(cce_init_handler,__VA_ARGS__)
+#define cce_init_and_register_handler(...)	_CCE_VFUNC(cce_init_and_register_handler,__VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -513,8 +579,6 @@ struct cce_condition_root_t {
   cce_condition_t	condition;
 };
 
-cce_decl cce_descriptor_root_t const * const cce_descriptor_root_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -538,9 +602,6 @@ struct cce_descriptor_unknown_t {
 struct cce_condition_unknown_t {
   cce_condition_root_t	root;
 };
-
-cce_decl cce_descriptor_unknown_t const * const	cce_descriptor_unknown_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_unknown_t  const * const	cce_condition_unknown_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -569,9 +630,6 @@ struct cce_condition_break_t {
   cce_condition_root_t	root;
 };
 
-cce_decl cce_descriptor_break_t const * const	cce_descriptor_break_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_break_t  const * const	cce_condition_break_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -598,9 +656,6 @@ struct cce_descriptor_error_t {
 struct cce_condition_error_t {
   cce_condition_root_t	root;
 };
-
-cce_decl cce_descriptor_error_t const * const	cce_descriptor_error_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_error_t  const * const	cce_condition_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -629,9 +684,6 @@ struct cce_condition_runtime_error_t {
   cce_condition_error_t	error;
 };
 
-cce_decl cce_descriptor_runtime_error_t const * const	cce_descriptor_runtime_error_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_runtime_error_t  const * const	cce_condition_runtime_error_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -658,9 +710,6 @@ struct cce_descriptor_logic_error_t {
 struct cce_condition_logic_error_t {
   cce_condition_error_t	error;
 };
-
-cce_decl cce_descriptor_logic_error_t const * const	cce_descriptor_logic_error_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_logic_error_t  const * const	cce_condition_logic_error_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -691,9 +740,6 @@ struct cce_condition_unreachable_t {
   char const *			funcname;
   int				linenum;
 };
-
-cce_decl cce_descriptor_unreachable_t const * const	cce_descriptor_unreachable_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_unreachable_t  const * const	cce_condition_unreachable_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -735,9 +781,6 @@ struct cce_condition_unimplemented_t {
   cce_condition_logic_error_t	logic_error;
 };
 
-cce_decl cce_descriptor_unimplemented_t const * const	cce_descriptor_unimplemented_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_unimplemented_t const  * const	cce_condition_unimplemented_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -770,8 +813,6 @@ struct cce_condition_invalid_argument_t {
   unsigned		index;
 };
 
-cce_decl cce_descriptor_invalid_argument_t const * cce_descriptor_invalid_argument_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -801,9 +842,6 @@ struct cce_condition_math_error_t {
   cce_condition_runtime_error_t	runtime_error;
 };
 
-cce_decl cce_descriptor_math_error_t const * const	cce_descriptor_math_error_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_math_error_t  const * const	cce_condition_math_error_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -830,9 +868,6 @@ struct cce_descriptor_math_nan_t {
 struct cce_condition_math_nan_t {
   cce_condition_math_error_t	math_error;
 };
-
-cce_decl cce_descriptor_math_nan_t const * const	cce_descriptor_math_nan_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_math_nan_t  const * const	cce_condition_math_nan_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -861,9 +896,6 @@ struct cce_condition_math_infinity_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_infinity_t const * const	cce_descriptor_math_infinity_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_math_infinity_t  const * const	cce_condition_math_infinity_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -891,9 +923,6 @@ struct cce_condition_math_overflow_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl cce_descriptor_math_overflow_t const * const	cce_descriptor_math_overflow_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_math_overflow_t  const * const	cce_condition_math_overflow_ptr __attribute__((__deprecated__));
-
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
@@ -920,9 +949,6 @@ struct cce_descriptor_math_underflow_t {
 struct cce_condition_math_underflow_t {
   cce_condition_math_error_t	math_error;
 };
-
-cce_decl cce_descriptor_math_underflow_t const * const	cce_descriptor_math_underflow_ptr __attribute__((__deprecated__));
-cce_decl cce_condition_math_underflow_t  const * const	cce_condition_math_underflow_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -952,8 +978,6 @@ struct cce_condition_errno_t {
   int			errnum;
   char const *		message;
 };
-
-cce_decl cce_descriptor_errno_t const * const cce_descriptor_errno_ptr __attribute__((__deprecated__));
 
 cce_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
@@ -1131,16 +1155,16 @@ cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsiz
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_init_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
+cce_decl void cce_init_and_register_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
+cce_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-#define cce_init_handler_malloc(L,P_H,P)				\
+#define cce_init_and_register_handler_malloc(L,P_H,P)			\
   _Generic((P_H),							\
-	   cce_clean_handler_t	*: cce_init_clean_handler_malloc,	\
-	   cce_error_handler_t	*: cce_init_error_handler_malloc)((L),(P_H),(P))
+	   cce_clean_handler_t	*: cce_init_and_register_clean_handler_malloc, \
+	   cce_error_handler_t	*: cce_init_and_register_error_handler_malloc)((L),(P_H),(P))
 
 /* ------------------------------------------------------------------ */
 
@@ -1365,119 +1389,6 @@ cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_hand
 	   \
 	   cce_location_t[1]				 : CCE_C002(CCE_CLOC(S)), \
 	   cce_location_t				*: CCE_C002(CCE_CLOC(S)))
-
-
-/** --------------------------------------------------------------------
- ** Deprecated.
- ** ----------------------------------------------------------------- */
-
-__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_handler instead")))
-static inline void
-cce_handler_set (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_handler(H, pointer, fun);
-}
-
-__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_clean_handler instead")))
-static inline void
-cce_clean_handler_set (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_handler(H, pointer, fun);
-}
-
-__attribute__((__always_inline__,__nonnull__(1,3),__deprecated__("use cce_init_error_handler instead")))
-static inline void
-cce_error_handler_set (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_handler(H, pointer, fun);
-}
-
-/* ------------------------------------------------------------------ */
-
-cce_decl bool cce_is_condition (cce_condition_t const * C, cce_descriptor_t const * D)
-  __attribute__((__leaf__,__nonnull__(1,2),__deprecated__("use cce_condition_is instead")));
-
-/* ------------------------------------------------------------------ */
-
-cce_decl void cce_run_clean_handlers (cce_destination_t L)
-  __attribute__((__nonnull__(1),__deprecated__("use cce_run_body_handlers instead")));
-
-cce_decl void cce_run_error_handlers (cce_destination_t L)
-  __attribute__((__nonnull__(1),__deprecated__("use cce_run_catch_handlers instead")));
-
-/* ------------------------------------------------------------------ */
-
-__attribute__((__nonnull__(1),__always_inline__,__deprecated__("use cce_run_catch_handlers_final instead")))
-static inline void
-cce_p_run_error_handlers_final (cce_destination_t L)
-{
-  cce_run_catch_handlers(L);
-  cce_condition_delete((cce_condition_t *)(L->condition));
-}
-
-__attribute__((__nonnull__(1),__always_inline__,__deprecated__("use cce_run_body_handlers_final instead")))
-static inline void
-cce_p_run_clean_handlers_final (cce_destination_t L)
-{
-  cce_run_body_handlers(L);
-  cce_condition_delete((cce_condition_t *)(L->condition));
-}
-
-#if (! defined CCEXCEPTIONS_TRACE)
-#  define cce_run_clean_handlers_final(L)	cce_p_run_clean_handlers_final(L)
-#  define cce_run_error_handlers_final(L)	cce_p_run_error_handlers_final(L)
-#else
-#  define cce_run_error_handlers_final(L)			\
-  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_final(L))
-#  define cce_run_clean_handlers_final(L)			\
-  (cce_trace_final(L, __FILE__, __func__, __LINE__), cce_p_run_clean_handlers_final(L))
-#endif
-
-/* ------------------------------------------------------------------ */
-
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__,__deprecated__("use cce_run_catch_handlers_raise instead")))
-static inline void
-cce_p_run_error_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_catch_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
-
-__attribute__((__always_inline__,__nonnull__(1,2),__noreturn__,__deprecated__("use cce_run_body_handlers_raise instead")))
-static inline void
-cce_p_run_clean_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-{
-  cce_run_body_handlers(L);
-  cce_p_raise(upper_L, L->condition);
-}
-
-#if (! defined CCEXCEPTIONS_TRACE)
-#  define cce_run_error_handlers_raise(L,upper_L)	cce_p_run_error_handlers_raise((L),(upper_L))
-#  define cce_run_clean_handlers_raise(L,upper_L)	cce_p_run_clean_handlers_raise((L),(upper_L))
-#else
-#  define cce_run_error_handlers_raise(L,upper_L)			\
-  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_error_handlers_raise((L), (upper_L)))
-#  define cce_run_clean_handlers_raise(L,upper_L)			\
-  (cce_trace_reraise(L, __FILE__, __func__, __LINE__), cce_p_run_clean_handlers_raise((L), (upper_L)))
-#endif
-
-/* ------------------------------------------------------------------ */
-
-cce_decl void cce_clean_handler_malloc_init (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_init_clean_handler_malloc instead")));
-
-cce_decl void cce_error_handler_malloc_init (cce_destination_t L, cce_error_handler_t * H, void * pointer)
-  __attribute__((__nonnull__(1,2,3),__deprecated__("use cce_init_error_handler_malloc instead")));
-
-#define cce_handler_malloc_init(L,P_H,P)				\
-  _Generic((P_H),							\
-	   cce_clean_handler_t	*: cce_clean_handler_malloc_init,	\
-	   cce_error_handler_t	*: cce_error_handler_malloc_init)((L),(P_H),(P))
-
-/* ------------------------------------------------------------------ */
-
-cce_decl void cce_descriptor_set_root_parent (cce_descriptor_t * D)
-  __attribute__((__nonnull__(1),__deprecated__("use cce_descriptor_set_parent_to(cce_descriptor_root_t) instead")));
 
 
 /** --------------------------------------------------------------------

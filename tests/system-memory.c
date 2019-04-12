@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -208,6 +208,7 @@ test_5_1 (void)
   } else {
     void *	P = cce_sys_malloc_guarded(L, P_H, 1024);
     assert(NULL != P);
+    if (0) { fprintf(stderr, "%s: reallocating...\n", __func__); }
     P = cce_sys_realloc_guarded(L, P_H, P, 4096);
     assert(NULL != P);
     cce_run_body_handlers(L);

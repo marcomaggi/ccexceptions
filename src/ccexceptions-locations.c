@@ -1,28 +1,25 @@
 /*
   Part of: CCExceptions
-  Contents: implementation of locations
+  Contents: implementation of locations mechanism
   Date: Sat Dec 17, 2016
 
   Abstract
 
+	This module implementas the basics of the locations mechanism.
 
+  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  This is free software; you can redistribute  it and/or modify it under the terms of
+  the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3.0 of the License, or (at your option) any later version.
 
-  This is free software; you  can redistribute it and/or modify it under
-  the terms of the GNU Lesser General Public License as published by the
-  Free Software  Foundation; either version  3.0 of the License,  or (at
-  your option) any later version.
+  This library  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-  This library  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  Lesser General Public License for more details.
-
-  You  should have  received a  copy of  the GNU  Lesser  General Public
-  License along  with this library; if  not, write to  the Free Software
-  Foundation, Inc.,  59 Temple Place,  Suite 330, Boston,  MA 02111-1307
-  USA.
+  You should have received a copy of the GNU Lesser General Public License along with
+  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+  Suite 330, Boston, MA 02111-1307 USA.
 
 */
 
@@ -53,7 +50,7 @@ __attribute__((__always_inline__,__pure__,__nonnull__(1)))
 static inline bool
 cce_handler_is_error (cce_handler_t const * const H)
 {
-  return ((((uintptr_t)(H->function)) & 1)? true : false);
+  return ((((uintptr_t)(H->handler_function)) & 1)? true : false);
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
@@ -73,14 +70,14 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline void
 cce_error_handler_mark_as_error (cce_error_handler_t * const H)
 {
-  H->handler.function = (cce_handler_fun_t *)(((uintptr_t)(H->handler.function)) | 1);
+  H->handler.handler_function = (cce_handler_fun_t *)(((uintptr_t)(H->handler.handler_function)) | 1);
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_fun_t *
 cce_handler_get_function (cce_handler_t const * const H)
 {
-  return (cce_handler_fun_t *)((((uintptr_t)(H->function)) >> 1) << 1);
+  return (cce_handler_fun_t *)((((uintptr_t)(H->handler_function)) >> 1) << 1);
 }
 
 #else
@@ -121,7 +118,7 @@ __attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
 static inline cce_handler_fun_t *
 cce_handler_get_function (cce_handler_t const * const H)
 {
-  return H->function;
+  return H->handler_function;
 }
 
 #endif
@@ -189,7 +186,7 @@ cce_run_body_handlers (cce_destination_t L)
 {
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
-  for (cce_handler_t * H = next; H && H->function; H = next) {
+  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
     /* First acquire the next handler... */
     next = H->next_handler;
     if (cce_handler_is_clean(H)) {
@@ -211,7 +208,7 @@ cce_run_catch_handlers (cce_destination_t L)
 {
   cce_handler_t *	next = L->first_handler;
   L->first_handler = NULL;
-  for (cce_handler_t * H = next; H && H->function; H = next) {
+  for (cce_handler_t * H = next; H && H->handler_function; H = next) {
     /* First acquire the next handler... */
     next = H->next_handler;
     /* ...  then  run the  current handler.   Remember that  the current
@@ -262,48 +259,53 @@ cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
  ** Exception handlers: initialisation only.
  ** ----------------------------------------------------------------- */
 
-inline void
-cce_init_only_handler_3 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
+cce_p_init_handler_3 (cce_handler_t * H, cce_handler_fun_t * handler_function, void * resource_pointer)
 {
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= NULL;
+  H->resource_pointer		= resource_pointer;
+  H->handler_function		= handler_function;
+  H->resource_destructor	= NULL;
 }
 
-inline void
-cce_init_only_handler_4 (cce_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+__attribute__((__always_inline__,__nonnull__(1,3)))
+static inline void
+cce_p_init_handler_4 (cce_handler_t * H, cce_handler_fun_t * handler_function,
+		      void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
 {
-  H->pointer	= pointer;
-  H->function	= fun;
-  H->destructor	= destructor;
-}
-
-/* ------------------------------------------------------------------ */
-
-void
-cce_init_only_clean_handler_3 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun)
-{
-  cce_init_only_handler_3(cce_clean_handler_handler(H), pointer, fun);
-}
-
-void
-cce_init_only_clean_handler_4 (cce_clean_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
-{
-  cce_init_only_handler_4(cce_clean_handler_handler(H), pointer, fun, destructor);
+  H->resource_pointer		= resource_pointer;
+  H->handler_function		= handler_function;
+  H->resource_destructor	= resource_destructor;
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-cce_init_only_error_handler_3 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun)
+cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function, void * resource_pointer)
 {
-  cce_init_only_handler_3(cce_error_handler_handler(H), pointer, fun);
+  cce_p_init_handler_3(cce_clean_handler_handler(H), (cce_handler_fun_t *)handler_function, resource_pointer);
 }
 
 void
-cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+			  void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
 {
-  cce_init_only_handler_4(cce_error_handler_handler(H), pointer, fun, destructor);
+  cce_p_init_handler_4(cce_clean_handler_handler(H), (cce_handler_fun_t *)handler_function, resource_pointer, resource_destructor);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function, void * resource_pointer)
+{
+  cce_p_init_handler_3(cce_error_handler_handler(H), (cce_handler_fun_t *)handler_function, resource_pointer);
+}
+
+void
+cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+			  void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+{
+  cce_p_init_handler_4(cce_error_handler_handler(H), (cce_handler_fun_t *)handler_function, resource_pointer, resource_destructor);
 }
 
 
@@ -312,34 +314,40 @@ cce_init_only_error_handler_4 (cce_error_handler_t * H, void * pointer, cce_hand
  ** ----------------------------------------------------------------- */
 
 void
-cce_init_and_register_clean_handler_4 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
-				       cce_handler_fun_t * fun)
+cce_init_and_register_clean_handler_4 (cce_destination_t L,
+				       cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+				       void * resource_pointer)
 {
-  cce_init_only_clean_handler_3(H, pointer, fun);
+  cce_init_clean_handler_3(H, handler_function, resource_pointer);
   cce_register_clean_handler(L, H);
 }
+
 void
-cce_init_and_register_clean_handler_5 (cce_destination_t L, cce_clean_handler_t * H, void * pointer,
-				       cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_and_register_clean_handler_5 (cce_destination_t L,
+				       cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+				       void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
 {
-  cce_init_only_clean_handler_4(H, pointer, fun, destructor);
+  cce_init_clean_handler_4(H, handler_function, resource_pointer, resource_destructor);
   cce_register_clean_handler(L, H);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-cce_init_and_register_error_handler_4 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
-				       cce_handler_fun_t * fun)
+cce_init_and_register_error_handler_4 (cce_destination_t L,
+				       cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+				       void * resource_pointer)
 {
-  cce_init_only_error_handler_3(H, pointer, fun);
+  cce_init_error_handler_3(H, handler_function, resource_pointer);
   cce_register_error_handler(L, H);
 }
+
 void
-cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t * H, void * pointer,
-				       cce_handler_fun_t * fun, cce_destructor_fun_t * destructor)
+cce_init_and_register_error_handler_5 (cce_destination_t L,
+				       cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+				       void * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
 {
-  cce_init_only_error_handler_4(H, pointer, fun, destructor);
+  cce_init_error_handler_4(H, handler_function, resource_pointer, resource_destructor);
   cce_register_error_handler(L, H);
 }
 
@@ -349,7 +357,7 @@ cce_init_and_register_error_handler_5 (cce_destination_t L, cce_error_handler_t 
  ** ----------------------------------------------------------------- */
 
 static void
-cce_forget_handler (cce_destination_t L, cce_handler_t * H)
+forget_handler (cce_destination_t L, cce_handler_t * H)
 {
   if (L->first_handler == H) {
     L->first_handler = H->next_handler;
@@ -367,13 +375,13 @@ cce_forget_handler (cce_destination_t L, cce_handler_t * H)
 void
 cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
 {
-  cce_forget_handler(L, cce_handler_handler(H));
+  forget_handler(L, cce_handler_handler(H));
 }
 
 void
 cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
 {
-  cce_forget_handler(L, cce_handler_handler(H));
+  forget_handler(L, cce_handler_handler(H));
 }
 
 
@@ -383,9 +391,9 @@ cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
 
 __attribute__((__nonnull__(1,2)))
 static void
-run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
+run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * inner_H)
 {
-  CCE_PC(cce_location_t, L, inner_H->pointer);
+  CCE_PC(cce_location_t, L, inner_H->resource_pointer);
 
   cce_run_body_handlers(L);
   cce_condition_delete(cce_condition(L));
@@ -393,9 +401,9 @@ run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H
 
 __attribute__((__nonnull__(1,2)))
 static void
-run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_H)
+run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * inner_H)
 {
-  CCE_PC(cce_location_t, L, inner_H->pointer);
+  CCE_PC(cce_location_t, L, inner_H->resource_pointer);
 
   cce_run_catch_handlers(L);
   cce_condition_delete(cce_condition(L));
@@ -406,14 +414,14 @@ run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t * inner_
 void
 cce_register_clean_handler_to_run_body_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_handler(inner_H, outer_L, run_body_handlers);
+  cce_init_handler(inner_H, (cce_clean_handler_fun_t *)run_body_handlers, outer_L);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_handler(inner_H, outer_L, run_catch_handlers);
+  cce_init_handler(inner_H, (cce_clean_handler_fun_t *)run_catch_handlers, outer_L);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -422,14 +430,14 @@ cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce
 void
 cce_register_error_handler_to_run_body_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_handler(inner_H, outer_L, run_body_handlers);
+  cce_init_handler(inner_H, (cce_error_handler_fun_t *)run_body_handlers, outer_L);
   cce_register_handler(inner_L, inner_H);
 }
 
 void
 cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H, cce_destination_t outer_L)
 {
-  cce_init_handler(inner_H, outer_L, run_catch_handlers);
+  cce_init_handler(inner_H, (cce_error_handler_fun_t *)run_catch_handlers, outer_L);
   cce_register_handler(inner_L, inner_H);
 }
 
@@ -487,12 +495,25 @@ cce_trace_final (cce_destination_t L, char const * filename, char const * funcna
  ** Miscellaneous.
  ** ----------------------------------------------------------------- */
 
-void
-cce_default_destructor_handler (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * H)
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline void
+cce_default_handler_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * H)
 {
-  if (H->destructor) {
-    H->destructor(H->pointer);
+  if (H->resource_destructor) {
+    H->resource_destructor(H->resource_pointer);
   }
+}
+
+void
+cce_default_clean_handler_function (cce_condition_t const * C, cce_clean_handler_t const * H)
+{
+  cce_default_handler_function(C, cce_handler_handler(H));
+}
+
+void
+cce_default_error_handler_function (cce_condition_t const * C, cce_error_handler_t const * H)
+{
+  cce_default_handler_function(C, cce_handler_handler(H));
 }
 
 /* end of file */

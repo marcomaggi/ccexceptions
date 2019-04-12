@@ -7,7 +7,7 @@
 
 	Test raising an exception with a error handler.
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -38,19 +38,17 @@
  ** ----------------------------------------------------------------- */
 
 static void
-handler1 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
+handler1 (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * const H)
 {
-  CCE_PC(cce_error_handler_t const, const H, _H);
-  bool	* flagp = cce_handler_handler(H)->pointer;
+  bool	* flagp = cce_handler_resource_pointer(H);
 
   *flagp = true;
 }
 
 static void
-handler2 (cce_condition_t const * const C CCE_UNUSED, cce_handler_t * _H)
+handler2 (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * const H)
 {
-  CCE_PC(cce_error_handler_t const , const H, _H);
-  bool	* flagp = cce_handler_handler(H)->pointer;
+  bool	* flagp = cce_handler_resource_pointer(H);
 
   *flagp = true;
 }
@@ -74,8 +72,8 @@ main (void)
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, (void *)&flag1, handler1);
-      cce_init_handler(H2, (void *)&flag2, handler2);
+      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
+      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);
@@ -96,8 +94,8 @@ main (void)
     if (cce_location(L)) {
       cce_run_catch_handlers_final(L);
     } else {
-      cce_init_handler(H1, &flag1, handler1);
-      cce_init_handler(H2, &flag2, handler2);
+      cce_init_handler(H1, handler1, (cce_resource_data_t *)&flag1);
+      cce_init_handler(H2, handler2, (cce_resource_data_t *)&flag2);
 
       cce_register_handler(L, H1);
       cce_register_handler(L, H2);
