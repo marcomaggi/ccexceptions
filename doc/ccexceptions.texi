@@ -657,18 +657,24 @@ An alias for @code{void}.  We can use it in pointer cast operations to make the 
 @end deftp
 
 
-@deftypefn {Preprocessor Macro} {cce_resource_data_t *} cce_resource_pointer (@var{POINTER})
-Cast the @var{POINTER} to @code{cce_resource_data_t *} and return it.  We can use this macro to make
-the code more readable when initialising exception handlers.
-@end deftypefn
-
-
 @deftypefn {Function Typedef} void cce_resource_destructor_fun_t (cce_resource_data_t * @var{pointer})
 Type of client data destructor functions meant to destroy some ansynchronous resource.  The argument
 @var{pointer} references the client data to destroy.
 
 If an error occurs destroying some data: the destructor function must take care of itself and return
 to the caller, it must @strong{not} raise an exceptional condition and jump to a remote location.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} {cce_resource_data_t *} cce_resource_pointer (@var{POINTER})
+Cast the @var{POINTER} to @code{cce_resource_data_t *} and return it.  We can use this macro to make
+the code more readable when initialising exception handlers.
+@end deftypefn
+
+
+@deftypefn {Preprocessor Macro} {cce_resource_destructor_fun_t *} cce_resource_destructor (@var{POINTER})
+Cast the @var{POINTER} to @code{cce_resource_destructor_fun_t *} and return it.  We can use this
+macro to make the code more readable when initialising exception handlers.
 @end deftypefn
 
 @c page

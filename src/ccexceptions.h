@@ -268,6 +268,7 @@ typedef void	cce_resource_data_t;
 typedef void cce_resource_destructor_fun_t (cce_resource_data_t * pointer);
 
 #define cce_resource_pointer(P)		((cce_resource_data_t *)(P))
+#define cce_resource_destructor(FUN)	((cce_resource_destructor_fun_t *)(FUN))
 
 struct cce_handler_t {
   cce_handler_t			*next_handler;
