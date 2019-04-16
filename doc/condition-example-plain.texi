@@ -29,24 +29,13 @@ Pointer to the data.
 @end deftp
 
 
-@CCEConditionObjectNewNoArgs{my,error_1}
+@CCEConditionObjectNew{my,error_1,{int @var{data}}}
 
 
 @CCEConditionObjectPredicate{my,error_1}
 
-@c ------------------------------------------------------------------------
 
-@subsubheading Facilities to derive an exceptional--condition object subtype
-
-When deriving a subtype from @CCEConditionObjectTypeCode{my,error_1} we need the following
-functions.
-
-
-@CCEDescriptorSetParentTo{my,error_1}
-
-
-@CCEConditionObjectInitNoArgs{my,error_1}
-
+@CCEConditionSubtypingFacilitiesFailing{cce,error_1,{int @var{data}}}
 
 @c Local Variables:
 @c mode: texinfo

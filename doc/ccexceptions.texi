@@ -2225,7 +2225,7 @@ return @cfalse{}.  With a correctly built conditions hierarchy: this function al
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,root}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,root}
 
 @c ------------------------------------------------------------------------
 
@@ -2270,7 +2270,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,unknown}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,unknown}
 
 @c page
 @node conditions break
@@ -2311,7 +2311,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,break}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,break}
 
 @c ------------------------------------------------------------------------
 
@@ -2356,7 +2356,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,error}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,error}
 
 @c ------------------------------------------------------------------------
 
@@ -2402,7 +2402,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,runtime_error}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,runtime_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2448,7 +2448,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,logic_error}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,logic_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2494,7 +2494,7 @@ Core values of the exceptional--condition object.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,unimplemented}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,unimplemented}
 
 @c ------------------------------------------------------------------------
 
@@ -2570,16 +2570,7 @@ where @var{EXPR} is an expression evaluating to @ctrue{} if the argument is @str
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Facilities to derive an exceptional--condition object subtype
-
-When deriving a subtype from @CCEConditionObjectTypeCode{cce,invalid_argument} we need the
-following functions.
-
-
-@CCEDescriptorSetParentTo{cce,invalid_argument}
-
-
-@CCEConditionObjectInit{cce,invalid_argument,{char const * @var{func}, unsigned @var{index}}}
+@CCEConditionSubtypingFacilities{cce,invalid_argument,{char const * @var{func}, unsigned @var{index}}}
 
 @c ------------------------------------------------------------------------
 
@@ -2651,16 +2642,7 @@ nothing.  By default @code{CCEXCEPTIONS_EXCLUDE_UNREACHABLE} is not defined.
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Facilities to derive an exceptional--condition object subtype
-
-When deriving a subtype from @CCEConditionObjectTypeCode{cce,unreachable} we need the
-following functions.
-
-
-@CCEDescriptorSetParentTo{cce,unreachable}
-
-
-@CCEConditionObjectInit{cce,unreachable,{char const * @var{filename}, char const * @var{funcname}, int @var{linenum}}}
+@CCEConditionSubtypingFacilities{cce,unreachable,{char const * @var{filename}, char const * @var{funcname}, int @var{linenum}}}
 
 @c ------------------------------------------------------------------------
 
@@ -2728,16 +2710,7 @@ Return @code{true} if the exceptional--condition object referenced by @var{C} is
 
 @c ------------------------------------------------------------------------
 
-@subsubheading Facilities to derive an exceptional--condition object subtype
-
-When deriving a subtype from @CCEConditionObjectTypeCode{cce,errno} we need the
-following functions.
-
-
-@CCEDescriptorSetParentTo{cce,errno}
-
-
-@CCEConditionObjectInit{cce,errno,{int @var{errum}}}
+@CCEConditionSubtypingFacilities{cce,errno,{int @var{errum}}}
 
 @c ------------------------------------------------------------------------
 
@@ -2807,7 +2780,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,math_error}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,math_error}
 
 @c ------------------------------------------------------------------------
 
@@ -2854,7 +2827,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,math_nan}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,math_nan}
 
 @c ------------------------------------------------------------------------
 
@@ -2900,7 +2873,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,math_infinity}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,math_infinity}
 
 @c ------------------------------------------------------------------------
 
@@ -2946,7 +2919,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,math_overflow}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,math_overflow}
 
 @c ------------------------------------------------------------------------
 
@@ -2992,7 +2965,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 @c ------------------------------------------------------------------------
 
-@CCEConditionSubtypingFacilities{cce,math_underflow}
+@CCEConditionSubtypingFacilitiesNoArgs{cce,math_underflow}
 
 @c ------------------------------------------------------------------------
 

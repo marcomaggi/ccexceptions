@@ -74,7 +74,6 @@ Core values of the exceptional--condition object--type descriptor.
 @c Constructors and destructors.
 @c ------------------------------------------------------------------------
 
-
 @c Format the exceptional-condition  object initialisation function, for the special  case in which:
 @c there   are  no   additional   arguments;   there  is   a   single   preallocated  and   prebuilt
 @c exceptional-condition object.
@@ -99,7 +98,7 @@ Return a pointer to a newly built exceptional--condition object of type
 
 
 @c Format the exceptional-condition  object initialisation function, for the special  case in which:
-@c there are no additional arguments.
+@c there are additional arguments.  We should wrap in braces the ARGS argument to this macro.
 @c
 @macro CCEConditionObjectNew{LIBPREFIX,TYPESTEM,ARGS}
 @deftypefun {cce_condition_t const *} \LIBPREFIX\_condition_new_\TYPESTEM\ (cce_destination_t @var{L}, \ARGS\)
@@ -111,6 +110,9 @@ performing a non--local exit to @var{L}.
 
 @c ------------------------------------------------------------------------
 
+@c Format the exceptional-condition object initialisation function, for the special case in which:
+@c there are no additional arguments; the initialisation cannot fail.
+@c
 @macro CCEConditionObjectInitNoArgs{LIBPREFIX,TYPESTEM}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
 Initialise an already allocated exceptional--condition object.  We should call this function from
@@ -119,10 +121,37 @@ the initialisation function of the derived type.
 @end macro
 
 
+@c Format the exceptional-condition object initialisation function, for the special case in which:
+@c there are additional arguments; the initialisation cannot fail.
+@c
 @macro CCEConditionObjectInit{LIBPREFIX,TYPESTEM,ARGS}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.
+@end deftypefun
+@end macro
+
+
+@c Format the exceptional-condition object initialisation function, for the special case in which:
+@c there are no additional arguments; the initialisation may fail.
+@c
+@macro CCEConditionObjectInitNoArgsFailing{LIBPREFIX,TYPESTEM}
+@deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
+Initialise an already allocated exceptional--condition object.  We should call this function from
+the initialisation function of the derived type.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
+@end deftypefun
+@end macro
+
+
+@c Format the exceptional-condition object initialisation function, for the special case in which:
+@c there are additional arguments; the initialisation may fail.
+@c
+@macro CCEConditionObjectInitFailing{LIBPREFIX,TYPESTEM,ARGS}
+@deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
+Initialise an already allocated exceptional--condition object.  We should call this function from
+the initialisation function of the derived type.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
 @end deftypefun
 @end macro
 
@@ -157,11 +186,13 @@ in the initialisation module of the derived type.
 @end deftypefun
 @end macro
 
+@c ------------------------------------------------------------------------
 
-@c Insert a whole section of documentation describing the subtyping facilities for the special case
-@c in which the initialisation function has no additional arguments.
+@c Insert a whole section of documentation describing  the subtyping facilities for the special case
+@c in which:  the initialisation function has  no additional arguments; the  initialisation function
+@c cannot fail.
 @c
-@macro CCEConditionSubtypingFacilities{LIBPREFIX,TYPESTEM}
+@macro CCEConditionSubtypingFacilitiesNoArgs{LIBPREFIX,TYPESTEM}
 @subsubheading Facilities to derive an exceptional--condition object subtype
 
 When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
@@ -174,11 +205,72 @@ following functions.
 @CCEConditionObjectInitNoArgs{\LIBPREFIX\,\TYPESTEM\}
 @end macro
 
+@c ------------------------------------------------------------------------
+
+@c Insert a whole section of documentation describing  the subtyping facilities for the special case
+@c in which:  the initialisation function has  no additional arguments; the  initialisation function
+@c may fail.
+@c
+@macro CCEConditionSubtypingFacilitiesNoArgsFailing{LIBPREFIX,TYPESTEM}
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
+following functions.
+
+
+@CCEDescriptorSetParentTo{\LIBPREFIX\,\TYPESTEM\}
+
+
+@CCEConditionObjectInitNoArgsFailing{\LIBPREFIX\,\TYPESTEM\}
+@end macro
+
+@c ------------------------------------------------------------------------
+
+@c Insert a whole section of documentation describing  the subtyping facilities for the special case
+@c in  which: the  initialisation function  has  additional arguments;  the initialisation  function
+@c cannot fail.
+@c
+@macro CCEConditionSubtypingFacilities{LIBPREFIX,TYPESTEM,ARGS}
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
+following functions.
+
+
+@CCEDescriptorSetParentTo{\LIBPREFIX\,\TYPESTEM\}
+
+
+@CCEConditionObjectInit{\LIBPREFIX\,\TYPESTEM\,\ARGS\}
+@end macro
+
+@c ------------------------------------------------------------------------
+
+@c Insert a whole section of documentation describing  the subtyping facilities for the special case
+@c in which: the  initialisation function has additional arguments; the  initialisation function may
+@c fail.
+@c
+@macro CCEConditionSubtypingFacilitiesFailing{LIBPREFIX,TYPESTEM,ARGS}
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} we need the
+following functions.
+
+
+@CCEDescriptorSetParentTo{\LIBPREFIX\,\TYPESTEM\}
+
+
+@CCEConditionObjectInitFailing{\LIBPREFIX\,\TYPESTEM\,\ARGS\}
+@end macro
+
+@c page
+@c ------------------------------------------------------------------------
+@c Done.
+@c ------------------------------------------------------------------------
 
 @c Local Variables:
 @c mode: texinfo
 @c TeX-master: "ccexceptions"
 @c fill-column: 100
-@c End:
 @c page-delimiter: "^@c page"
+@c ispell-local-dictionary: "en_GB-ise-w_accents"
 @c End:
