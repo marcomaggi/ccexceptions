@@ -7,6 +7,7 @@ EXTRA_DIST		= INSTALL			\
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS)
 AM_CPPFLAGS		= -I$(srcdir)/src
+CLEANFILES		=
 
 ## --------------------------------------------------------------------
 
@@ -15,8 +16,11 @@ nodist_pkgconfig_DATA	= meta/scripts/ccexceptions.pc
 
 #### documentation
 
+EXTRA_DIST		+= doc/cclibraries.style.css
+CLEANFILES		+= doc/cclibraries.css
+
 AM_MAKEINFOFLAGS	= --no-split
-AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 \
+AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 --css-ref=cclibraries.css \
 	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/ccexceptions.texi
@@ -28,6 +32,23 @@ doc_ccexceptions_TEXINFOS	= \
 	doc/fdl-1.3.texi		\
 	\
 	doc/condition-example-plain.texi
+
+## --------------------------------------------------------------------
+
+doc/ccexceptions.html/$(am__dirstamp): doc/$(am__dirstamp)
+	@$(MKDIR_P) doc/ccexceptions.html/
+	@: > doc/ccexceptions.html/$(am__dirstamp)
+
+doc/ccexceptions.html/cclibraries.css: doc/cclibraries.style.css doc/ccexceptions.html/$(am__dirstamp)
+	$(INSTALL) -m 0444 "$(top_srcdir)/doc/cclibraries.style.css" "$(builddir)/doc/ccexceptions.html/cclibraries.css"
+
+## --------------------------------------------------------------------
+
+html-local: doc/ccexceptions.html/cclibraries.css
+
+install-html-local:
+	$(MKDIR_P) "$(DESTDIR)$(htmldir)/ccexceptions.html/"
+	$(INSTALL) -m 0444 $(builddir)/doc/ccexceptions.html/cclibraries.css "$(DESTDIR)$(htmldir)/ccexceptions.html/"
 
 
 #### libraries
