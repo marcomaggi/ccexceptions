@@ -4,12 +4,12 @@
 AC_PREREQ([2.69])
 MMUX_PKG_VERSIONS([0],[9],[0],[devel.3])
 AC_INIT([CCExceptions],[MMUX_PACKAGE_VERSION],
-  [marco.maggi-ipsu@poste.it],
+  [mrc.mgg@gmail.com],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])
 MMUX_INIT
 MMUX_LIBTOOL_LIBRARY_VERSIONS([ccexceptions],9,0,0)
 AC_REVISION([1.0])
-AC_COPYRIGHT([Copyright (c) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by

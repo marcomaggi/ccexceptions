@@ -14,7 +14,7 @@
 	definition is a "plain" one:  no inline functions; new condition
 	objects allocated by a constructor.
 
-  Copyright (C) 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2019 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing

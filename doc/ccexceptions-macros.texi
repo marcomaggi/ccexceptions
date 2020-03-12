@@ -8,7 +8,7 @@
 @c
 @c the LIPREFIX is "my" and the TYPESTEM is "error_1".
 
-@c Copyright (c) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+@c Copyright (c) 2019 Marco Maggi <mrc.mgg@gmail.com>
 @c
 @c The author hereby  grant permission to use,  copy, modify, distribute, and  license this software
 @c and its documentation for  any purpose, provided that existing copyright  notices are retained in

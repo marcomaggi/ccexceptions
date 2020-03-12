@@ -17,7 +17,7 @@ both Ubuntu GNU+Linux systems and OS X systems.
 
 ## License
 
-Copyright (c) 2016-2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2016-2018, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by

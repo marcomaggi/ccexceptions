@@ -4,7 +4,7 @@
 #
 # LICENSE
 #
-#   Copyright (c) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+#   Copyright (c) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
 #
 #   Copying and distribution of this file, with or without modification,
 #   are permitted in  any medium without royalty  provided the copyright

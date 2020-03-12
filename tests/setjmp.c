@@ -8,7 +8,7 @@
 	Test  file for  "setjmp()"  and  "longjmp()" functions  standard
 	behaviour.
 
-  Copyright (C) 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016, 2017 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */

@@ -8,7 +8,7 @@ dnl
 dnl	Macros used in "configure.ac".  Some  of these macros are reused
 dnl     from infrastructure of the the package Vicare Scheme.
 dnl
-dnl Copyright (C) 2014, 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+dnl Copyright (C) 2014, 2017, 2018 Marco Maggi <mrc.mgg@gmail.com>
 dnl
 dnl This program is free software: you can redistribute it and/or modify
 dnl it  under the  terms of  the GNU  Lesser General  Public License  as

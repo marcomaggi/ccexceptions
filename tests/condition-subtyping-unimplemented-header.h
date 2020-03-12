@@ -7,7 +7,7 @@
 
 	Header definitions for subtyping of "unimplemented" conditions.
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */

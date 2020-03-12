@@ -8,7 +8,7 @@
 	This is a  subordinate header file: it is sourced  by "ccexceptions.h" and it
 	must not be included by itself.
 
-  Copyright (C) 2016-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
