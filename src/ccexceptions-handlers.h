@@ -8,7 +8,7 @@
 	This is a  subordinate header file: it is sourced  by "ccexceptions.h" and it
 	must not be included by itself.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -151,10 +151,10 @@ cce_error_handler_resource_destructor (cce_error_handler_t const * const H)
  ** Exception handlers: default handler functions.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_default_clean_handler_function (cce_condition_t const * C, cce_clean_handler_t const * H)
+cclib_decl void cce_default_clean_handler_function (cce_condition_t const * C, cce_clean_handler_t const * H)
   __attribute__((__nonnull__(1,2)));
 
-cce_decl void cce_default_error_handler_function (cce_condition_t const * C, cce_error_handler_t const * H)
+cclib_decl void cce_default_error_handler_function (cce_condition_t const * C, cce_error_handler_t const * H)
   __attribute__((__nonnull__(1,2)));
 
 
@@ -162,21 +162,21 @@ cce_decl void cce_default_error_handler_function (cce_condition_t const * C, cce
  ** Exception handlers: initialisation only.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+cclib_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
+cclib_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+cclib_decl void cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
+cclib_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
@@ -201,10 +201,10 @@ cce_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handl
  ** Exception handlers: registration.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
+cclib_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
+cclib_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 #define cce_register_handler(L,H)					\
@@ -214,10 +214,10 @@ cce_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
+cclib_decl void cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
+cclib_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 #define cce_forget_handler(L,H)						\
@@ -230,24 +230,24 @@ cce_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t
  ** Exception handlers: initialisation and registration.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L,
+cclib_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L,
+cclib_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_init_and_register_error_handler_4 (cce_destination_t L,
+cclib_decl void cce_init_and_register_error_handler_4 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
+cclib_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
@@ -275,12 +275,12 @@ cce_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 
 /* We do *not* set the "leaf" attribute for this function, because the clean handlers
    might modify data in the current compilation unit. */
-cce_decl void cce_run_body_handlers (cce_destination_t L)
+cclib_decl void cce_run_body_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
 /* We do *not* set the "leaf" attribute for this function, because the error handlers
    might modify data in the current compilation unit. */
-cce_decl void cce_run_catch_handlers (cce_destination_t L)
+cclib_decl void cce_run_catch_handlers (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
 

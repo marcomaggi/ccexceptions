@@ -7,7 +7,7 @@
 
 	Test raising an exception with a error handler.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -38,7 +38,7 @@
  ** ----------------------------------------------------------------- */
 
 static void
-handler1 (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * const H)
+handler1 (cce_condition_t const * const C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool	* flagp = cce_handler_resource_pointer(H);
 
@@ -46,7 +46,7 @@ handler1 (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const 
 }
 
 static void
-handler2 (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * const H)
+handler2 (cce_condition_t const * const C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool	* flagp = cce_handler_resource_pointer(H);
 

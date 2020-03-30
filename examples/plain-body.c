@@ -14,7 +14,7 @@
 	definition is a "plain" one:  no inline functions; new condition
 	objects allocated by a constructor.
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -102,7 +102,7 @@ my_condition_delete_error_1 (cce_condition_t * _C)
 }
 
 char const *
-my_condition_static_message_error_1 (cce_condition_t const * C CCE_UNUSED)
+my_condition_static_message_error_1 (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Error-1 exceptional condition";
 }

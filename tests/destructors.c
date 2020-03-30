@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -50,7 +50,7 @@ dynamic_memory_destructor (void * pointer)
 }
 
 static void
-dynamic_memory_clean_handler (cce_condition_t const * const C CCE_UNUSED, cce_clean_handler_t const * H)
+dynamic_memory_clean_handler (cce_condition_t const * const C CCLIB_UNUSED, cce_clean_handler_t const * H)
 {
   cce_resource_destructor_fun_t *	destructor = cce_handler_resource_destructor(H);
 
@@ -60,7 +60,7 @@ dynamic_memory_clean_handler (cce_condition_t const * const C CCE_UNUSED, cce_cl
 }
 
 static void
-dynamic_memory_error_handler (cce_condition_t const * const C CCE_UNUSED, cce_error_handler_t const * H)
+dynamic_memory_error_handler (cce_condition_t const * const C CCLIB_UNUSED, cce_error_handler_t const * H)
 {
   cce_resource_destructor_fun_t *	destructor = cce_handler_resource_destructor(H);
 

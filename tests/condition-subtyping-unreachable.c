@@ -7,7 +7,7 @@
 
 	Test file for subtyping of "test unreachable" conditions.
 
-  Copyright (C) 2017, 2018 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2017, 2018, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */
@@ -35,7 +35,7 @@ main (void)
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
       if (my_condition_is_unreachable_subtype(cce_condition(L))) {
-	CCE_PC(my_condition_unreachable_subtype_t, C, cce_condition(L));
+	CCLIB_PC(my_condition_unreachable_subtype_t, C, cce_condition(L));
 	fprintf(stderr, "%s: is unreachable subtype, filename=%s, funcname=%s, linenum=%u, data=%d\n", __func__,
 		C->unreachable.filename, C->unreachable.funcname, C->unreachable.linenum,
 		*(C->data));

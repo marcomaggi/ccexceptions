@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -30,7 +30,7 @@
 #include <assert.h>
 
 int
-main (int argc CCE_UNUSED, char const *const argv[] CCE_UNUSED)
+main (int argc CCLIB_UNUSED, char const *const argv[] CCLIB_UNUSED)
 {
   cce_location_t	L[1];
   bool volatile		flag = false;

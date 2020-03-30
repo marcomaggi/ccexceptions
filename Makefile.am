@@ -59,6 +59,7 @@ ccexceptions_AGE		= @ccexceptions_VERSION_INTERFACE_AGE@
 ccexceptions_LINKER_VERSION	= -version-info $(ccexceptions_CURRENT):$(ccexceptions_REVISION):$(ccexceptions_AGE)
 
 include_HEADERS			= \
+	src/cclibraries.h			\
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
 	src/ccexceptions-conditions.h
@@ -66,6 +67,7 @@ include_HEADERS			= \
 lib_LTLIBRARIES			= libccexceptions.la
 libccexceptions_la_LDFLAGS	= $(ccexceptions_LINKER_VERSION)
 libccexceptions_la_SOURCES	= \
+	src/cclibraries.h			\
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
 	src/ccexceptions-conditions.h		\

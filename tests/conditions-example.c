@@ -7,7 +7,7 @@
 
 	This example is copied in the documentation.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -90,14 +90,14 @@ condition_init_alpha (condition_alpha_t * C, int alpha)
 }
 
 void
-condition_final_alpha (cce_condition_t * C CCE_UNUSED)
+condition_final_alpha (cce_condition_t * C CCLIB_UNUSED)
 /* Finalise a condition object; do not release memory. */
 {
   fprintf(stderr, "%s\n", __func__);
 }
 
 static char const *
-condition_static_message_alpha (cce_condition_t const * C CCE_UNUSED)
+condition_static_message_alpha (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "exceptional condition A";
 }
@@ -178,14 +178,14 @@ condition_init_beta (condition_beta_t * C, int alpha, int beta)
 }
 
 void
-condition_final_beta (cce_condition_t * C CCE_UNUSED)
+condition_final_beta (cce_condition_t * C CCLIB_UNUSED)
 /* Finalise a condition object; do not release memory. */
 {
   fprintf(stderr, "%s\n", __func__);
 }
 
 static char const *
-condition_static_message_beta (cce_condition_t const * C CCE_UNUSED)
+condition_static_message_beta (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "exceptional condition A";
 }
@@ -266,14 +266,14 @@ condition_init_gamma (condition_gamma_t * C, int alpha, int beta, int gamma)
 }
 
 void
-condition_final_gamma (cce_condition_t * C CCE_UNUSED)
+condition_final_gamma (cce_condition_t * C CCLIB_UNUSED)
 /* Finalise a condition object; do not release memory. */
 {
   fprintf(stderr, "%s\n", __func__);
 }
 
 static char const *
-condition_static_message_gamma (cce_condition_t const * C CCE_UNUSED)
+condition_static_message_gamma (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "exceptional condition A";
 }

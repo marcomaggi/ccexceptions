@@ -13,7 +13,7 @@
 	a "plain"  one: no  inline functions;  new condition  objects allocated  by a
 	constructor.
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -59,7 +59,7 @@ main (void)
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
       if (my_condition_is_error_1(cce_condition(L))) {
-	CCE_PC(my_condition_error_1_t, C, cce_condition(L));
+	CCLIB_PC(my_condition_error_1_t, C, cce_condition(L));
 	fprintf(stderr, "%s: is error-1 condition, data=%d\n", __func__, *(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);

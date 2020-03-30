@@ -7,7 +7,7 @@
 
 	Body definitions of a subtype of "math_overflow".
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */
@@ -77,7 +77,7 @@ my_condition_delete_math_overflow_subtype (cce_condition_t * _C)
 }
 
 char const *
-my_condition_static_message_math_overflow_subtype (cce_condition_t const * C CCE_UNUSED)
+my_condition_static_message_math_overflow_subtype (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Math_Overflow subtype exceptional condition";
 }

@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -39,21 +39,21 @@
  ** ----------------------------------------------------------------- */
 
 static void
-just_run_body_handler1 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+just_run_body_handler1 (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-just_run_body_handler2 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+just_run_body_handler2 (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-just_run_body_handler3 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+just_run_body_handler3 (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
@@ -93,21 +93,21 @@ test_just_run_body_handlers()
  ** ----------------------------------------------------------------- */
 
 static void
-just_run_catch_handler1 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+just_run_catch_handler1 (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-just_run_catch_handler2 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+just_run_catch_handler2 (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-just_run_catch_handler3 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+just_run_catch_handler3 (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
@@ -152,12 +152,12 @@ typedef struct test_amse_t {
 } test_amse_t;
 
 static void
-test_amse_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_amse_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   void *	P = cce_handler_resource_pointer(H);
   free(P);
   {
-    CCE_PC(test_amse_t, W, H);
+    CCLIB_PC(test_amse_t, W, H);
     *(W->flagp) = true;
   }
 }
@@ -197,12 +197,12 @@ typedef struct test_amee_t {
 } test_amee_t;
 
 static void
-test_amee_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_amee_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   void *	P = cce_handler_resource_pointer(H);
   free(P);
   {
-    CCE_PC(test_amee_t, W, H);
+    CCLIB_PC(test_amee_t, W, H);
     *(W->flagp) = true;
   }
 }
@@ -237,7 +237,7 @@ test_allocating_memory_exceptional_execution (void)
  ** ----------------------------------------------------------------- */
 
 static void
-test_csse_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+test_csse_constructor_handler (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
@@ -277,13 +277,13 @@ typedef struct test_csse_t {
 } test_csse_t;
 
 static void
-test_csse_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_csse_caller_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
   {
-    CCE_PC(test_csse_t, W, H);
+    CCLIB_PC(test_csse_t, W, H);
     *(W->flagp) = true;
   }
 }
@@ -320,7 +320,7 @@ test_constructor_scheme_success_execution (void)
  ** ----------------------------------------------------------------- */
 
 static void
-test_csee_constructor_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+test_csee_constructor_handler (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
@@ -360,13 +360,13 @@ typedef struct test_csee_t {
 } test_csee_t;
 
 static void
-test_csee_caller_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_csee_caller_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   void **	PP = cce_handler_resource_pointer(H);
   void *	P  = *PP;
   free(P);
   {
-    CCE_PC(test_csee_t, W, H);
+    CCLIB_PC(test_csee_t, W, H);
     *(W->flagp) = true;
   }
 }
@@ -397,7 +397,7 @@ test_constructor_scheme_exceptional_execution (void)
  ** ----------------------------------------------------------------- */
 
 static void
-handler_removal_function (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+handler_removal_function (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool	* flag = cce_handler_resource_pointer(H);
   *flag = true;

@@ -7,7 +7,7 @@
 
 	This module implementas the basics of the locations mechanism.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -310,9 +310,9 @@ cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * target_hand
 
 __attribute__((__nonnull__(1,2)))
 static void
-run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * inner_H)
+run_body_handlers (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * inner_H)
 {
-  CCE_PC(cce_location_t, L, inner_H->resource_pointer);
+  CCLIB_PC(cce_location_t, L, inner_H->resource_pointer);
 
   cce_run_body_handlers(L);
   cce_condition_delete(cce_condition(L));
@@ -320,9 +320,9 @@ run_body_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * i
 
 __attribute__((__nonnull__(1,2)))
 static void
-run_catch_handlers (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * inner_H)
+run_catch_handlers (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * inner_H)
 {
-  CCE_PC(cce_location_t, L, inner_H->resource_pointer);
+  CCLIB_PC(cce_location_t, L, inner_H->resource_pointer);
 
   cce_run_catch_handlers(L);
   cce_condition_delete(cce_condition(L));
@@ -416,7 +416,7 @@ cce_trace_final (cce_destination_t L, char const * filename, char const * funcna
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline void
-cce_default_handler_function (cce_condition_t const * C CCE_UNUSED, cce_handler_t const * H)
+cce_default_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * H)
 {
   if (H->resource_destructor) {
     H->resource_destructor(H->resource_pointer);

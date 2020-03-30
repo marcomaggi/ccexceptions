@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016, 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -29,7 +29,7 @@
 #include <assert.h>
 
 int
-main (int argc CCE_UNUSED, char const *const CCE_UNUSED argv[] CCE_UNUSED)
+main (int argc CCLIB_UNUSED, char const *const CCLIB_UNUSED argv[] CCLIB_UNUSED)
 {
   /* "if" statement */
   {

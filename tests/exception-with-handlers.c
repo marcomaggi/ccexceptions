@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -40,14 +40,14 @@
  ** ----------------------------------------------------------------- */
 
 static void
-test_no_exception_handler1 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_no_exception_handler1 (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool volatile *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-test_no_exception_handler2 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+test_no_exception_handler2 (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool volatile *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
@@ -79,14 +79,14 @@ test_no_exception (void)
  ** ----------------------------------------------------------------- */
 
 static void
-test_with_error_handler1 (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+test_with_error_handler1 (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-test_with_error_handler2 (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+test_with_error_handler2 (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool *	flagp = cce_handler_resource_pointer(H);
   *flagp = true;

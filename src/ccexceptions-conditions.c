@@ -7,7 +7,7 @@
 
 	This module implements the exceptional-condition object-types.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -90,7 +90,7 @@ cce_descriptor_child_and_ancestor (cce_descriptor_t const * const D, cce_descrip
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_root_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_root_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Root exceptional condition";
 }
@@ -115,7 +115,7 @@ cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
 /* ------------------------------------------------------------------ */
 
 void
-cce_condition_init_root (cce_condition_root_t * C CCE_UNUSED)
+cce_condition_init_root (cce_condition_root_t * C CCLIB_UNUSED)
 {
   /* We do  nothing here.  We  need to remember that  the true initialisation  of the
      field "condition" is  performed by "cce_condition_init()", which  must be always
@@ -134,7 +134,7 @@ cce_condition_is_root (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_unknown_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_unknown_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Unknown exceptional condition";
 }
@@ -191,7 +191,7 @@ cce_condition_is_unknown (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_break_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_break_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Break exceptional condition";
 }
@@ -248,7 +248,7 @@ cce_condition_is_break (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_error_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_error_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Unspecified error exceptional condition";
 }
@@ -305,7 +305,7 @@ cce_condition_is_error (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_runtime_error_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_runtime_error_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Runtime error exceptional condition";
 }
@@ -339,7 +339,7 @@ cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t *
 /* ------------------------------------------------------------------ */
 
 void
-cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCE_UNUSED)
+cce_condition_init_runtime_error (cce_condition_runtime_error_t * C CCLIB_UNUSED)
 {
 }
 
@@ -361,7 +361,7 @@ cce_condition_is_runtime_error (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_logic_error_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_logic_error_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Logic error exceptional condition";
 }
@@ -395,7 +395,7 @@ cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * c
 /* ------------------------------------------------------------------ */
 
 void
-cce_condition_init_logic_error (cce_condition_logic_error_t * C CCE_UNUSED)
+cce_condition_init_logic_error (cce_condition_logic_error_t * C CCLIB_UNUSED)
 {
 }
 
@@ -443,7 +443,7 @@ cce_condition_delete_unreachable (cce_condition_t * C)
 }
 
 char const *
-cce_condition_static_message_unreachable (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_unreachable (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "CCExceptions unreachable code was executed";
 }
@@ -491,7 +491,7 @@ cce_condition_is_unreachable (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_unimplemented_static_message_fun (cce_condition_t const * C CCE_UNUSED)
+cce_condition_unimplemented_static_message_fun (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Unimplemented exceptional condition";
 }
@@ -568,13 +568,13 @@ cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_
 /* ------------------------------------------------------------------ */
 
 void
-cce_condition_delete_invalid_argument (cce_condition_t * C CCE_UNUSED)
+cce_condition_delete_invalid_argument (cce_condition_t * C CCLIB_UNUSED)
 {
   free(C);
 }
 
 char const *
-cce_condition_static_message_invalid_argument (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_invalid_argument (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "invalid function argument";
 }
@@ -611,7 +611,7 @@ cce_condition_is_invalid_argument (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_static_message_math_error (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_math_error (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "error computing a mathematical expression";
 }
@@ -668,7 +668,7 @@ cce_condition_is_math_error (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_static_message_math_nan (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_math_nan (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "not-a-number result while computing a mathematical expression";
 }
@@ -725,7 +725,7 @@ cce_condition_is_math_nan (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_static_message_math_infinity (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_math_infinity (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "infinite result while computing a mathematical expression";
 }
@@ -782,7 +782,7 @@ cce_condition_is_math_infinity (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_static_message_math_overflow (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_math_overflow (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "overflow error while computing a mathematical expression";
 }
@@ -839,7 +839,7 @@ cce_condition_is_math_overflow (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-cce_condition_static_message_math_underflow (cce_condition_t const * C CCE_UNUSED)
+cce_condition_static_message_math_underflow (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "underflow error while computing a mathematical expression";
 }
@@ -898,7 +898,7 @@ cce_condition_is_math_underflow (cce_condition_t const * C)
 static char const *
 cce_condition_errno_static_message_fun (cce_condition_t const * C)
 {
-  CCE_PC(cce_condition_errno_t const, EC, C);
+  CCLIB_PC(cce_condition_errno_t const, EC, C);
   return EC->message;
 }
 

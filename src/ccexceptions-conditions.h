@@ -8,7 +8,7 @@
 	This is a  subordinate header file: it is sourced  by "ccexceptions.h" and it
 	must not be included by itself.
 
-  Copyright (C) 2016-2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -52,24 +52,24 @@ struct cce_condition_t {
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
+cclib_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl void cce_condition_final (cce_condition_t * C)
+cclib_decl void cce_condition_final (cce_condition_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl void cce_condition_delete (cce_condition_t * C)
+cclib_decl void cce_condition_delete (cce_condition_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl bool cce_condition_is (cce_condition_t const * C, cce_descriptor_t const * D)
+cclib_decl bool cce_condition_is (cce_condition_t const * C, cce_descriptor_t const * D)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
-cce_decl char const * cce_condition_static_message (cce_condition_t const * C)
+cclib_decl char const * cce_condition_static_message (cce_condition_t const * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
+cclib_decl bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
   __attribute__((__leaf__,__nonnull__(1,2)));
 
 #define cce_descriptor_set_parent_to(TYPE)	cce_descriptor_set_parent_to ## TYPE
@@ -90,15 +90,15 @@ struct cce_condition_root_t {
   cce_condition_t	condition;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_root (cce_condition_root_t * C)
+cclib_decl void cce_condition_init_root (cce_condition_root_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl bool cce_condition_is_root (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_root (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -114,18 +114,18 @@ struct cce_condition_unknown_t {
   cce_condition_root_t	root;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_unknown (cce_condition_unknown_t * C)
+cclib_decl void cce_condition_init_unknown (cce_condition_unknown_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_unknown (void)
+cclib_decl cce_condition_t const * cce_condition_new_unknown (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_unknown (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_unknown (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -141,18 +141,18 @@ struct cce_condition_break_t {
   cce_condition_root_t	root;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_break (cce_condition_break_t * C)
+cclib_decl void cce_condition_init_break (cce_condition_break_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_break (void)
+cclib_decl cce_condition_t const * cce_condition_new_break (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_break (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_break (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -168,18 +168,18 @@ struct cce_condition_error_t {
   cce_condition_root_t	root;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_error (cce_condition_error_t * C)
+cclib_decl void cce_condition_init_error (cce_condition_error_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_error (void)
+cclib_decl cce_condition_t const * cce_condition_new_error (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_error (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_error (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -195,18 +195,18 @@ struct cce_condition_runtime_error_t {
   cce_condition_error_t	error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_runtime_error (cce_condition_runtime_error_t * C)
+cclib_decl void cce_condition_init_runtime_error (cce_condition_runtime_error_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_runtime_error (void)
+cclib_decl cce_condition_t const * cce_condition_new_runtime_error (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_runtime_error (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_runtime_error (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -222,18 +222,18 @@ struct cce_condition_logic_error_t {
   cce_condition_error_t	error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_logic_error (cce_condition_logic_error_t * C)
+cclib_decl void cce_condition_init_logic_error (cce_condition_logic_error_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_logic_error (void)
+cclib_decl cce_condition_t const * cce_condition_new_logic_error (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_logic_error (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_logic_error (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -252,18 +252,18 @@ struct cce_condition_unreachable_t {
   int				linenum;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
+cclib_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
 					      char const * const filename,
 					      char const * const funcname,
 					      int const linenum)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
+cclib_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
 								char const * const filename,
 								char const * const funcname,
 								int const linenum)
@@ -276,7 +276,7 @@ cce_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_
      cce_raise((L), cce_condition_new_unreachable((L), __FILE__, __func__, __LINE__))
 #endif
 
-cce_decl bool cce_condition_is_unreachable (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_unreachable (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -292,18 +292,18 @@ struct cce_condition_unimplemented_t {
   cce_condition_logic_error_t	logic_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
+cclib_decl void cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_unimplemented (void)
+cclib_decl cce_condition_t const * cce_condition_new_unimplemented (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_unimplemented (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_unimplemented (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -324,17 +324,17 @@ struct cce_condition_invalid_argument_t {
   unsigned		index;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index);
+cclib_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index);
 
-cce_decl cce_condition_t const * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
+cclib_decl cce_condition_t const * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl bool cce_condition_is_invalid_argument (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_invalid_argument (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 #define cce_check_argument(L,EXPR,ARGNUM) \
@@ -353,18 +353,18 @@ struct cce_condition_math_error_t {
   cce_condition_runtime_error_t	runtime_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_math_error (cce_condition_math_error_t * C)
+cclib_decl void cce_condition_init_math_error (cce_condition_math_error_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_math_error (void)
+cclib_decl cce_condition_t const * cce_condition_new_math_error (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_math_error (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_math_error (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -380,18 +380,18 @@ struct cce_condition_math_nan_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_math_nan (cce_condition_math_nan_t * C)
+cclib_decl void cce_condition_init_math_nan (cce_condition_math_nan_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_math_nan (void)
+cclib_decl cce_condition_t const * cce_condition_new_math_nan (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_math_nan (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_math_nan (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -407,18 +407,18 @@ struct cce_condition_math_infinity_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
+cclib_decl void cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_math_infinity (void)
+cclib_decl cce_condition_t const * cce_condition_new_math_infinity (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_math_infinity (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_math_infinity (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -434,18 +434,18 @@ struct cce_condition_math_overflow_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
+cclib_decl void cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_math_overflow (void)
+cclib_decl cce_condition_t const * cce_condition_new_math_overflow (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_math_overflow (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_math_overflow (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -461,18 +461,18 @@ struct cce_condition_math_underflow_t {
   cce_condition_math_error_t	math_error;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
+cclib_decl void cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl cce_condition_t const * cce_condition_new_math_underflow (void)
+cclib_decl cce_condition_t const * cce_condition_new_math_underflow (void)
   __attribute__((__leaf__,__const__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_math_underflow (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_math_underflow (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 
@@ -490,21 +490,21 @@ struct cce_condition_errno_t {
   char const *		message;
 };
 
-cce_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
+cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
   __attribute__((__leaf__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl cce_condition_t const * cce_condition_new_errno (int code)
+cclib_decl cce_condition_t const * cce_condition_new_errno (int code)
   __attribute__((__leaf__,__returns_nonnull__));
 
-cce_decl cce_condition_t const * cce_condition_new_errno_clear (void)
+cclib_decl cce_condition_t const * cce_condition_new_errno_clear (void)
   __attribute__((__leaf__,__returns_nonnull__));
 
-cce_decl bool cce_condition_is_errno (cce_condition_t const * C)
+cclib_decl bool cce_condition_is_errno (cce_condition_t const * C)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
-cce_decl bool cce_condition_is_errno_with_code (cce_condition_t const * C, int errnum)
+cclib_decl bool cce_condition_is_errno_with_code (cce_condition_t const * C, int errnum)
   __attribute__((__leaf__,__pure__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
@@ -513,7 +513,7 @@ __attribute__((__always_inline__,__pure__))
 static inline int
 cce_condition_ref_errno_errnum (cce_condition_t const * const C)
 {
-  CCE_PC(cce_condition_errno_t const, K, C);
+  CCLIB_PC(cce_condition_errno_t const, K, C);
   return K->errnum;
 }
 
@@ -521,7 +521,7 @@ __attribute__((__always_inline__,__pure__,__returns_nonnull__))
 static inline char const *
 cce_condition_ref_errno_message (cce_condition_t const * const C)
 {
-  CCE_PC(cce_condition_errno_t const, K, C);
+  CCLIB_PC(cce_condition_errno_t const, K, C);
   return K->message;
 }
 

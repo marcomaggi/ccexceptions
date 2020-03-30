@@ -11,7 +11,7 @@
 
 	   #define _POSIX_C_SOURCE 200809L
 
-  Copyright (C) 2016, 2017, 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2016, 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -30,66 +30,8 @@
 
 
 /** --------------------------------------------------------------------
- ** Preliminary definitions.
- ** ----------------------------------------------------------------- */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* The macro CCE_UNUSED indicates that  a function, function argument or
-   variable may potentially be unused. Usage examples:
-
-   static int unused_function (char arg) CCE_UNUSED;
-   int foo (char unused_argument CCE_UNUSED);
-   int unused_variable CCE_UNUSED;
-*/
-#ifdef __GNUC__
-#  define CCE_UNUSED		__attribute__((__unused__))
-#else
-#  define CCE_UNUSED		/* empty */
-#endif
-
-#ifndef __GNUC__
-#  define __attribute__(...)	/* empty */
-#endif
-
-#ifndef __GNUC__
-#  define __builtin_expect(...)	/* empty */
-#endif
-
-#if defined _WIN32 || defined __CYGWIN__
-#  ifdef BUILDING_DLL
-#    ifdef __GNUC__
-#      define cce_decl		__attribute__((__dllexport__)) extern
-#    else
-#      define cce_decl		__declspec(dllexport) extern
-#    endif
-#  else
-#    ifdef __GNUC__
-#      define cce_decl		__attribute__((__dllimport__)) extern
-#    else
-#      define cce_decl		__declspec(dllimport) extern
-#    endif
-#  endif
-#  define cce_private_decl	extern
-#else
-#  if __GNUC__ >= 4
-#    define cce_decl		__attribute__((__visibility__("default"))) extern
-#    define cce_private_decl	__attribute__((__visibility__("hidden")))  extern
-#  else
-#    define cce_decl		extern
-#    define cce_private_decl	extern
-#  endif
-#endif
-
-
-/** --------------------------------------------------------------------
  ** Helper macros.
  ** ----------------------------------------------------------------- */
-
-/* Pointer cast macro helper. */
-#define CCE_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
 
 /* Cast pointer S to a location structure and evaluate to the pointer to
    condition object. */
@@ -155,6 +97,7 @@ extern "C" {
 #undef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE		200809L
 
+#include <cclibraries.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <setjmp.h>
@@ -187,13 +130,13 @@ typedef enum {
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-cce_decl char const *	cce_version_string		(void)
+cclib_decl char const *	cce_version_string		(void)
   __attribute__((__leaf__,__pure__));
-cce_decl int		cce_version_interface_current	(void)
+cclib_decl int		cce_version_interface_current	(void)
   __attribute__((__leaf__,__pure__));
-cce_decl int		cce_version_interface_revision	(void)
+cclib_decl int		cce_version_interface_revision	(void)
   __attribute__((__leaf__,__pure__));
-cce_decl int		cce_version_interface_age	(void)
+cclib_decl int		cce_version_interface_age	(void)
   __attribute__((__leaf__,__pure__));
 
 
@@ -277,24 +220,24 @@ struct cce_location_t {
   cce_handler_t *		first_error_handler;
 };
 
-cce_decl void cce_location_init	(cce_destination_t here)
+cclib_decl void cce_location_init	(cce_destination_t here)
   __attribute__((__leaf__,__nonnull__(1)));
 
-cce_decl void cce_p_raise (cce_destination_t L, cce_condition_t const * C)
+cclib_decl void cce_p_raise (cce_destination_t L, cce_condition_t const * C)
   __attribute__((__noreturn__,__nonnull__(1)));
 
-cce_decl void cce_p_retry (cce_destination_t L)
+cclib_decl void cce_p_retry (cce_destination_t L)
   __attribute__((__noreturn__,__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl int cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
+cclib_decl int cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,3,4)));
 
-cce_decl cce_condition_t const * cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
+cclib_decl cce_condition_t const * cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(2,3)));
 
-cce_decl cce_destination_t cce_trace_retry (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+cclib_decl cce_destination_t cce_trace_retry (cce_destination_t L, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,2,3)));
 
 /* ------------------------------------------------------------------ */
@@ -324,13 +267,13 @@ cce_code (int const code)
  ** Running handlers and catching exceptions as final step.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_p_run_catch_handlers_final (cce_destination_t L)
+cclib_decl void cce_p_run_catch_handlers_final (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
-cce_decl void cce_p_run_body_handlers_final (cce_destination_t L)
+cclib_decl void cce_p_run_body_handlers_final (cce_destination_t L)
   __attribute__((__nonnull__(1)));
 
-cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+cclib_decl void cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,2,3)));
 
 #if (! defined CCEXCEPTIONS_TRACE)
@@ -348,15 +291,15 @@ cce_decl void cce_trace_final (cce_destination_t L, char const * filename, char 
  ** Running handlers and re-raising exceptions.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+cclib_decl void cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
   __attribute__((__nonnull__(1,2),__noreturn__));
 
-cce_decl void cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
+cclib_decl void cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
   __attribute__((__nonnull__(1,2),__noreturn__));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, char const * funcname, int linenum)
+cclib_decl void cce_trace_reraise (cce_destination_t L, char const * filename, char const * funcname, int linenum)
   __attribute__((__nonnull__(1,2,3)));
 
 #if (! defined CCEXCEPTIONS_TRACE)
@@ -374,19 +317,19 @@ cce_decl void cce_trace_reraise (cce_destination_t L, char const * filename, cha
  ** Registering handlers to run handlers.
  ** ----------------------------------------------------------------- */
 
-cce_decl void cce_register_clean_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
+cclib_decl void cce_register_clean_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
 								cce_destination_t outer_L)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
+cclib_decl void cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
 								cce_destination_t outer_L)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_register_error_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_error_handler_t * inner_H,
+cclib_decl void cce_register_error_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_error_handler_t * inner_H,
 								cce_destination_t outer_L)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
+cclib_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
 								cce_destination_t outer_L)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
@@ -395,21 +338,21 @@ cce_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_
  ** System call wrappers: memory allocation.
  ** ----------------------------------------------------------------- */
 
-cce_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
+cclib_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
   __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
-cce_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize)
+cclib_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize)
   __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
-cce_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
+cclib_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
   __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void cce_init_and_register_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
+cclib_decl void cce_init_and_register_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
-cce_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
+cclib_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
   __attribute__((__leaf__,__nonnull__(1,2,3)));
 
 #define cce_init_and_register_handler_malloc(L,P_H,P)			\
@@ -419,10 +362,10 @@ cce_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L, c
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
+cclib_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
+cclib_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_malloc_guarded(L,P_H,size)				\
@@ -432,10 +375,10 @@ cce_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_hand
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
+cclib_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * P, size_t newsize)
+cclib_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * P, size_t newsize)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_realloc_guarded(L,P_H,old_P,newsize)			\
@@ -445,10 +388,10 @@ cce_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_han
 
 /* ------------------------------------------------------------------ */
 
-cce_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
+cclib_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
-cce_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
+cclib_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
   __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
 
 #define cce_sys_calloc_guarded(L,P_H,count,eltsize)			\

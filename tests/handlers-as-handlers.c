@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -40,14 +40,14 @@
  ** ----------------------------------------------------------------- */
 
 static void
-flag_clean_handler (cce_condition_t const * C CCE_UNUSED, cce_clean_handler_t const * const H)
+flag_clean_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 {
   bool volatile	*flagp = cce_handler_resource_pointer(H);
   *flagp = true;
 }
 
 static void
-flag_error_handler (cce_condition_t const * C CCE_UNUSED, cce_error_handler_t const * const H)
+flag_error_handler (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 {
   bool volatile	*flagp = cce_handler_resource_pointer(H);
   *flagp = true;
