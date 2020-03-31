@@ -31,13 +31,13 @@
  ** ----------------------------------------------------------------- */
 
 typedef void cce_condition_delete_fun_t (cce_condition_t * C)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 typedef void cce_condition_final_fun_t (cce_condition_t * C)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 typedef char const * cce_condition_static_message_fun_t	(cce_condition_t const * C)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 struct cce_descriptor_t {
   cce_descriptor_t const *		parent;
@@ -53,24 +53,30 @@ struct cce_condition_t {
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init (cce_condition_t * C, cce_descriptor_t const * D)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_condition_final (cce_condition_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl void cce_condition_delete (cce_condition_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl bool cce_condition_is (cce_condition_t const * C, cce_descriptor_t const * D)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl char const * cce_condition_static_message (cce_condition_t const * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl bool cce_descriptor_child_and_ancestor (cce_descriptor_t const * child, cce_descriptor_t const * ancestor)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 #define cce_descriptor_set_parent_to(TYPE)	cce_descriptor_set_parent_to ## TYPE
 
@@ -91,15 +97,19 @@ struct cce_condition_root_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_root_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_root (cce_condition_root_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl bool cce_condition_is_root (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -115,18 +125,24 @@ struct cce_condition_unknown_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unknown_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_unknown (cce_condition_unknown_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_unknown (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_unknown (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -142,18 +158,24 @@ struct cce_condition_break_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_break_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_break (cce_condition_break_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_break (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_break (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -169,18 +191,24 @@ struct cce_condition_error_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_error_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_error (cce_condition_error_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_error (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_error (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -196,18 +224,24 @@ struct cce_condition_runtime_error_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_runtime_error (cce_condition_runtime_error_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_runtime_error (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_runtime_error (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -223,18 +257,24 @@ struct cce_condition_logic_error_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_logic_error_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_logic_error (cce_condition_logic_error_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_logic_error (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_logic_error (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -253,7 +293,8 @@ struct cce_condition_unreachable_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
@@ -261,13 +302,16 @@ cclib_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
 					      char const * const filename,
 					      char const * const funcname,
 					      int const linenum)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
 								char const * const filename,
 								char const * const funcname,
 								int const linenum)
-  __attribute__((__leaf__,__nonnull__(1,2,3),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 #if (defined CCEXCEPTIONS_EXCLUDE_UNREACHABLE)
 #  define cce_raise_unreachable(L)		/* empty */
@@ -277,7 +321,9 @@ cclib_decl cce_condition_t const * cce_condition_new_unreachable (cce_destinatio
 #endif
 
 cclib_decl bool cce_condition_is_unreachable (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -293,18 +339,24 @@ struct cce_condition_unimplemented_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_unimplemented (cce_condition_unimplemented_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_unimplemented (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_unimplemented (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -325,17 +377,23 @@ struct cce_condition_invalid_argument_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-cclib_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index);
+cclib_decl void cce_condition_init_invalid_argument (cce_condition_invalid_argument_t * C, char const * func, unsigned index)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl cce_condition_t const * cce_condition_new_invalid_argument (cce_destination_t L, char const * func, unsigned index)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_invalid_argument (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 #define cce_check_argument(L,EXPR,ARGNUM) \
   if (! (EXPR)) { cce_raise((L), cce_condition_new_invalid_argument((L), __func__, (ARGNUM))); }
@@ -354,18 +412,24 @@ struct cce_condition_math_error_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_error_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_math_error (cce_condition_math_error_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_math_error (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_math_error (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -381,18 +445,24 @@ struct cce_condition_math_nan_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_nan_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_math_nan (cce_condition_math_nan_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_math_nan (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_math_nan (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -408,18 +478,24 @@ struct cce_condition_math_infinity_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_math_infinity (cce_condition_math_infinity_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_math_infinity (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_math_infinity (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -435,18 +511,24 @@ struct cce_condition_math_overflow_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_math_overflow (cce_condition_math_overflow_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_math_overflow (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_math_overflow (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -462,18 +544,24 @@ struct cce_condition_math_underflow_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_math_underflow (cce_condition_math_underflow_t * C)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_math_underflow (void)
-  __attribute__((__leaf__,__const__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_CONST
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_math_underflow (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -491,25 +579,33 @@ struct cce_condition_errno_t {
 };
 
 cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descriptor_t * const D)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl cce_condition_t const * cce_condition_new_errno (int code)
-  __attribute__((__leaf__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl cce_condition_t const * cce_condition_new_errno_clear (void)
-  __attribute__((__leaf__,__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl bool cce_condition_is_errno (cce_condition_t const * C)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl bool cce_condition_is_errno_with_code (cce_condition_t const * C, int errnum)
-  __attribute__((__leaf__,__pure__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline int
 cce_condition_ref_errno_errnum (cce_condition_t const * const C)
 {
@@ -517,7 +613,9 @@ cce_condition_ref_errno_errnum (cce_condition_t const * const C)
   return K->errnum;
 }
 
-__attribute__((__always_inline__,__pure__,__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline char const *
 cce_condition_ref_errno_message (cce_condition_t const * const C)
 {

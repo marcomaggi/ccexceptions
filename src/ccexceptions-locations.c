@@ -37,7 +37,8 @@
  ** Helpers.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_condition_t const *
 cce_condition_or_default (cce_condition_t const * C)
 {
@@ -49,7 +50,7 @@ cce_condition_or_default (cce_condition_t const * C)
  ** Location mechanism.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__hot__))
+CCLIB_FUNC_ATTRIBUTE_HOT
 void
 cce_location_init (cce_destination_t L)
 {
@@ -58,7 +59,7 @@ cce_location_init (cce_destination_t L)
   L->first_error_handler	= NULL;
 }
 
-__attribute__((__hot__))
+CCLIB_FUNC_ATTRIBUTE_HOT
 void
 cce_p_raise (cce_destination_t L, cce_condition_t const * C)
 {
@@ -75,7 +76,7 @@ cce_p_retry (cce_destination_t L)
   siglongjmp(L->buffer, (int)CCE_RETRY);
 }
 
-__attribute__((__hot__))
+CCLIB_FUNC_ATTRIBUTE_HOT
 void
 cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
 {
@@ -83,7 +84,7 @@ cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
   L->first_clean_handler	= cce_clean_handler_handler(H);
 }
 
-__attribute__((__hot__))
+CCLIB_FUNC_ATTRIBUTE_HOT
 void
 cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 {
@@ -176,7 +177,8 @@ cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
  ** Exception handlers: initialisation only.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,3)
 static inline void
 cce_p_init_handler_3 (cce_handler_t * H, cce_handler_fun_t * handler_function, cce_resource_data_t * resource_pointer)
 {
@@ -185,7 +187,8 @@ cce_p_init_handler_3 (cce_handler_t * H, cce_handler_fun_t * handler_function, c
   H->resource_destructor	= NULL;
 }
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,3)
 static inline void
 cce_p_init_handler_4 (cce_handler_t * H, cce_handler_fun_t * handler_function,
 		      cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
@@ -308,7 +311,7 @@ cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * target_hand
  ** Running handlers from a handler.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
 run_body_handlers (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * inner_H)
 {
@@ -318,7 +321,7 @@ run_body_handlers (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const *
   cce_condition_delete(cce_condition(L));
 }
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
 run_catch_handlers (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * inner_H)
 {
@@ -414,7 +417,8 @@ cce_trace_final (cce_destination_t L, char const * filename, char const * funcna
  ** Miscellaneous.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline void
 cce_default_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_handler_t const * H)
 {

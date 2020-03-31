@@ -30,6 +30,20 @@
 
 
 /** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
+/* Enable latest POSIX features. */
+#undef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE		200809L
+
+#include <cclibraries.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <setjmp.h>
+
+
+/** --------------------------------------------------------------------
  ** Helper macros.
  ** ----------------------------------------------------------------- */
 
@@ -90,20 +104,6 @@
 
 
 /** --------------------------------------------------------------------
- ** Headers.
- ** ----------------------------------------------------------------- */
-
-/* Enable latest POSIX features. */
-#undef _POSIX_C_SOURCE
-#define _POSIX_C_SOURCE		200809L
-
-#include <cclibraries.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <setjmp.h>
-
-
-/** --------------------------------------------------------------------
  ** Constants.
  ** ----------------------------------------------------------------- */
 
@@ -131,13 +131,20 @@ typedef enum {
  ** ----------------------------------------------------------------- */
 
 cclib_decl char const *	cce_version_string		(void)
-  __attribute__((__leaf__,__pure__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE;
+
 cclib_decl int		cce_version_interface_current	(void)
-  __attribute__((__leaf__,__pure__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE;
+
 cclib_decl int		cce_version_interface_revision	(void)
-  __attribute__((__leaf__,__pure__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE;
+
 cclib_decl int		cce_version_interface_age	(void)
-  __attribute__((__leaf__,__pure__));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE;
 
 
 /** --------------------------------------------------------------------
@@ -221,28 +228,32 @@ struct cce_location_t {
 };
 
 cclib_decl void cce_location_init	(cce_destination_t here)
-  __attribute__((__leaf__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl void cce_p_raise (cce_destination_t L, cce_condition_t const * C)
-  __attribute__((__noreturn__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NORETURN
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl void cce_p_retry (cce_destination_t L)
-  __attribute__((__noreturn__,__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NORETURN
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl int cce_trace_setjmp (cce_destination_t L, int rv, char const * filename, char const * funcname, int linenum)
-  __attribute__((__nonnull__(1,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,3,4);
 
 cclib_decl cce_condition_t const * cce_trace_raise (cce_condition_t const * C, char const * filename, char const * funcname, int linenum)
-  __attribute__((__nonnull__(2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(2,3);
 
 cclib_decl cce_destination_t cce_trace_retry (cce_destination_t L, char const * filename, char const * funcname, int linenum)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__const__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_CONST
 static inline int
 cce_code (int const code)
 {
@@ -268,13 +279,13 @@ cce_code (int const code)
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cce_p_run_catch_handlers_final (cce_destination_t L)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl void cce_p_run_body_handlers_final (cce_destination_t L)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl void cce_trace_final (cce_destination_t L, char const * filename, char const * funcname, int linenum)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 #if (! defined CCEXCEPTIONS_TRACE)
 #  define cce_run_body_handlers_final(L)	cce_p_run_body_handlers_final(L)
@@ -292,15 +303,17 @@ cclib_decl void cce_trace_final (cce_destination_t L, char const * filename, cha
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cce_p_run_catch_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-  __attribute__((__nonnull__(1,2),__noreturn__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_NORETURN;
 
 cclib_decl void cce_p_run_body_handlers_raise (cce_destination_t L, cce_destination_t upper_L)
-  __attribute__((__nonnull__(1,2),__noreturn__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_NORETURN;
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_trace_reraise (cce_destination_t L, char const * filename, char const * funcname, int linenum)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 #if (! defined CCEXCEPTIONS_TRACE)
 #  define cce_run_catch_handlers_raise(L,upper_L)	cce_p_run_catch_handlers_raise((L),(upper_L))
@@ -319,19 +332,23 @@ cclib_decl void cce_trace_reraise (cce_destination_t L, char const * filename, c
 
 cclib_decl void cce_register_clean_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
 								cce_destination_t outer_L)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void cce_register_clean_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_clean_handler_t * inner_H,
-								cce_destination_t outer_L)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+								  cce_destination_t outer_L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void cce_register_error_handler_to_run_body_handlers  (cce_destination_t inner_L, cce_error_handler_t * inner_H,
-								cce_destination_t outer_L)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+								  cce_destination_t outer_L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void cce_register_error_handler_to_run_catch_handlers (cce_destination_t inner_L, cce_error_handler_t * inner_H,
-								cce_destination_t outer_L)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+								  cce_destination_t outer_L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 
 /** --------------------------------------------------------------------
@@ -339,21 +356,29 @@ cclib_decl void cce_register_error_handler_to_run_catch_handlers (cce_destinatio
  ** ----------------------------------------------------------------- */
 
 cclib_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
-  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void * cce_sys_realloc (cce_destination_t L, void * ptr, size_t newsize)
-  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void * cce_sys_calloc (cce_destination_t L, size_t count, size_t eltsize)
-  __attribute__((__leaf__,__nonnull__(1),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_init_and_register_clean_handler_malloc (cce_destination_t L, cce_clean_handler_t * H, void * pointer)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L, cce_error_handler_t * H, void * pointer)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 #define cce_init_and_register_handler_malloc(L,P_H,P)			\
   _Generic((P_H),							\
@@ -363,10 +388,14 @@ cclib_decl void cce_init_and_register_error_handler_malloc (cce_destination_t L,
 /* ------------------------------------------------------------------ */
 
 cclib_decl void * cce_sys_malloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t size)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_handler_t *   P_H, size_t size)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 #define cce_sys_malloc_guarded(L,P_H,size)				\
   _Generic((P_H),							\
@@ -376,10 +405,14 @@ cclib_decl void * cce_sys_malloc_guarded_error (cce_location_t * L, cce_error_ha
 /* ------------------------------------------------------------------ */
 
 cclib_decl void * cce_sys_realloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, void * P, size_t newsize)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, void * P, size_t newsize)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 #define cce_sys_realloc_guarded(L,P_H,old_P,newsize)			\
   _Generic((P_H),							\
@@ -389,10 +422,14 @@ cclib_decl void * cce_sys_realloc_guarded_error (cce_location_t * L, cce_error_h
 /* ------------------------------------------------------------------ */
 
 cclib_decl void * cce_sys_calloc_guarded_clean (cce_location_t * L, cce_clean_handler_t * P_H, size_t count, size_t eltsize)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 cclib_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_handler_t * P_H, size_t count, size_t eltsize)
-  __attribute__((__leaf__,__nonnull__(1,2),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
 
 #define cce_sys_calloc_guarded(L,P_H,count,eltsize)			\
   _Generic((P_H),							\

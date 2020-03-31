@@ -50,6 +50,7 @@ AX_IS_RELEASE([git-directory])
 
 AC_LANG([C])
 MMUX_LANG_C11
+MMUX_CHECK_C_COMPILER_FUNC_ATTRIBUTES([always_inline],[const],[dllexport],[dllimport],[format],[hot],[leaf],[nonnull],[noreturn],[pure],[returns_nonnull],[unused],[used],[visibility])
 
 AM_PROG_AS
 AM_PROG_CC_C_O
@@ -227,8 +228,9 @@ CCE_ERRNO_TEST([EXFULL])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
-   [meta/scripts/ccexceptions.pc]
-   [meta/slackware/slack-desc])
+  [src/cclibraries-config.h]
+  [meta/scripts/ccexceptions.pc]
+  [meta/slackware/slack-desc])
 MMUX_OUTPUT
 AC_OUTPUT
 

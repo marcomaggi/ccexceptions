@@ -59,28 +59,40 @@ struct cce_error_handler_t {
  ** Exception handlers: core handler accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_handler_t *
 cce_clean_handler_handler (cce_clean_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_handler_t *
 cce_error_handler_handler (cce_error_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_handler_t const *
 cce_clean_handler_const_handler (cce_clean_handler_t const * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_handler_t const *
 cce_error_handler_const_handler (cce_error_handler_t const * const H)
 {
@@ -99,14 +111,20 @@ cce_error_handler_const_handler (cce_error_handler_t const * const H)
  ** Exception handlers: resource pointer accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline void *
 cce_clean_handler_resource_pointer (cce_clean_handler_t const * const H)
 {
   return H->handler.resource_pointer;
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline void *
 cce_error_handler_resource_pointer (cce_error_handler_t const * const H)
 {
@@ -125,14 +143,18 @@ cce_error_handler_resource_pointer (cce_error_handler_t const * const H)
  ** Exception handlers: resource destructor accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline cce_resource_destructor_fun_t *
 cce_clean_handler_resource_destructor (cce_clean_handler_t const * const H)
 {
   return H->handler.resource_destructor;
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline cce_resource_destructor_fun_t *
 cce_error_handler_resource_destructor (cce_error_handler_t const * const H)
 {
@@ -152,10 +174,10 @@ cce_error_handler_resource_destructor (cce_error_handler_t const * const H)
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cce_default_clean_handler_function (cce_condition_t const * C, cce_clean_handler_t const * H)
-  __attribute__((__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_default_error_handler_function (cce_condition_t const * C, cce_error_handler_t const * H)
-  __attribute__((__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 
 /** --------------------------------------------------------------------
@@ -164,21 +186,25 @@ cclib_decl void cce_default_error_handler_function (cce_condition_t const * C, c
 
 cclib_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_init_error_handler_3 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-					cce_resource_data_t * resource_pointer)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+					  cce_resource_data_t * resource_pointer)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
-					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+					  cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 /* ------------------------------------------------------------------ */
 
@@ -202,10 +228,12 @@ cclib_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_han
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cce_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 #define cce_register_handler(L,H)					\
   _Generic((H),								\
@@ -215,10 +243,12 @@ cclib_decl void cce_register_error_handler (cce_destination_t L, cce_error_handl
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_forget_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler_t * H)
-  __attribute__((__leaf__,__nonnull__(1,2)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 #define cce_forget_handler(L,H)						\
   _Generic((H),								\
@@ -233,24 +263,28 @@ cclib_decl void cce_forget_error_handler (cce_destination_t L, cce_error_handler
 cclib_decl void cce_init_and_register_clean_handler_4 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cce_init_and_register_clean_handler_5 (cce_destination_t L,
 						     cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_init_and_register_error_handler_4 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 						     cce_error_handler_t * H, cce_error_handler_fun_t * handler_function,
 						     cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
-  __attribute__((__leaf__,__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
@@ -276,12 +310,12 @@ cclib_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 /* We do *not* set the "leaf" attribute for this function, because the clean handlers
    might modify data in the current compilation unit. */
 cclib_decl void cce_run_body_handlers (cce_destination_t L)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* We do *not* set the "leaf" attribute for this function, because the error handlers
    might modify data in the current compilation unit. */
 cclib_decl void cce_run_catch_handlers (cce_destination_t L)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------

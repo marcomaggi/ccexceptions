@@ -6,7 +6,7 @@ EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS)
-AM_CPPFLAGS		= -I$(srcdir)/src
+AM_CPPFLAGS		= -I$(srcdir)/src -I$(builddir)/src
 CLEANFILES		=
 
 ## --------------------------------------------------------------------
@@ -60,6 +60,7 @@ ccexceptions_LINKER_VERSION	= -version-info $(ccexceptions_CURRENT):$(ccexceptio
 
 include_HEADERS			= \
 	src/cclibraries.h			\
+	src/cclibraries-config.h		\
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
 	src/ccexceptions-conditions.h
@@ -68,6 +69,7 @@ lib_LTLIBRARIES			= libccexceptions.la
 libccexceptions_la_LDFLAGS	= $(ccexceptions_LINKER_VERSION)
 libccexceptions_la_SOURCES	= \
 	src/cclibraries.h			\
+	src/cclibraries-config.h		\
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
 	src/ccexceptions-conditions.h		\
