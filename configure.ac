@@ -228,7 +228,6 @@ CCE_ERRNO_TEST([EXFULL])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
-  [src/cclibraries-config.h]
   [meta/scripts/ccexceptions.pc]
   [meta/slackware/slack-desc])
 MMUX_OUTPUT
