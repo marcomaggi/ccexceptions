@@ -44,15 +44,6 @@
 
 
 /** --------------------------------------------------------------------
- ** Helper macros.
- ** ----------------------------------------------------------------- */
-
-/* Cast pointer S to a location structure and evaluate to the pointer to
-   condition object. */
-#define CCE_CLOC(S)			(((cce_location_t *)(S))->condition)
-
-
-/** --------------------------------------------------------------------
  ** Constants.
  ** ----------------------------------------------------------------- */
 
@@ -389,6 +380,10 @@ cclib_decl void * cce_sys_calloc_guarded_error (cce_location_t * L, cce_error_ha
 /** --------------------------------------------------------------------
  ** Generic macros.
  ** ----------------------------------------------------------------- */
+
+/* Cast pointer S to a location structure and evaluate to the pointer to
+   condition object. */
+#define CCE_CLOC(S)			(((cce_location_t *)(S))->condition)
 
 /* Cast a pointer to condition descriptor. */
 #define CCE_C001(S)	((cce_descriptor_t*)(S))
