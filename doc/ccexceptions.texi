@@ -3398,8 +3398,221 @@ finalising: ../tests/tracing.c:85, test_tracing(): Unknown exceptional condition
 @appendix The header file @file{cclibraries.h}
 
 
-The following definitions are in the header file @file{cclibraries.h}, which is automatically
-included by @file{ccexceptions.h}.
+The header file @file{cclibraries.h} is meant to be included in all the CCLibraries projects;
+@file{cclibraries.h} is included by @file{ccexceptions.h}.  This header files is meant to support
+the C11 language standard on @posix{} platforms.  This header file is distributed with the
+@value{PACKAGE} project because @value{PACKAGE} implements core facilities for all the CCLibraries
+packages.  All the macro definitions are prefixed with @code{CCLIB_} or @code{cclib_}.
+
+@menu
+* cclibraries attributes::      Compiler attributes for functions.
+* cclibraries declarations::    Functions and variables visibility declarations.
+* cclibraries macros::          Helper macros.
+* cclibraries variadic::        Variadic preprocessor macros.
+@end menu
+
+@c page
+@node cclibraries attributes
+@appendixsec Compiler attributes for functions
+
+
+The following definitions are in the header file @file{cclibraries.h}.  The header file tries to
+determine, through the C preprocessor macros, which function attributes are implemented by the
+compiler and defines the following macros accordingly.  If an attribute is not implemented: the
+corresponding macro is defined to expand to the empty string.
+
+A typical function prototype declaration for a function using the facilities of @value{PACKAGE}
+looks like this:
+
+@example
+cclib_decl void * cce_sys_malloc (cce_destination_t L, size_t size)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+  CCLIB_FUNC_ATTRIBUTE_LEAF;
+@end example
+
+@noindent
+while a @code{static} and @code{inline} function definition looks like this:
+
+@example
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+static inline cce_handler_t *
+cce_clean_handler_handler (cce_clean_handler_t * const H)
+@{
+  ...
+@}
+@end example
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+Expand into:
+
+@example
+__attribute__((__always_inline__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_CONST
+Expand into:
+
+@example
+__attribute__((__const__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_DLLEXPORT
+Expand into:
+
+@example
+__attribute__((__dllexport__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_DLLIMPORT
+Expand into:
+
+@example
+__attribute__((__dllimport__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_FORMAT (...)
+Expand into:
+
+@example
+__attribute__((__format__(__VA_ARGS__)))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_HOT
+Expand into:
+
+@example
+__attribute__((__hot__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_LEAF
+Expand into:
+
+@example
+__attribute__((__leaf__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_NONNULL (...)
+Expand into:
+
+@example
+__attribute__((__nonnull__(__VA_ARGS__)))
+@end example
+
+We can use this macro as follows:
+
+@example
+cclib_decl void my_func (int * dst, int * src)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_NORETURN
+Expand into:
+
+@example
+__attribute__((__noreturn__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_PURE
+Expand into:
+
+@example
+__attribute__((__pure__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
+Expand into:
+
+@example
+__attribute__((__returns_nonnull__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_UNUSED
+Expand into:
+
+@example
+__attribute__((__unused__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_USED
+Expand into:
+
+@example
+__attribute__((__used__))
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_VISIBILITY (...)
+Expand into:
+
+@example
+__attribute__((__visibility__(__VA_ARGS__)))
+@end example
+@end deffn
+
+@c page
+@node cclibraries declarations
+@appendixsec Functions and variables visibility declarations
+
+
+The following definitions are in the header file @file{cclibraries.h}.
+
+
+@deffn {Preprocessor Macro} cclib_decl
+Expand into the qualifiers for a public @api{} declaration.  When using the @gnu{} C Compiler on a
+@posix{} system, it should expand into:
+
+@example
+CCLIB_FUNC_ATTRIBUTE_VISIBILITY("default") extern
+@end example
+@end deffn
+
+
+@deffn {Preprocessor Macro} cclib_private_decl
+Expand into the qualifiers for a private @api{} declaration: entities qualified with this macro are
+meant to be visible only inside the namespace of a shared library.  When using the @gnu{} C Compiler
+on a @posix{} system, it should expand into:
+
+@example
+CCLIB_FUNC_ATTRIBUTE_VISIBILITY("hidden")  extern
+@end example
+@end deffn
+
+@c page
+@node cclibraries macros
+@appendixsec Helper macros
+
+
+The following definitions are in the header file @file{cclibraries.h}.
 
 
 @deffn {Preprocessor Macro} CCLIB_CAST (@var{TYPE}, @var{X}, @var{Y})
@@ -3445,17 +3658,137 @@ CCLIB_PC(ccevents_timeval_invalid_t, C, cce_condition(L));
 @end deffn
 
 
-@defmac CCLIB_UNUSED
-Preprocessor macro that is meant to expand into an attribute declaration.  If the symbol
-@code{__GNUC__} is defined, the expansion is:
+@deffn {Preprocessor Macro} CCLIB_UNUSED
+Preprocessor macro that is meant to expand into an attribute declaration.  It expands into:
 
 @example
-__attribute__((__unused__))
+CCLIB_FUNC_ATTRIBUTE_UNUSED
+@end example
+@end deffn
+
+@c page
+@node cclibraries variadic
+@appendixsec Variadic preprocessor macros
+
+
+The following definitions are in the header file @file{cclibraries.h}.  The variadic macros
+machinery implemented in the header file is derived from code found on Stack Overflow (@aurl{} last
+accessed Apr 1, 2020):
+
+@center @url{https://stackoverflow.com/a/26408195}
+
+The machinery is composed of a number of preprocessor macros, of which only @cfunc{CCLIB_VFUNC} is
+public.
+
+
+@deffn {Preprocessor Macro} CCLIB_VFUNC (@var{FUNC}, @var{ARG}, ...)
+Expand into the name of a C language function or preprocessor macro; the name has @var{FUNC} as
+prefix and @code{_0}, @code{_1}, @code{_2}, @dots{} as suffix, depending on how many arguments are
+in the macro use after the mandatory @var{FUNC}.  We can use up to 63 arguments, generating names
+with suffix from @code{_1} to @code{_63}.
+
+@strong{NOTE} It is @strong{mandatory} to use at least one argument after @var{FUNC}: @var{ARG} is
+not optional!
+@end deffn
+
+
+We can use the machinery in multiple ways.
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Mimicking variadic functions
+
+
+With the single macro definition:
+
+@example
+#define my_one(...)     CCLIB_VFUNC(my_one,__VA_ARGS__)
 @end example
 
 @noindent
-otherwise the expansion is the empty string.
-@end defmac
+we can obtain the following expansions:
+
+@example
+my_one(7)       @expansion{} my_one_1(7)
+my_one(8,9)     @expansion{} my_one_1(8,9)
+@end example
+
+@noindent
+so we can define the functions:
+
+@example
+int
+my_one_1 (int arg)
+@{
+  return arg;
+@}
+
+int
+my_one_2 (int arg1, int arg2)
+@{
+  return arg1 + arg2;
+@}
+@end example
+
+@noindent
+and call them as:
+
+@example
+my_one(7);
+my_one(8, 9);
+@end example
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Function names composition
+
+With the following macro definitions:
+
+@example
+#define my_two_1(A1)            my_two_ ## A1
+#define my_two_2(A1,A2)         my_two_ ## A1 ## _ ## A2
+#define my_two(...)             CCLIB_VFUNC(my_two,__VA_ARGS__)
+@end example
+
+@noindent
+we can obtain the following partial expansions:
+
+@example
+my_two(alpha)           @expansion{} my_two_1(alpha)
+my_two(alpha,beta)      @expansion{} my_two_2(alpha,beta)
+@end example
+
+@noindent
+and then the final expansions:
+
+@example
+my_two_1(alpha)         @expansion{} my_two_alpha
+my_two_2(alpha,beta)    @expansion{} my_two_alpha_beta
+@end example
+
+So we can define the functions:
+
+@example
+int
+my_two(alpha) (int arg)
+@{
+  return arg;
+@}
+
+int
+my_two(alpha,beta) (int arg1, int arg2, int arg3)
+@{
+  return arg1 + arg2 + arg3;
+@}
+@end example
+
+@noindent
+and call them as:
+
+@example
+my_two(alpha)(1);
+my_two(alpha,beta)(1,2,4);
+@end example
 
 @c page
 @c ------------------------------------------------------------
