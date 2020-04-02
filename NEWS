@@ -3,7 +3,7 @@
 Notes for revision 0.10.0-devel.1
 ---------------------------------
 
-* ...
+* Added function attribute "__constructor__" to "cclibraries.h".
 
 
 Notes for revision 0.10.0-devel.0
