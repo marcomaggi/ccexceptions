@@ -5,6 +5,12 @@ Notes for revision 0.9.0-devel.4
 
 * Added the header file "cclibraries.h".
 
+* Added  GNU Autoconf  macros to  check for  C compiler  "__attribute__"
+  support.
+
+* Added   requirement   to   use    the   "cclibraries.m4"   macros   in
+  "configure.ac".
+
 
 Notes for revision 0.9.0-devel.3
 --------------------------------

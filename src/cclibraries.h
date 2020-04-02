@@ -35,43 +35,97 @@ extern "C" {
  ** Header files.
  ** ----------------------------------------------------------------- */
 
-#include <cclibraries-config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 
 /** --------------------------------------------------------------------
  ** Compiler attributes.
  ** ----------------------------------------------------------------- */
 
-#if ((defined  __GNUC__) && (__GNUC__ >= 4))
+#ifdef HAVE_FUNC_ATTRIBUTE_ALWAYS_INLINE
 #  define CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE	__attribute__((__always_inline__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_CONST
 #  define CCLIB_FUNC_ATTRIBUTE_CONST		__attribute__((__const__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_CONST	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_DLLEXPORT
 #  define CCLIB_FUNC_ATTRIBUTE_DLLEXPORT	__attribute__((__dllexport__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_DLLEXPORT	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_DLLIMPORT
 #  define CCLIB_FUNC_ATTRIBUTE_DLLIMPORT	__attribute__((__dllimport__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_DLLIMPORT	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_FORMAT
 #  define CCLIB_FUNC_ATTRIBUTE_FORMAT(...)	__attribute__((__format__(__VA_ARGS__)))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_FORMAT	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_HOT
 #  define CCLIB_FUNC_ATTRIBUTE_HOT		__attribute__((__hot__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_HOT	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_LEAF
 #  define CCLIB_FUNC_ATTRIBUTE_LEAF		__attribute__((__leaf__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_LEAF	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_NONNULL
 #  define CCLIB_FUNC_ATTRIBUTE_NONNULL(...)	__attribute__((__nonnull__(__VA_ARGS__)))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_NONNULL	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_NORETURN
 #  define CCLIB_FUNC_ATTRIBUTE_NORETURN		__attribute__((__noreturn__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_NORETURN	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_PURE
 #  define CCLIB_FUNC_ATTRIBUTE_PURE		__attribute__((__pure__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_PURE	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_RETURNS_NONNULL
 #  define CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL	__attribute__((__returns_nonnull__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_UNUSED
 #  define CCLIB_FUNC_ATTRIBUTE_UNUSED		__attribute__((__unused__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_UNUSED	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_USED
 #  define CCLIB_FUNC_ATTRIBUTE_USED		__attribute__((__used__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_USED	/* empty string */
+#endif
+
+#ifdef HAVE_FUNC_ATTRIBUTE_VISIBILITY
 #  define CCLIB_FUNC_ATTRIBUTE_VISIBILITY(...)	__attribute__((__visibility__(__VA_ARGS__)))
 #else
-#  define CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_CONST		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_DLLEXPORT	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_DLLIMPORT	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_FORMAT(...)	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_HOT		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_LEAF		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_NONNULL(...)	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_NORETURN		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_PURE		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL	/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_UNUSED		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_USED		/* the empty string */
-#  define CCLIB_FUNC_ATTRIBUTE_VISIBILITY(...)	/* the empty string */
+#  define CCLIB_FUNC_ATTRIBUTE_VISIBILITY	/* empty string */
 #endif
 
 

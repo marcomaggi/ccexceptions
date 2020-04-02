@@ -14,10 +14,11 @@ m4_include(meta/autoconf/ax-append-flag.m4)
 m4_include(meta/autoconf/ax-append-compile-flags.m4)
 m4_include(meta/autoconf/ax-append-link-flags.m4)
 m4_include(meta/autoconf/ax-gcc-version.m4)
+m4_include(meta/autoconf/ax-gcc-func-attribute.m4)
 
 m4_include(meta/autoconf/mmux-lang-c11.m4)
-m4_include(meta/autoconf/mmux-check-c-compiler-func-attributes.m4)
 
-m4_include(meta/autoconf/cce.m4)
+m4_include(meta/autoconf/cclibraries.m4)
+m4_include(meta/autoconf/ccexceptions.m4)
 
 ### end of file
