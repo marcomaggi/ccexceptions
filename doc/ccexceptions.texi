@@ -3465,6 +3465,15 @@ __attribute__((__const__))
 @end deffn
 
 
+@deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_CONSTRUCTOR
+Expand into:
+
+@example
+__attribute__((__constructor__))
+@end example
+@end deffn
+
+
 @deffn {Preprocessor Macro} CCLIB_FUNC_ATTRIBUTE_DLLEXPORT
 Expand into:
 

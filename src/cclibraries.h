@@ -56,6 +56,12 @@ extern "C" {
 #  define CCLIB_FUNC_ATTRIBUTE_CONST	/* empty string */
 #endif
 
+#ifdef HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR
+#  define CCLIB_FUNC_ATTRIBUTE_CONSTRUCTOR	__attribute__((__constructor__))
+#else
+#  define CCLIB_FUNC_ATTRIBUTE_CONSTRUCTOR	/* empty string */
+#endif
+
 #ifdef HAVE_FUNC_ATTRIBUTE_DLLEXPORT
 #  define CCLIB_FUNC_ATTRIBUTE_DLLEXPORT	__attribute__((__dllexport__))
 #else
