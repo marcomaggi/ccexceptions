@@ -182,7 +182,7 @@ matrix:
       dist: xenial
       compiler: clang
       script: |
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        ./configure --enable-maintainer-mode;
         make all;
         make check;
         (umask 0; sudo make install);
@@ -193,7 +193,7 @@ matrix:
       osx_image: xcode10.1
       compiler: clang
       script: |
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
+        ./configure --enable-maintainer-mode;
         make all;
         make check;
         (umask 0; sudo make install);
