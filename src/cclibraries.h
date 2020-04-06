@@ -179,6 +179,17 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
+ ** Helper macros.
+ ** ----------------------------------------------------------------- */
+
+/* Pointer cast macro helper. */
+#define CCLIB_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
+
+/* Type cast macro helper. */
+#define CCLIB_CAST(TYPE,X,Y)		TYPE X = (TYPE) (Y)
+
+
+/** --------------------------------------------------------------------
  ** Variadic macros mechanism.
  ** ----------------------------------------------------------------- */
 
@@ -295,14 +306,157 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
- ** Helper macros.
+ ** Automatically generated names API: data structs.
  ** ----------------------------------------------------------------- */
 
-/* Pointer cast macro helper. */
-#define CCLIB_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
+/* Whether it appears to make sense or not, let's always implement 4 variants of each
+   "well  known" macro  name: without  VAR, with  single VAR,  with double  VAR, with
+   triple VAR. */
 
-/* Type cast macro helper. */
-#define CCLIB_CAST(TYPE,X,Y)		TYPE X = (TYPE) (Y)
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "make()". */
+#define cclib_make_1(STRUCT)				STRUCT ## __make
+#define cclib_make_2(STRUCT, VAR)			STRUCT ## __make__ ## VAR
+#define cclib_make_3(STRUCT, VAR1, VAR2)		STRUCT ## __make__ ## VAR1 ## _ ## VAR2
+#define cclib_make_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __make__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_make(...)					CCLIB_VFUNC(cclib_make, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "new()". */
+#define cclib_new_1(STRUCT)				STRUCT ## __new
+#define cclib_new_2(STRUCT, VAR)			STRUCT ## __new__ ## VAR
+#define cclib_new_3(STRUCT, VAR1, VAR2)			STRUCT ## __new__ ## VAR1 ## _ ## VAR2
+#define cclib_new_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __new__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_new(...)					CCLIB_VFUNC(cclib_new, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "delete()". */
+#define cclib_delete_1(STRUCT)				STRUCT ## __delete
+#define cclib_delete_2(STRUCT, VAR)			STRUCT ## __delete__ ## VAR
+#define cclib_delete_3(STRUCT, VAR1, VAR2)		STRUCT ## __delete__ ## VAR1 ## _ ## VAR2
+#define cclib_delete_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __delete__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_delete(...)				CCLIB_VFUNC(cclib_delete, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "init()". */
+#define cclib_init_1(STRUCT)				STRUCT ## __init
+#define cclib_init_2(STRUCT, VAR)			STRUCT ## __init__ ## VAR
+#define cclib_init_3(STRUCT, VAR1, VAR2)		STRUCT ## __init__ ## VAR1 ## _ ## VAR2
+#define cclib_init_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __init__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_init(...)					CCLIB_VFUNC(cclib_init, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "final()". */
+#define cclib_final_1(STRUCT)				STRUCT ## __final
+#define cclib_final_2(STRUCT, VAR)			STRUCT ## __final__ ## VAR
+#define cclib_final_3(STRUCT, VAR1, VAR2)		STRUCT ## __final__ ## VAR1 ## _ ## VAR2
+#define cclib_final_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __final__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_final(...)				CCLIB_VFUNC(cclib_final, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "alloc()". */
+#define cclib_alloc_1(STRUCT)				STRUCT ## __alloc
+#define cclib_alloc_2(STRUCT, VAR)			STRUCT ## __alloc__ ## VAR
+#define cclib_alloc_3(STRUCT, VAR1, VAR2)		STRUCT ## __alloc__ ## VAR1 ## _ ## VAR2
+#define cclib_alloc_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __alloc__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_alloc(...)				CCLIB_VFUNC(cclib_alloc, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "release()". */
+#define cclib_release_1(STRUCT)				STRUCT ## __release
+#define cclib_release_2(STRUCT, VAR)			STRUCT ## __release__ ## VAR
+#define cclib_release_3(STRUCT, VAR1, VAR2)		STRUCT ## __release__ ## VAR1 ## _ ## VAR2
+#define cclib_release_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __release__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_release(...)				CCLIB_VFUNC(cclib_release, __VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
+ ** Automatically generated names API: methods table for data structs.
+ ** ----------------------------------------------------------------- */
+
+/* We can define a structure with a table of methods as follows:
+ *
+ *   typedef struct my_complex_t			my_complex_t;
+ *   typedef struct ccname_table_type(my_complex_t)	ccname_table_type(my_complex_t);
+ *
+ *   struct my_complex_t {
+ *     ccname_table_type(my_complex_t) const *	methods;
+ *     complex double	Z;
+ *   };
+ *
+ * we define a function type for each method:
+ *
+ *   typedef my_complex_t cclib_method_type(my_complex_t, sin) (my_complex_t op);
+ *   typedef my_complex_t cclib_method_type(my_complex_t, cos) (my_complex_t op);
+ *
+ * we declare a function prototype for each method:
+ *
+ *   static cclib_method_type(my_complex_t, sin) cclib_method(my_complex_t, sin);
+ *   static cclib_method_type(my_complex_t, cos) cclib_method(my_complex_t, cos);
+ *
+ * we define the table of methods itself:
+ *
+ *   struct ccname_table_type(my_complex_t) {
+ *     cclib_method_type(my_complex_t, sin) *	sin;
+ *     cclib_method_type(my_complex_t, cos) *	cos;
+ *   };
+ *
+ * we define the method implementation functions:
+ *
+ *   my_complex_t
+ *   cclib_method(my_complex_t, sin) (my_complex_t op)
+ *   {
+ *     ...
+ *   }
+ *
+ *   my_complex_t
+ *   cclib_method(my_complex_t, cos) (my_complex_t op)
+ *   {
+ *     ...
+ *   }
+ *
+ * Finally we call a method as follows:
+ *
+ *   my_complex_t  op = ...;
+ *   my_complex_t  rop;
+ *
+ *   rop = cclib_call(my_complex_t, sin)(op);
+ */
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the struct's methods table type. */
+#define cclib_table_type_1(STRUCT)				STRUCT ## __methods_table_t
+#define cclib_table_type_2(STRUCT, VAR)				STRUCT ## __methods_table_t__ ## VAR
+#define cclib_table_type_3(STRUCT, VAR1, VAR2)			STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2
+#define cclib_table_type_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_table_type(...)					CCLIB_VFUNC(cclib_table_type, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the struct's methods table. */
+#define cclib_table_1(STRUCT)					STRUCT ## __methods_table
+#define cclib_table_2(STRUCT, VAR)				STRUCT ## __methods_table__ ## VAR
+#define cclib_table_3(STRUCT, VAR1, VAR2)			STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2
+#define cclib_table_4(STRUCT, VAR1, VAR2, VAR3)			STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_table(...)					CCLIB_VFUNC(cclib_table, __VA_ARGS__)
+
+/* Given the  struct type name  STRUCT, the method  name METHOD, an  optional variant
+   specification  VAR: expand  into  the type  name  of that  variant  of the  method
+   function for the struct type. */
+#define cclib_method_type_1(STRUCT, METHOD)			STRUCT ## __method_t__ ## METHOD
+#define cclib_method_type_2(STRUCT, METHOD, VAR)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR
+#define cclib_method_type_3(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
+#define cclib_method_type_4(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_method_type(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
+
+/* Given  a struct  type  name STRUCT,  a  method name  METHOD,  an optional  variant
+   specification VAR: expand into the name of the method for that type. */
+#define cclib_method_1(STRUCT, METHOD)				STRUCT ## __method__ ## METHOD
+#define cclib_method_2(STRUCT, METHOD, VAR)			STRUCT ## __method__ ## METHOD ## __ ## VAR
+#define cclib_method_3(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
+#define cclib_method_4(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_method(...)					CCLIB_VFUNC(cclib_method, __VA_ARGS__)
+
+#define cclib_call(STRUCT, METHOD)				((STRUCT)->methods.(METHOD))
 
 
 /** --------------------------------------------------------------------

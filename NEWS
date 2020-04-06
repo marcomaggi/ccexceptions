@@ -3,7 +3,8 @@
 Notes for revision 0.10.0-devel.2
 ---------------------------------
 
-* ...
+* Embedded in the  header file "cclibrareis.h" the  preprocessor API for
+  automatic names generation.
 
 
 Notes for revision 0.10.0-devel.1
