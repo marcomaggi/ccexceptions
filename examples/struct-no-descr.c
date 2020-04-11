@@ -60,13 +60,6 @@ cclib_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
   S->Y = RHO * sin(THETA);
 }
 
-void
-cclib_init(my_coords_t, deserialisable) (my_coords_t * S)
-{
-  S->X = 0.0;
-  S->Y = 0.0;
-}
-
 /* ------------------------------------------------------------------ */
 
 void

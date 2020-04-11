@@ -74,12 +74,6 @@ cclib_decl void cclib_init(my_coords_t, rec) (my_coords_t * S, double X, double 
 cclib_decl void cclib_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-/* Initialisation  function  that  initialises  an already  allocated  struct.   This
-   initialises in such a  way that it allows for both  finalisation and mutation from
-   deserialisation.. */
-cclib_decl void cclib_init(my_coords_t, deserialisable) (my_coords_t * S)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
-
 /* ------------------------------------------------------------------ */
 
 /* Finalisation  function.  Releases  all  the asynchronous  resources  owned by  the
@@ -100,13 +94,6 @@ cclib_decl my_coords_t const * cclib_new(my_coords_t, rec) (cce_destination_t L,
    memory   allocator  implemented   by  CCMemory.    This  initialises   from  polar
    coordinates. */
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
-  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
-
-/* Constructor function  that allocates  the struct  on the  heap using  the standard
-   memory allocator implemented by CCMemory.  This  initialises in such a way that it
-   allows for both finalisation and mutation from deserialisation. */
-cclib_decl my_coords_t * cclib_new(my_coords_t, deserialisable) (cce_destination_t L)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 

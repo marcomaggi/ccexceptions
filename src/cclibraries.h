@@ -333,6 +333,14 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_make(...)					CCLIB_VFUNC(cclib_make, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into the name of the API function "unmake()". */
+#define cclib_unmake_1(STRUCT)				STRUCT ## __unmake
+#define cclib_unmake_2(STRUCT, VAR)			STRUCT ## __unmake__ ## VAR
+#define cclib_unmake_3(STRUCT, VAR1, VAR2)		STRUCT ## __unmake__ ## VAR1 ## _ ## VAR2
+#define cclib_unmake_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __unmake__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_unmake(...)				CCLIB_VFUNC(cclib_unmake, __VA_ARGS__)
+
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "new()". */
 #define cclib_new_1(STRUCT)				STRUCT ## __new
 #define cclib_new_2(STRUCT, VAR)			STRUCT ## __new__ ## VAR

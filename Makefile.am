@@ -318,17 +318,22 @@ installcheck-local: $(TESTS)
 ### examples
 
 dist_doc_DATA	+= \
-	examples/struct-no-descr.h		\
-	examples/struct-no-descr.c		\
-	examples/test-struct-no-descr.c		\
+	examples/struct-no-descr.h			\
+	examples/struct-no-descr.c			\
+	examples/test-struct-no-descr.c			\
 	\
-	examples/struct-with-descr.h		\
-	examples/struct-with-descr.c		\
+	examples/struct-as-value-no-descr.h		\
+	examples/struct-as-value-no-descr.c		\
+	examples/test-struct-as-value-no-descr.c	\
+	\
+	examples/struct-with-descr.h			\
+	examples/struct-with-descr.c			\
 	examples/test-struct-with-descr.c
 
-noinst_PROGRAMS	=				\
-	examples/plain				\
-	examples/test-struct-no-descr		\
+noinst_PROGRAMS	=					\
+	examples/plain					\
+	examples/test-struct-no-descr			\
+	examples/test-struct-as-value-no-descr		\
 	examples/test-struct-with-descr
 
 ccexceptions_examples_cppflags		= $(AM_CPPFLAGS) -I$(srcdir)/examples
@@ -364,6 +369,18 @@ examples_test_struct_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
 examples_test_struct_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
 
 $(examples_test_struct_no_descr_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_struct_as_value_no_descr_SOURCES =	\
+	examples/struct-as-value-no-descr.h		\
+	examples/struct-as-value-no-descr.c		\
+	examples/test-struct-as-value-no-descr.c
+
+examples_test_struct_as_value_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_as_value_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
+
+$(examples_test_struct_as_value_no_descr_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 

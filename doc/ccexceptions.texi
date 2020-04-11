@@ -3869,6 +3869,7 @@ my_two(alpha,beta)(1,2,4);
 
 @menu
 * cclibraries structs common::  Well known functions for @struct{} types.
+* cclibraries structs values::  Data structures as values.
 * cclibraries structs descr::   Data structures with descriptor.
 @end menu
 
@@ -4034,6 +4035,57 @@ main (void)
   exit(EXIT_SUCCESS);
 @}
 @end smallexample
+
+@c page
+@node cclibraries structs values
+@appendixsubsec Data structures as values
+
+
+Usually we allocate a data structure then use a pointer to it as argument to functions; but if a
+data structure is ``small'' we can pass it by value, with no significant overhead.  The @api{}
+defined by the ``well known functions'' is not good for these data types, @ref{cclibraries structs
+common, Well known functions for @struct{} types}.
+
+The header file @file{cclibraries.h} defines some macros especially for use with structures as
+values.  Some of these macros are variadic and accept from zero up to three @var{VARIANT} arguments;
+@ref{cclibraries variadic, Variadic preprocessor macros}.
+
+There is no better way to learn how to use this @api{} than to peruse the distributed and installed
+examples, they are the files with stem @code{struct-as-value}.
+
+
+@defmac cclib_make (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given a data structure type name @var{STRUCT} and an optional variant specification: expand into the
+name of the @api{} function @cfunc{make}.  Functions with this name are constructors for @struct{}
+instances passed by value.  Usage example:
+
+@example
+typedef struct my_complex_t     my_complex_t;
+
+struct my_complex_t @{
+  double  real_part;
+  double  imag_part;
+@};
+
+my_complex_t
+cclib_make(my_complex_t) (double re, double im)
+@{
+  my_complex_t Z = @{
+    .real_part = re,
+    .imag_part = im
+  @};
+
+  return Z;
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_unmake (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given a data structure type name @var{STRUCT} and an optional variant specification: expand into the
+name of the @api{} function @cfunc{unmake}.  Functions with this name are destructors for @struct{}
+instances passed by value.
+@end defmac
 
 @c page
 @node cclibraries structs descr
@@ -4237,6 +4289,22 @@ my_complex_t  Z[1];
 cclib_init(my_complex_t, rec)(Z, 1.0, 2.0);
 ...
 cclib_call(destroy, Z);
+@end example
+@end defmac
+
+
+@defmac cclib_call (@var{METHOD}, @var{VAR}, @dots{})
+Given the name of a method @var{METHOD}, the name of a variable @var{VAR} holding a data structure
+as value (which is meant to be a ``struct with descr''), any number of optional arguments: expand
+into an expression that calls the selected method applying it to the value @var{VAR} itself (as
+first argument) and the optional arguments.  Usage example:
+
+@example
+my_complex_t  Z;
+
+Z = cclib_make(my_complex_t, rec)(1.0, 2.0);
+...
+cclib_call(print, Z);
 @end example
 @end defmac
 
