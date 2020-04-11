@@ -3398,18 +3398,51 @@ finalising: ../tests/tracing.c:85, test_tracing(): Unknown exceptional condition
 @appendix The header file @file{cclibraries.h}
 
 
-The header file @file{cclibraries.h} is meant to be included in all the CCLibraries projects;
-@file{cclibraries.h} is included by @file{ccexceptions.h}.  This header files is meant to support
-the C11 language standard on @posix{} platforms.  This header file is distributed with the
+The header file @file{cclibraries.h} is meant to be included in the source files of all the
+CCLibraries projects; it is included by @file{ccexceptions.h}; it is distributed with the
 @value{PACKAGE} project because @value{PACKAGE} implements core facilities for all the CCLibraries
-packages.  All the macro definitions are prefixed with @code{CCLIB_} or @code{cclib_}.
+packages.
+
+The header file @file{cclibraries.h} is meant to support the C11 language standard on @posix{}
+platforms.  All the macro definitions are prefixed with @code{CCLIB_} or @code{cclib_}; all the type
+names are prefixed with @code{cclib_} and suffixed with @code{_t}.
 
 @menu
+* cclibraries requisites::      Requirements.
 * cclibraries attributes::      Compiler attributes for functions.
 * cclibraries declarations::    Functions and variables visibility declarations.
 * cclibraries macros::          Helper macros.
+* cclibraries typedefs::        Common type definitions and related macros.
 * cclibraries variadic::        Variadic preprocessor macros.
+* cclibraries structs::         Defining data structure handling @api{}.
+* cclibraries trait::           Well known names for trait types.
 @end menu
+
+@c page
+@node cclibraries requisites
+@appendixsec Requirements
+
+
+The header file @file{cclibraries.h} expects to be compiled in an environment set up by @gnu{}
+Autoconf; there must be a project--specific @file{config.h} file that @file{cclibraries.h} will
+include as:
+
+@example
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+@end example
+
+@noindent
+and the template configuration script @file{configure.ac} must call the macro:
+
+@example
+CCLIB_CONFIG_SETUP()
+@end example
+
+@noindent
+so the package distribution must include all the requires Autoconf macro files and load them
+correctly.
 
 @c page
 @node cclibraries attributes
@@ -3676,6 +3709,36 @@ CCLIB_FUNC_ATTRIBUTE_UNUSED
 @end deffn
 
 @c page
+@node cclibraries typedefs
+@appendixsec Common type definitions and related macros
+
+
+@menu
+* cclibraries typedefs opaque:: Opaque data structures handling.
+@end menu
+
+@c page
+@node cclibraries typedefs opaque
+@appendixsubsec Opaque data structures handling
+
+
+@deftp {Opaque Typedef} cclib_resource_data_t
+An alias for @code{void}.
+@end deftp
+
+
+@deftp {Pointer Typedef} cclib_resource_pointer_t
+An alias for @code{cclib_resource_data_t *} we can use to document a pointer to an unspecified data
+structure.  It is used, for example, by CCExceptions to reference a resource that must be released
+by an exception handler.
+@end deftp
+
+
+@deftypefn {Preprocessor Macro} cclib_resource_pointer_t cclib_resource_pointer (void * @var{expr})
+Cast to @objtype{cclib_resource_pointer_t} the result of evaluating the expression @var{expr}.
+@end deftypefn
+
+@c page
 @node cclibraries variadic
 @appendixsec Variadic preprocessor macros
 
@@ -3798,6 +3861,575 @@ and call them as:
 my_two(alpha)(1);
 my_two(alpha,beta)(1,2,4);
 @end example
+
+@c page
+@node cclibraries structs
+@appendixsec Defining data structure handling @api{}
+
+
+@menu
+* cclibraries structs common::  Well known functions for @struct{} types.
+* cclibraries structs descr::   Data structures with descriptor.
+@end menu
+
+@c page
+@node cclibraries structs common
+@appendixsubsec Well known functions for @struct{} types
+
+
+The following macros for ``well known functions'' define an @api{} for the basic operations upon a
+data structure.  There is no better way to learn how to use this @api{} than to peruse the
+distributed and installed examples, they are the files with stem @code{struct-no-descr}.
+
+All the macros are variadic and accept from zero up to three @var{VARIANT} arguments;
+@ref{cclibraries variadic, Variadic preprocessor macros}.
+
+
+@defmac cclib_init (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{init}.
+
+Functions with this name are constructors for @struct{} instances allocated on the stack or embedded
+into enclosing @struct{} instances.  They allocate all the asynchronous resources and initialise the
+@struct{} fields.
+@end defmac
+
+
+@defmac cclib_final (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name: expand into the name of the @api{} function @cfunc{final}.
+
+Functions with this name are destructors for @struct{} instances allocated on the stack or embedded
+into enclosing @struct{} instances.  They release all the asynchronous resources associated to the
+@struct{} fields.
+@end defmac
+
+
+@defmac cclib_alloc (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{alloc}.
+
+Functions of this type are memory allocators for @struct{} instances allocated on the heap.
+@end defmac
+
+
+@defmac cclib_release (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{release}.
+
+Functions of this type are memory releasers for @struct{} instances allocated on the heap.
+@end defmac
+
+
+@defmac cclib_new (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{new}.
+
+Functions with this name are constructors for @struct{} instances allocated on the heap.  The memory
+allocation is performed by calling the @cfunc{alloc} function.  The initialisation of the fields is
+performed by calling the @cfunc{init} function.
+@end defmac
+
+
+@defmac cclib_delete (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{delete}.
+
+Functions with this name are destructors for @struct{} instances allocated on the heap.  The
+finalisation of the fields is performed by calling the @cfunc{final} function.  The memory release
+is performed by calling the @cfunc{release} function.
+@end defmac
+
+
+The following code is a usage example of common function implementation for @struct{} types; this
+example is distributed in source form under the directory @file{examples} of @value{PACKAGE}, with
+the file stem @code{struct-no-methods}.
+
+@smallexample
+#include <ccexceptions.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef my_coords_t     my_coords_t;
+
+struct my_coords_t @{
+  double  X;
+  double  Y;
+@};
+
+void
+cclib_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
+@{
+  S->X = X;
+  S->Y = Y;
+@}
+
+void
+cclib_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
+@{
+  S->X = RHO * cos(THETA);
+  S->Y = RHO * sin(THETA);
+@}
+
+void
+cclib_final(my_coords_t) (my_coords_t * S)
+@{
+@}
+
+static my_coords_t *
+cclib_alloc(my_coords_t) (cce_destination_t L)
+@{
+  return (my_coords_t *)cce_sys_malloc(L, sizeof(my_coords_t));
+@}
+
+static void
+cclib_release(my_coords_t) (my_coords_t * S)
+@{
+  free(S);
+@}
+
+my_coords_t *
+cclib_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+@{
+  my_coords_t * S = cclib_alloc(my_coords_t)(L);
+
+  cclib_init(my_coords_t, rec)(S, X, Y);
+  return S;
+@}
+
+my_coords_t *
+cclib_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
+@{
+  my_coords_t * S = cclib_alloc(my_coords_t)(L);
+
+  cclib_init(my_coords_t, pol)(S, RHO, THETA);
+  return S;
+@}
+
+void
+cclib_delete(my_coords_t) (my_coords_t * S)
+@{
+  cclib_final(my_coords_t)(S);
+  cclib_release(my_coords_t)(S);
+@}
+
+int
+main (void)
+@{
+  cce_location_t        L[1];
+  my_coords_t *         S;
+  cce_clean_handler_t   S_H[1];
+
+  if (cce_location(L)) @{
+    cce_run_catch_handlers_final(L);
+  @} else @{
+    S = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    cce_init_and_register_handler(L, S_H,
+      cce_default_clean_handler_function,
+      cce_resource_pointer(S),
+      cce_resource_destructor(cclib_delete(my_coords_t)));
+
+    printf("X=%f, Y=%f\n", S->X, S->Y);
+  @}
+  exit(EXIT_SUCCESS);
+@}
+@end smallexample
+
+@c page
+@node cclibraries structs descr
+@appendixsubsec Data structures with descriptor
+
+
+A ``data structure with descriptor (or ``struct with descr'') is just a regular C language data
+structure in which a field is itself a data structure defined by the @file{cclibraries.h} @api{} of
+preprocessor macros.  It is something like this pseudo--code:
+
+@example
+struct cclib_descr_t @{
+  ...
+@};
+
+struct my_data_t @{
+  ...
+  struct cclib_descr_t cclib_descr;
+  ...
+@};
+@end example
+
+@noindent
+the position of the descriptor field with respect to the other fields does not matter: there is no
+requirement of it being the first field.  The descriptor contains meta--informations about the
+structure, for example a ``table of methods'': a data structure holding pointers to functions
+specialised to operate on the structure itself.  We can define a ``struct with descr'' along with
+the common data structures @api{}, @ref{cclibraries structs common, Well known functions for
+@struct{} types}.
+
+There is no better way to learn how to use this @api{} than to peruse the distributed and installed
+examples, they are the files with stem @code{struct-with-descr}.
+
+Some macros in the following @api{} are variadic and accept from zero up to three @var{VARIANT}
+arguments; @ref{cclibraries variadic, Variadic preprocessor macros}.
+
+
+@defmac CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR (@var{STRUCT})
+Given a data structure name @var{STRUCT}, which is meant to be a ``struct with descr'': expand into
+a preamble of declarations and definitions required to define a ``struct with descr''.  This macro
+should be used before declaring the data structure itself.  Usage example:
+
+@example
+CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(my_complex_t);
+
+typedef struct my_complex_t     my_complex_t;
+
+struct my_complex_t @{
+  cclib_struct_descriptor(my_complex_t);
+  double        re;
+  double        im;
+@};
+@end example
+@end defmac
+
+
+@defmac cclib_struct_descriptor_type (@var{STRUCT})
+Given a data structure name @var{STRUCT}, which is meant to be a ``struct with descr'': expand into
+the type name of its descriptor field.  Usually we do not need to use this macro directly.
+@end defmac
+
+
+@defmac cclib_struct_descriptor (@var{STRUCT})
+Given a data structure name @var{STRUCT}, which is meant to be a ``struct with descr'': expand into
+the descriptor structure field declaration.  We must include a use of this macro in the declaration
+of a structure:
+
+@example
+struct my_complex_t @{
+  cclib_struct_descriptor(my_complex_t);
+  double  real_part;
+  double  imac_part;
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_methods_table_type (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr'') and an
+optional variant specification: expand into the name of the methods table type.  For every ``struct
+with descr'' we can define a single table of methods.  Usage example:
+
+@example
+struct cclib_methods_table_type(my_complex_t) @{
+  cclib_method_type(my_complex_t, destroy) *    destroy;
+@};
+@end example
+@end defmac
+
+
+@defmac cclib_methods_table (@var{STRUCT_TYPE}, @var{VARIANT}, @dots{})
+Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr'') and an
+optional variant specification: expand into the name of the methods table for the @struct{} type.
+For every table of methods type we can define as many structure instances as we desire.  Usage
+example:
+
+@example
+static cclib_methods_table_type(my_complex_t) const
+    cclib_methods_table(my_complex_t, embedded) = @{
+  .destroy      = cclib_method(my_complex_t, destroy, embedded)
+@};
+
+static cclib_methods_table_type(my_complex_t) const
+    cclib_methods_table(my_complex_t, standalone) = @{
+  .destroy      = cclib_method(my_complex_t, destroy, standalone)
+@};
+@end example
+@end defmac
+
+
+@defmac cclib_method_type (@var{STRUCT}, @var{METHOD}, @var{VARIANT}, @dots{})
+Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr''), a method
+name @var{METHOD}, and an optional variant specification: expand into the type name of that variant
+of the method function.  Usage example to define the type signature of a method's implementation
+function:
+
+@example
+typedef void cclib_method_type(my_complex_t, destroy) (my_complex_t * self);
+@end example
+@end defmac
+
+
+@defmac cclib_method (@var{STRUCT}, @var{METHOD}, @var{VARIANT}, @dots{})
+Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr''), a method
+name @var{METHOD}, and an optional variant specification: expand into the name of that variant of
+method's implementation function.  Usage example to define a couple of method implementations:
+
+@example
+void
+cclib_method(my_complex_t, destroy, embedded) (my_complex_t * self)
+@{
+  cclib_final(my_complex_t)(self);
+@}
+
+void
+cclib_method(my_complex_t, destroy, standalone) (my_complex_t * self)
+@{
+  cclib_delete(my_complex_t)(self);
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_struct_descriptor_ref_methods_table_pointer (@var{PTR})
+Given a pointer do data structure @var{PTR} (which is meant to be a ``struct with descr''): return a
+pointer to its methods table usable as both lvalue and rvalue.
+@end defmac
+
+
+@defmac cclib_struct_descriptor_set_methods_table_pointer (@var{PTR}, @var{METHODS_TABLE_POINTER})
+Given a pointer do data structure @var{PTR} (which is meant to be a ``struct with descr''): set its
+pointer to methods table to @var{METHODS_TABLE_POINTER}.  Usage example:
+
+@example
+void
+cclib_init(my_complex_t, rec) (my_complex_t * S, double re, double im)
+@{
+  cclib_struct_descriptor_set_methods_table_pointer(S,
+    &cclib_methods_table(my_complex_t, embedded));
+  S->real_part = re;
+  S->imag_part = im;
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_method_pointer (@var{PTR}, @var{METHOD})
+Given a struct type name @var{STRUCT} (which is meant to be a ``struct with descr''), a method name
+@var{METHOD}: expand into an expression evaluating to a pointer to the method implementation.  Usage
+example:
+
+@example
+cce_location_t          L[1];
+my_complex_t            Z[1];
+cce_clean_handler_t     Z_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_complex_t, rec)(Z, 1.0, 2.0);
+  cce_init_and_register_handler(L, Z_H,
+    cce_default_clean_handler_function,
+    cce_resource_pointer(Z),
+    cce_resource_destructor(cclib_method_pointer(Z, destroy)));
+
+  cce_run_body_handlers(L);
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_call (@var{METHOD}, @var{PTR}, @dots{})
+Given the name of a method @var{METHOD}, the name of a variable @var{PTR} holding a data structure
+pointer (which is meant to be a ``struct with descr''), any number of optional arguments: expand
+into an expression that calls the selected method applying it to the pointer @var{PTR} itself (as
+first argument) and the optional arguments.  Usage example:
+
+@example
+my_complex_t  Z[1];
+
+cclib_init(my_complex_t, rec)(Z, 1.0, 2.0);
+...
+cclib_call(destroy, Z);
+@end example
+@end defmac
+
+@c page
+@node cclibraries trait
+@appendixsec Well known names for trait types.
+
+
+The macros for ``well known trait functions'' define an @api{} to implement trait @struct{} types;
+an trait is a set of operations we can apply to a data @struct{}; multiple data @struct{} types can
+implement multiple traits.  The following macros are defined in the header file
+@file{cclibraries.h}.
+
+
+@defmac cclib_trait_new_type (@var{TRAIT_TYPE})
+@defmacx cclib_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx cclib_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, an optional struct name and an optional variant specification: expand
+into the function type name of trait implementation constructors.  Constructors of such type
+must build instances of @var{TRAIT_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
+variant @var{VARIANT}.
+@end defmac
+
+
+@defmac cclib_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx cclib_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, a struct type name, an optional variant specification: expand into the
+name of the @api{} function @cfunc{new} that instantiates that variant of the trait for the
+@struct{}.
+@end defmac
+
+
+@defmac cclib_trait_table_type (@var{TRAIT_TYPE})
+@defmacx cclib_trait_table_type (@var{TRAIT_TYPE}, @var{VARIANT})
+Given an trait type name and an optional variant specification: expand into the name of the
+methods table type for the trait type.
+@end defmac
+
+
+@defmac cclib_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx cclib_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, a struct type name, and an optional variant specification: expand into
+the name of the methods table for that variant of the trait implementation for the @struct{}
+type.
+@end defmac
+
+
+@defmac cclib_trait_method_type (@var{TRAIT_TYPE}, @var{METHOD_NAME})
+@defmacx cclib_trait_method_type (@var{TRAIT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an trait type name, an optional variant specification, and a method name: expand into the
+type name of the method function for that variant of the trait implementation.
+@end defmac
+
+
+@defmac cclib_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
+@defmacx cclib_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an trait type name, a struct type name, an optional variant specification, and a method
+name: expand into the name of the method function for that variant of the trait implementation
+for the struct type.
+@end defmac
+
+
+Let's say we have this @struct{} definition:
+
+@smallexample
+typedef struct my_coords_t      my_coords_t;
+
+struct my_coords_t @{
+  double        X;
+  double        Y;
+@};
+@end smallexample
+
+@noindent
+and we want to define an trait type @objtype{my_printable_T} to print the @struct{} on a
+standard stream, both in rectangular and polar forms.
+
+Every trait must have a @struct{} acting as table of pointers to functions, whose functions
+implements the trait methods.  The trait @struct{} type is unique, the methods table
+@struct{} type is unique; for every data @struct{} that implements the trait: we need a methods
+table and an trait constructor.
+
+The trait @struct{} type and the methods table @struct{} type are defined as follows:
+
+@smallexample
+typedef struct my_printable_T   my_printable_T;
+typedef struct cclib_trait_table_type(my_printable_T) \
+  cclib_trait_table_type(my_printable_T);
+
+struct my_printable_T @{
+  cclib_trait_table_type(my_printable_T)  const * methods;
+  ccstructs_core_t                         const * self;
+@};
+
+typedef void cclib_trait_method_type(my_printable_T, print) \
+  (my_printable_T I, FILE * stream);
+
+struct cclib_trait_table_type(my_printable_T) @{
+  cclib_trait_method_type(my_printable_T, print) * print_rec;
+  cclib_trait_method_type(my_printable_T, print) * print_pol;
+@};
+@end smallexample
+
+The @objtype{my_printable_T} trait @api{} is defined as follows:
+
+@smallexample
+my_printable_T
+my_printable_new (ccstructs_core_t const * S,
+                  cclib_trait_table_type(my_printable_T) const * M)
+@{
+  my_printable_T        I = @{
+    .methods    = M,
+    .self       = S
+  @};
+  return I;
+@}
+
+ccstructs_core_t const *
+my_printable_self (my_printable_T I)
+@{
+  return I.self;
+@}
+
+void
+my_printable_print_rec (my_printable_T I, FILE * stream)
+@{
+  I.methods->print_rec(I, stream);
+@}
+
+void
+my_printable_print_pol (my_printable_T I, FILE * stream)
+@{
+  I.methods->print_pol(I, stream);
+@}
+@end smallexample
+
+The implementation of @objtype{my_printable_T} for the data @struct{} @objtype{my_coords_t} is
+defined as follows:
+
+@smallexample
+static void
+cclib_trait_method(my_printable_T, my_coords_t, print_rec) (my_printable_T I, FILE * stream)
+@{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+
+  fprintf(stream, "X=%f, Y=%f\n", S->X, S->Y);
+@}
+
+static void
+cclib_trait_method(my_printable_T, my_coords_t, print_pol) (my_printable_T I, FILE * stream)
+@{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  double        RHO   = hypot(S->X, S->Y);
+  double        THETA = atan2(S->Y, S->X);
+
+  fprintf(stream, "RHO=%f, THETA=%f\n", RHO, THETA);
+@}
+
+static cclib_trait_table_type(my_printable_T) const cclib_trait_table(my_printable_T, my_coords_t) = @{
+  .print_rec    = cclib_trait_method(my_printable_T, my_coords_t, print_rec),
+  .print_pol    = cclib_trait_method(my_printable_T, my_coords_t, print_pol)
+@};
+
+my_printable_T
+cclib_trait_new(my_printable_T, my_coords_t) (my_coords_t * S)
+@{
+  return my_printable_new(ccstructs_core(S), &cclib_trait_table(my_printable_T, my_coords_t));
+@}
+@end smallexample
+
+We can use the trait as follows:
+
+@smallexample
+int
+main (void)
+@{
+  cce_location_t        L[1];
+  my_coords_t *         S;
+  my_printable_T        I;
+
+  if (cce_location(L)) @{
+    cce_run_catch_handlers_final(L);
+  @} else @{
+    S = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    I = cclib_trait_new(my_printable_T, my_coords_t)(S);
+
+    my_printable_print_rec(I, stdout);
+    my_printable_print_pol(I, stdout);
+    cclib_delete(my_coords_t)(S);
+  @}
+  exit(EXIT_SUCCESS);
+@}
+@end smallexample
 
 @c page
 @c ------------------------------------------------------------

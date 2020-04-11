@@ -185,12 +185,12 @@ cclib_decl void cce_default_error_handler_function (cce_condition_t const * C, c
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cce_init_clean_handler_3 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-					cce_resource_data_t * resource_pointer)
+					  cce_resource_data_t * resource_pointer)
   CCLIB_FUNC_ATTRIBUTE_LEAF
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl void cce_init_clean_handler_4 (cce_clean_handler_t * H, cce_clean_handler_fun_t * handler_function,
-					cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
+					  cce_resource_data_t * resource_pointer, cce_resource_destructor_fun_t * resource_destructor)
   CCLIB_FUNC_ATTRIBUTE_LEAF
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 

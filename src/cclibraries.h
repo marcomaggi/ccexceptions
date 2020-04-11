@@ -190,6 +190,17 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
+ ** Common type definitions: opaque data structures handling.
+ ** ----------------------------------------------------------------- */
+
+typedef void				cclib_resource_data_t;
+typedef cclib_resource_data_t *		cclib_resource_pointer_t;
+
+#undef  cclib_resource_pointer
+#define cclib_resource_pointer(EXPR)	((cclib_resource_pointer_t)(EXPR))
+
+
+/** --------------------------------------------------------------------
  ** Variadic macros mechanism.
  ** ----------------------------------------------------------------- */
 
@@ -369,94 +380,167 @@ extern "C" {
 #define cclib_release_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __release__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
 #define cclib_release(...)				CCLIB_VFUNC(cclib_release, __VA_ARGS__)
 
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into a function name. */
+#define cclib_fun_1(STRUCT)				STRUCT ## __fun
+#define cclib_fun_2(STRUCT, VAR)			STRUCT ## __fun__ ## VAR
+#define cclib_fun_3(STRUCT, VAR1, VAR2)			STRUCT ## __fun__ ## VAR1 ## _ ## VAR2
+#define cclib_fun_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __fun__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_fun(...)					CCLIB_VFUNC(cclib_fun, __VA_ARGS__)
+
 
 /** --------------------------------------------------------------------
- ** Automatically generated names API: methods table for data structs.
+ ** Automatically generated names API: data structure with descriptor.
  ** ----------------------------------------------------------------- */
 
-/* We can define a structure with a table of methods as follows:
- *
- *   typedef struct my_complex_t			my_complex_t;
- *   typedef struct ccname_table_type(my_complex_t)	ccname_table_type(my_complex_t);
- *
- *   struct my_complex_t {
- *     ccname_table_type(my_complex_t) const *	methods;
- *     complex double	Z;
- *   };
- *
- * we define a function type for each method:
- *
- *   typedef my_complex_t cclib_method_type(my_complex_t, sin) (my_complex_t op);
- *   typedef my_complex_t cclib_method_type(my_complex_t, cos) (my_complex_t op);
- *
- * we declare a function prototype for each method:
- *
- *   static cclib_method_type(my_complex_t, sin) cclib_method(my_complex_t, sin);
- *   static cclib_method_type(my_complex_t, cos) cclib_method(my_complex_t, cos);
- *
- * we define the table of methods itself:
- *
- *   struct ccname_table_type(my_complex_t) {
- *     cclib_method_type(my_complex_t, sin) *	sin;
- *     cclib_method_type(my_complex_t, cos) *	cos;
- *   };
- *
- * we define the method implementation functions:
- *
- *   my_complex_t
- *   cclib_method(my_complex_t, sin) (my_complex_t op)
- *   {
- *     ...
- *   }
- *
- *   my_complex_t
- *   cclib_method(my_complex_t, cos) (my_complex_t op)
- *   {
- *     ...
- *   }
- *
- * Finally we call a method as follows:
- *
- *   my_complex_t  op = ...;
- *   my_complex_t  rop;
- *
- *   rop = cclib_call(my_complex_t, sin)(op);
- */
+/* Given a data  structure name STRUCT, which  is meant to be a  "struct with descr":
+   expand into the type name of its descriptor field. */
+#define cclib_struct_descriptor_type(STRUCT)			cclib_struct_descriptor_ ## STRUCT ## _descr_t
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the struct's methods table type. */
-#define cclib_table_type_1(STRUCT)				STRUCT ## __methods_table_t
-#define cclib_table_type_2(STRUCT, VAR)				STRUCT ## __methods_table_t__ ## VAR
-#define cclib_table_type_3(STRUCT, VAR1, VAR2)			STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2
-#define cclib_table_type_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_table_type(...)					CCLIB_VFUNC(cclib_table_type, __VA_ARGS__)
+#define cclib_methods_table_type_1(STRUCT)			STRUCT ## __methods_table_t
+#define cclib_methods_table_type_2(STRUCT, VAR)			STRUCT ## __methods_table_t__ ## VAR
+#define cclib_methods_table_type_3(STRUCT, VAR1, VAR2)		STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2
+#define cclib_methods_table_type_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_methods_table_type(...)				CCLIB_VFUNC(cclib_methods_table_type, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the struct's methods table. */
-#define cclib_table_1(STRUCT)					STRUCT ## __methods_table
-#define cclib_table_2(STRUCT, VAR)				STRUCT ## __methods_table__ ## VAR
-#define cclib_table_3(STRUCT, VAR1, VAR2)			STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2
-#define cclib_table_4(STRUCT, VAR1, VAR2, VAR3)			STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_table(...)					CCLIB_VFUNC(cclib_table, __VA_ARGS__)
+#define cclib_methods_table_1(STRUCT)				STRUCT ## __methods_table
+#define cclib_methods_table_2(STRUCT, VAR)			STRUCT ## __methods_table__ ## VAR
+#define cclib_methods_table_3(STRUCT, VAR1, VAR2)		STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2
+#define cclib_methods_table_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_methods_table(...)				CCLIB_VFUNC(cclib_methods_table, __VA_ARGS__)
 
 /* Given the  struct type name  STRUCT, the method  name METHOD, an  optional variant
    specification  VAR: expand  into  the type  name  of that  variant  of the  method
    function for the struct type. */
-#define cclib_method_type_1(STRUCT, METHOD)			STRUCT ## __method_t__ ## METHOD
-#define cclib_method_type_2(STRUCT, METHOD, VAR)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR
-#define cclib_method_type_3(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
-#define cclib_method_type_4(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_method_type_2(STRUCT, METHOD)			STRUCT ## __method_t__ ## METHOD
+#define cclib_method_type_3(STRUCT, METHOD, VAR)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR
+#define cclib_method_type_4(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
+#define cclib_method_type_5(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
 #define cclib_method_type(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
 
 /* Given  a struct  type  name STRUCT,  a  method name  METHOD,  an optional  variant
    specification VAR: expand into the name of the method for that type. */
-#define cclib_method_1(STRUCT, METHOD)				STRUCT ## __method__ ## METHOD
-#define cclib_method_2(STRUCT, METHOD, VAR)			STRUCT ## __method__ ## METHOD ## __ ## VAR
-#define cclib_method_3(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
-#define cclib_method_4(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_method_2(STRUCT, METHOD)				STRUCT ## __method__ ## METHOD
+#define cclib_method_3(STRUCT, METHOD, VAR)			STRUCT ## __method__ ## METHOD ## __ ## VAR
+#define cclib_method_4(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
+#define cclib_method_5(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
 #define cclib_method(...)					CCLIB_VFUNC(cclib_method, __VA_ARGS__)
 
-#define cclib_call(STRUCT, METHOD)				((STRUCT)->methods.(METHOD))
+
+/** --------------------------------------------------------------------
+ ** Automatically generated definitions API: data structure with header.
+ ** ----------------------------------------------------------------- */
+
+/* Define everything needed to declare a "struct with header":
+ *
+ * - The struct typedef.
+ * - The typedef of the methods table.
+ * - The typedef of the header struct.
+ * - The header struct definition.
+ *
+ * We can define a "struct with header" as follows:
+ *
+ *   CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(my_complex_t);
+ *
+ *   struct my_complex_t {
+ *     cclib_struct_descriptor(my_complex_t);
+ *     double  re;
+ *     double  im;
+ *   };
+ */
+#undef  CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR
+#define CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(STRUCT)						\
+  typedef struct cclib_methods_table_type(STRUCT)	cclib_methods_table_type(STRUCT);	\
+												\
+  typedef struct cclib_struct_descriptor_type(STRUCT)	cclib_struct_descriptor_type(STRUCT);	\
+  												\
+  struct cclib_struct_descriptor_type(STRUCT) {							\
+    cclib_methods_table_type(STRUCT) const	*cclib_table_of_methods_pointer;		\
+  }
+
+/* Given the  name of a data  structure STRUCT, which is  meant to be a  "struct with
+   descr": expand into the descriptor struct field declaration. */
+#define cclib_struct_descriptor(STRUCT)		cclib_struct_descriptor_type(STRUCT) cclib_struct_descr
+
+/* Given a pointer do data structure PTR, which is meant to be a "struct with descr":
+   return a pointer to its methods table usable as both lvalue and rvalue. */
+#define cclib_struct_descriptor_ref_methods_table_pointer(PTR)	\
+  ((PTR)->cclib_struct_descr.cclib_table_of_methods_pointer)
+
+/* Given a pointer do data structure PTR, which is meant to be a "struct with descr":
+   set its pointer to methods table to METHODS_TABLE_POINTER. */
+#define cclib_struct_descriptor_set_methods_table_pointer(PTR, METHODS_TABLE_POINTER)	\
+  (cclib_struct_descriptor_ref_methods_table_pointer(PTR) = (METHODS_TABLE_POINTER))
+
+/* Given a struct type  name STRUCT, a method name METHOD:  expand into an expression
+   evaluating to a pointer to the method implementation. */
+#define cclib_method_pointer(PTR, METHOD)	(cclib_struct_descriptor_ref_methods_table_pointer(PTR)->METHOD)
+
+/* Given the name of a variable PTR holding  a data structure pointer and the name of
+   a method METHOD: expand into an expression evaluating to the pointer to the method
+   implementation in the table of methods, usable to call the method. */
+#define cclib_call_worker(METHOD, PTR, ...)	cclib_method_pointer(PTR, METHOD)
+#define cclib_call(METHOD, ...)			(cclib_call_worker(METHOD, __VA_ARGS__, CCLIB_DUMMY)(__VA_ARGS__))
+
+/* Given the name of a variable VAR holding a data structure and the name of a method
+   METHD:  expand  into  an  expression  evaluating to  the  pointer  to  the  method
+   implementation in the table of methods, usable to call the method itself. */
+#define cclib_vcall_worker(METHOD, VAR, ...)	cclib_method_pointer(&(VAR), METHOD)
+#define cclib_vcall(METHOD, ...)		(cclib_vcall_worker(METHOD, __VA_ARGS__, CCLIB_DUMMY)(__VA_ARGS__))
+
+
+/** --------------------------------------------------------------------
+ ** Helper macros: trait values.
+ ** ----------------------------------------------------------------- */
+
+/* Define the trait data structure type and the typedef of it table of methods. */
+#undef  CCLIB_DEFINE_TRAIT_STRUCTURE
+#define CCLIB_DEFINE_TRAIT_STRUCTURE(TRAIT)							\
+  typedef struct TRAIT				TRAIT;						\
+  typedef struct cclib_methods_table_type(TRAIT)	cclib_methods_table_type(TRAIT);	\
+  struct TRAIT {										\
+    cclib_struct_with_methods_header(TRAIT);							\
+    cce_resource_data_t const	* self;								\
+  };
+
+/* Define the constructor function of the trait data structure.  Trait structures are
+   passed by value  to function, so this constructor builds  the structure itself and
+   it returns it as value. */
+#undef  CCLIB_DEFINE_TRAIT_MAKER
+#define CCLIB_DEFINE_TRAIT_MAKER(TRAIT)										\
+  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE										\
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)										\
+    static inline TRAIT												\
+    cclib_make(TRAIT) (cce_resource_data_t const * self, cclib_methods_table_type(TRAIT) const * methods)	\
+  {														\
+    TRAIT	impl = {											\
+      .cclib_methods_table_of_methods_pointer	= methods,							\
+      .self				= self									\
+    };														\
+    return impl;												\
+  }
+
+#define cclib_trait_resource_pointer(TRAIT)		((TRAIT).self)
+
+#undef  CCLIB_DEFINE_TRAIT_SELF_GETTER
+#define CCLIB_DEFINE_TRAIT_SELF_GETTER(TRAIT)		    \
+  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE			    \
+  CCLIB_FUNC_ATTRIBUTE_PURE				    \
+  static inline cce_resource_data_t const *		    \
+  cclib_fun(TRAIT, self) (TRAIT impl)			    \
+  {							    \
+    return impl.self;					    \
+  }
+
+#undef  CCLIB_DEFINE_TRAIT
+#define CCLIB_DEFINE_TRAIT(TRAIT)			    \
+  CCLIB_DEFINE_TRAIT_STRUCTURE(TRAIT)			    \
+    CCLIB_DEFINE_TRAIT_MAKER(TRAIT)			    \
+    CCLIB_DEFINE_TRAIT_SELF_GETTER(TRAIT)
 
 
 /** --------------------------------------------------------------------

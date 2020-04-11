@@ -78,6 +78,10 @@ libccexceptions_la_SOURCES	= \
 	src/ccexceptions-deprecated.c		\
 	src/ccexceptions-version.c
 
+.PHONY: library
+
+library: libccexceptions.la
+
 
 #### tests
 
@@ -313,16 +317,29 @@ installcheck-local: $(TESTS)
 
 ### examples
 
-noinst_PROGRAMS	= \
-	examples/plain
+dist_doc_DATA	+= \
+	examples/struct-no-descr.h		\
+	examples/struct-no-descr.c		\
+	examples/test-struct-no-descr.c		\
+	\
+	examples/struct-with-descr.h		\
+	examples/struct-with-descr.c		\
+	examples/test-struct-with-descr.c
 
-ccexceptions_examples_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/examples
-ccexceptions_examples_ldadd	= libccexceptions.la
+noinst_PROGRAMS	=				\
+	examples/plain				\
+	examples/test-struct-no-descr		\
+	examples/test-struct-with-descr
+
+ccexceptions_examples_cppflags		= $(AM_CPPFLAGS) -I$(srcdir)/examples
+ccexceptions_examples_ldadd		= -lm -L$(builddir) libccexceptions.la
 
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
 	-./examples/plain
+	-./examples/test-struct-no-descr
+	-./examples/test-struct-with-descr
 
 ## --------------------------------------------------------------------
 
@@ -331,10 +348,34 @@ examples_plain_SOURCES		=	\
 	examples/plain-header.h		\
 	examples/plain-body.c
 
-examples_plain_CPPFLAGS		= $(ccexceptions_examples_cppflags)
-examples_plain_LDADD		= $(ccexceptions_examples_ldadd)
+examples_plain_CPPFLAGS			= $(ccexceptions_examples_cppflags)
+examples_plain_LDADD			= $(ccexceptions_examples_ldadd)
 
 $(examples_plain_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_struct_no_descr_SOURCES =	\
+	examples/struct-no-descr.h		\
+	examples/struct-no-descr.c		\
+	examples/test-struct-no-descr.c
+
+examples_test_struct_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
+
+$(examples_test_struct_no_descr_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_struct_with_descr_SOURCES =	\
+	examples/struct-with-descr.h		\
+	examples/struct-with-descr.c		\
+	examples/test-struct-with-descr.c
+
+examples_test_struct_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_with_descr_LDADD		= $(ccexceptions_examples_ldadd)
+
+$(examples_test_struct_with_descr_OBJECTS): libccexceptions.la
 
 
 #### common rules
