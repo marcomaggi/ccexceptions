@@ -3415,7 +3415,6 @@ names are prefixed with @code{cclib_} and suffixed with @code{_t}.
 * cclibraries typedefs::        Common type definitions and related macros.
 * cclibraries variadic::        Variadic preprocessor macros.
 * cclibraries structs::         Defining data structure handling @api{}.
-* cclibraries trait::           Well known names for trait types.
 @end menu
 
 @c page
@@ -3871,6 +3870,7 @@ my_two(alpha,beta)(1,2,4);
 * cclibraries structs common::  Well known functions for @struct{} types.
 * cclibraries structs values::  Data structures as values.
 * cclibraries structs descr::   Data structures with descriptor.
+* cclibraries structs traits::  Trait data structures.
 @end menu
 
 @c page
@@ -4309,58 +4309,91 @@ cclib_call(print, Z);
 @end defmac
 
 @c page
-@node cclibraries trait
-@appendixsec Well known names for trait types.
+@node cclibraries structs traits
+@appendixsubsec Trait data structures
 
 
-The macros for ``well known trait functions'' define an @api{} to implement trait @struct{} types;
-an trait is a set of operations we can apply to a data @struct{}; multiple data @struct{} types can
-implement multiple traits.  The following macros are defined in the header file
-@file{cclibraries.h}.
+The purpose of traits is to implement a unified interface for some behaviour different resources
+implement; for example: different C language string implementations might implement the same
+``string'' trait to provide a unified @api{} to some string operations; different file system
+pathname implementations might implement the same ``pathname'' trait to provide a unified @api{} to
+file system pathname operations.
+
+Traits are data structures with the following characteristics:
+
+@itemize
+@item
+Traits implement the @file{cclibraries.h} common data structures @api{}.
+
+@item
+Traits are passed by value as arguments to functions, @ref{cclibraries structs values, Data
+structures as values}.
+
+@item
+Traits have only two fields:
+
+@itemize -
+@item
+A descriptor as defined by the @file{cclibraries.h} @api{}, @ref{cclibraries structs descr, Data
+structures with descriptor}.
+
+@item
+A pointer to a resource that the trait operates upon; typically another data structure.
+@end itemize
+
+@item
+Traits have no state, there must be no trait destructor functions; when we have finished using a
+trait: we just forget it like we forget an @objtype{int} or @objtype{double} variable.
+
+@item
+While trait data structures hold a pointer to the underlying resource, they do not ``own'' it:
+stopping to use of a trait data structure must not cause the underlying resource to be destroyed
+too, neither must cause the underlying resource to be leaked (it is our responsibility to ensure
+this).
+@end itemize
+
+There is no better way to learn how to use this @api{} than to peruse the distributed and installed
+examples, they are the files with stem @code{trait}.
+
+Some macros in the following @api{} are variadic and accept from zero up to three @var{VARIANT}
+arguments; @ref{cclibraries variadic, Variadic preprocessor macros}.
 
 
-@defmac cclib_trait_new_type (@var{TRAIT_TYPE})
-@defmacx cclib_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
-@defmacx cclib_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+@defmac cclib_trait_new_type (@var{TRAIT}, @var{STRUCT}, @var{VARIANT}, @dots{})
 Given an trait type name, an optional struct name and an optional variant specification: expand
 into the function type name of trait implementation constructors.  Constructors of such type
-must build instances of @var{TRAIT_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
+must build instances of @var{TRAIT} as implemented by @var{STRUCT}, as specified for the
 variant @var{VARIANT}.
 @end defmac
 
 
-@defmac cclib_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
-@defmacx cclib_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+@defmac cclib_trait_new (@var{TRAIT}, @var{STRUCT}, @var{VARIANT}, @dots{})
 Given an trait type name, a struct type name, an optional variant specification: expand into the
 name of the @api{} function @cfunc{new} that instantiates that variant of the trait for the
 @struct{}.
 @end defmac
 
 
-@defmac cclib_trait_table_type (@var{TRAIT_TYPE})
-@defmacx cclib_trait_table_type (@var{TRAIT_TYPE}, @var{VARIANT})
+@defmac cclib_trait_table_type (@var{TRAIT}, @var{VARIANT}, @dots{})
 Given an trait type name and an optional variant specification: expand into the name of the
 methods table type for the trait type.
 @end defmac
 
 
-@defmac cclib_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
-@defmacx cclib_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+@defmac cclib_trait_table (@var{TRAIT}, @var{STRUCT}, @var{VARIANT}, @dots{})
 Given an trait type name, a struct type name, and an optional variant specification: expand into
 the name of the methods table for that variant of the trait implementation for the @struct{}
 type.
 @end defmac
 
 
-@defmac cclib_trait_method_type (@var{TRAIT_TYPE}, @var{METHOD_NAME})
-@defmacx cclib_trait_method_type (@var{TRAIT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+@defmac cclib_trait_method_type (@var{TRAIT}, @var{VARIANT}, @var{METHOD_NAME})
 Given an trait type name, an optional variant specification, and a method name: expand into the
 type name of the method function for that variant of the trait implementation.
 @end defmac
 
 
-@defmac cclib_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
-@defmacx cclib_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+@defmac cclib_trait_method (@var{TRAIT}, @var{STRUCT}, @var{VARIANT}, @var{METHOD_NAME})
 Given an trait type name, a struct type name, an optional variant specification, and a method
 name: expand into the name of the method function for that variant of the trait implementation
 for the struct type.

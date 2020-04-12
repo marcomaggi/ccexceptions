@@ -505,50 +505,48 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  ** Helper macros: trait values.
  ** ----------------------------------------------------------------- */
 
-/* Define the trait data structure type and the typedef of it table of methods. */
-#undef  CCLIB_DEFINE_TRAIT_STRUCTURE
-#define CCLIB_DEFINE_TRAIT_STRUCTURE(TRAIT)							\
-  typedef struct TRAIT				TRAIT;						\
-  typedef struct cclib_methods_table_type(TRAIT)	cclib_methods_table_type(TRAIT);	\
-  struct TRAIT {										\
-    cclib_struct_with_methods_header(TRAIT);							\
-    cce_resource_data_t const	* self;								\
-  };
-
-/* Define the constructor function of the trait data structure.  Trait structures are
-   passed by value  to function, so this constructor builds  the structure itself and
-   it returns it as value. */
-#undef  CCLIB_DEFINE_TRAIT_MAKER
-#define CCLIB_DEFINE_TRAIT_MAKER(TRAIT)										\
+#undef  CCLIB_DEFINE_TRAIT
+#define CCLIB_DEFINE_TRAIT(TRAIT)										\
+  CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(TRAIT);									\
+														\
+  typedef struct TRAIT		TRAIT;										\
+														\
+  struct TRAIT {												\
+    cclib_struct_descriptor(TRAIT);										\
+    cclib_resource_data_t const *self;										\
+  };														\
+														\
+  CCLIB_FUNC_ATTRIBUTE_UNUSED											\
   CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE										\
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)										\
     static inline TRAIT												\
-    cclib_make(TRAIT) (cce_resource_data_t const * self, cclib_methods_table_type(TRAIT) const * methods)	\
+    cclib_make(TRAIT) (cclib_resource_data_t const * self, cclib_methods_table_type(TRAIT) const * methods)	\
   {														\
-    TRAIT	impl = {											\
-      .cclib_methods_table_of_methods_pointer	= methods,							\
-      .self				= self									\
-    };														\
+    TRAIT	impl = { .self = self };									\
+														\
+    cclib_struct_descriptor_set_methods_table_pointer(&impl, methods);						\
     return impl;												\
-  }
+  }														\
+														\
+  /* We want the use of  this macro to be followed by a semicolon.   So we put this				\
+     harmless declaration at the end. */									\
+  struct TRAIT
 
 #define cclib_trait_resource_pointer(TRAIT)		((TRAIT).self)
 
-#undef  CCLIB_DEFINE_TRAIT_SELF_GETTER
-#define CCLIB_DEFINE_TRAIT_SELF_GETTER(TRAIT)		    \
-  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE			    \
-  CCLIB_FUNC_ATTRIBUTE_PURE				    \
-  static inline cce_resource_data_t const *		    \
-  cclib_fun(TRAIT, self) (TRAIT impl)			    \
-  {							    \
-    return impl.self;					    \
-  }
-
-#undef  CCLIB_DEFINE_TRAIT
-#define CCLIB_DEFINE_TRAIT(TRAIT)			    \
-  CCLIB_DEFINE_TRAIT_STRUCTURE(TRAIT)			    \
-    CCLIB_DEFINE_TRAIT_MAKER(TRAIT)			    \
-    CCLIB_DEFINE_TRAIT_SELF_GETTER(TRAIT)
+#undef  CCLIB_DEFINE_TRAIT_IMPLEMENTATION
+#define CCLIB_DEFINE_TRAIT_IMPLEMENTATION(TRAIT, STRUCT)						\
+  													\
+  static TRAIT												\
+  cclib_make(TRAIT, STRUCT) (STRUCT const * self, cclib_methods_table_type(TRAIT) const * methods)	\
+    /* The constructor for TRAIT implemented by "STRUCT". */						\
+  {													\
+    return cclib_make(TRAIT)(self, methods);								\
+  }													\
+													\
+  /* We want the use of  this macro to be followed by a semicolon.   So we put this			\
+     harmless declaration at the end. */								\
+  struct TRAIT
 
 
 /** --------------------------------------------------------------------

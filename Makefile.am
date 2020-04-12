@@ -317,7 +317,8 @@ installcheck-local: $(TESTS)
 
 ### examples
 
-dist_doc_DATA	+= \
+examplesdir		= $(docdir)/examples
+dist_examples_DATA	= \
 	examples/struct-no-descr.h			\
 	examples/struct-no-descr.c			\
 	examples/test-struct-no-descr.c			\
@@ -332,14 +333,18 @@ dist_doc_DATA	+= \
 	\
 	examples/struct-as-value-with-descr.h		\
 	examples/struct-as-value-with-descr.c		\
-	examples/test-struct-as-value-with-descr.c
+	examples/test-struct-as-value-with-descr.c	\
+	\
+	examples/destructor-trait.h			\
+	examples/test-destructor-trait.c
 
 noinst_PROGRAMS	=					\
 	examples/plain					\
 	examples/test-struct-no-descr			\
 	examples/test-struct-with-descr			\
 	examples/test-struct-as-value-no-descr		\
-	examples/test-struct-as-value-with-descr
+	examples/test-struct-as-value-with-descr	\
+	examples/test-destructor-trait
 
 ccexceptions_examples_cppflags		= $(AM_CPPFLAGS) -I$(srcdir)/examples
 ccexceptions_examples_ldadd		= -lm -L$(builddir) libccexceptions.la
@@ -352,6 +357,7 @@ examples: $(noinst_PROGRAMS)
 	-./examples/test-struct-with-descr
 	-./examples/test-struct-as-value-no-descr
 	-./examples/test-struct-as-value-with-descr
+	-./examples/test-destructor-trait
 
 ## --------------------------------------------------------------------
 
@@ -412,6 +418,17 @@ examples_test_struct_as_value_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppf
 examples_test_struct_as_value_with_descr_LDADD		= $(ccexceptions_examples_ldadd)
 
 $(examples_test_struct_as_value_with_descr_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_destructor_trait_SOURCES =		\
+	examples/destructor-trait.h			\
+	examples/test-destructor-trait.c
+
+examples_test_destructor_trait_CPPFLAGS		= $(ccexceptions_examples_cppflags)
+examples_test_destructor_trait_LDADD		= $(ccexceptions_examples_ldadd)
+
+$(examples_test_destructor_trait_OBJECTS): libccexceptions.la
 
 
 #### common rules
