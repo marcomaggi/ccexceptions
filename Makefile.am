@@ -324,7 +324,7 @@ dist_doc_DATA	+= \
 	\
 	examples/struct-with-descr.h			\
 	examples/struct-with-descr.c			\
-	examples/test-struct-with-descr.c
+	examples/test-struct-with-descr.c		\
 	\
 	examples/struct-as-value-no-descr.h		\
 	examples/struct-as-value-no-descr.c		\
