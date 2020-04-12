@@ -101,7 +101,7 @@ test_1_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, A->re, A->im);
+    cclib_call(print, A, stderr);
     cce_run_body_handlers(L);
   }
 }
@@ -132,7 +132,7 @@ test_1_2 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, A->re, A->im);
+    cclib_call(print, A, stderr);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
@@ -160,7 +160,7 @@ test_1_3 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, A->re, A->im);
+    cclib_call(print, A, stderr);
     cce_run_body_handlers(L);
   }
 }
@@ -173,7 +173,7 @@ test_1_4 (cce_destination_t upper_L CCLIB_UNUSED)
   my_complex_t		A[1];
 
   cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
-  fprintf(stderr, "%s: re=%f, im=%f\n", __func__, A->re, A->im);
+  cclib_call(print, A, stderr);
   cclib_call(destroy, A);
 }
 
@@ -204,7 +204,7 @@ test_2_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, Z->re, Z->im);
+    cclib_call(print, Z, stderr);
     cce_run_body_handlers(L);
   }
 }
@@ -235,7 +235,7 @@ test_2_2 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, Z->re, Z->im);
+    cclib_call(print, Z, stderr);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
@@ -263,7 +263,7 @@ test_2_3 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, Z->re, Z->im);
+    cclib_call(print, Z, stderr);
     cce_run_body_handlers(L);
   }
 }
@@ -281,7 +281,7 @@ test_2_4 (cce_destination_t upper_L)
   } else {
     Z = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
 
-    fprintf(stderr, "%s: re=%f, im=%f\n", __func__, Z->re, Z->im);
+    cclib_call(print, Z, stderr);
 
     cclib_call(destroy, Z);
     cce_run_body_handlers(L);

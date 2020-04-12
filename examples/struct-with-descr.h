@@ -66,10 +66,12 @@ struct my_complex_t {
 
 /* A typedef for every method. */
 typedef void cclib_method_type(my_complex_t, destroy) (my_complex_t const * self);
+typedef void cclib_method_type(my_complex_t, print)   (my_complex_t const * self, FILE * stream);
 
 /* The methods table declaration. */
 struct cclib_methods_table_type(my_complex_t) {
   cclib_method_type(my_complex_t, destroy) *	destroy;
+  cclib_method_type(my_complex_t, print) *	print;
 };
 
 

@@ -48,16 +48,19 @@
 /* A prototype for every method. */
 static cclib_method_type(my_complex_t, destroy) cclib_method(my_complex_t, destroy, embedded);
 static cclib_method_type(my_complex_t, destroy) cclib_method(my_complex_t, destroy, standalone);
+static cclib_method_type(my_complex_t, print)	cclib_method(my_complex_t, print);
 
 /* Table of methods  for data structures allocated  on the stack or  embedded into an
    enveloping structure. */
 static cclib_methods_table_type(my_complex_t) const cclib_methods_table(my_complex_t, embedded) = {
-  .destroy	= cclib_method(my_complex_t, destroy, embedded)
+  .destroy	= cclib_method(my_complex_t, destroy, embedded),
+  .print	= cclib_method(my_complex_t, print)
 };
 
 /* Table of methods for data structures allocated on the heap. */
 static cclib_methods_table_type(my_complex_t) const cclib_methods_table(my_complex_t, standalone) = {
-  .destroy	= cclib_method(my_complex_t, destroy, standalone)
+  .destroy	= cclib_method(my_complex_t, destroy, standalone),
+  .print	= cclib_method(my_complex_t, print)
 };
 
 
@@ -155,6 +158,12 @@ void
 cclib_method(my_complex_t, destroy, standalone) (my_complex_t const * self)
 {
   cclib_delete(my_complex_t)(self);
+}
+
+void
+cclib_method(my_complex_t, print) (my_complex_t const * self, FILE * stream)
+{
+  fprintf(stream, "my_complex_t: %s: re=%f, im=%f\n", __func__, self->re, self->im);
 }
 
 
