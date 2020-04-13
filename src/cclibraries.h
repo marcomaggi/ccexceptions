@@ -534,20 +534,6 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 
 #define cclib_trait_resource_pointer(TRAIT)		((TRAIT).self)
 
-#undef  CCLIB_DEFINE_TRAIT_IMPLEMENTATION
-#define CCLIB_DEFINE_TRAIT_IMPLEMENTATION(TRAIT, STRUCT)						\
-  													\
-  static TRAIT												\
-  cclib_make(TRAIT, STRUCT) (STRUCT const * self, cclib_methods_table_type(TRAIT) const * methods)	\
-    /* The constructor for TRAIT implemented by "STRUCT". */						\
-  {													\
-    return cclib_make(TRAIT)(self, methods);								\
-  }													\
-													\
-  /* We want the use of  this macro to be followed by a semicolon.   So we put this			\
-     harmless declaration at the end. */								\
-  struct TRAIT
-
 
 /** --------------------------------------------------------------------
  ** Done.
