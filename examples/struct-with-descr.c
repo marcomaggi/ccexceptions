@@ -145,6 +145,97 @@ cclib_delete(my_complex_t) (my_complex_t const * S)
 
 
 /** --------------------------------------------------------------------
+ ** Guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+void
+cclib_init(my_complex_t, rec, guarded, clean) (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double re, double im)
+{
+  cclib_init(my_complex_t, rec)(S, re, im);
+  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+}
+
+void
+cclib_init(my_complex_t, rec, guarded, error) (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double re, double im)
+{
+  cclib_init(my_complex_t, rec)(S, re, im);
+  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cclib_init(my_complex_t, pol, guarded, clean) (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double rho, double theta)
+{
+  cclib_init(my_complex_t, pol)(S, rho, theta);
+  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+}
+
+void
+cclib_init(my_complex_t, pol, guarded, error) (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double rho, double theta)
+{
+  cclib_init(my_complex_t, pol)(S, rho, theta);
+  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+}
+
+/* ------------------------------------------------------------------ */
+
+my_complex_t const *
+cclib_new(my_complex_t, rec, guarded, clean) (cce_destination_t L, cce_clean_handler_t *S_H, double re, double im)
+{
+  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, re, im);
+
+  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  return S;
+}
+
+my_complex_t const *
+cclib_new(my_complex_t, rec, guarded, error) (cce_destination_t L, cce_error_handler_t *S_H, double re, double im)
+{
+  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, re, im);
+
+  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  return S;
+}
+
+/* ------------------------------------------------------------------ */
+
+my_complex_t const *
+cclib_new(my_complex_t, pol, guarded, clean) (cce_destination_t L, cce_clean_handler_t *S_H, double rho, double theta)
+{
+  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, rho, theta);
+
+  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  return S;
+}
+
+my_complex_t const *
+cclib_new(my_complex_t, pol, guarded, error) (cce_destination_t L, cce_error_handler_t *S_H, double rho, double theta)
+{
+  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, rho, theta);
+
+  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
+				cce_resource_pointer(S),
+				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  return S;
+}
+
+
+/** --------------------------------------------------------------------
  ** Method implementations: destructor methods.
  ** ----------------------------------------------------------------- */
 

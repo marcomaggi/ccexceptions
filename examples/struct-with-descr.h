@@ -115,6 +115,53 @@ cclib_decl void cclib_delete(my_complex_t) (my_complex_t const * S)
 
 
 /** --------------------------------------------------------------------
+ ** Guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+cclib_decl void cclib_init(my_complex_t, rec, guarded, clean)
+  (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double re, double im)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+
+cclib_decl void cclib_init(my_complex_t, rec, guarded, error)
+  (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double re, double im)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+
+/* ------------------------------------------------------------------ */
+
+cclib_decl void cclib_init(my_complex_t, pol, guarded, clean)
+  (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double rho, double theta)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+
+cclib_decl void cclib_init(my_complex_t, pol, guarded, error)
+  (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double rho, double theta)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+
+/* ------------------------------------------------------------------ */
+
+cclib_decl my_complex_t const * cclib_new(my_complex_t, rec, guarded, clean)
+  (cce_destination_t L, cce_clean_handler_t *S_H, double re, double im)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+
+cclib_decl my_complex_t const * cclib_new(my_complex_t, rec, guarded, error)
+  (cce_destination_t L, cce_error_handler_t *S_H, double re, double im)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+
+/* ------------------------------------------------------------------ */
+
+cclib_decl my_complex_t const * cclib_new(my_complex_t, pol, guarded, clean)
+  (cce_destination_t L, cce_clean_handler_t *S_H, double rho, double theta)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+
+cclib_decl my_complex_t const * cclib_new(my_complex_t, pol, guarded, error)
+  (cce_destination_t L, cce_error_handler_t *S_H, double rho, double theta)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 
