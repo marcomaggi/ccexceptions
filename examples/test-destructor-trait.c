@@ -131,7 +131,9 @@ cclib_method(my_destructor_T, retrieve_cce_resource_destructor, my_complex_t) (m
 /* Implementation  of the  method "retrieve_cce_resource_destructor()"  of the  trait
    "my_destructor_T" as implemented by the data type "my_complex_t". */
 {
-  return cce_resource_destructor(cclib_final(my_complex_t));
+  my_complex_t const	* self = cclib_trait_resource_pointer(impl);
+
+  return cce_resource_destructor(cclib_method_pointer(self, destroy));
 }
 
 
