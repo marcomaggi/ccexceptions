@@ -93,6 +93,40 @@ test_1_1 (cce_destination_t upper_L)
   }
 }
 
+void
+test_1_2 (cce_destination_t upper_L)
+/* Make the struct, then destroy it with the "final()" function. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+
+    cclib_vcall(print, A, stderr);
+    cclib_final(my_coords_t)(&A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_3 (cce_destination_t upper_L)
+/* Make the struct, then destroy it with the "destroy()" method. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+
+    cclib_vcall(print, A, stderr);
+    cclib_vcall(destroy, A);
+    cce_run_body_handlers(L);
+  }
+}
+
 
 /** --------------------------------------------------------------------
  ** Allocation on the stack, plain handler destructors.
@@ -155,6 +189,108 @@ test_2_2 (cce_destination_t upper_L)
   }
 }
 
+void
+test_2_3 (cce_destination_t upper_L)
+/* Make the struct, then destroy it using the type-specific clean handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t					A;
+  cclib_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    cclib_init_and_register_handler(my_coords_t, clean)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_vcall(print, A, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_4 (cce_destination_t upper_L)
+/* Make the struct, then destroy it using the type-specific error handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t					A;
+  cclib_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    cclib_init_and_register_handler(my_coords_t, error)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_vcall(print, A, stderr);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_5 (cce_destination_t upper_L)
+/* Make  the  struct, using the clean guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec, guarded, clean)(L, A_H, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_vcall(print, A, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_6 (cce_destination_t upper_L)
+/* Make the struct, using the error guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+      my_coords_t	A = cclib_make(my_coords_t, rec, guarded, error)(L, A_H, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_vcall(print, A, stderr);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
 
 int
 main (void)
@@ -166,8 +302,15 @@ main (void)
     exit(EXIT_FAILURE);
   } else {
     test_1_1(L);
+    test_1_2(L);
+    test_1_3(L);
+
     test_2_1(L);
     test_2_2(L);
+    test_2_3(L);
+    test_2_4(L);
+    test_2_5(L);
+    test_2_6(L);
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }

@@ -3417,6 +3417,7 @@ names are prefixed with @code{cclib_} and suffixed with @code{_t}.
 * cclibraries typedefs::        Common type definitions and related macros.
 * cclibraries variadic::        Variadic preprocessor macros.
 * cclibraries structs::         Defining data structure handling @api{}.
+* cclibraries handlers::        Exception handling helpers.
 @end menu
 
 @c page
@@ -4390,6 +4391,64 @@ To finish the trait definition: we must define a table of methods in the same wa
 Given a trait data structure @var{VAR} as argument: return a pointer to the underlying resource the
 @var{TRAIT} operates upon.
 @end deftypefn
+
+@c page
+@node cclibraries handlers
+@appendixsec Exception handling helpers
+
+
+All the macros are variadic and accept from zero up to three @var{VARIANT} arguments;
+@ref{cclibraries variadic, Variadic preprocessor macros}.
+
+
+@defmac cclib_handler_type (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
+into the name of an exception handler structure to be used to finalise instances of the structure
+type.  Usage example:
+
+@example
+typedef struct my_data_t        my_data_t;
+
+struct my_data_t @{
+  ...
+@};
+
+typedef struct cclib_handler_type(my_data_t, clean)   cclib_handler_type(my_data_t, clean);
+typedef struct cclib_handler_type(my_data_t, error)   cclib_handler_type(my_data_t, error);
+
+struct cclib_handler_type(my_data_t, clean) @{
+  cce_clean_handler_t  handler;
+  my_data_t            resource;
+@};
+
+struct cclib_handler_type(my_data_t, error) @{
+  cce_error_handler_t  handler;
+  my_data_t            resource;
+@};
+@end example
+@end defmac
+
+
+@defmac cclib_init_and_register_handler (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
+into the name of a function to be used to initialise an exception handler to finalise an instance of
+the structure type.
+
+Usage example:
+
+@example
+void
+cclib_init_and_register_handler(my_data_t, clean)
+   (cce_destination_t L, cclib_handler_type(my_data_t, clean) * S_H, my_data_t S)
+@{
+  S_H->resource = S;
+  cce_init_and_register_handler(L, &(S_H->handler),
+    cce_default_clean_handler_function,
+    cce_resource_pointer(&(S_H->resource)),
+    cce_resource_destructor(cclib_final(my_data_t)));
+@}
+@end example
+@end defmac
 
 @c page
 @c ------------------------------------------------------------
