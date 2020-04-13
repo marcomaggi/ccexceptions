@@ -425,6 +425,8 @@ examples_test_destructor_trait_SOURCES =		\
 	examples/destructor-trait.h			\
 	examples/struct-as-value-with-descr.h		\
 	examples/struct-as-value-with-descr.c		\
+	examples/struct-with-descr.h			\
+	examples/struct-with-descr.c			\
 	examples/test-destructor-trait.c
 
 examples_test_destructor_trait_CPPFLAGS		= $(ccexceptions_examples_cppflags)

@@ -37,6 +37,7 @@
  ** ----------------------------------------------------------------- */
 
 #include "destructor-trait.h"
+#include "struct-with-descr.h"
 #include "struct-as-value-with-descr.h"
 
 
@@ -73,7 +74,7 @@ cclib_method(my_destructor_T, destroy, my_coords_t) (my_destructor_T impl)
   {
     my_coords_t const	* self = cclib_trait_resource_pointer(impl);
 
-    cclib_unmake(my_coords_t)(*self);
+    cclib_vcall(destroy, *self);
   }
   fprintf(stderr, "%s: method destroy done\n", __func__);
 }
@@ -84,6 +85,53 @@ cclib_method(my_destructor_T, retrieve_cce_resource_destructor, my_coords_t) (my
    "my_destructor_T" as implemented by the data type "my_coords_t". */
 {
   return cce_resource_destructor(cclib_final(my_coords_t));
+}
+
+
+/** --------------------------------------------------------------------
+ ** The destructor trait as implemented by my_complex_t.
+ ** ----------------------------------------------------------------- */
+
+/* A prototype for every method in the destructor trait implementation. */
+static cclib_method_type(my_destructor_T, destroy)
+  cclib_method(my_destructor_T, destroy, my_complex_t);
+static cclib_method_type(my_destructor_T, retrieve_cce_resource_destructor)
+  cclib_method(my_destructor_T, retrieve_cce_resource_destructor, my_complex_t);
+
+/* The table  of methods  for the  destructor trait as  implemented by  the structure
+   "my_complex_t". */
+static cclib_methods_table_type(my_destructor_T) const cclib_methods_table(my_destructor_T, my_complex_t) = {
+  .destroy                          = cclib_method(my_destructor_T, destroy,                          my_complex_t),
+  .retrieve_cce_resource_destructor = cclib_method(my_destructor_T, retrieve_cce_resource_destructor, my_complex_t)
+};
+
+my_destructor_T
+cclib_make(my_destructor_T, my_complex_t) (my_complex_t const * self)
+/* The constructor for my_destructor_T implemented by "my_complex_t". */
+{
+  return cclib_make(my_destructor_T)(cclib_resource_pointer(self), &cclib_methods_table(my_destructor_T, my_complex_t));
+}
+
+void
+cclib_method(my_destructor_T, destroy, my_complex_t) (my_destructor_T impl)
+/* Implementation  of  the  method  "destroy()" of  the  trait  "my_destructor_T"  as
+   implemented by the data type "my_complex_t". */
+{
+  fprintf(stderr, "%s: enter method destroy\n", __func__);
+  {
+    my_complex_t const	* self = cclib_trait_resource_pointer(impl);
+
+    cclib_call(destroy, self);
+  }
+  fprintf(stderr, "%s: method destroy done\n", __func__);
+}
+
+cce_resource_destructor_fun_t *
+cclib_method(my_destructor_T, retrieve_cce_resource_destructor, my_complex_t) (my_destructor_T impl CCLIB_UNUSED)
+/* Implementation  of the  method "retrieve_cce_resource_destructor()"  of the  trait
+   "my_destructor_T" as implemented by the data type "my_complex_t". */
+{
+  return cce_resource_destructor(cclib_final(my_complex_t));
 }
 
 
@@ -195,6 +243,128 @@ test_1_4 (cce_destination_t upper_L)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Test for the data structure as value.
+ ** ----------------------------------------------------------------- */
+
+void
+test_2_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  heap,  then destroy  it with  the "delete()"  common
+   function. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+
+    cclib_call(print, A, stderr);
+    cclib_delete(my_complex_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  stack,  then destroy  it with  the "final()"  common
+   function. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t	A[1];
+
+    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+
+    cclib_call(print, A, stderr);
+    cclib_final(my_complex_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_3 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with the  "destroy()" method of
+   "my_complex_t". */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+
+    cclib_call(print, A, stderr);
+    cclib_call(destroy, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_4 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  the "destroy()" method of
+   "my_complex_t". */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t	A[1];
+
+    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+
+    cclib_call(print, A, stderr);
+    cclib_call(destroy, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_5 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with the  "destroy()" method of
+   the destructor trait. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *	A  = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+    my_destructor_T		AD = cclib_make(my_destructor_T, my_complex_t)(A);
+
+    cclib_call(print, A, stderr);
+    cclib_vcall(destroy, AD);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_2_6 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  the "destroy()" method of
+   the destructor trait. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t	A[1];
+    my_destructor_T	AD;
+
+    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    AD = cclib_make(my_destructor_T, my_complex_t)(A);
+
+    cclib_call(print, A, stderr);
+    cclib_vcall(destroy, AD);
+    cce_run_body_handlers(L);
+  }
+}
+
+
 int
 main (void)
 {
@@ -208,6 +378,14 @@ main (void)
     test_1_2(L);
     test_1_3(L);
     test_1_4(L);
+
+    test_2_1(L);
+    test_2_2(L);
+    test_2_3(L);
+    test_2_4(L);
+    test_2_5(L);
+    test_2_6(L);
+
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }
