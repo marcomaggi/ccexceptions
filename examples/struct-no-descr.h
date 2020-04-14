@@ -47,6 +47,45 @@ extern "C" {
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
+
+/** --------------------------------------------------------------------
+ ** Preliminary type definitions.
+ ** ----------------------------------------------------------------- */
+
+#define MY_DEFINE_PARM(NAME)						\
+  typedef struct my_ ## NAME ## _t		my_ ## NAME ## _t;	\
+									\
+  struct my_ ## NAME ## _t {						\
+    double	val;							\
+  };									\
+									\
+  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE					\
+  static inline my_ ## NAME ## _t					\
+  cclib_make(my_ ## NAME ## _t) (double val)				\
+  {									\
+    return (my_ ## NAME ## _t) { .val = val };				\
+  }
+
+MY_DEFINE_PARM(x)
+MY_DEFINE_PARM(y)
+MY_DEFINE_PARM(rho)
+MY_DEFINE_PARM(theta)
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_x_t
+cclib_make(my_x_t, pol) (my_rho_t rho, my_theta_t theta)
+{
+  return (my_x_t) { .val = rho.val * cos(theta.val) };
+}
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_y_t
+cclib_make(my_y_t, pol) (my_rho_t rho, my_theta_t theta)
+{
+  return (my_y_t) { .val = rho.val * sin(theta.val) };
+}
 
 
 /** --------------------------------------------------------------------
@@ -56,8 +95,8 @@ extern "C" {
 typedef struct my_coords_t	my_coords_t;
 
 struct my_coords_t {
-  double	X;
-  double	Y;
+  my_x_t	X;
+  my_y_t	Y;
 };
 
 
@@ -67,12 +106,12 @@ struct my_coords_t {
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises from rectangular coordinates. */
-cclib_decl void cclib_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
+cclib_decl void cclib_init(my_coords_t, rec) (my_coords_t * S, my_x_t X, my_y_t Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises from polar coordinates. */
-cclib_decl void cclib_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
+cclib_decl void cclib_init(my_coords_t, pol) (my_coords_t * S, my_rho_t RHO, my_theta_t THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
@@ -87,14 +126,14 @@ cclib_decl void cclib_final(my_coords_t) (my_coords_t const * S CCLIB_UNUSED)
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory  allocator  implemented by  CCMemory.   This  initialises from  rectangular
    coordinates. */
-cclib_decl my_coords_t const * cclib_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+cclib_decl my_coords_t const * cclib_new(my_coords_t, rec) (cce_destination_t L, my_x_t X, my_y_t Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory   allocator  implemented   by  CCMemory.    This  initialises   from  polar
    coordinates. */
-cclib_decl my_coords_t const * cclib_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
+cclib_decl my_coords_t const * cclib_new(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
@@ -152,42 +191,42 @@ cclib_decl void cclib_exception_handler_init_and_register(my_coords_t, error, st
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cclib_init(my_coords_t, rec, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, double X, double Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, my_x_t X, my_y_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cclib_init(my_coords_t, rec, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, double X, double Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, my_x_t X, my_y_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cclib_init(my_coords_t, pol, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, double RHO, double THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, my_rho_t RHO, my_theta_t THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cclib_init(my_coords_t, pol, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, double RHO, double THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, my_rho_t RHO, my_theta_t THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, rec, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double X, double Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_x_t X, my_y_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, rec, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double X, double Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_x_t X, my_y_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_rho_t RHO, my_theta_t THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_rho_t RHO, my_theta_t THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 
 /** --------------------------------------------------------------------

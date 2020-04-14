@@ -38,7 +38,7 @@
 
 #include "struct-no-descr.h"
 
-#define PRINTIT(STRU)    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, (STRU)->X, (STRU)->Y)
+#define PRINTIT(STRU)    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, (STRU)->X.val, (STRU)->Y.val)
 
 
 /** --------------------------------------------------------------------
@@ -89,7 +89,7 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     PRINTIT(A);
     cclib_final(my_coords_t)(A);
@@ -107,7 +107,7 @@ test_1_2 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t const *		A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *		A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     PRINTIT(A);
     cclib_delete(my_coords_t)(A);
@@ -135,7 +135,7 @@ test_2_1_1 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -167,7 +167,7 @@ test_2_1_2 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -194,7 +194,7 @@ test_2_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_delete(my_coords_t)));
@@ -224,7 +224,7 @@ test_2_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_delete(my_coords_t)));
@@ -258,7 +258,7 @@ test_3_1_1 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -288,7 +288,7 @@ test_3_1_2 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, error, embedded)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -313,7 +313,7 @@ test_3_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -341,7 +341,7 @@ test_3_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, error, standalone)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -372,7 +372,7 @@ test_4_1_1 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec, guarded, clean)(L, A_H, A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec, guarded, clean)(L, A_H, A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -400,13 +400,38 @@ test_4_1_2 (cce_destination_t upper_L)
   } else {
     my_coords_t		A[1];
 
-    cclib_init(my_coords_t, rec, guarded, error)(L, A_H, A, 1.0, 2.0);
+    cclib_init(my_coords_t, rec, guarded, error)(L, A_H, A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
     PRINTIT(A);
     cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_1_3 (cce_destination_t upper_L)
+/* Allocate  the  struct on  the  stack,  use  a  clean guarded  constructor.   Polar
+   coordinates. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t		A[1];
+
+    cclib_init(my_coords_t, pol, guarded, clean)(L, A_H, A, cclib_make(my_rho_t)(1.0), cclib_make(my_theta_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
     cce_run_body_handlers(L);
   }
 }
@@ -423,7 +448,7 @@ test_4_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, clean)(L, A_H, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, clean)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -449,7 +474,7 @@ test_4_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, error)(L, A_H, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, error)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -485,6 +510,7 @@ main (void)
 
     test_4_1_1(L);
     test_4_1_2(L);
+    test_4_1_3(L);
     test_4_2_1(L);
     test_4_2_2(L);
 
