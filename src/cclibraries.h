@@ -539,17 +539,35 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  ** Exception handlers.
  ** ----------------------------------------------------------------- */
 
-#define cclib_handler_type_1(STRUCT)			STRUCT ## __handler_t
-#define cclib_handler_type_2(STRUCT, VAR)		STRUCT ## __handler_t__ ## VAR
-#define cclib_handler_type_3(STRUCT, VAR1, VAR2)	STRUCT ## __handler_t__ ## VAR1 ## _ ## VAR2
-#define cclib_handler_type_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __handler_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_handler_type(...)				CCLIB_VFUNC(cclib_handler_type, __VA_ARGS__)
+#define cclib_exception_handler_type_1(STRUCT)				\
+  STRUCT ## __exception_handler_t
+#define cclib_exception_handler_type_2(STRUCT, VAR)			\
+  STRUCT ## __exception_handler_t__ ## VAR
+#define cclib_exception_handler_type_3(STRUCT, VAR1, VAR2)		\
+  STRUCT ## __exception_handler_t__ ## VAR1 ## _ ## VAR2
+#define cclib_exception_handler_type_4(STRUCT, VAR1, VAR2, VAR3)	\
+  STRUCT ## __exception_handler_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exception_handler_type(...)	CCLIB_VFUNC(cclib_exception_handler_type, __VA_ARGS__)
 
-#define cclib_init_and_register_handler_1(STRUCT)		    STRUCT ## __init_and_register_handler
-#define cclib_init_and_register_handler_2(STRUCT, VAR)		    STRUCT ## __init_and_register_handler__ ## VAR
-#define cclib_init_and_register_handler_3(STRUCT, VAR1, VAR2)	    STRUCT ## __init_and_register_handler__ ## VAR1 ## _ ## VAR2
-#define cclib_init_and_register_handler_4(STRUCT, VAR1, VAR2, VAR3) STRUCT ## __init_and_register_handler__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_init_and_register_handler(...)			    CCLIB_VFUNC(cclib_init_and_register_handler, __VA_ARGS__)
+#define cclib_exception_handler_function_1(STRUCT)			\
+    STRUCT ## __exception_handler
+#define cclib_exception_handler_function_2(STRUCT, VAR)			\
+  STRUCT ## __exception_handler__ ## VAR
+#define cclib_exception_handler_function_3(STRUCT, VAR1, VAR2)		\
+    STRUCT ## __exception_handler__ ## VAR1 ## _ ## VAR2
+#define cclib_exception_handler_function_4(STRUCT, VAR1, VAR2, VAR3)	\
+  STRUCT ## __exception_handler__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exception_handler_function(...)	CCLIB_VFUNC(cclib_exception_handler_function, __VA_ARGS__)
+
+#define cclib_exception_handler_init_and_register_1(STRUCT)			\
+    STRUCT ## __init_and_register_exception_handler
+#define cclib_exception_handler_init_and_register_2(STRUCT, VAR)		\
+  STRUCT ## __init_and_register_exception_handler__ ## VAR
+#define cclib_exception_handler_init_and_register_3(STRUCT, VAR1, VAR2)		\
+    STRUCT ## __init_and_register_exception_handler__ ## VAR1 ## _ ## VAR2
+#define cclib_exception_handler_init_and_register_4(STRUCT, VAR1, VAR2, VAR3)	\
+  STRUCT ## __init_and_register_exception_handler__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exception_handler_init_and_register(...)	CCLIB_VFUNC(cclib_exception_handler_init_and_register, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------

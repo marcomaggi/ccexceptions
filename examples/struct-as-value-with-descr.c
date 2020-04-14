@@ -141,7 +141,8 @@ cclib_method(my_coords_t, print) (my_coords_t self, FILE * stream)
  ** ----------------------------------------------------------------- */
 
 void
-cclib_init_and_register_handler(my_coords_t, clean) (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, my_coords_t S)
+cclib_exception_handler_init_and_register(my_coords_t, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t S)
 {
   S_H->resource = S;
   cce_init_and_register_handler(L, &(S_H->handler),
@@ -151,7 +152,8 @@ cclib_init_and_register_handler(my_coords_t, clean) (cce_destination_t L, cclib_
 }
 
 void
-cclib_init_and_register_handler(my_coords_t, error) (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, my_coords_t S)
+cclib_exception_handler_init_and_register(my_coords_t, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t S)
 {
   S_H->resource = S;
   cce_init_and_register_handler(L, &(S_H->handler),
@@ -166,38 +168,42 @@ cclib_init_and_register_handler(my_coords_t, error) (cce_destination_t L, cclib_
  ** ----------------------------------------------------------------- */
 
 my_coords_t
-cclib_make(my_coords_t, rec, guarded, clean) (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, double X, double Y)
+cclib_make(my_coords_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double X, double Y)
 {
   my_coords_t	S = cclib_make(my_coords_t, rec)(L, X, Y);
 
-  cclib_init_and_register_handler(my_coords_t, clean)(L, S_H, S);
+  cclib_exception_handler_init_and_register(my_coords_t, clean)(L, S_H, S);
   return S;
 }
 
 my_coords_t
-cclib_make(my_coords_t, rec, guarded, error) (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, double X, double Y)
+cclib_make(my_coords_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double X, double Y)
 {
   my_coords_t	S = cclib_make(my_coords_t, rec)(L, X, Y);
 
-  cclib_init_and_register_handler(my_coords_t, error)(L, S_H, S);
+  cclib_exception_handler_init_and_register(my_coords_t, error)(L, S_H, S);
   return S;
 }
 
 my_coords_t
-cclib_make(my_coords_t, pol, guarded, clean) (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
+cclib_make(my_coords_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
 {
   my_coords_t	S = cclib_make(my_coords_t, pol)(L, RHO, THETA);
 
-  cclib_init_and_register_handler(my_coords_t, clean)(L, S_H, S);
+  cclib_exception_handler_init_and_register(my_coords_t, clean)(L, S_H, S);
   return S;
 }
 
 my_coords_t
-cclib_make(my_coords_t, pol, guarded, error) (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
+cclib_make(my_coords_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
 {
   my_coords_t	S = cclib_make(my_coords_t, pol)(L, RHO, THETA);
 
-  cclib_init_and_register_handler(my_coords_t, error)(L, S_H, S);
+  cclib_exception_handler_init_and_register(my_coords_t, error)(L, S_H, S);
   return S;
 }
 

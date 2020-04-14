@@ -197,13 +197,13 @@ test_2_3 (cce_destination_t upper_L)
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
   my_coords_t					A;
-  cclib_handler_type(my_coords_t, clean)	A_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
-    cclib_init_and_register_handler(my_coords_t, clean)(L, A_H, A);
+    cclib_exception_handler_init_and_register(my_coords_t, clean)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -221,7 +221,7 @@ test_2_4 (cce_destination_t upper_L)
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
   my_coords_t					A;
-  cclib_handler_type(my_coords_t, error)	A_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
 
   if (cce_location(L)) {
     if (cce_condition_is_logic_error(cce_condition(L))) {
@@ -231,7 +231,7 @@ test_2_4 (cce_destination_t upper_L)
     }
   } else {
     A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
-    cclib_init_and_register_handler(my_coords_t, error)(L, A_H, A);
+    cclib_exception_handler_init_and_register(my_coords_t, error)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -249,7 +249,7 @@ test_2_5 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  cclib_handler_type(my_coords_t, clean)	A_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
@@ -271,7 +271,7 @@ test_2_6 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  cclib_handler_type(my_coords_t, error)	A_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
 
   if (cce_location(L)) {
     if (cce_condition_is_logic_error(cce_condition(L))) {

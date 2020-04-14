@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: demo program for CCLibraries, struct with no descriptor
+  Contents: data structure type definition example
   Date: Jan  4, 2019
 
   Abstract
@@ -121,7 +121,7 @@ cclib_delete(my_coords_t) (my_coords_t const * S)
  ** ----------------------------------------------------------------- */
 
 static void
-my_coords_clean_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
+cclib_exception_handler_function(my_coords_t, clean, embedded) (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor handler for embedded instances.  Release all the asynchronous resources
    associated to the struct instance; does not touch the struct itself. */
 {
@@ -132,7 +132,7 @@ my_coords_clean_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_clean
 }
 
 static void
-my_coords_error_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
+cclib_exception_handler_function(my_coords_t, error, embedded) (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 /* Destructor handler for embedded instances.  Release all the asynchronous resources
    associated to the struct instance; does not touch the struct itself. */
 {
@@ -143,21 +143,27 @@ my_coords_error_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_error
 }
 
 void
-my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
+cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * H, my_coords_t const * self)
 {
-  cce_init_and_register_handler(L, H, my_coords_clean_handler_final, cce_resource_pointer(self));
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_coords_t, clean, embedded),
+				cce_resource_pointer(self));
 }
 
 void
-my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
+cclib_exception_handler_init_and_register(my_coords_t, error, embedded)
+  (cce_destination_t L, struct cclib_exception_handler_type(my_coords_t, error) * H, my_coords_t const * self)
 {
-  cce_init_and_register_handler(L, H, my_coords_error_handler_final, cce_resource_pointer(self));
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_coords_t, error, embedded),
+				cce_resource_pointer(self));
 }
 
 /* ------------------------------------------------------------------ */
 
 static void
-my_coords_clean_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
+cclib_exception_handler_function(my_coords_t, clean, standalone) (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
    aresources associated  to the struct  instance; release the memory  block allocated
    for  the  struct instance  using  the  standard  memory allocator  implemented  by
@@ -172,7 +178,7 @@ my_coords_clean_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_clea
 }
 
 static void
-my_coords_error_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
+cclib_exception_handler_function(my_coords_t, error, standalone) (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 /* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
    aresources associated  to the struct  instance; release the memory  block allocated
    for  the  struct instance  using  the  standard  memory allocator  implemented  by
@@ -187,15 +193,104 @@ my_coords_error_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_erro
 }
 
 void
-my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
+cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * H, my_coords_t const * self)
 {
-  cce_init_and_register_handler(L, H, my_coords_clean_handler_delete, cce_resource_pointer(self));
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_coords_t, clean, standalone),
+				cce_resource_pointer(self));
 }
 
 void
-my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
+cclib_exception_handler_init_and_register(my_coords_t, error, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * H, my_coords_t const * self)
 {
-  cce_init_and_register_handler(L, H, my_coords_error_handler_delete, cce_resource_pointer(self));
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_coords_t, error, standalone),
+				cce_resource_pointer(self));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+void
+cclib_init(my_coords_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, double X, double Y)
+{
+  cclib_init(my_coords_t, rec)(S, X, Y);
+  cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)(L, S_H, S);
+}
+
+void
+cclib_init(my_coords_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, double X, double Y)
+{
+  cclib_init(my_coords_t, rec)(S, X, Y);
+  cclib_exception_handler_init_and_register(my_coords_t, error, embedded)(L, S_H, S);
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+cclib_init(my_coords_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t * S, double RHO, double THETA)
+{
+  cclib_init(my_coords_t, pol)(S, RHO, THETA);
+  cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)(L, S_H, S);
+}
+
+void
+cclib_init(my_coords_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t * S, double RHO, double THETA)
+{
+  cclib_init(my_coords_t, pol)(S, RHO, THETA);
+  cclib_exception_handler_init_and_register(my_coords_t, error, embedded)(L, S_H, S);
+}
+
+/* ------------------------------------------------------------------ */
+
+my_coords_t const *
+cclib_new(my_coords_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double X, double Y)
+{
+  my_coords_t const *	S = cclib_new(my_coords_t, pol)(L, X, Y);
+
+  cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)(L, S_H, S);
+  return S;
+}
+
+my_coords_t const *
+cclib_new(my_coords_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double X, double Y)
+{
+  my_coords_t const *	S = cclib_new(my_coords_t, pol)(L, X, Y);
+
+  cclib_exception_handler_init_and_register(my_coords_t, error, standalone)(L, S_H, S);
+  return S;
+}
+
+/* ------------------------------------------------------------------ */
+
+my_coords_t const *
+cclib_new(my_coords_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
+{
+  my_coords_t const *	S = cclib_new(my_coords_t, pol)(L, RHO, THETA);
+
+  cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)(L, S_H, S);
+  return S;
+}
+
+my_coords_t const *
+cclib_new(my_coords_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
+{
+  my_coords_t const *	S = cclib_new(my_coords_t, pol)(L, RHO, THETA);
+
+  cclib_exception_handler_init_and_register(my_coords_t, error, standalone)(L, S_H, S);
+  return S;
 }
 
 /* end of file */

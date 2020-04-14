@@ -3417,7 +3417,7 @@ names are prefixed with @code{cclib_} and suffixed with @code{_t}.
 * cclibraries typedefs::        Common type definitions and related macros.
 * cclibraries variadic::        Variadic preprocessor macros.
 * cclibraries structs::         Defining data structure handling @api{}.
-* cclibraries handlers::        Exception handling helpers.
+* cclibraries exceptions::      Exception handling helpers.
 @end menu
 
 @c page
@@ -4393,61 +4393,43 @@ Given a trait data structure @var{VAR} as argument: return a pointer to the unde
 @end deftypefn
 
 @c page
-@node cclibraries handlers
+@node cclibraries exceptions
 @appendixsec Exception handling helpers
 
+
+The location handlers @api{} defined by @value{PACKAGE} requires data types and functions with
+specific roles, @ref{handlers, The location handlers @api{}}.  The header file @file{cclibraries.h}
+defines some preprocessor macros to tag the names of such definitions with their intended purpose.
+
+There is no better way to learn how to use this @api{} than to peruse the distributed and installed
+examples; all the examples defining a data structure type also implement the associated
+exception--handlers.
 
 All the macros are variadic and accept from zero up to three @var{VARIANT} arguments;
 @ref{cclibraries variadic, Variadic preprocessor macros}.
 
 
-@defmac cclib_handler_type (@var{STRUCT}, @var{VARIANT}, @dots{})
+@defmac cclib_exception_handler_type (@var{STRUCT}, @var{VARIANT}, @dots{})
 Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
-into the name of an exception handler structure to be used to finalise instances of the structure
-type.  Usage example:
-
-@example
-typedef struct my_data_t        my_data_t;
-
-struct my_data_t @{
-  ...
-@};
-
-typedef struct cclib_handler_type(my_data_t, clean)   cclib_handler_type(my_data_t, clean);
-typedef struct cclib_handler_type(my_data_t, error)   cclib_handler_type(my_data_t, error);
-
-struct cclib_handler_type(my_data_t, clean) @{
-  cce_clean_handler_t  handler;
-  my_data_t            resource;
-@};
-
-struct cclib_handler_type(my_data_t, error) @{
-  cce_error_handler_t  handler;
-  my_data_t            resource;
-@};
-@end example
+into the name of an exception--handler structure to be used to finalise instances of the structure
+type.  The data structure types should be wrappers for @objtype{cce_clean_handler_t} and
+@objtype{cce_error_handler_t}.
 @end defmac
 
 
-@defmac cclib_init_and_register_handler (@var{STRUCT}, @var{VARIANT}, @dots{})
+@defmac cclib_exception_handler_function (@var{STRUCT}, @var{VARIANT}, @dots{})
+Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
+into the name of a function to be used as exception--handler.  These functions should have the type
+signature defined by the types @objtype{cce_clean_handler_fun_t} and
+@objtype{cce_error_handler_fun_t}.
+@end defmac
+
+
+@defmac cclib_exception_handler_init_and_register (@var{STRUCT}, @var{VARIANT}, @dots{})
 Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
 into the name of a function to be used to initialise an exception handler to finalise an instance of
-the structure type.
-
-Usage example:
-
-@example
-void
-cclib_init_and_register_handler(my_data_t, clean)
-   (cce_destination_t L, cclib_handler_type(my_data_t, clean) * S_H, my_data_t S)
-@{
-  S_H->resource = S;
-  cce_init_and_register_handler(L, &(S_H->handler),
-    cce_default_clean_handler_function,
-    cce_resource_pointer(&(S_H->resource)),
-    cce_resource_destructor(cclib_final(my_data_t)));
-@}
-@end example
+the structure type.  These functions should call @cfunc{cce_init_and_register_handler} to perform
+the operation.
 @end defmac
 
 @c page

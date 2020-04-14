@@ -99,25 +99,25 @@ cclib_decl void cclib_final(my_coords_t) (my_coords_t * S);
  ** Exception handlers.
  ** ----------------------------------------------------------------- */
 
-typedef struct cclib_handler_type(my_coords_t, clean)	cclib_handler_type(my_coords_t, clean);
-typedef struct cclib_handler_type(my_coords_t, error)	cclib_handler_type(my_coords_t, error);
+typedef struct cclib_exception_handler_type(my_coords_t, clean)	cclib_exception_handler_type(my_coords_t, clean);
+typedef struct cclib_exception_handler_type(my_coords_t, error)	cclib_exception_handler_type(my_coords_t, error);
 
-struct cclib_handler_type(my_coords_t, clean) {
+struct cclib_exception_handler_type(my_coords_t, clean) {
   cce_clean_handler_t	handler;
   my_coords_t		resource;
 };
 
-struct cclib_handler_type(my_coords_t, error) {
+struct cclib_exception_handler_type(my_coords_t, error) {
   cce_error_handler_t	handler;
   my_coords_t		resource;
 };
 
-cclib_decl void cclib_init_and_register_handler(my_coords_t, clean)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, my_coords_t S)
+cclib_decl void cclib_exception_handler_init_and_register(my_coords_t, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t S)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-cclib_decl void cclib_init_and_register_handler(my_coords_t, error)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, my_coords_t S)
+cclib_decl void cclib_exception_handler_init_and_register(my_coords_t, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t S)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 
@@ -126,19 +126,19 @@ cclib_decl void cclib_init_and_register_handler(my_coords_t, error)
  ** ----------------------------------------------------------------- */
 
 cclib_decl my_coords_t cclib_make(my_coords_t, rec, guarded, clean)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, double X, double Y)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double X, double Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_coords_t cclib_make(my_coords_t, rec, guarded, error)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, double X, double Y)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double X, double Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_coords_t cclib_make(my_coords_t, pol, guarded, clean)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_coords_t cclib_make(my_coords_t, pol, guarded, error)
-  (cce_destination_t L, cclib_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 

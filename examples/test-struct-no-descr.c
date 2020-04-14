@@ -38,6 +38,8 @@
 
 #include "struct-no-descr.h"
 
+#define PRINTIT(STRU)    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, (STRU)->X, (STRU)->Y)
+
 
 /** --------------------------------------------------------------------
  ** Flagging handlers.
@@ -73,12 +75,13 @@ flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, no handlers.
+ ** Allocation and destruction, explicit destructor call.
  ** ----------------------------------------------------------------- */
 
 void
 test_1_1 (cce_destination_t upper_L)
-/* Allocate the struct on the stack, then destroy it with the "final" function. */
+/* Allocate  the  struct on  the  stack,  then  destroy  by excplicitly  calling  the
+   "final()" function. */
 {
   cce_location_t	L[1];
   my_coords_t		A[1];
@@ -87,29 +90,26 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+
+    PRINTIT(A);
     cclib_final(my_coords_t)(A);
     cce_run_body_handlers(L);
   }
 }
 
-
-/** --------------------------------------------------------------------
- ** Allocation on the heap, no handlers.
- ** ----------------------------------------------------------------- */
-
 void
-test_2_1 (cce_destination_t upper_L)
-/* Allocate the struct on the heap, then destroy it with the "delete" function. */
+test_1_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  by  explicitly calling  the
+   "delete()" function. */
 {
   cce_location_t	L[1];
-  my_coords_t const *	A;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A  = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+    my_coords_t const *		A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+
+    PRINTIT(A);
     cclib_delete(my_coords_t)(A);
     cce_run_body_handlers(L);
   }
@@ -117,23 +117,24 @@ test_2_1 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, plain handler destructors.
+ ** Allocation and destruction, generic exception-handler API.
  ** ----------------------------------------------------------------- */
 
 void
-test_3_1 (cce_destination_t upper_L)
-/* Allocate the struct  on the stack, then  destroy with a "clean"  handler using the
-   "final" function. */
+test_2_1_1 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  a generic "clean" handler
+   using the "final()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_coords_t		A[1];
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
+    my_coords_t		A[1];
+
     cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
@@ -142,45 +143,19 @@ test_3_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+    PRINTIT(A);
     cce_run_body_handlers(L);
   }
 }
 
 void
-test_3_2 (cce_destination_t upper_L)
-/* Allocate the struct  on the stack, then  destroy with a "clean"  handler using the
-   "final" function. */
+test_2_1_2 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  a generic "error" handler
+   using the "final()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_coords_t		A[1];
-  cce_clean_handler_t	A_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
-    my_coords_register_clean_handler_final(L, A_H, A);
-
-    flag_register_clean_handler(L, FC_H);
-    flag_register_error_handler(L, FE_H);
-
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
-    cce_run_body_handlers(L);
-  }
-}
-
-void
-test_3_3 (cce_destination_t upper_L)
-/* Allocate the struct  on the stack, then  destroy it with an  "error" handler using
-   the "final" function. */
-{
-  cce_location_t	L[1];
-  cce_clean_handler_t	FC_H[1];
-  cce_error_handler_t	FE_H[1];
-  my_coords_t		A[1];
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -190,38 +165,36 @@ test_3_3 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
+    my_coords_t		A[1];
+
     cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
-    my_coords_register_error_handler_final(L, A_H, A);
+    cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
+				  cce_resource_pointer(A),
+				  cce_resource_destructor(cclib_final(my_coords_t)));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+    PRINTIT(A);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
 }
 
-
-/** --------------------------------------------------------------------
- ** Allocation on the heap, plain handler destructors.
- ** ----------------------------------------------------------------- */
-
 void
-test_4_1 (cce_destination_t upper_L)
-/* Allocate the struct on  the heap, then destroy it with a  "clean" handler usin the
-   "delete" function. */
+test_2_2_1 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with a  generic "clean" handler
+   using the "delete()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_coords_t const *	A;
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_delete(my_coords_t)));
@@ -229,45 +202,19 @@ test_4_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+    PRINTIT(A);
     cce_run_body_handlers(L);
   }
 }
 
 void
-test_4_2 (cce_destination_t upper_L)
-/* Allocate the struct on  the heap, then destroy it with a  "clean" handler usin the
-   "delete" function. */
+test_2_2_2 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with a  generic "error" handler
+   using the "delete()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_coords_t const *	A;
-  cce_clean_handler_t	A_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
-    my_coords_register_clean_handler_delete(L, A_H, A);
-
-    flag_register_clean_handler(L, FC_H);
-    flag_register_error_handler(L, FE_H);
-
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
-    cce_run_body_handlers(L);
-  }
-}
-
-void
-test_4_3 (cce_destination_t upper_L)
-/* Allocate the struct on the heap, then destroy it with an "error" handler using the
-   "delete" function. */
-{
-  cce_location_t	L[1];
-  cce_clean_handler_t	FC_H[1];
-  cce_error_handler_t	FE_H[1];
-  my_coords_t const *	A;
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -277,13 +224,237 @@ test_4_3 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
-    my_coords_register_error_handler_delete(L, A_H, A);
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
+				  cce_resource_pointer(A),
+				  cce_resource_destructor(cclib_delete(my_coords_t)));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A->X, A->Y);
+    PRINTIT(A);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation and destruction, custom exception-handler API.
+ ** ----------------------------------------------------------------- */
+
+void
+test_3_1_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  stack,  then destroy  it with  a customised  "clean"
+   handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t		A[1];
+
+    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_1_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  stack,  then destroy  it with  a customised  "error"
+   handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_coords_t		A[1];
+
+    cclib_init(my_coords_t, rec)(A, 1.0, 2.0);
+    cclib_exception_handler_init_and_register(my_coords_t, error, embedded)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_2_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  with  a customised  "clean"
+   handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_2_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  with  a customised  "error"
+   handler. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_coords_t const *	A = cclib_new(my_coords_t, rec)(L, 1.0, 2.0);
+    cclib_exception_handler_init_and_register(my_coords_t, error, standalone)(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation and destruction, guarded constructors API.
+ ** ----------------------------------------------------------------- */
+
+void
+test_4_1_1 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, use a clean guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t		A[1];
+
+    cclib_init(my_coords_t, rec, guarded, clean)(L, A_H, A, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_1_2 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, use an error guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_coords_t		A[1];
+
+    cclib_init(my_coords_t, rec, guarded, error)(L, A_H, A, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_2_1 (cce_destination_t upper_L)
+/* Allocate the struct on the heap, use a guarded clean constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, clean)(L, A_H, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_2_2 (cce_destination_t upper_L)
+/* Allocate the struct on the heap, use a guarded clean constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_coords_t const *	A = cclib_new(my_coords_t, rec, guarded, error)(L, A_H, 1.0, 2.0);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PRINTIT(A);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
@@ -300,13 +471,23 @@ main (void)
     exit(EXIT_FAILURE);
   } else {
     test_1_1(L);
-    test_2_1(L);
-    test_3_1(L);
-    test_3_2(L);
-    test_3_3(L);
-    test_4_1(L);
-    test_4_2(L);
-    test_4_3(L);
+    test_1_2(L);
+
+    test_2_1_1(L);
+    test_2_1_2(L);
+    test_2_2_1(L);
+    test_2_2_2(L);
+
+    test_3_1_1(L);
+    test_3_1_2(L);
+    test_3_2_1(L);
+    test_3_2_2(L);
+
+    test_4_1_1(L);
+    test_4_1_2(L);
+    test_4_2_1(L);
+    test_4_2_2(L);
+
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }
