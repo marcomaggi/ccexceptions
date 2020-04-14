@@ -259,7 +259,8 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
 
     cclib_call(print, A, stderr);
     cclib_delete(my_complex_t)(A);
@@ -279,7 +280,7 @@ test_2_2 (cce_destination_t upper_L)
   } else {
     my_complex_t	A[1];
 
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
 
     cclib_call(print, A, stderr);
     cclib_final(my_complex_t)(A);
@@ -297,7 +298,8 @@ test_2_3 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
 
     cclib_call(print, A, stderr);
     cclib_call(destroy, A);
@@ -317,7 +319,7 @@ test_2_4 (cce_destination_t upper_L)
   } else {
     my_complex_t	A[1];
 
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
 
     cclib_call(print, A, stderr);
     cclib_call(destroy, A);
@@ -335,7 +337,8 @@ test_2_5 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_complex_t const *	A  = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
+    my_complex_t const *	A  =
+      cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
     my_destructor_T		AD = cclib_make(my_destructor_T, my_complex_t)(A);
 
     cclib_call(print, A, stderr);
@@ -357,7 +360,7 @@ test_2_6 (cce_destination_t upper_L)
     my_complex_t	A[1];
     my_destructor_T	AD;
 
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
     AD = cclib_make(my_destructor_T, my_complex_t)(A);
 
     cclib_call(print, A, stderr);

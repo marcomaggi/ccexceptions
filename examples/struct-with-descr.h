@@ -51,6 +51,59 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
+ ** Preliminary type definitions.
+ ** ----------------------------------------------------------------- */
+
+#undef  MY_DEFINE_PARM
+#define MY_DEFINE_PARM(NAME)						\
+  typedef struct my_ ## NAME ## _t		my_ ## NAME ## _t;	\
+									\
+  struct my_ ## NAME ## _t {						\
+    double	val;							\
+  };									\
+									\
+  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE					\
+  static inline my_ ## NAME ## _t					\
+  cclib_make(my_ ## NAME ## _t) (double val)				\
+  {									\
+    return (my_ ## NAME ## _t) { .val = val };				\
+  }
+
+MY_DEFINE_PARM(real_part)
+MY_DEFINE_PARM(imag_part)
+MY_DEFINE_PARM(magnitude)
+MY_DEFINE_PARM(angle)
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_real_part_t
+cclib_make(my_real_part_t, pol) (my_magnitude_t magnitude, my_angle_t angle)
+{
+  return (my_real_part_t) { .val = magnitude.val * cos(angle.val) };
+}
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_imag_part_t
+cclib_make(my_imag_part_t, pol) (my_magnitude_t magnitude, my_angle_t angle)
+{
+  return (my_imag_part_t) { .val = magnitude.val * sin(angle.val) };
+}
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_magnitude_t
+cclib_make(my_magnitude_t, pol) (my_real_part_t real_part, my_imag_part_t imag_part)
+{
+  return (my_magnitude_t) { .val = hypot(real_part.val, imag_part.val) };
+}
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+static inline my_angle_t
+cclib_make(my_angle_t, pol) (my_real_part_t real_part, my_imag_part_t imag_part)
+{
+  return (my_angle_t) { .val = atan2(imag_part.val, real_part.val) };
+}
+
+
+/** --------------------------------------------------------------------
  ** Type definitions: data struct "my_complex_t".
  ** ----------------------------------------------------------------- */
 
@@ -60,8 +113,8 @@ typedef struct my_complex_t	my_complex_t;
 
 struct my_complex_t {
   cclib_struct_descriptor(my_complex_t);
-  double	re;
-  double	im;
+  my_real_part_t	re;
+  my_imag_part_t	im;
 };
 
 /* A typedef for every method. */
@@ -81,12 +134,12 @@ struct cclib_methods_table_type(my_complex_t) {
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    constructor initialises the structure from rectangular coordinates. */
-cclib_decl void cclib_init(my_complex_t, rec) (my_complex_t * S, double re, double im)
+cclib_decl void cclib_init(my_complex_t, rec) (my_complex_t * S, my_real_part_t re, my_imag_part_t im)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    constructor initialises the structure from polar coordinates. */
-cclib_decl void cclib_init(my_complex_t, pol) (my_complex_t * S, double RHO, double THETA)
+cclib_decl void cclib_init(my_complex_t, pol) (my_complex_t * S, my_magnitude_t magnitude, my_angle_t angle)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
@@ -94,14 +147,14 @@ cclib_decl void cclib_init(my_complex_t, pol) (my_complex_t * S, double RHO, dou
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory allocator  implemented by  CCExceptions.  This constructor  initialises the
    structure from polar coordinates. */
-cclib_decl my_complex_t const * cclib_new(my_complex_t, rec) (cce_destination_t L, double re, double im)
+cclib_decl my_complex_t const * cclib_new(my_complex_t, rec) (cce_destination_t L, my_real_part_t re, my_imag_part_t im)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory allocator  implemented by  CCExceptions.  This constructor  initialises the
    structure from polar coordinates. */
-cclib_decl my_complex_t const * cclib_new(my_complex_t, pol) (cce_destination_t L, double RHO, double THETA)
+cclib_decl my_complex_t const * cclib_new(my_complex_t, pol) (cce_destination_t L, my_magnitude_t magnitude, my_angle_t angle)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
@@ -115,50 +168,86 @@ cclib_decl void cclib_delete(my_complex_t) (my_complex_t const * S)
 
 
 /** --------------------------------------------------------------------
+ ** Function prototypes: plain exception handlers.
+ ** ----------------------------------------------------------------- */
+
+typedef struct cclib_exception_handler_type(my_complex_t, clean)  cclib_exception_handler_type(my_complex_t, clean);
+typedef struct cclib_exception_handler_type(my_complex_t, error)  cclib_exception_handler_type(my_complex_t, error);
+
+struct cclib_exception_handler_type(my_complex_t, clean) {
+  cce_clean_handler_t	handler;
+};
+
+struct cclib_exception_handler_type(my_complex_t, error) {
+  cce_error_handler_t	handler;
+};
+
+/* Initialises a "clean" exception handler that calls "cclib_final(my_complex_t)()" as
+   destructor function. */
+cclib_decl void cclib_exception_handler_init_and_register(my_complex_t, clean, embedded)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * H, my_complex_t const * self)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
+
+/* Initialises an  "error" exception handler that  calls "cclib_final(my_complex_t)()"
+   as destructor function. */
+cclib_decl void cclib_exception_handler_init_and_register(my_complex_t, error, embedded)
+  (cce_destination_t L, struct cclib_exception_handler_type(my_complex_t, error) * H, my_complex_t const * self)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
+
+/* Initialises a  "clean" exception handler that  calls "cclib_delete(my_complex_t)()"
+   as destructor function. */
+cclib_decl void cclib_exception_handler_init_and_register(my_complex_t, clean, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * H, my_complex_t const * self)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
+
+/* Initialises an "error" exception  handler that calls "cclib_delete(my_complex_t)()"
+   as destructor function. */
+cclib_decl void cclib_exception_handler_init_and_register(my_complex_t, error, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * H, my_complex_t const * self)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
+
+
+/** --------------------------------------------------------------------
  ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
 cclib_decl void cclib_init(my_complex_t, rec, guarded, clean)
-  (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double re, double im)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_complex_t * S, my_real_part_t X, my_imag_part_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cclib_init(my_complex_t, rec, guarded, error)
-  (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double re, double im)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_complex_t * S, my_real_part_t X, my_imag_part_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cclib_init(my_complex_t, pol, guarded, clean)
-  (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double rho, double theta)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_complex_t * S, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl void cclib_init(my_complex_t, pol, guarded, error)
-  (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double rho, double theta)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_complex_t * S, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl my_complex_t const * cclib_new(my_complex_t, rec, guarded, clean)
-  (cce_destination_t L, cce_clean_handler_t *S_H, double re, double im)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
-  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_real_part_t X, my_imag_part_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_complex_t const * cclib_new(my_complex_t, rec, guarded, error)
-  (cce_destination_t L, cce_error_handler_t *S_H, double re, double im)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
-  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_real_part_t X, my_imag_part_t Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl my_complex_t const * cclib_new(my_complex_t, pol, guarded, clean)
-  (cce_destination_t L, cce_clean_handler_t *S_H, double rho, double theta)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
-  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl my_complex_t const * cclib_new(my_complex_t, pol, guarded, error)
-  (cce_destination_t L, cce_error_handler_t *S_H, double rho, double theta)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
-  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 
 /** --------------------------------------------------------------------

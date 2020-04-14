@@ -54,6 +54,7 @@ extern "C" {
  ** Preliminary type definitions.
  ** ----------------------------------------------------------------- */
 
+#undef  MY_DEFINE_PARM
 #define MY_DEFINE_PARM(NAME)						\
   typedef struct my_ ## NAME ## _t		my_ ## NAME ## _t;	\
 									\
@@ -212,21 +213,25 @@ cclib_decl void cclib_init(my_coords_t, pol, guarded, error)
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, rec, guarded, clean)
   (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_x_t X, my_y_t Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, rec, guarded, error)
   (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_x_t X, my_y_t Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* ------------------------------------------------------------------ */
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol, guarded, clean)
   (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_rho_t RHO, my_theta_t THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol, guarded, error)
   (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_rho_t RHO, my_theta_t THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 
 /** --------------------------------------------------------------------

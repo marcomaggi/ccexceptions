@@ -76,24 +76,112 @@ flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack.
+ ** Allocation and destruction, explicit destructor call.
  ** ----------------------------------------------------------------- */
 
-static void
-test_1_1 (cce_destination_t upper_L)
-/* Allocate the struct instance on the stack,  then destroy it with a "clean" handler
-   using the "final()" destructor. */
+void
+test_1_1_1 (cce_destination_t upper_L)
+/* Allocate  the  struct on  the  stack,  then  destroy  by excplicitly  calling  the
+   "final()" function. */
+{
+  cce_location_t	L[1];
+  my_complex_t		A[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    cclib_init(my_complex_t, rec)(A,
+				  cclib_make(my_real_part_t)(1.0),
+				  cclib_make(my_imag_part_t)(2.0));
+
+    cclib_call(print, A, stderr);
+    cclib_final(my_complex_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_1_2 (cce_destination_t upper_L)
+/* Allocate  the  struct on  the  stack,  then  destroy  by excplicitly  calling  the
+   "destroy()" method. */
+{
+  cce_location_t	L[1];
+  my_complex_t		A[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    cclib_init(my_complex_t, rec)(A,
+				  cclib_make(my_real_part_t)(1.0),
+				  cclib_make(my_imag_part_t)(2.0));
+
+    cclib_call(print, A, stderr);
+    cclib_call(destroy, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_2_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  by  explicitly calling  the
+   "delete()" function. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *A = cclib_new(my_complex_t, rec)(L,
+							 cclib_make(my_real_part_t)(1.0),
+							 cclib_make(my_imag_part_t)(2.0));
+
+    cclib_call(print, A, stderr);
+    cclib_delete(my_complex_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_2_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  by  explicitly calling  the
+   "destroy()" method. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *A = cclib_new(my_complex_t, rec)(L,
+							 cclib_make(my_real_part_t)(1.0),
+							 cclib_make(my_imag_part_t)(2.0));
+
+    cclib_call(print, A, stderr);
+    cclib_call(destroy, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation and destruction, generic exception-handler API.
+ ** ----------------------------------------------------------------- */
+
+void
+test_2_1_1 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  a generic "clean" handler
+   using the "final()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t		A[1];
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_final(my_complex_t)));
@@ -106,15 +194,14 @@ test_1_1 (cce_destination_t upper_L)
   }
 }
 
-static void
-test_1_2 (cce_destination_t upper_L)
-/* Allocate the struct instance on the stack, then destroy it with an "error" handler
-   using the "final()" destructor. */
+void
+test_2_1_2 (cce_destination_t upper_L)
+/* Allocate the struct on  the stack, then destroy it with  a generic "error" handler
+   using the "final()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t		A[1];
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -124,7 +211,9 @@ test_1_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
 				  cce_resource_pointer(A),
 				  cce_resource_destructor(cclib_final(my_complex_t)));
@@ -138,24 +227,23 @@ test_1_2 (cce_destination_t upper_L)
   }
 }
 
-static void
-test_1_3 (cce_destination_t upper_L)
-/* Allocate the struct instance on the stack,  then destroy it with a "clean" handler
-   using the "destroy() method. */
+void
+test_2_2_1 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with a  generic "clean" handler
+   using the "delete()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t		A[1];
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
+    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(A),
-				  cce_resource_destructor(cclib_method_pointer(A, destroy)));
+				  cce_resource_destructor(cclib_delete(my_complex_t)));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -165,49 +253,14 @@ test_1_3 (cce_destination_t upper_L)
   }
 }
 
-static void
-test_1_4 (cce_destination_t upper_L CCLIB_UNUSED)
-/* Allocate the struct  instance on the stack, then destroy  it calling the "destroy"
-   method. */
-{
-  my_complex_t		A[1];
-
-  cclib_init(my_complex_t, rec)(A, 1.0, 2.0);
-  cclib_call(print, A, stderr);
-  cclib_call(destroy, A);
-}
-
-static void
-test_1_5 (cce_destination_t upper_L)
-/* Allocate the struct instance on the stack, using the clean guarded constructor. */
+void
+test_2_2_2 (cce_destination_t upper_L)
+/* Allocate the struct  on the heap, then  destroy it with a  generic "error" handler
+   using the "delete()" function. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t		A[1];
-  cce_clean_handler_t	A_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    cclib_init(my_complex_t, rec, guarded, clean)(A, L, A_H, 1.0, 2.0);
-
-    flag_register_clean_handler(L, FC_H);
-    flag_register_error_handler(L, FE_H);
-
-    cclib_call(print, A, stderr);
-    cce_run_body_handlers(L);
-  }
-}
-
-static void
-test_1_6 (cce_destination_t upper_L)
-/* Allocate the struct instance on the stack, using the error guarded constructor. */
-{
-  cce_location_t	L[1];
-  cce_clean_handler_t	FC_H[1];
-  cce_error_handler_t	FE_H[1];
-  my_complex_t		A[1];
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -217,7 +270,10 @@ test_1_6 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    cclib_init(my_complex_t, rec, guarded, error)(A, L, A_H, 1.0, 2.0);
+    my_complex_t const *	A = cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+    cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
+				  cce_resource_pointer(A),
+				  cce_resource_destructor(cclib_delete(my_complex_t)));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -230,46 +286,44 @@ test_1_6 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the heap.
+ ** Allocation and destruction, custom exception-handler API.
  ** ----------------------------------------------------------------- */
 
-static void
-test_2_1 (cce_destination_t upper_L)
-/* Allocate the struct instance  on the heap, then destroy it  with a "clean" handler
-   using the "delete()" destructor. */
+void
+test_3_1_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  stack,  then destroy  it with  a customised  "clean"
+   handler. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t const *	Z;
-  cce_clean_handler_t	Z_H[1];
+  cclib_exception_handler_type(my_complex_t, clean)	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    Z = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
-    cce_init_and_register_handler(L, Z_H, cce_default_clean_handler_function,
-				  cce_resource_pointer(Z),
-				  cce_resource_destructor(cclib_delete(my_complex_t)));
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+    cclib_exception_handler_init_and_register(my_complex_t, clean, embedded)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    cclib_call(print, Z, stderr);
+    cclib_call(print, A, stderr);
     cce_run_body_handlers(L);
   }
 }
 
-static void
-test_2_2 (cce_destination_t upper_L)
-/* Allocate the struct instance on the heap,  then destroy it with an "error" handler
-   using the "delete()" destructor. */
+void
+test_3_1_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  stack,  then destroy  it with  a customised  "error"
+   handler. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t const *	Z;
-  cce_error_handler_t	Z_H[1];
+  cclib_exception_handler_type(my_complex_t, error)	A_H[1];
 
   if (cce_location(L)) {
     if (cce_condition_is_logic_error(cce_condition(L))) {
@@ -278,99 +332,54 @@ test_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    Z = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
-    cce_init_and_register_handler(L, Z_H, cce_default_error_handler_function,
-				  cce_resource_pointer(Z),
-				  cce_resource_destructor(cclib_delete(my_complex_t)));
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec)(A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+    cclib_exception_handler_init_and_register(my_complex_t, error, embedded)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    cclib_call(print, Z, stderr);
+    cclib_call(print, A, stderr);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
 }
 
-static void
-test_2_3 (cce_destination_t upper_L)
-/* Allocate the struct instance  on the heap, then destroy it  with a "clean" handler
-   using the "destroy()" method. */
+void
+test_3_2_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  with  a customised  "clean"
+   handler. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t const *	Z;
-  cce_clean_handler_t	Z_H[1];
+  cclib_exception_handler_type(my_complex_t, clean)	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    Z = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
-    cce_init_and_register_handler(L, Z_H, cce_default_clean_handler_function,
-				  cce_resource_pointer(Z),
-				  cce_resource_destructor(cclib_method_pointer(Z, destroy)));
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+    cclib_exception_handler_init_and_register(my_complex_t, clean, standalone)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    cclib_call(print, Z, stderr);
+    cclib_call(print, A, stderr);
     cce_run_body_handlers(L);
   }
 }
 
-static void
-test_2_4 (cce_destination_t upper_L)
-/* Allocate the  struct instance  on the  heap, then destroy  it with  a call  to the
-   "destroy()" method. */
-{
-  cce_location_t	L[1];
-  my_complex_t const *	Z;
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    Z = cclib_new(my_complex_t, rec)(L, 1.0, 2.0);
-
-    cclib_call(print, Z, stderr);
-
-    cclib_call(destroy, Z);
-    cce_run_body_handlers(L);
-  }
-}
-
-static void
-test_2_5 (cce_destination_t upper_L)
-/* Allocate the struct instance on the heap, using the clean guarded constructor. */
+void
+test_3_2_2 (cce_destination_t upper_L)
+/* Allocate  the struct  on  the heap,  then  destroy it  with  a customised  "error"
+   handler. */
 {
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_complex_t const *	Z;
-  cce_clean_handler_t	Z_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    Z = cclib_new(my_complex_t, rec, guarded, clean)(L, Z_H, 1.0, 2.0);
-
-    flag_register_clean_handler(L, FC_H);
-    flag_register_error_handler(L, FE_H);
-
-    cclib_call(print, Z, stderr);
-    cce_run_body_handlers(L);
-  }
-}
-
-static void
-test_2_6 (cce_destination_t upper_L)
-/* Allocate the struct instance on the heap, using the error guarded constructor. */
-{
-  cce_location_t	L[1];
-  cce_clean_handler_t	FC_H[1];
-  cce_error_handler_t	FE_H[1];
-  my_complex_t const *	Z;
-  cce_error_handler_t	Z_H[1];
+  cclib_exception_handler_type(my_complex_t, error)	A_H[1];
 
   if (cce_location(L)) {
     if (cce_condition_is_logic_error(cce_condition(L))) {
@@ -379,12 +388,148 @@ test_2_6 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    Z = cclib_new(my_complex_t, rec, guarded, error)(L, Z_H, 1.0, 2.0);
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec)(L, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+    cclib_exception_handler_init_and_register(my_complex_t, error, standalone)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    cclib_call(print, Z, stderr);
+    cclib_call(print, A, stderr);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation and destruction, guarded constructors API.
+ ** ----------------------------------------------------------------- */
+
+void
+test_4_1_1 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, use a clean guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_complex_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec, guarded, clean)(L, A_H, A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_call(print, A, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_1_2 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, use an error guarded constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_complex_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, rec, guarded, error)(L, A_H, A, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_call(print, A, stderr);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_1_3 (cce_destination_t upper_L)
+/* Allocate  the  struct on  the  stack,  use  a  clean guarded  constructor.   Polar
+   coordinates. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_complex_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t		A[1];
+
+    cclib_init(my_complex_t, pol, guarded, clean)(L, A_H, A, cclib_make(my_magnitude_t)(1.0), cclib_make(my_angle_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_call(print, A, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_2_1 (cce_destination_t upper_L)
+/* Allocate the struct on the heap, use a guarded clean constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_complex_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec, guarded, clean)(L, A_H, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_call(print, A, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_2_2 (cce_destination_t upper_L)
+/* Allocate the struct on the heap, use a guarded clean constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_complex_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_complex_t const *	A =
+      cclib_new(my_complex_t, rec, guarded, error)(L, A_H, cclib_make(my_real_part_t)(1.0), cclib_make(my_imag_part_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    cclib_call(print, A, stderr);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
@@ -400,19 +545,27 @@ main (void)
     cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
-    test_1_1(L);
-    test_1_2(L);
-    test_1_3(L);
-    test_1_4(L);
-    test_1_5(L);
-    test_1_6(L);
+    test_1_1_1(L);
+    test_1_1_2(L);
+    test_1_2_1(L);
+    test_1_2_2(L);
 
-    test_2_1(L);
-    test_2_2(L);
-    test_2_3(L);
-    test_2_4(L);
-    test_2_5(L);
-    test_2_6(L);
+    test_2_1_1(L);
+    test_2_1_2(L);
+    test_2_2_1(L);
+    test_2_2_2(L);
+
+    test_3_1_1(L);
+    test_3_1_2(L);
+    test_3_2_1(L);
+    test_3_2_2(L);
+
+    test_4_1_1(L);
+    test_4_1_2(L);
+    test_4_1_3(L);
+    test_4_2_1(L);
+    test_4_2_2(L);
+
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }

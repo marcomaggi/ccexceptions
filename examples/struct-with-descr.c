@@ -69,7 +69,7 @@ static cclib_methods_table_type(my_complex_t) const cclib_methods_table(my_compl
  ** ----------------------------------------------------------------- */
 
 void
-cclib_init(my_complex_t, rec) (my_complex_t * S, double re, double im)
+cclib_init(my_complex_t, rec) (my_complex_t * S, my_real_part_t re, my_imag_part_t im)
 {
   cclib_struct_descriptor_set_methods_table_pointer(S, &cclib_methods_table(my_complex_t, embedded));
   S->re		= re;
@@ -77,11 +77,11 @@ cclib_init(my_complex_t, rec) (my_complex_t * S, double re, double im)
 }
 
 void
-cclib_init(my_complex_t, pol) (my_complex_t * S, double RHO, double THETA)
+cclib_init(my_complex_t, pol) (my_complex_t * S, my_magnitude_t rho, my_angle_t theta)
 {
   cclib_struct_descriptor_set_methods_table_pointer(S, &cclib_methods_table(my_complex_t, embedded));
-  S->re		= RHO * cos(THETA);
-  S->im		= RHO * sin(THETA);
+  S->re		= cclib_make(my_real_part_t, pol)(rho, theta);
+  S->im		= cclib_make(my_imag_part_t, pol)(rho, theta);
 }
 
 /* ------------------------------------------------------------------ */
@@ -113,7 +113,7 @@ cclib_release(my_complex_t) (my_complex_t const * S)
 /* ------------------------------------------------------------------ */
 
 my_complex_t const *
-cclib_new(my_complex_t, rec) (cce_destination_t L, double re, double im)
+cclib_new(my_complex_t, rec) (cce_destination_t L, my_real_part_t re, my_imag_part_t im)
 {
   my_complex_t *	S = cclib_alloc(my_complex_t)(L);
 
@@ -123,11 +123,11 @@ cclib_new(my_complex_t, rec) (cce_destination_t L, double re, double im)
 }
 
 my_complex_t const *
-cclib_new(my_complex_t, pol) (cce_destination_t L, double RHO, double THETA)
+cclib_new(my_complex_t, pol) (cce_destination_t L, my_magnitude_t rho, my_angle_t theta)
 {
   my_complex_t *	S = cclib_alloc(my_complex_t)(L);
 
-  cclib_init(my_complex_t, pol)(S, RHO, THETA);
+  cclib_init(my_complex_t, pol)(S, rho, theta);
   cclib_struct_descriptor_set_methods_table_pointer(S, &cclib_methods_table(my_complex_t, standalone));
   return (my_complex_t const *) S;
 }
@@ -145,92 +145,179 @@ cclib_delete(my_complex_t) (my_complex_t const * S)
 
 
 /** --------------------------------------------------------------------
+ ** Plain exception handlers.
+ ** ----------------------------------------------------------------- */
+
+static void
+cclib_exception_handler_function(my_complex_t, clean, embedded) (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
+/* Destructor handler for embedded instances.  Release all the asynchronous resources
+   associated to the struct instance; does not touch the struct itself. */
+{
+  CCLIB_PC(my_complex_t, self, cce_handler_resource_pointer(H));
+
+  cclib_final(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
+}
+
+static void
+cclib_exception_handler_function(my_complex_t, error, embedded) (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
+/* Destructor handler for embedded instances.  Release all the asynchronous resources
+   associated to the struct instance; does not touch the struct itself. */
+{
+  CCLIB_PC(my_complex_t, self, cce_handler_resource_pointer(H));
+
+  cclib_final(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
+}
+
+void
+cclib_exception_handler_init_and_register(my_complex_t, clean, embedded)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * H, my_complex_t const * self)
+{
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_complex_t, clean, embedded),
+				cce_resource_pointer(self));
+}
+
+void
+cclib_exception_handler_init_and_register(my_complex_t, error, embedded)
+  (cce_destination_t L, struct cclib_exception_handler_type(my_complex_t, error) * H, my_complex_t const * self)
+{
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_complex_t, error, embedded),
+				cce_resource_pointer(self));
+}
+
+/* ------------------------------------------------------------------ */
+
+static void
+cclib_exception_handler_function(my_complex_t, clean, standalone) (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
+/* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
+   aresources associated  to the struct  instance; release the memory  block allocated
+   for  the  struct instance  using  the  standard  memory allocator  implemented  by
+   CCMemory.
+
+   To be used to destroy instances dynamically allocated on the heap. */
+{
+  CCLIB_PC(my_complex_t, self, cce_handler_resource_pointer(H));
+
+  cclib_delete(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
+}
+
+static void
+cclib_exception_handler_function(my_complex_t, error, standalone) (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
+/* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
+   aresources associated  to the struct  instance; release the memory  block allocated
+   for  the  struct instance  using  the  standard  memory allocator  implemented  by
+   CCMemory.
+
+   To be used to destroy instances dynamically allocated on the heap. */
+{
+  CCLIB_PC(my_complex_t, self, cce_handler_resource_pointer(H));
+
+  cclib_delete(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
+}
+
+void
+cclib_exception_handler_init_and_register(my_complex_t, clean, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * H, my_complex_t const * self)
+{
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_complex_t, clean, standalone),
+				cce_resource_pointer(self));
+}
+
+void
+cclib_exception_handler_init_and_register(my_complex_t, error, standalone)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * H, my_complex_t const * self)
+{
+  cce_init_and_register_handler(L, &(H->handler),
+				cclib_exception_handler_function(my_complex_t, error, standalone),
+				cce_resource_pointer(self));
+}
+
+
+/** --------------------------------------------------------------------
  ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
 void
-cclib_init(my_complex_t, rec, guarded, clean) (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double re, double im)
+cclib_init(my_complex_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_complex_t * S, my_real_part_t X, my_imag_part_t Y)
 {
-  cclib_init(my_complex_t, rec)(S, re, im);
-  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_init(my_complex_t, rec)(S, X, Y);
+  cclib_exception_handler_init_and_register(my_complex_t, clean, embedded)(L, S_H, S);
 }
 
 void
-cclib_init(my_complex_t, rec, guarded, error) (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double re, double im)
+cclib_init(my_complex_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_complex_t * S, my_real_part_t X, my_imag_part_t Y)
 {
-  cclib_init(my_complex_t, rec)(S, re, im);
-  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_init(my_complex_t, rec)(S, X, Y);
+  cclib_exception_handler_init_and_register(my_complex_t, error, embedded)(L, S_H, S);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-cclib_init(my_complex_t, pol, guarded, clean) (my_complex_t * S, cce_destination_t L, cce_clean_handler_t * S_H, double rho, double theta)
+cclib_init(my_complex_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_complex_t * S, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
 {
-  cclib_init(my_complex_t, pol)(S, rho, theta);
-  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_init(my_complex_t, pol)(S, MAGNITUDE, ANGLE);
+  cclib_exception_handler_init_and_register(my_complex_t, clean, embedded)(L, S_H, S);
 }
 
 void
-cclib_init(my_complex_t, pol, guarded, error) (my_complex_t * S, cce_destination_t L, cce_error_handler_t * S_H, double rho, double theta)
+cclib_init(my_complex_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_complex_t * S, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
 {
-  cclib_init(my_complex_t, pol)(S, rho, theta);
-  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_init(my_complex_t, pol)(S, MAGNITUDE, ANGLE);
+  cclib_exception_handler_init_and_register(my_complex_t, error, embedded)(L, S_H, S);
 }
 
 /* ------------------------------------------------------------------ */
 
 my_complex_t const *
-cclib_new(my_complex_t, rec, guarded, clean) (cce_destination_t L, cce_clean_handler_t *S_H, double re, double im)
+cclib_new(my_complex_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_real_part_t X, my_imag_part_t Y)
 {
-  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, re, im);
+  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, X, Y);
 
-  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_exception_handler_init_and_register(my_complex_t, clean, standalone)(L, S_H, S);
   return S;
 }
 
 my_complex_t const *
-cclib_new(my_complex_t, rec, guarded, error) (cce_destination_t L, cce_error_handler_t *S_H, double re, double im)
+cclib_new(my_complex_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_real_part_t X, my_imag_part_t Y)
 {
-  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, re, im);
+  my_complex_t const *	S = cclib_new(my_complex_t, rec)(L, X, Y);
 
-  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_exception_handler_init_and_register(my_complex_t, error, standalone)(L, S_H, S);
   return S;
 }
 
 /* ------------------------------------------------------------------ */
 
 my_complex_t const *
-cclib_new(my_complex_t, pol, guarded, clean) (cce_destination_t L, cce_clean_handler_t *S_H, double rho, double theta)
+cclib_new(my_complex_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, clean) * S_H, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
 {
-  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, rho, theta);
+  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, MAGNITUDE, ANGLE);
 
-  cce_init_and_register_handler(L, S_H, cce_default_clean_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_exception_handler_init_and_register(my_complex_t, clean, standalone)(L, S_H, S);
   return S;
 }
 
 my_complex_t const *
-cclib_new(my_complex_t, pol, guarded, error) (cce_destination_t L, cce_error_handler_t *S_H, double rho, double theta)
+cclib_new(my_complex_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_complex_t, error) * S_H, my_magnitude_t MAGNITUDE, my_angle_t ANGLE)
 {
-  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, rho, theta);
+  my_complex_t const *	S = cclib_new(my_complex_t, pol)(L, MAGNITUDE, ANGLE);
 
-  cce_init_and_register_handler(L, S_H, cce_default_error_handler_function,
-				cce_resource_pointer(S),
-				cce_resource_destructor(cclib_method_pointer(S, destroy)));
+  cclib_exception_handler_init_and_register(my_complex_t, error, standalone)(L, S_H, S);
   return S;
 }
 
@@ -242,19 +329,23 @@ cclib_new(my_complex_t, pol, guarded, error) (cce_destination_t L, cce_error_han
 void
 cclib_method(my_complex_t, destroy, embedded) (my_complex_t const * self)
 {
+  if (1) { fprintf(stderr, "%-35s: enter method destroy\n", __func__); }
   cclib_final(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: method destroy done\n", __func__); }
 }
 
 void
 cclib_method(my_complex_t, destroy, standalone) (my_complex_t const * self)
 {
+  if (1) { fprintf(stderr, "%-35s: enter method destroy\n", __func__); }
   cclib_delete(my_complex_t)(self);
+  if (1) { fprintf(stderr, "%-35s: method destroy done\n", __func__); }
 }
 
 void
 cclib_method(my_complex_t, print) (my_complex_t const * self, FILE * stream)
 {
-  fprintf(stream, "my_complex_t: %s: re=%f, im=%f\n", __func__, self->re, self->im);
+  fprintf(stream, "my_complex_t: %s: re=%f, im=%f\n", __func__, self->re.val, self->im.val);
 }
 
 
