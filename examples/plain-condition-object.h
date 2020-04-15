@@ -73,19 +73,19 @@ struct my_condition_error_1_t {
   int *				data;
 };
 
-extern void cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * D)
+cclib_decl void cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * D)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-extern void my_condition_init_error_1 (cce_destination_t L, my_condition_error_1_t * C, int the_data)
+cclib_decl void my_condition_init_error_1 (cce_destination_t L, my_condition_error_1_t * C, int the_data)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-extern cce_condition_t const * my_condition_new_error_1 (cce_destination_t L, int the_data)
+cclib_decl cce_condition_t const * my_condition_new_error_1 (cce_destination_t L, int the_data)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-extern bool my_condition_is_error_1 (cce_condition_t const * C)
+cclib_decl bool my_condition_is_error_1 (cce_condition_t const * C)
   CCLIB_FUNC_ATTRIBUTE_PURE
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
