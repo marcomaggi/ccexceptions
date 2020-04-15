@@ -8,6 +8,7 @@
 * struct-by-ptr-with-descr destructors::   Data structure destructors.
 * struct-by-ptr-with-descr handlers::      Exception handlers.
 * struct-by-ptr-with-descr guarded::       Guarded constructors.
+* struct-by-ptr-with-descr methods::       Data structure methods.
 @end menu
 
 @c page
@@ -472,6 +473,39 @@ if (cce_location(L)) @{
 @}
 @end example
 @end deftypefun
+
+@c page
+@node struct-by-ptr-with-descr methods
+@section Data structure methods
+
+
+Data structures with descriptor implement methods specialised for the instance; for procedures
+passed by pointer, we can call methods using the preprocessor macro @cfunc{cclib_call};
+@ccexceptionsref{cclibraries structs descr, Data structures with descriptor}.
+
+
+@deftypemethod {my_complex_t} void destroy (my_complex_t const * @var{self})
+Destroy the data structure referenced by @var{self}, using the appropriate destructor for embedded
+or standalone instances.  We can call this method as follows:
+
+@example
+my_complex_t const * self = ...;
+
+cclib_call(destroy, self);
+@end example
+@end deftypemethod
+
+
+@deftypemethod {my_complex_t} void print (my_complex_t const * @var{self}, FILE * @var{stream})
+Print on @var{stream} a string representation of the data structure referenced by @var{self}.  We
+can call this method as follows:
+
+@example
+my_complex_t const * self = ...;
+
+cclib_call(print, self, stderr);
+@end example
+@end deftypemethod
 
 
 @c Local Variables:

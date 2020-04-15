@@ -4304,7 +4304,7 @@ cclib_call(destroy, Z);
 @end defmac
 
 
-@defmac cclib_call (@var{METHOD}, @var{VAR}, @dots{})
+@defmac cclib_vcall (@var{METHOD}, @var{VAR}, @dots{})
 Given the name of a method @var{METHOD}, the name of a variable @var{VAR} holding a data structure
 as value (which is meant to be a ``struct with descr''), any number of optional arguments: expand
 into an expression that calls the selected method applying it to the value @var{VAR} itself (as
@@ -4315,7 +4315,7 @@ my_complex_t  Z;
 
 Z = cclib_make(my_complex_t, rec)(1.0, 2.0);
 ...
-cclib_call(print, Z);
+cclib_vcall(print, Z, stderr);
 @end example
 @end defmac
 
