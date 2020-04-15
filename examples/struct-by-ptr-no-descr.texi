@@ -16,7 +16,7 @@
 
 
 @deftp {Struct Typedef} my_coords_t
-Structure type used to hold coordinates.  It has the following fields:
+Structure type used to hold coordinates.  It has the following public fields:
 
 @table @code
 @item my_x_t X
@@ -230,7 +230,7 @@ exceptional--condition is raised by performing a non--local exit to @var{L}.
 @subsubheading Embedded data structures, rectangular coordinates
 
 
-@deftypefun void cclib_init(my_coords_t, rec, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * S, my_x_t @var{X}, my_y_t @var{Y})
+@deftypefun void cclib_init(my_coords_t, rec, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * @var{self}, my_x_t @var{X}, my_y_t @var{Y})
 Constructor function for embedded data structures.  This constructor initialises the, already
 allocated, data structure referenced by @var{self} from the rectangular coordinates @var{X} and
 @var{Y}.
@@ -258,7 +258,7 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun void cclib_init(my_coords_t, rec, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * S, my_x_t @var{X}, my_y_t @var{Y})
+@deftypefun void cclib_init(my_coords_t, rec, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * @var{self}, my_x_t @var{X}, my_y_t @var{Y})
 Constructor function for embedded data structures.  This constructor initialises the, already
 allocated, data structure referenced by @var{self} from the rectangular coordinates @var{X} and
 @var{Y}.
@@ -291,7 +291,7 @@ if (cce_location(L)) @{
 @subsubheading Embedded data structures, polar coordinates
 
 
-@deftypefun void cclib_init(my_coords_t, pol, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * S, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+@deftypefun void cclib_init(my_coords_t, pol, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * @var{self}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
 Constructor function for embedded data structures.  This constructor initialises, already allocated,
 the data structure referenced by @var{self} from the polar coordinates @var{RHO} and @var{THETA}.
 
@@ -318,7 +318,7 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun void cclib_init(my_coords_t, pol, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * S, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+@deftypefun void cclib_init(my_coords_t, pol, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * @var{self}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
 Constructor function for embedded data structures.  This constructor initialises, already allocated,
 the data structure referenced by @var{self} from the polar coordinates @var{RHO} and @var{THETA}.
 
