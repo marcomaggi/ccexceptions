@@ -3,15 +3,15 @@
 
 
 @menu
-* struct-as-ptr-no-descr typedefs::      Type definitions.
-* struct-as-ptr-no-descr constructors::  Data structure constructors.
-* struct-as-ptr-no-descr destructors::   Data structure destructors.
-* struct-as-ptr-no-descr handlers::      Exception handlers.
-* struct-as-ptr-no-descr guarded::       Guarded constructors.
+* struct-by-ptr-no-descr typedefs::      Type definitions.
+* struct-by-ptr-no-descr constructors::  Data structure constructors.
+* struct-by-ptr-no-descr destructors::   Data structure destructors.
+* struct-by-ptr-no-descr handlers::      Exception handlers.
+* struct-by-ptr-no-descr guarded::       Guarded constructors.
 @end menu
 
 @c page
-@node struct-as-ptr-no-descr typedefs
+@node struct-by-ptr-no-descr typedefs
 @section Type definitions
 
 
@@ -29,7 +29,7 @@ The Y coordinate.
 
 
 @c page
-@node struct-as-ptr-no-descr constructors
+@node struct-by-ptr-no-descr constructors
 @section Data structure constructors and destructors
 
 
@@ -38,8 +38,12 @@ structure is allocated on the stack or it is embedded into an another, envelopin
 @dfn{standalone} data structure is allocated on the heap using dynamic memory.
 
 This section documents the constructors @api{} we can use to build new data structures.  While this
-@api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+@api{} is available: it preferable to use the guarded constructors, @ref{struct-by-ptr-no-descr
 guarded, Guarded constructors}.
+
+For all the functions having an argument @var{L} of type @objtype{cce_destination_t}: if the
+operation completes successfully, the function returns; otherwise an appropriate
+exceptional--condition is raised by performing a non--local exit to @var{L}.
 
 
 @deftypefun void {cclib_init(my_coords_t, rec)} (my_coords_t * @var{self}, my_x_t @var{X}, my_y_t @var{Y})
@@ -69,7 +73,7 @@ from the polar coordinates @var{RHO} and @var{THETA}.
 @end deftypefun
 
 @c page
-@node struct-as-ptr-no-descr destructors
+@node struct-by-ptr-no-descr destructors
 @section Data structure destructors
 
 
@@ -78,7 +82,7 @@ structure is allocated on the stack or it is embedded into an another, envelopin
 @dfn{standalone} data structure is allocated on the heap using dynamic memory.
 
 This section documents the destructors @api{} we can use to destroy existent data structures.  While
-this @api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+this @api{} is available: it preferable to use the guarded constructors, @ref{struct-by-ptr-no-descr
 guarded, Guarded constructors}.
 
 
@@ -94,12 +98,12 @@ the data structure, if any; the data structure's memory block is also released.
 @end deftypefun
 
 @c page
-@node struct-as-ptr-no-descr handlers
+@node struct-by-ptr-no-descr handlers
 @section Exception handlers
 
 
 This section documents the exception handlers @api{} we can use to destroy data structures.  While
-this @api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+this @api{} is available: it preferable to use the guarded constructors, @ref{struct-by-ptr-no-descr
 guarded, Guarded constructors}.
 
 
@@ -209,13 +213,17 @@ if (cce_location(L)) @{
 @end deftypefun
 
 @c page
-@node struct-as-ptr-no-descr guarded
+@node struct-by-ptr-no-descr guarded
 @section Guarded constructors
 
 
 The following functions operate upon embedded or standalone data structures: an @dfn{embedded} data
 structure is allocated on the stack or it is embedded into an another, enveloping, data structure; a
 @dfn{standalone} data structure is allocated on the heap using dynamic memory.
+
+For all the functions having an argument @var{L} of type @objtype{cce_destination_t}: if the
+operation completes successfully, the function returns; otherwise an appropriate
+exceptional--condition is raised by performing a non--local exit to @var{L}.
 
 @c ------------------------------------------------------------------------
 
