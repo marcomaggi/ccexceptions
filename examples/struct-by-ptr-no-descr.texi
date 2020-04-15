@@ -1,4 +1,4 @@
-@node struct-as-ptr-no-descr
+@node struct-by-ptr-no-descr
 @chapter Data structure type, passed by pointer, without descriptor
 
 

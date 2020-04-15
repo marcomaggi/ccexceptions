@@ -36,7 +36,7 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#include "struct-no-descr.h"
+#include "struct-by-ptr-no-descr.h"
 
 #define PRINTIT(STRU)    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, (STRU)->X.val, (STRU)->Y.val)
 

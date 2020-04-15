@@ -319,35 +319,35 @@ installcheck-local: $(TESTS)
 
 examplesdir		= $(docdir)/examples
 dist_examples_DATA	=				\
-	examples/struct-as-pointer-no-descr.texi	\
-	examples/struct-no-descr.h			\
-	examples/struct-no-descr.c			\
-	examples/test-struct-no-descr.c			\
+	examples/struct-by-ptr-no-descr.texi		\
+	examples/struct-by-ptr-no-descr.h		\
+	examples/struct-by-ptr-no-descr.c		\
+	examples/test-struct-by-ptr-no-descr.c		\
 							\
-	examples/struct-as-pointer-with-descr.texi	\
-	examples/struct-with-descr.h			\
-	examples/struct-with-descr.c			\
-	examples/test-struct-with-descr.c		\
+	examples/struct-by-ptr-with-descr.texi		\
+	examples/struct-by-ptr-with-descr.h		\
+	examples/struct-by-ptr-with-descr.c		\
+	examples/test-struct-by-ptr-with-descr.c	\
 							\
-	examples/struct-as-value-no-descr.h		\
-	examples/struct-as-value-no-descr.c		\
-	examples/test-struct-as-value-no-descr.c	\
-	examples/struct-as-value-no-descr.texi		\
+	examples/struct-by-val-no-descr.texi		\
+	examples/struct-by-val-no-descr.h		\
+	examples/struct-by-val-no-descr.c		\
+	examples/test-struct-by-val-no-descr.c		\
 							\
-	examples/struct-as-value-with-descr.texi	\
-	examples/struct-as-value-with-descr.h		\
-	examples/struct-as-value-with-descr.c		\
-	examples/test-struct-as-value-with-descr.c	\
+	examples/struct-by-val-with-descr.texi		\
+	examples/struct-by-val-with-descr.h		\
+	examples/struct-by-val-with-descr.c		\
+	examples/test-struct-by-val-with-descr.c	\
 							\
 	examples/destructor-trait.h			\
 	examples/test-destructor-trait.c
 
 noinst_PROGRAMS	=					\
 	examples/plain					\
-	examples/test-struct-no-descr			\
-	examples/test-struct-with-descr			\
-	examples/test-struct-as-value-no-descr		\
-	examples/test-struct-as-value-with-descr	\
+	examples/test-struct-by-ptr-no-descr		\
+	examples/test-struct-by-ptr-with-descr		\
+	examples/test-struct-by-val-no-descr		\
+	examples/test-struct-by-val-with-descr		\
 	examples/test-destructor-trait
 
 ccexceptions_examples_cppflags		= $(AM_CPPFLAGS) -I$(srcdir)/examples
@@ -357,10 +357,10 @@ ccexceptions_examples_ldadd		= -lm -L$(builddir) libccexceptions.la
 
 examples: $(noinst_PROGRAMS)
 	-./examples/plain
-	-./examples/test-struct-no-descr
-	-./examples/test-struct-with-descr
-	-./examples/test-struct-as-value-no-descr
-	-./examples/test-struct-as-value-with-descr
+	-./examples/test-struct-by-ptr-no-descr
+	-./examples/test-struct-by-ptr-with-descr
+	-./examples/test-struct-by-val-no-descr
+	-./examples/test-struct-by-val-with-descr
 	-./examples/test-destructor-trait
 
 ## --------------------------------------------------------------------
@@ -377,60 +377,60 @@ $(examples_plain_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
-examples_test_struct_no_descr_SOURCES =	\
-	examples/struct-no-descr.h		\
-	examples/struct-no-descr.c		\
-	examples/test-struct-no-descr.c
+examples_test_struct_by_ptr_no_descr_SOURCES =		\
+	examples/struct-by-ptr-no-descr.h		\
+	examples/struct-by-ptr-no-descr.c		\
+	examples/test-struct-by-ptr-no-descr.c
 
-examples_test_struct_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
-examples_test_struct_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
+examples_test_struct_by_ptr_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_by_ptr_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
 
-$(examples_test_struct_no_descr_OBJECTS): libccexceptions.la
-
-## --------------------------------------------------------------------
-
-examples_test_struct_with_descr_SOURCES =	\
-	examples/struct-with-descr.h		\
-	examples/struct-with-descr.c		\
-	examples/test-struct-with-descr.c
-
-examples_test_struct_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
-examples_test_struct_with_descr_LDADD		= $(ccexceptions_examples_ldadd)
-
-$(examples_test_struct_with_descr_OBJECTS): libccexceptions.la
+$(examples_test_struct_by_ptr_no_descr_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
-examples_test_struct_as_value_no_descr_SOURCES =	\
-	examples/struct-as-value-no-descr.h		\
-	examples/struct-as-value-no-descr.c		\
-	examples/test-struct-as-value-no-descr.c
+examples_test_struct_by_ptr_with_descr_SOURCES =	\
+	examples/struct-by-ptr-with-descr.h		\
+	examples/struct-by-ptr-with-descr.c		\
+	examples/test-struct-by-ptr-with-descr.c
 
-examples_test_struct_as_value_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
-examples_test_struct_as_value_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
+examples_test_struct_by_ptr_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_by_ptr_with_descr_LDADD	= $(ccexceptions_examples_ldadd)
 
-$(examples_test_struct_as_value_no_descr_OBJECTS): libccexceptions.la
+$(examples_test_struct_by_ptr_with_descr_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
-examples_test_struct_as_value_with_descr_SOURCES =	\
-	examples/struct-as-value-with-descr.h		\
-	examples/struct-as-value-with-descr.c		\
-	examples/test-struct-as-value-with-descr.c
+examples_test_struct_by_val_no_descr_SOURCES =		\
+	examples/struct-by-val-no-descr.h		\
+	examples/struct-by-val-no-descr.c		\
+	examples/test-struct-by-val-no-descr.c
 
-examples_test_struct_as_value_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
-examples_test_struct_as_value_with_descr_LDADD		= $(ccexceptions_examples_ldadd)
+examples_test_struct_by_val_no_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_by_val_no_descr_LDADD	= $(ccexceptions_examples_ldadd)
 
-$(examples_test_struct_as_value_with_descr_OBJECTS): libccexceptions.la
+$(examples_test_struct_by_val_no_descr_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_struct_by_val_with_descr_SOURCES =	\
+	examples/struct-by-val-with-descr.h		\
+	examples/struct-by-val-with-descr.c		\
+	examples/test-struct-by-val-with-descr.c
+
+examples_test_struct_by_val_with_descr_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_struct_by_val_with_descr_LDADD	= $(ccexceptions_examples_ldadd)
+
+$(examples_test_struct_by_val_with_descr_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
 examples_test_destructor_trait_SOURCES =		\
 	examples/destructor-trait.h			\
-	examples/struct-as-value-with-descr.h		\
-	examples/struct-as-value-with-descr.c		\
-	examples/struct-with-descr.h			\
-	examples/struct-with-descr.c			\
+	examples/struct-by-val-with-descr.h		\
+	examples/struct-by-val-with-descr.c		\
+	examples/struct-by-ptr-with-descr.h		\
+	examples/struct-by-ptr-with-descr.c		\
 	examples/test-destructor-trait.c
 
 examples_test_destructor_trait_CPPFLAGS		= $(ccexceptions_examples_cppflags)
@@ -445,12 +445,12 @@ EXAMPLES_INFO_TARGETS	 = $(builddir)/doc/cclibraries-examples.info
 
 info: $(EXAMPLES_INFO_TARGETS)
 
-$(builddir)/doc/cclibraries-examples.info: \
+$(builddir)/doc/cclibraries-examples.info:					\
 		$(top_srcdir)/doc/cclibraries-examples.texi			\
-		$(top_srcdir)/examples/struct-as-pointer-no-descr.texi		\
-		$(top_srcdir)/examples/struct-as-pointer-with-descr.texi	\
-		$(top_srcdir)/examples/struct-as-value-no-descr.texi		\
-		$(top_srcdir)/examples/struct-as-value-with-descr.texi		\
+		$(top_srcdir)/examples/struct-by-ptr-no-descr.texi		\
+		$(top_srcdir)/examples/struct-by-ptr-with-descr.texi		\
+		$(top_srcdir)/examples/struct-by-val-no-descr.texi		\
+		$(top_srcdir)/examples/struct-by-val-with-descr.texi		\
 		$(top_srcdir)/doc/macros.texi
 	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(top_srcdir)/examples -o $(@) $(<)
 

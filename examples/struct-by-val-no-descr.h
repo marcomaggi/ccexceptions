@@ -1,14 +1,14 @@
 /*
   Part of: CCExceptions
-  Contents: example of data structure type implementing the common API
-  Date: Apr 12, 2020
+  Contents: example of data structure types common API
+  Date: Apr 11, 2020
 
   Abstract
 
 	This header file defines the struct "my_coords_t", passed as value, using the
-	common structs API, using the struct descriptor API.
+	common structs API, without struct descriptor API.
 
-  Copyright (C) 2020 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2019-2020 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -32,8 +32,8 @@
 
 */
 
-#ifndef STRUCT_AS_VALUE_WITH_DESCR_H
-#define STRUCT_AS_VALUE_WITH_DESCR_H
+#ifndef STRUCT_BY_VAL_NO_DESCR_H
+#define STRUCT_BY_VAL_NO_DESCR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,7 +41,7 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
- ** Descrs.
+ ** Headers.
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
@@ -93,26 +93,13 @@ cclib_make(my_y_t, pol) (my_rho_t rho, my_theta_t theta)
  ** Type definitions: data struct "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(my_coords_t);
-
 typedef struct my_coords_t	my_coords_t;
 
 struct my_coords_t {
-  cclib_struct_descriptor(my_coords_t);
   /* We implement the coordinates storage with  dynamic memory allocation to show how
      to handle asynchronous resources. */
   my_x_t	*X;
   my_y_t	*Y;
-};
-
-/* A typedef for every method. */
-typedef void cclib_method_type(my_coords_t, destroy) (my_coords_t self);
-typedef void cclib_method_type(my_coords_t, print)   (my_coords_t self, FILE * stream);
-
-/* The methods table declaration. */
-struct cclib_methods_table_type(my_coords_t) {
-  cclib_method_type(my_coords_t, destroy) *	destroy;
-  cclib_method_type(my_coords_t, print) *	print;
 };
 
 
@@ -121,12 +108,10 @@ struct cclib_methods_table_type(my_coords_t) {
  ** ----------------------------------------------------------------- */
 
 /* Maker function.  This initialises from rectangular coordinates. */
-cclib_decl my_coords_t cclib_make(my_coords_t, rec) (cce_destination_t L, my_x_t X, my_y_t Y)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+cclib_decl my_coords_t cclib_make(my_coords_t, rec) (cce_destination_t L, my_x_t X, my_y_t Y);
 
 /* Maker function.  This initialises from polar coordinates. */
-cclib_decl my_coords_t cclib_make(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+cclib_decl my_coords_t cclib_make(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA);
 
 /* Destructor function. */
 cclib_decl void cclib_unmake(my_coords_t) (my_coords_t S);
@@ -136,10 +121,10 @@ cclib_decl void cclib_final(my_coords_t) (my_coords_t * S);
 
 
 /** --------------------------------------------------------------------
- ** Exception handlers.
+ ** Function prototypes: plain exception handlers.
  ** ----------------------------------------------------------------- */
 
-typedef struct cclib_exception_handler_type(my_coords_t, clean)	cclib_exception_handler_type(my_coords_t, clean);
+typedef struct cclib_exception_handler_type(my_coords_t, clean) cclib_exception_handler_type(my_coords_t, clean);
 typedef struct cclib_exception_handler_type(my_coords_t, error)	cclib_exception_handler_type(my_coords_t, error);
 
 struct cclib_exception_handler_type(my_coords_t, clean) {
@@ -192,6 +177,6 @@ cclib_decl my_coords_t cclib_make(my_coords_t, pol, guarded, error)
 } // extern "C"
 #endif
 
-#endif /* define STRUCT_AS_VALUE_WITH_DESCR_H */
+#endif /* define STRUCT_BY_VAL_NO_DESCR_H */
 
 /* end of file */

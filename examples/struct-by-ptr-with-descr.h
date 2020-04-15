@@ -32,8 +32,8 @@
 
 */
 
-#ifndef STRUCT_WITH_DESCR_H
-#define STRUCT_WITH_DESCR_H 1
+#ifndef STRUCT_BY_PTR_WITH_DESCR_H
+#define STRUCT_BY_PTR_WITH_DESCR_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -258,6 +258,6 @@ cclib_decl my_complex_t const * cclib_new(my_complex_t, pol, guarded, error)
 } // extern "C"
 #endif
 
-#endif /* defined STRUCT_WITH_DESCR_H */
+#endif /* defined STRUCT_BY_PTR_WITH_DESCR_H */
 
 /* end of file */

@@ -36,7 +36,7 @@
  ** Descrs.
  ** ----------------------------------------------------------------- */
 
-#include "struct-as-value-no-descr.h"
+#include "struct-by-val-no-descr.h"
 #include <math.h>
 
 

@@ -37,8 +37,8 @@
  ** ----------------------------------------------------------------- */
 
 #include "destructor-trait.h"
-#include "struct-with-descr.h"
-#include "struct-as-value-with-descr.h"
+#include "struct-by-ptr-with-descr.h"
+#include "struct-by-val-with-descr.h"
 
 
 /** --------------------------------------------------------------------

@@ -37,7 +37,7 @@
  ** Descrs.
  ** ----------------------------------------------------------------- */
 
-#include "struct-with-descr.h"
+#include "struct-by-ptr-with-descr.h"
 #include <stdio.h>
 #include <stdlib.h>
 

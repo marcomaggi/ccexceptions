@@ -36,7 +36,7 @@
  ** Descrs.
  ** ----------------------------------------------------------------- */
 
-#include "struct-no-descr.h"
+#include "struct-by-ptr-no-descr.h"
 #include <errno.h>
 #include <math.h>
 #include <stdarg.h>

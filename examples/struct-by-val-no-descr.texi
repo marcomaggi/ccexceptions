@@ -1,4 +1,4 @@
-@node struct-as-value-no-descr
+@node struct-by-val-no-descr
 @chapter Data structure type, passed by pointer, without descriptor
 
 @c Local Variables:
