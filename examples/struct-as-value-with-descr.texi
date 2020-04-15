@@ -1,0 +1,8 @@
+@node struct-as-value-with-descr
+@chapter Data structure type, passed by pointer, with descriptor
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

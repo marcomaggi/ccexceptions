@@ -105,44 +105,29 @@ struct my_coords_t {
  ** Data struct "my_coords_t": well known functions API.
  ** ----------------------------------------------------------------- */
 
-/* Initialisation  function  that  initialises  an already  allocated  struct.   This
-   initialises from rectangular coordinates. */
 cclib_decl void cclib_init(my_coords_t, rec) (my_coords_t * S, my_x_t X, my_y_t Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-/* Initialisation  function  that  initialises  an already  allocated  struct.   This
-   initialises from polar coordinates. */
 cclib_decl void cclib_init(my_coords_t, pol) (my_coords_t * S, my_rho_t RHO, my_theta_t THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-/* Finalisation  function.  Releases  all  the asynchronous  resources  owned by  the
-   struct, if any.  The struct's memory block is left untouched. */
-cclib_decl void cclib_final(my_coords_t) (my_coords_t const * S CCLIB_UNUSED)
+cclib_decl void cclib_final(my_coords_t) (my_coords_t const * S)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor function  that allocates  the struct  on the  heap using  the standard
-   memory  allocator  implemented by  CCMemory.   This  initialises from  rectangular
-   coordinates. */
 cclib_decl my_coords_t const * cclib_new(my_coords_t, rec) (cce_destination_t L, my_x_t X, my_y_t Y)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-/* Constructor function  that allocates  the struct  on the  heap using  the standard
-   memory   allocator  implemented   by  CCMemory.    This  initialises   from  polar
-   coordinates. */
 cclib_decl my_coords_t const * cclib_new(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* ------------------------------------------------------------------ */
 
-/* Destructor function.  Releases all the asynchronous resources owned by the struct,
-   if any.  The struct's memory block is released using the standard memory allocator
-   implemented by CCMemory.  */
 cclib_decl void cclib_delete(my_coords_t) (my_coords_t const * S)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 

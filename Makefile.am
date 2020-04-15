@@ -318,23 +318,27 @@ installcheck-local: $(TESTS)
 ### examples
 
 examplesdir		= $(docdir)/examples
-dist_examples_DATA	= \
+dist_examples_DATA	=				\
+	examples/struct-as-pointer-no-descr.texi	\
 	examples/struct-no-descr.h			\
 	examples/struct-no-descr.c			\
 	examples/test-struct-no-descr.c			\
-	\
+							\
+	examples/struct-as-pointer-with-descr.texi	\
 	examples/struct-with-descr.h			\
 	examples/struct-with-descr.c			\
 	examples/test-struct-with-descr.c		\
-	\
+							\
 	examples/struct-as-value-no-descr.h		\
 	examples/struct-as-value-no-descr.c		\
 	examples/test-struct-as-value-no-descr.c	\
-	\
+	examples/struct-as-value-no-descr.texi		\
+							\
+	examples/struct-as-value-with-descr.texi	\
 	examples/struct-as-value-with-descr.h		\
 	examples/struct-as-value-with-descr.c		\
 	examples/test-struct-as-value-with-descr.c	\
-	\
+							\
 	examples/destructor-trait.h			\
 	examples/test-destructor-trait.c
 
@@ -433,6 +437,22 @@ examples_test_destructor_trait_CPPFLAGS		= $(ccexceptions_examples_cppflags)
 examples_test_destructor_trait_LDADD		= $(ccexceptions_examples_ldadd)
 
 $(examples_test_destructor_trait_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+EXTRA_DIST		+= $(top_srcdir)/doc/cclibraries-examples.texi
+EXAMPLES_INFO_TARGETS	 = $(builddir)/doc/cclibraries-examples.info
+
+info: $(EXAMPLES_INFO_TARGETS)
+
+$(builddir)/doc/cclibraries-examples.info: \
+		$(top_srcdir)/doc/cclibraries-examples.texi			\
+		$(top_srcdir)/examples/struct-as-pointer-no-descr.texi		\
+		$(top_srcdir)/examples/struct-as-pointer-with-descr.texi	\
+		$(top_srcdir)/examples/struct-as-value-no-descr.texi		\
+		$(top_srcdir)/examples/struct-as-value-with-descr.texi		\
+		$(top_srcdir)/doc/macros.texi
+	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(top_srcdir)/examples -o $(@) $(<)
 
 
 #### common rules

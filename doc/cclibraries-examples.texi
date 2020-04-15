@@ -1,0 +1,159 @@
+\input texinfo.tex
+@c %**start of header
+@setfilename cclibraries-examples.info
+@settitle CCLibraries Examples
+@c %**end of header
+
+@include version.texi
+@include macros.texi
+
+@c page
+@c ------------------------------------------------------------
+@c Values.
+@c ------------------------------------------------------------
+
+@set TITLE                      CCLibraries Examples
+
+@c To be used as @value{PACKAGE} whenever we need to include the full
+@c name of this package.
+@set PACKAGE                    CCLibraries Examples
+
+@c To be used as @value{PACKAGE} whenever we need to include the
+@c nickname of the project: the name that is used to compose the
+@c distribution tarball or the web address.
+@set PACKAGE_NICKNAME           cclibraries-examples
+
+@c To be used as @value{AUTHOR} whenever we need to include the list of
+@c authors of this document.
+@set AUTHOR                     Marco Maggi
+
+@c To be used as @value{AUTHOR_EMAIL} whenever we need to include the
+@c email of the *single* author of this document.
+@set AUTHOR_EMAIL               @email{mrc.mgg@@gmail.com}
+
+@c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
+@c list of copyright years.
+@set COPYRIGHT_YEARS            2020
+
+
+@c page
+@c ------------------------------------------------------------
+@c Copyright notice.
+@c ------------------------------------------------------------
+
+@copying
+This document provides template documentation for the examples distributed with version
+@value{VERSION} of @value{PACKAGE}.
+
+@noindent
+Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
+
+@quotation
+The author hereby grant permission to use, copy, modify, distribute, and license this software and
+its documentation for any purpose, provided that existing copyright notices are retained in all
+copies and that this notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.  Modifications to this software
+may be copyrighted by their authors and need not follow the licensing terms described here, provided
+that the new terms are clearly indicated on the first page of each file where they apply.
+
+IN NO EVENT SHALL THE AUTHOR OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL,
+INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR
+ANY DERIVATIVES THEREOF, EVEN IF THE AUTHOR HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHOR AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS
+SOFTWARE IS PROVIDED ON AN ``AS IS'' BASIS, AND THE AUTHOR AND DISTRIBUTORS HAVE NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+@end quotation
+@end copying
+
+@c page
+@c ------------------------------------------------------------
+@c Headers.
+@c ------------------------------------------------------------
+
+@titlepage
+@title @value{TITLE}
+@subtitle Revision @value{VERSION}
+@author @value{AUTHOR} @value{AUTHOR_EMAIL}
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ------------------------------------------------------------
+
+@ignore
+@syncodeindex tp cp
+@syncodeindex vr cp
+@syncodeindex fn cp
+@end ignore
+
+@c page
+@ifnottex
+@node Top
+@top @value{TITLE}
+
+@insertcopying
+
+@menu
+* overview::                    Overview of the package.
+* struct-as-ptr-no-descr::      Data structure type, passed by pointer, without descriptor.
+* struct-as-ptr-with-descr::    Data structure type, passed by pointer, with descriptor.
+* struct-as-value-no-descr::    Data structure type, passed by pointer, without descriptor.
+* struct-as-value-with-descr::  Data structure type, passed by pointer, with descriptor.
+
+Indexes
+
+* concept index::               An entry for each concept.
+* function index::              An entry for each function.
+* variable index::              An entry for each variable.
+* type index::                  An entry for each type.
+@end menu
+@end ifnottex
+
+@c page
+@node overview
+@chapter Overview of the package
+
+
+This document provides template documentation for the examples distributed with version
+@value{VERSION} of @value{PACKAGE}.
+
+@c page
+
+@include struct-as-pointer-no-descr.texi
+@include struct-as-pointer-with-descr.texi
+@include struct-as-value-no-descr.texi
+@include struct-as-value-with-descr.texi
+
+@c page
+@node concept index
+@appendix An entry for each concept
+
+@printindex cp
+
+@node function index
+@appendix An entry for each function.
+
+@printindex fn
+
+@node variable index
+@appendix An entry for each variable.
+
+@printindex vr
+
+@node type index
+@appendix An entry for each type.
+
+@printindex tp
+
+@contents
+@bye
+
+@c end of file
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

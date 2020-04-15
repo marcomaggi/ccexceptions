@@ -1,0 +1,470 @@
+@node struct-as-ptr-no-descr
+@chapter Data structure type, passed by pointer, without descriptor
+
+
+@menu
+* struct-as-ptr-no-descr typedefs::      Type definitions.
+* struct-as-ptr-no-descr constructors::  Data structure constructors.
+* struct-as-ptr-no-descr destructors::   Data structure destructors.
+* struct-as-ptr-no-descr handlers::      Exception handlers.
+* struct-as-ptr-no-descr guarded::       Guarded constructors.
+@end menu
+
+@c page
+@node struct-as-ptr-no-descr typedefs
+@section Type definitions
+
+
+@deftp {Struct Typedef} my_coords_t
+Structure type used to hold coordinates.  It has the following fields:
+
+@table @code
+@item my_x_t X
+The X coordinate.
+
+@item my_y_t Y
+The Y coordinate.
+@end table
+@end deftp
+
+
+@c page
+@node struct-as-ptr-no-descr constructors
+@section Data structure constructors and destructors
+
+
+The following functions operate upon embedded or standalone data structures: an @dfn{embedded} data
+structure is allocated on the stack or it is embedded into an another, enveloping, data structure; a
+@dfn{standalone} data structure is allocated on the heap using dynamic memory.
+
+This section documents the constructors @api{} we can use to build new data structures.  While this
+@api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+guarded, Guarded constructors}.
+
+
+@deftypefun void {cclib_init(my_coords_t, rec)} (my_coords_t * @var{self}, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for embedded data structures.  This constructor initialises the, already
+allocated, data structure referenced by @var{self} from the rectangular coordinates @var{X} and
+@var{Y}.
+@end deftypefun
+
+
+@deftypefun void {cclib_init(my_coords_t, pol)} (my_coords_t * @var{self}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for embedded data structures.  This constructor initialises, already allocated,
+the data structure referenced by @var{self} from the polar coordinates @var{RHO} and @var{THETA}.
+@end deftypefun
+
+
+@deftypefun {my_coords_t const *} {cclib_new(my_coords_t, rec)} (cce_destination_t @var{L}, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the rectangular coordinates @var{X} and @var{Y}.
+@end deftypefun
+
+
+@deftypefun {my_coords_t const *} {cclib_new(my_coords_t, pol)} (cce_destination_t @var{L}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the polar coordinates @var{RHO} and @var{THETA}.
+@end deftypefun
+
+@c page
+@node struct-as-ptr-no-descr destructors
+@section Data structure destructors
+
+
+The following functions operate upon embedded or standalone data structures: an @dfn{embedded} data
+structure is allocated on the stack or it is embedded into an another, enveloping, data structure; a
+@dfn{standalone} data structure is allocated on the heap using dynamic memory.
+
+This section documents the destructors @api{} we can use to destroy existent data structures.  While
+this @api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+guarded, Guarded constructors}.
+
+
+@deftypefun void {cclib_final(my_coords_t)} (my_coords_t const * @var{self})
+Destructor function for embedded data structures.  Release all the asynchronous resources owned by
+the data structure, if any; the data structure's memory block is left untouched.
+@end deftypefun
+
+
+@deftypefun void {cclib_delete(my_coords_t)} (my_coords_t const * @var{self})
+Destructor function for standalone data structures.  Release all the asynchronous resources owned by
+the data structure, if any; the data structure's memory block is also released.
+@end deftypefun
+
+@c page
+@node struct-as-ptr-no-descr handlers
+@section Exception handlers
+
+
+This section documents the exception handlers @api{} we can use to destroy data structures.  While
+this @api{} is available: it preferable to use the guarded constructors, @ref{struct-as-ptr-no-descr
+guarded, Guarded constructors}.
+
+
+@deftp {Struct Typedef} {cclib_exception_handler_type(my_coords_t, clean)}
+@deftpx {Struct Typedef} {cclib_exception_handler_type(my_coords_t, error)}
+Data structure types for exception handlers as defined by CCExceptions.
+@end deftp
+
+
+@deftypefun void {cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)} (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t const * @var{self})
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+  cclib_exception_handler_init_and_register(my_coords_t, clean, embedded)(L, A_H, A);
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun void {cclib_exception_handler_init_and_register(my_coords_t, error, embedded)} (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t const * @var{self})
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, rec)(A, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+  cclib_exception_handler_init_and_register(my_coords_t, error, embedded)(L, A_H, A);
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun void {cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)} (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t const * @var{self})
+Configure the exception handler referenced by @var{self_H} to destroy the standalone data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+  cclib_exception_handler_init_and_register(my_coords_t, clean, standalone)(L, A_H, A);
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun void {cclib_exception_handler_init_and_register(my_coords_t, error, standalone)} (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t const * @var{self})
+Configure the exception handler referenced by @var{self_H} to destroy the standalone data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+  cclib_exception_handler_init_and_register(my_coords_t, error, standalone)(L, A_H, A);
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+@c page
+@node struct-as-ptr-no-descr guarded
+@section Guarded constructors
+
+
+The following functions operate upon embedded or standalone data structures: an @dfn{embedded} data
+structure is allocated on the stack or it is embedded into an another, enveloping, data structure; a
+@dfn{standalone} data structure is allocated on the heap using dynamic memory.
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Embedded data structures, rectangular coordinates
+
+
+@deftypefun void cclib_init(my_coords_t, rec, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * S, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for embedded data structures.  This constructor initialises the, already
+allocated, data structure referenced by @var{self} from the rectangular coordinates @var{X} and
+@var{Y}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, rec, guarded, clean)(L, A_H, A,
+    cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun void cclib_init(my_coords_t, rec, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * S, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for embedded data structures.  This constructor initialises the, already
+allocated, data structure referenced by @var{self} from the rectangular coordinates @var{X} and
+@var{Y}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, rec, guarded, error)(L, A_H, A,
+    cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Embedded data structures, polar coordinates
+
+
+@deftypefun void cclib_init(my_coords_t, pol, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_coords_t * S, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for embedded data structures.  This constructor initialises, already allocated,
+the data structure referenced by @var{self} from the polar coordinates @var{RHO} and @var{THETA}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, pol, guarded, clean)(L, A_H, A,
+    cclib_make(my_rho_t)(1.0), cclib_make(my_theta_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun void cclib_init(my_coords_t, pol, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_coords_t * S, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for embedded data structures.  This constructor initialises, already allocated,
+the data structure referenced by @var{self} from the polar coordinates @var{RHO} and @var{THETA}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+my_coords_t     A[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  cclib_init(my_coords_t, pol, guarded, error)(L, A_H, A,
+    cclib_make(my_rho_t)(1.0), cclib_make(my_theta_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Standalone data structures, rectangular coordinates
+
+
+@deftypefun my_coords_t const * cclib_new(my_coords_t, rec, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the rectangular coordinates @var{X} and @var{Y}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, rec, guared, clean)(L, A_H,
+    cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun my_coords_t const * cclib_new(my_coords_t, rec, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_x_t @var{X}, my_y_t @var{Y})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the rectangular coordinates @var{X} and @var{Y}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, rec, guared, error)(L, A_H,
+    cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Standalone data structures, polar coordinates
+
+
+@deftypefun my_coords_t const * cclib_new(my_coords_t, pol, guarded, clean) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, clean) * @var{self_H}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the polar coordinates @var{RHO} and @var{THETA}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L}.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, clean)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, pol, guared, clean)(L, A_H,
+    cclib_make(my_rho_t)(1.0), cclib_make(my_theta_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@deftypefun my_coords_t const * cclib_new(my_coords_t, pol, guarded, error) (cce_destination_t @var{L}, cclib_exception_handler_type(my_coords_t, error) * @var{self_H}, my_rho_t @var{RHO}, my_theta_t @var{THETA})
+Constructor function for standalone data structures.  This constructor allocates a new data
+structure on the heap using the standard memory allocator, then it initialises the data structure
+from the polar coordinates @var{RHO} and @var{THETA}.
+
+Configure the exception handler referenced by @var{self_H} to destroy the embedded data structure
+referenced by @var{self} upon leaving the location @var{L} in case an exceptional condition is
+raised.
+
+Usage example:
+
+@example
+cce_location_t  L[1];
+cclib_exception_handler_type(my_coords_t, error)  A_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  my_coords_t const * A;
+
+  A = cclib_new(my_coords_t, pol, guared, error)(L, A_H,
+    cclib_make(my_rho_t)(1.0), cclib_make(my_theta_t)(2.0));
+
+  /* do something with A */
+  cce_run_body_handlers(L);
+@}
+@end example
+@end deftypefun
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:
