@@ -129,7 +129,7 @@ test_1_3 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, plain handler destructors.
+ ** Allocation on the stack, generic handler destructors.
  ** ----------------------------------------------------------------- */
 
 void
@@ -189,8 +189,13 @@ test_2_2 (cce_destination_t upper_L)
   }
 }
 
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, custom handler destructors.
+ ** ----------------------------------------------------------------- */
+
 void
-test_2_3 (cce_destination_t upper_L)
+test_3_1 (cce_destination_t upper_L)
 /* Make the struct, then destroy it using the type-specific clean handler. */
 {
   cce_location_t	L[1];
@@ -214,7 +219,7 @@ test_2_3 (cce_destination_t upper_L)
 }
 
 void
-test_2_4 (cce_destination_t upper_L)
+test_3_2 (cce_destination_t upper_L)
 /* Make the struct, then destroy it using the type-specific error handler. */
 {
   cce_location_t	L[1];
@@ -242,8 +247,13 @@ test_2_4 (cce_destination_t upper_L)
   }
 }
 
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, guarded constructors.
+ ** ----------------------------------------------------------------- */
+
 void
-test_2_5 (cce_destination_t upper_L)
+test_4_1 (cce_destination_t upper_L)
 /* Make  the  struct, using the clean guarded constructor. */
 {
   cce_location_t	L[1];
@@ -265,7 +275,7 @@ test_2_5 (cce_destination_t upper_L)
 }
 
 void
-test_2_6 (cce_destination_t upper_L)
+test_4_2 (cce_destination_t upper_L)
 /* Make the struct, using the error guarded constructor. */
 {
   cce_location_t	L[1];
@@ -308,10 +318,12 @@ main (void)
 
     test_2_1(L);
     test_2_2(L);
-    test_2_3(L);
-    test_2_4(L);
-    test_2_5(L);
-    test_2_6(L);
+
+    test_3_1(L);
+    test_3_2(L);
+
+    test_4_1(L);
+    test_4_2(L);
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }
