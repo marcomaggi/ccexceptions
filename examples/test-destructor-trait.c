@@ -183,7 +183,7 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_unmake(my_coords_t)(A);
@@ -200,7 +200,7 @@ test_1_2 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_final(my_coords_t)(&A);
@@ -217,7 +217,7 @@ test_1_3 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t		A  = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t		A  = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_vcall(destroy, A);
@@ -235,7 +235,7 @@ test_1_4 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t		A  = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t		A  = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     my_destructor_T	AD = cclib_make(my_destructor_T, my_coords_t)(&A);
 
     cclib_vcall(print, A, stderr);

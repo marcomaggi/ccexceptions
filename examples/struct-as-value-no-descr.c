@@ -66,24 +66,9 @@ cclib_make(my_coords_t, rec) (cce_destination_t upper_L, my_x_t X, my_y_t Y)
 }
 
 my_coords_t
-cclib_make(my_coords_t, pol) (cce_destination_t upper_L, my_rho_t RHO, my_theta_t THETA)
+cclib_make(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA)
 {
-  cce_location_t	L[1];
-  cce_error_handler_t	X_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    my_coords_t	S = {
-      .X = cce_sys_malloc_guarded(L, X_H, sizeof(double)),
-      .Y = cce_sys_malloc(L, sizeof(double))
-    };
-
-    *(S.X) = cclib_make(my_x_t, pol)(RHO, THETA);
-    *(S.Y) = cclib_make(my_y_t, pol)(RHO, THETA);
-    cce_run_body_handlers(L);
-    return S;
-  }
+  return cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t, pol)(RHO, THETA), cclib_make(my_y_t, pol)(RHO, THETA));
 }
 
 void
@@ -136,20 +121,26 @@ void
 cclib_exception_handler_init_and_register(my_coords_t, clean)
   (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_coords_t self)
 {
+  self_H->resource = self;
+  /* We could very well use  "cce_default_error_handler_function()", but for the sake
+     of  showing  how  to  do  it:  we use  the  custom  exception  handler  function
+     "cclib_exception_handler_function(my_coords_t, clean)()". */
   cce_init_and_register_handler(L, &(self_H->handler),
 				cclib_exception_handler_function(my_coords_t, clean),
-				cce_resource_pointer(&self));
-  self_H->resource = self;
+				cce_resource_pointer(&(self_H->resource)));
 }
 
 void
 cclib_exception_handler_init_and_register(my_coords_t, error)
   (cce_destination_t L, struct cclib_exception_handler_type(my_coords_t, error) * self_H, my_coords_t self)
 {
+  self_H->resource = self;
+  /* We could very well use  "cce_default_error_handler_function()", but for the sake
+     of  showing  how  to  do  it:  we use  the  custom  exception  handler  function
+     "cclib_exception_handler_function(my_coords_t, error)()". */
   cce_init_and_register_handler(L, &(self_H->handler),
 				cclib_exception_handler_function(my_coords_t, error),
-				cce_resource_pointer(&self));
-  self_H->resource = self;
+				cce_resource_pointer(&(self_H->resource)));
 }
 
 

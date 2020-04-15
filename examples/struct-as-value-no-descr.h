@@ -137,16 +137,12 @@ struct cclib_exception_handler_type(my_coords_t, error) {
   my_coords_t		resource;
 };
 
-/* Initialises a "clean" exception handler that calls "cclib_final(my_coords_t)()" as
-   destructor function. */
 cclib_decl void cclib_exception_handler_init_and_register(my_coords_t, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * H, my_coords_t self)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_coords_t self)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-/* Initialises an  "error" exception handler that  calls "cclib_final(my_coords_t)()"
-   as destructor function. */
 cclib_decl void cclib_exception_handler_init_and_register(my_coords_t, error)
-  (cce_destination_t L, struct cclib_exception_handler_type(my_coords_t, error) * H, my_coords_t self)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * self_H, my_coords_t self)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 

@@ -85,7 +85,7 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_unmake(my_coords_t)(A);
@@ -102,7 +102,7 @@ test_1_2 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_final(my_coords_t)(&A);
@@ -119,7 +119,7 @@ test_1_3 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     cclib_vcall(print, A, stderr);
     cclib_vcall(destroy, A);
@@ -145,7 +145,7 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(&A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -175,7 +175,7 @@ test_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
 				  cce_resource_pointer(&A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -202,7 +202,7 @@ test_2_3 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, clean)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -230,7 +230,7 @@ test_2_4 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cclib_exception_handler_init_and_register(my_coords_t, error)(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
@@ -254,7 +254,7 @@ test_2_5 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec, guarded, clean)(L, A_H, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec, guarded, clean)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -280,7 +280,8 @@ test_2_6 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-      my_coords_t	A = cclib_make(my_coords_t, rec, guarded, error)(L, A_H, 1.0, 2.0);
+
+      my_coords_t	A = cclib_make(my_coords_t, rec, guarded, error)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);

@@ -1,6 +1,6 @@
 /*
   Part of: CCExceptions
-  Contents: demo program for structs handling API, source file
+  Contents: example of data structure type implementing the common API
   Date: Apr 12, 2020
 
   Abstract
@@ -37,7 +37,6 @@
  ** ----------------------------------------------------------------- */
 
 #include "struct-as-value-with-descr.h"
-#include <math.h>
 
 
 /** --------------------------------------------------------------------
@@ -60,7 +59,7 @@ static cclib_methods_table_type(my_coords_t) const cclib_methods_table(my_coords
  ** ----------------------------------------------------------------- */
 
 my_coords_t
-cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
+cclib_make(my_coords_t, rec) (cce_destination_t upper_L, my_x_t X, my_y_t Y)
 {
   cce_location_t	L[1];
   cce_error_handler_t	X_H[1];
@@ -69,8 +68,8 @@ cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     my_coords_t	S = {
-      .X = cce_sys_malloc_guarded(L, X_H, sizeof(double)),
-      .Y = cce_sys_malloc(L, sizeof(double))
+      .X = cce_sys_malloc_guarded(L, X_H, sizeof(my_x_t)),
+      .Y = cce_sys_malloc(L, sizeof(my_y_t))
     };
 
     cclib_struct_descriptor_set_methods_table_pointer(&S, &cclib_methods_table(my_coords_t));
@@ -82,25 +81,9 @@ cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
 }
 
 my_coords_t
-cclib_make(my_coords_t, pol) (cce_destination_t upper_L, double RHO, double THETA)
+cclib_make(my_coords_t, pol) (cce_destination_t L, my_rho_t RHO, my_theta_t THETA)
 {
-  cce_location_t	L[1];
-  cce_error_handler_t	X_H[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    my_coords_t	S = {
-      .X = cce_sys_malloc_guarded(L, X_H, sizeof(double)),
-      .Y = cce_sys_malloc(L, sizeof(double))
-    };
-
-    cclib_struct_descriptor_set_methods_table_pointer(&S, &cclib_methods_table(my_coords_t));
-    *(S.X) = RHO * cos(THETA);
-    *(S.Y) = RHO * sin(THETA);
-    cce_run_body_handlers(L);
-    return S;
-  }
+  return cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t, pol)(RHO, THETA), cclib_make(my_y_t, pol)(RHO, THETA));
 }
 
 void
@@ -132,7 +115,7 @@ cclib_method(my_coords_t, destroy) (my_coords_t self)
 void
 cclib_method(my_coords_t, print) (my_coords_t self, FILE * stream)
 {
-  fprintf(stream, "my_coords_t: %s: X=%f, Y=%f\n", __func__, *(self.X), *(self.Y));
+  fprintf(stream, "my_coords_t: %s: X=%f, Y=%f\n", __func__, self.X->val, self.Y->val);
 }
 
 
@@ -142,23 +125,29 @@ cclib_method(my_coords_t, print) (my_coords_t self, FILE * stream)
 
 void
 cclib_exception_handler_init_and_register(my_coords_t, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_coords_t S)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_coords_t self)
 {
-  S_H->resource = S;
-  cce_init_and_register_handler(L, &(S_H->handler),
+  self_H->resource = self;
+  /* Notice that  the resource pointer we  store in the  handler is a pointer  to the
+     field in the handler itself!  The data  structure is passed by value, so we need
+     to store a copy for it to be available if the exception handler is called. */
+  cce_init_and_register_handler(L, &(self_H->handler),
 				cce_default_clean_handler_function,
-                                cce_resource_pointer(&(S_H->resource)),
+                                cce_resource_pointer(&(self_H->resource)),
 				cce_resource_destructor(cclib_final(my_coords_t)));
 }
 
 void
 cclib_exception_handler_init_and_register(my_coords_t, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_coords_t S)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * self_H, my_coords_t self)
 {
-  S_H->resource = S;
-  cce_init_and_register_handler(L, &(S_H->handler),
+  self_H->resource = self;
+  /* Notice that  the resource pointer we  store in the  handler is a pointer  to the
+     field in the handler itself!  The data  structure is passed by value, so we need
+     to store a copy for it to be available if the exception handler is called. */
+  cce_init_and_register_handler(L, &(self_H->handler),
 				cce_default_error_handler_function,
-                                cce_resource_pointer(&(S_H->resource)),
+                                cce_resource_pointer(&(self_H->resource)),
 				cce_resource_destructor(cclib_final(my_coords_t)));
 }
 
@@ -169,7 +158,7 @@ cclib_exception_handler_init_and_register(my_coords_t, error)
 
 my_coords_t
 cclib_make(my_coords_t, rec, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double X, double Y)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_x_t X, my_y_t Y)
 {
   my_coords_t	S = cclib_make(my_coords_t, rec)(L, X, Y);
 
@@ -179,7 +168,7 @@ cclib_make(my_coords_t, rec, guarded, clean)
 
 my_coords_t
 cclib_make(my_coords_t, rec, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double X, double Y)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_x_t X, my_y_t Y)
 {
   my_coords_t	S = cclib_make(my_coords_t, rec)(L, X, Y);
 
@@ -189,7 +178,7 @@ cclib_make(my_coords_t, rec, guarded, error)
 
 my_coords_t
 cclib_make(my_coords_t, pol, guarded, clean)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, double RHO, double THETA)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * S_H, my_rho_t RHO, my_theta_t THETA)
 {
   my_coords_t	S = cclib_make(my_coords_t, pol)(L, RHO, THETA);
 
@@ -199,7 +188,7 @@ cclib_make(my_coords_t, pol, guarded, clean)
 
 my_coords_t
 cclib_make(my_coords_t, pol, guarded, error)
-  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, double RHO, double THETA)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * S_H, my_rho_t RHO, my_theta_t THETA)
 {
   my_coords_t	S = cclib_make(my_coords_t, pol)(L, RHO, THETA);
 
