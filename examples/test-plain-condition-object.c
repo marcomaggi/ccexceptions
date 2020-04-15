@@ -44,7 +44,7 @@
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "plain-header.h"
+#include "plain-condition-object.h"
 
 
 int

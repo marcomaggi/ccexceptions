@@ -319,6 +319,10 @@ installcheck-local: $(TESTS)
 
 examplesdir		= $(docdir)/examples
 dist_examples_DATA	=				\
+	examples/plain-condition-object.h		\
+	examples/plain-condition-object.c		\
+	examples/test-plain-condition-object.c		\
+							\
 	examples/struct-by-ptr-no-descr.texi		\
 	examples/struct-by-ptr-no-descr.h		\
 	examples/struct-by-ptr-no-descr.c		\
@@ -343,7 +347,7 @@ dist_examples_DATA	=				\
 	examples/test-destructor-trait.c
 
 noinst_PROGRAMS	=					\
-	examples/plain					\
+	examples/test-plain-condition-object		\
 	examples/test-struct-by-ptr-no-descr		\
 	examples/test-struct-by-ptr-with-descr		\
 	examples/test-struct-by-val-no-descr		\
@@ -356,7 +360,7 @@ ccexceptions_examples_ldadd		= -lm -L$(builddir) libccexceptions.la
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-./examples/plain
+	-./examples/test-plain-condition-object
 	-./examples/test-struct-by-ptr-no-descr
 	-./examples/test-struct-by-ptr-with-descr
 	-./examples/test-struct-by-val-no-descr
@@ -365,15 +369,15 @@ examples: $(noinst_PROGRAMS)
 
 ## --------------------------------------------------------------------
 
-examples_plain_SOURCES		=	\
-	examples/plain.c		\
-	examples/plain-header.h		\
-	examples/plain-body.c
+examples_test_plain_condition_object_SOURCES =		\
+	examples/plain-condition-object.h		\
+	examples/plain-condition-object.c		\
+	examples/test-plain-condition-object.c
 
-examples_plain_CPPFLAGS			= $(ccexceptions_examples_cppflags)
-examples_plain_LDADD			= $(ccexceptions_examples_ldadd)
+examples_test_plain_condition_object_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_plain_condition_object_LDADD	= $(ccexceptions_examples_ldadd)
 
-$(examples_plain_OBJECTS): libccexceptions.la
+$(examples_test_plain_condition_object_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 

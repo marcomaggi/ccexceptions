@@ -43,7 +43,7 @@
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
-#include "plain-header.h"
+#include "plain-condition-object.h"
 #include <stdio.h>
 #include <stdlib.h>
 

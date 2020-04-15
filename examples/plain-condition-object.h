@@ -37,8 +37,8 @@
   UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-#ifndef PLAIN_HEADER_H
-#define PLAIN_HEADER_H 1
+#ifndef PLAIN_condition_OBJECT_H
+#define PLAIN_condition_OBJECT_H 1
 
 
 /** --------------------------------------------------------------------
@@ -94,6 +94,6 @@ extern bool my_condition_is_error_1 (cce_condition_t const * C)
  ** Done.
  ** ----------------------------------------------------------------- */
 
-#endif /* PLAIN_HEADER_H */
+#endif /* PLAIN_condition_OBJECT_H */
 
 /* end of file */
