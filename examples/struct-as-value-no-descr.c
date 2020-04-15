@@ -1,12 +1,12 @@
 /*
   Part of: CCExceptions
-  Contents: demo program for CCLibraries, struct as value with no descriptor
+  Contents: example of data structure types common API
   Date: Apr 11, 2020
 
   Abstract
 
-	This body  file implements functions  for the struct "my_coords_t"  as value,
-	which implements the common API.
+	This body file  defines the struct "my_coords_t", passed as  value, using the
+	common structs API, without struct descriptor API.
 
   Copyright (C) 2019-2020 Marco Maggi <mrc.mgg@gmail.com>
 
@@ -45,7 +45,7 @@
  ** ----------------------------------------------------------------- */
 
 my_coords_t
-cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
+cclib_make(my_coords_t, rec) (cce_destination_t upper_L, my_x_t X, my_y_t Y)
 {
   cce_location_t	L[1];
   cce_error_handler_t	X_H[1];
@@ -54,8 +54,8 @@ cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     my_coords_t	S = {
-      .X = cce_sys_malloc_guarded(L, X_H, sizeof(double)),
-      .Y = cce_sys_malloc(L, sizeof(double))
+      .X = cce_sys_malloc_guarded(L, X_H, sizeof(my_x_t)),
+      .Y = cce_sys_malloc(L, sizeof(my_y_t))
     };
 
     *(S.X) = X;
@@ -66,7 +66,7 @@ cclib_make(my_coords_t, rec) (cce_destination_t upper_L, double X, double Y)
 }
 
 my_coords_t
-cclib_make(my_coords_t, pol) (cce_destination_t upper_L, double RHO, double THETA)
+cclib_make(my_coords_t, pol) (cce_destination_t upper_L, my_rho_t RHO, my_theta_t THETA)
 {
   cce_location_t	L[1];
   cce_error_handler_t	X_H[1];
@@ -79,8 +79,8 @@ cclib_make(my_coords_t, pol) (cce_destination_t upper_L, double RHO, double THET
       .Y = cce_sys_malloc(L, sizeof(double))
     };
 
-    *(S.X) = RHO * cos(THETA);
-    *(S.Y) = RHO * sin(THETA);
+    *(S.X) = cclib_make(my_x_t, pol)(RHO, THETA);
+    *(S.Y) = cclib_make(my_y_t, pol)(RHO, THETA);
     cce_run_body_handlers(L);
     return S;
   }
@@ -98,7 +98,105 @@ cclib_unmake(my_coords_t) (my_coords_t S)
 void
 cclib_final(my_coords_t) (my_coords_t * SP)
 {
+  fprintf(stderr, "%s: enter final function\n", __func__);
   cclib_unmake(my_coords_t)(*SP);
+  fprintf(stderr, "%s: finalised \n", __func__);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Plain exception handlers.
+ ** ----------------------------------------------------------------- */
+
+static void
+cclib_exception_handler_function(my_coords_t, clean) (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const _self_H)
+{
+  if (1) { fprintf(stderr, "%-35s: enter exception handler\n", __func__); }
+  {
+    CCLIB_PC(cclib_exception_handler_type(my_coords_t, clean) const, self_H, _self_H);
+
+    cclib_unmake(my_coords_t)(self_H->resource);
+  }
+  if (1) { fprintf(stderr, "%-35s: exception handling done\n", __func__); }
+}
+
+static void
+cclib_exception_handler_function(my_coords_t, error) (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const _self_H)
+{
+  if (1) { fprintf(stderr, "%-35s: enter exception handler\n", __func__); }
+  {
+    CCLIB_PC(cclib_exception_handler_type(my_coords_t, error) const, self_H, _self_H);
+
+    cclib_unmake(my_coords_t)(self_H->resource);
+  }
+  if (1) { fprintf(stderr, "%-35s: exception handling done\n", __func__); }
+}
+
+void
+cclib_exception_handler_init_and_register(my_coords_t, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_coords_t self)
+{
+  cce_init_and_register_handler(L, &(self_H->handler),
+				cclib_exception_handler_function(my_coords_t, clean),
+				cce_resource_pointer(&self));
+  self_H->resource = self;
+}
+
+void
+cclib_exception_handler_init_and_register(my_coords_t, error)
+  (cce_destination_t L, struct cclib_exception_handler_type(my_coords_t, error) * self_H, my_coords_t self)
+{
+  cce_init_and_register_handler(L, &(self_H->handler),
+				cclib_exception_handler_function(my_coords_t, error),
+				cce_resource_pointer(&self));
+  self_H->resource = self;
+}
+
+
+/** --------------------------------------------------------------------
+ ** Guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+my_coords_t
+cclib_make(my_coords_t, rec, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_x_t X, my_y_t Y)
+{
+  my_coords_t	self = cclib_make(my_coords_t, rec)(L, X, Y);
+
+  cclib_exception_handler_init_and_register(my_coords_t, clean)(L, self_H, self);
+  return self;
+}
+
+my_coords_t
+cclib_make(my_coords_t, rec, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * self_H, my_x_t X, my_y_t Y)
+{
+  my_coords_t	self = cclib_make(my_coords_t, rec)(L, X, Y);
+
+  cclib_exception_handler_init_and_register(my_coords_t, error)(L, self_H, self);
+  return self;
+}
+
+/* ------------------------------------------------------------------ */
+
+my_coords_t
+cclib_make(my_coords_t, pol, guarded, clean)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, clean) * self_H, my_rho_t RHO, my_theta_t THETA)
+{
+  my_coords_t	self = cclib_make(my_coords_t, pol)(L, RHO, THETA);
+
+  cclib_exception_handler_init_and_register(my_coords_t, clean)(L, self_H, self);
+  return self;
+}
+
+my_coords_t
+cclib_make(my_coords_t, pol, guarded, error)
+  (cce_destination_t L, cclib_exception_handler_type(my_coords_t, error) * self_H, my_rho_t RHO, my_theta_t THETA)
+{
+  my_coords_t	self = cclib_make(my_coords_t, pol)(L, RHO, THETA);
+
+  cclib_exception_handler_init_and_register(my_coords_t, error)(L, self_H, self);
+  return self;
 }
 
 /* end of file */

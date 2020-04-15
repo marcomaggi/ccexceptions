@@ -6,7 +6,8 @@
   Abstract
 
 	This  test   program  checks  the  behaviour   of  the  API  of   the  struct
-	"my_coords_t".
+	"my_coords_t", passed as value, using  the common structs API, without struct
+	descriptor API.
 
   Copyright (C) 2019-2020 Marco Maggi <mrc.mgg@gmail.com>
 
@@ -78,6 +79,23 @@ flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 
 void
 test_1_1 (cce_destination_t upper_L)
+/* Make the struct, then destroy it with the "unmake()" function. */
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
+    cclib_unmake(my_coords_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_2 (cce_destination_t upper_L)
 /* Make the struct, then destroy it with the "final()" function. */
 {
   cce_location_t	L[1];
@@ -85,10 +103,10 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, *(A.X), *(A.Y));
-    cclib_unmake(my_coords_t)(A);
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
+    cclib_final(my_coords_t)(&A);
     cce_run_body_handlers(L);
   }
 }
@@ -111,7 +129,7 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_clean_handler_function,
 				  cce_resource_pointer(&A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -119,7 +137,7 @@ test_2_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, *(A.X), *(A.Y));
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
     cce_run_body_handlers(L);
   }
 }
@@ -141,7 +159,7 @@ test_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_coords_t	A = cclib_make(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_t	A = cclib_make(my_coords_t, rec)(L, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
     cce_init_and_register_handler(L, A_H, cce_default_error_handler_function,
 				  cce_resource_pointer(&A),
 				  cce_resource_destructor(cclib_final(my_coords_t)));
@@ -149,7 +167,61 @@ test_2_2 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, *(A.X), *(A.Y));
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
+    cce_raise(L, cce_condition_new_logic_error());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+void
+test_3_1 (cce_destination_t upper_L)
+/* Make the struct, use the guarded clean constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, clean)	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec, guarded, clean)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_2 (cce_destination_t upper_L)
+/* Make the struct, use the guarded error constructor. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  cclib_exception_handler_type(my_coords_t, error)	A_H[1];
+
+  if (cce_location(L)) {
+    if (cce_condition_is_logic_error(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_coords_t	A = cclib_make(my_coords_t, rec, guarded, error)(L, A_H, cclib_make(my_x_t)(1.0), cclib_make(my_y_t)(2.0));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    fprintf(stderr, "%s: X=%f, Y=%f\n", __func__, A.X->val, A.Y->val);
     cce_raise(L, cce_condition_new_logic_error());
     cce_run_body_handlers(L);
   }
@@ -166,8 +238,13 @@ main (void)
     exit(EXIT_FAILURE);
   } else {
     test_1_1(L);
+    test_1_2(L);
+
     test_2_1(L);
     test_2_2(L);
+
+    test_3_1(L);
+    test_3_2(L);
     cce_run_body_handlers(L);
     exit(EXIT_SUCCESS);
   }
