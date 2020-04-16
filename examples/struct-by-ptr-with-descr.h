@@ -55,18 +55,18 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 #undef  MY_DEFINE_PARM
-#define MY_DEFINE_PARM(NAME)						\
-  typedef struct my_ ## NAME ## _t		my_ ## NAME ## _t;	\
-									\
-  struct my_ ## NAME ## _t {						\
-    double	val;							\
-  };									\
-									\
-  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE					\
-  static inline my_ ## NAME ## _t					\
-  cclib_make(my_ ## NAME ## _t) (double val)				\
-  {									\
-    return (my_ ## NAME ## _t) { .val = val };				\
+#define MY_DEFINE_PARM(NAME)				    \
+  CCLIB_STRUCT_TYPEDEF(my_ ## NAME ## _t);		    \
+							    \
+  struct my_ ## NAME ## _t {				    \
+    double	val;					    \
+  };							    \
+							    \
+  CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE			    \
+  static inline my_ ## NAME ## _t			    \
+  cclib_make(my_ ## NAME ## _t) (double val)		    \
+  {							    \
+    return (my_ ## NAME ## _t) { .val = val };		    \
   }
 
 MY_DEFINE_PARM(real_part)
@@ -109,7 +109,7 @@ cclib_make(my_angle_t, pol) (my_real_part_t real_part, my_imag_part_t imag_part)
 
 CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(my_complex_t);
 
-typedef struct my_complex_t	my_complex_t;
+CCLIB_STRUCT_TYPEDEF(my_complex_t);
 
 struct my_complex_t {
   cclib_struct_descriptor(my_complex_t);
@@ -171,8 +171,8 @@ cclib_decl void cclib_delete(my_complex_t) (my_complex_t const * S)
  ** Function prototypes: plain exception handlers.
  ** ----------------------------------------------------------------- */
 
-typedef struct cclib_exception_handler_type(my_complex_t, clean)  cclib_exception_handler_type(my_complex_t, clean);
-typedef struct cclib_exception_handler_type(my_complex_t, error)  cclib_exception_handler_type(my_complex_t, error);
+CCLIB_STRUCT_TYPEDEF(cclib_exception_handler_type(my_complex_t, clean));
+CCLIB_STRUCT_TYPEDEF(cclib_exception_handler_type(my_complex_t, error));
 
 struct cclib_exception_handler_type(my_complex_t, clean) {
   cce_clean_handler_t	handler;

@@ -91,58 +91,58 @@ cclib_decl int		cce_version_interface_age	(void)
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
-typedef struct cce_location_t			cce_location_t;
-typedef struct cce_handler_t			cce_handler_t;
-typedef struct cce_clean_handler_t		cce_clean_handler_t;
-typedef struct cce_error_handler_t		cce_error_handler_t;
+CCLIB_STRUCT_TYPEDEF(cce_location_t);
+CCLIB_STRUCT_TYPEDEF(cce_handler_t);
+CCLIB_STRUCT_TYPEDEF(cce_clean_handler_t);
+CCLIB_STRUCT_TYPEDEF(cce_error_handler_t);
 
-typedef struct cce_descriptor_t			cce_descriptor_t;
-typedef struct cce_condition_t			cce_condition_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_t);
 
-typedef struct cce_descriptor_root_t		cce_descriptor_root_t;
-typedef struct cce_condition_root_t		cce_condition_root_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_root_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_root_t);
 
-typedef struct cce_descriptor_unknown_t		cce_descriptor_unknown_t;
-typedef struct cce_condition_unknown_t		cce_condition_unknown_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_unknown_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_unknown_t);
 
-typedef struct cce_descriptor_break_t		cce_descriptor_break_t;
-typedef struct cce_condition_break_t		cce_condition_break_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_break_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_break_t);
 
-typedef struct cce_descriptor_unimplemented_t	cce_descriptor_unimplemented_t;
-typedef struct cce_condition_unimplemented_t	cce_condition_unimplemented_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_unimplemented_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_unimplemented_t);
 
-typedef struct cce_descriptor_error_t		cce_descriptor_error_t;
-typedef struct cce_condition_error_t		cce_condition_error_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_error_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_error_t);
 
-typedef struct cce_descriptor_runtime_error_t	cce_descriptor_runtime_error_t;
-typedef struct cce_condition_runtime_error_t	cce_condition_runtime_error_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_runtime_error_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_runtime_error_t);
 
-typedef struct cce_descriptor_logic_error_t	cce_descriptor_logic_error_t;
-typedef struct cce_condition_logic_error_t	cce_condition_logic_error_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_logic_error_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_logic_error_t);
 
-typedef struct cce_descriptor_invalid_argument_t cce_descriptor_invalid_argument_t;
-typedef struct cce_condition_invalid_argument_t	cce_condition_invalid_argument_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_invalid_argument_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_invalid_argument_t);
 
-typedef struct cce_descriptor_unreachable_t	cce_descriptor_unreachable_t;
-typedef struct cce_condition_unreachable_t	cce_condition_unreachable_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_unreachable_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_unreachable_t);
 
-typedef struct cce_descriptor_math_error_t	cce_descriptor_math_error_t;
-typedef struct cce_condition_math_error_t	cce_condition_math_error_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_math_error_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_math_error_t);
 
-typedef struct cce_descriptor_math_nan_t	cce_descriptor_math_nan_t;
-typedef struct cce_condition_math_nan_t		cce_condition_math_nan_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_math_nan_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_math_nan_t);
 
-typedef struct cce_descriptor_math_infinity_t	cce_descriptor_math_infinity_t;
-typedef struct cce_condition_math_infinity_t	cce_condition_math_infinity_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_math_infinity_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_math_infinity_t);
 
-typedef struct cce_descriptor_math_overflow_t	cce_descriptor_math_overflow_t;
-typedef struct cce_condition_math_overflow_t	cce_condition_math_overflow_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_math_overflow_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_math_overflow_t);
 
-typedef struct cce_descriptor_math_underflow_t	cce_descriptor_math_underflow_t;
-typedef struct cce_condition_math_underflow_t	cce_condition_math_underflow_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_math_underflow_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_math_underflow_t);
 
-typedef struct cce_descriptor_errno_t		cce_descriptor_errno_t;
-typedef struct cce_condition_errno_t		cce_condition_errno_t;
+CCLIB_STRUCT_TYPEDEF(cce_descriptor_errno_t);
+CCLIB_STRUCT_TYPEDEF(cce_condition_errno_t);
 
 typedef cce_location_t *			cce_destination_t;
 

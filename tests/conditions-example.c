@@ -37,14 +37,17 @@
  ** Exceptional condition "alpha".
  ** ----------------------------------------------------------------- */
 
-typedef struct descriptor_alpha_t {
-  cce_descriptor_t	descriptor;
-} descriptor_alpha_t;
+CCLIB_STRUCT_TYPEDEF(descriptor_alpha_t);
+CCLIB_STRUCT_TYPEDEF(condition_alpha_t);
 
-typedef struct condition_alpha_t {
+struct descriptor_alpha_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct condition_alpha_t {
   cce_condition_root_t	root;
   int			alpha;
-} condition_alpha_t;
+};
 
 cce_condition_t * condition_new_alpha (cce_location_t * L, int alpha);
 void condition_init_alpha (condition_alpha_t * C, int alpha);
@@ -124,14 +127,17 @@ condition_is_alpha (cce_condition_t const * condition)
  ** Exceptional condition "beta".
  ** ----------------------------------------------------------------- */
 
-typedef struct descriptor_beta_t {
-  cce_descriptor_t	descriptor;
-} descriptor_beta_t;
+CCLIB_STRUCT_TYPEDEF(descriptor_beta_t);
+CCLIB_STRUCT_TYPEDEF(condition_beta_t);
 
-typedef struct condition_beta_t {
+struct descriptor_beta_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct condition_beta_t {
   condition_alpha_t	alpha;
   int			beta;
-} condition_beta_t;
+};
 
 cce_condition_t * condition_new_beta (cce_location_t * L, int alpha, int beta);
 void condition_init_beta (condition_beta_t * C, int alpha, int beta);
@@ -212,14 +218,17 @@ condition_is_beta (cce_condition_t const * condition)
  ** Exceptional condition "gamma".
  ** ----------------------------------------------------------------- */
 
-typedef struct descriptor_gamma_t {
-  cce_descriptor_t	descriptor;
-} descriptor_gamma_t;
+CCLIB_STRUCT_TYPEDEF(descriptor_gamma_t);
+CCLIB_STRUCT_TYPEDEF(condition_gamma_t);
 
-typedef struct condition_gamma_t {
+struct descriptor_gamma_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct condition_gamma_t {
   condition_beta_t	beta;
   int			gamma;
-} condition_gamma_t;
+};
 
 cce_condition_t * condition_new_gamma (cce_location_t * L, int alpha, int beta, int gamma);
 void condition_init_gamma (condition_gamma_t * C, int alpha, int beta, int gamma);

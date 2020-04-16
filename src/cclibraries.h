@@ -188,6 +188,8 @@ extern "C" {
 /* Type cast macro helper. */
 #define CCLIB_CAST(TYPE,X,Y)		TYPE X = (TYPE) (Y)
 
+#define CCLIB_STRUCT_TYPEDEF(STRUCT)	typedef struct STRUCT STRUCT
+
 
 /** --------------------------------------------------------------------
  ** Common type definitions: opaque data structures handling.
@@ -461,13 +463,13 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  *   };
  */
 #undef  CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR
-#define CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(STRUCT)						\
-  typedef struct cclib_methods_table_type(STRUCT)	cclib_methods_table_type(STRUCT);	\
-												\
-  typedef struct cclib_struct_descriptor_type(STRUCT)	cclib_struct_descriptor_type(STRUCT);	\
-  												\
-  struct cclib_struct_descriptor_type(STRUCT) {							\
-    cclib_methods_table_type(STRUCT) const	*cclib_table_of_methods_pointer;		\
+#define CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(STRUCT)					\
+  CCLIB_STRUCT_TYPEDEF(cclib_methods_table_type(STRUCT));				\
+											\
+  CCLIB_STRUCT_TYPEDEF(cclib_struct_descriptor_type(STRUCT));				\
+											\
+  struct cclib_struct_descriptor_type(STRUCT) {						\
+    cclib_methods_table_type(STRUCT) const	*cclib_table_of_methods_pointer;	\
   }
 
 /* Given the  name of a data  structure STRUCT, which is  meant to be a  "struct with
@@ -508,8 +510,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #undef  CCLIB_DEFINE_TRAIT
 #define CCLIB_DEFINE_TRAIT(TRAIT)										\
   CCLIB_DEFINE_STRUCT_WITH_DESCRIPTOR(TRAIT);									\
-														\
-  typedef struct TRAIT		TRAIT;										\
+  CCLIB_STRUCT_TYPEDEF(TRAIT);											\
 														\
   struct TRAIT {												\
     cclib_struct_descriptor(TRAIT);										\

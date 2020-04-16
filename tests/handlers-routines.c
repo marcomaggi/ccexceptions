@@ -146,10 +146,12 @@ test_just_run_catch_handlers (void)
  ** Allocating memory with successful execution.
  ** ----------------------------------------------------------------- */
 
-typedef struct test_amse_t {
+CCLIB_STRUCT_TYPEDEF(test_amse_t);
+
+struct test_amse_t {
   cce_clean_handler_t	handler;
   bool volatile *	flagp;
-} test_amse_t;
+};
 
 static void
 test_amse_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)

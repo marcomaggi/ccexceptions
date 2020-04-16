@@ -3710,6 +3710,15 @@ CCLIB_FUNC_ATTRIBUTE_UNUSED
 @end example
 @end deffn
 
+
+@deffn {Preprocessor Macro} CCLIB_STRUCT_TYPEDEF (@var{STRUCT})
+Preprocessor macro that expands into a data structure typedef:
+
+@example
+typedef struct @var{STRUCT}      @var{STRUCT}
+@end example
+@end deffn
+
 @c page
 @node cclibraries typedefs
 @appendixsec Common type definitions and related macros

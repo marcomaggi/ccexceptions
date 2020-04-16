@@ -100,7 +100,7 @@ cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), delete) (c
 char const *
 cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), static_message) (cce_condition_t const * C CCLIB_UNUSED)
 {
-  return "Error-1 exceptional condition";
+  return "Error-2 exceptional condition";
 }
 
 

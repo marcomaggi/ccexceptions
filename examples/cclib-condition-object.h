@@ -58,8 +58,8 @@ extern void my_plain_init_module (void);
  ** Header definitions.
  ** ----------------------------------------------------------------- */
 
-typedef struct cclib_exceptional_condition_descriptor_type(my_error_2)	cclib_exceptional_condition_descriptor_type(my_error_2);
-typedef struct cclib_exceptional_condition_object_type(my_error_2)	cclib_exceptional_condition_object_type(my_error_2);
+CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(my_error_2));
+CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(my_error_2));
 
 struct cclib_exceptional_condition_descriptor_type(my_error_2) {
   cce_descriptor_t	descriptor;

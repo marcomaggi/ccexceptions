@@ -20,7 +20,7 @@ EXTRA_DIST		+= doc/cclibraries.style.css
 CLEANFILES		+= doc/cclibraries.css
 
 AM_MAKEINFOFLAGS	= --no-split
-AM_MAKEINFOHTMLFLAGS	= --split=node  -I $(srcdir)/examples -c WORDS_IN_PAGE=0 --css-ref=cclibraries.css \
+AM_MAKEINFOHTMLFLAGS	= --split=node -I $(srcdir)/examples -c WORDS_IN_PAGE=0 --css-ref=cclibraries.css \
 	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/ccexceptions.texi
@@ -464,8 +464,9 @@ $(examples_test_destructor_trait_OBJECTS): libccexceptions.la
 
 EXTRA_DIST		+= $(top_srcdir)/doc/cclibraries-examples.texi
 EXAMPLES_INFO_TARGETS	 = $(builddir)/doc/cclibraries-examples.info
+CLEANFILES		+= $(EXAMPLES_INFO_TARGETS)
 
-info: $(EXAMPLES_INFO_TARGETS)
+info-local: $(EXAMPLES_INFO_TARGETS)
 
 $(builddir)/doc/cclibraries-examples.info:					\
 		$(top_srcdir)/doc/cclibraries-examples.texi			\
