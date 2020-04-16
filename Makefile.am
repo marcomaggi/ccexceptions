@@ -62,7 +62,8 @@ include_HEADERS			= \
 	src/cclibraries.h			\
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
-	src/ccexceptions-conditions.h
+	src/ccexceptions-conditions.h		\
+	src/ccexceptions-cclib-conditions.h
 
 lib_LTLIBRARIES			= libccexceptions.la
 libccexceptions_la_LDFLAGS	= $(ccexceptions_LINKER_VERSION)
@@ -71,6 +72,7 @@ libccexceptions_la_SOURCES	= \
 	src/ccexceptions.h			\
 	src/ccexceptions-handlers.h		\
 	src/ccexceptions-conditions.h		\
+	src/ccexceptions-cclib-conditions.h	\
 	src/ccexceptions-internals.h		\
 	src/ccexceptions-locations.c		\
 	src/ccexceptions-conditions.c		\

@@ -153,6 +153,7 @@ typedef cce_location_t *			cce_destination_t;
 
 #include <ccexceptions-handlers.h>
 #include <ccexceptions-conditions.h>
+#include <ccexceptions-cclib-conditions.h>
 
 
 /** --------------------------------------------------------------------

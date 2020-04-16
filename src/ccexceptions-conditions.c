@@ -1106,6 +1106,22 @@ cce_condition_new_errno_clear (void)
   return cce_condition_new_errno(errnum);
 }
 
+void
+cce_condition_init_errno (cce_condition_errno_t * C, int errnum)
+{
+  CCLIB_PC(cce_condition_errno_t, K, cce_condition_new_errno(errnum));
+
+  *C = *K;
+}
+
+void
+cce_condition_init_errno_clear (cce_condition_errno_t * C)
+{
+  CCLIB_PC(cce_condition_errno_t, K, cce_condition_new_errno_clear());
+
+  *C = *K;
+}
+
 bool
 cce_condition_is_errno (cce_condition_t const * const C)
 {

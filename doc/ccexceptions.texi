@@ -2726,6 +2726,12 @@ Return @code{true} if the exceptional--condition object referenced by @var{C} is
 
 @CCEConditionSubtypingFacilities{cce,errno,{int @var{errum}}}
 
+
+@deftypefun void cce_condition_init_errno_clear (cce_condition_errno_t * @var{C})
+Like @cfunc{cce_condition_init_errno}, but consume the current value of @code{errno}.  Before
+returning: @code{errno} is reset to zero.
+@end deftypefun
+
 @c ------------------------------------------------------------------------
 
 @subsubheading Structure field getters

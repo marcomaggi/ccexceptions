@@ -299,16 +299,16 @@ cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_unreachable_t) (cce_
 /* ------------------------------------------------------------------ */
 
 cclib_decl void cce_condition_init_unreachable (cce_condition_unreachable_t * C,
-					      char const * const filename,
-					      char const * const funcname,
-					      int const linenum)
+						char const * const filename,
+						char const * const funcname,
+						int const linenum)
   CCLIB_FUNC_ATTRIBUTE_LEAF
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 cclib_decl cce_condition_t const * cce_condition_new_unreachable (cce_destination_t L,
-								char const * const filename,
-								char const * const funcname,
-								int const linenum)
+								  char const * const filename,
+								  char const * const funcname,
+								  int const linenum)
   CCLIB_FUNC_ATTRIBUTE_LEAF
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
@@ -583,6 +583,12 @@ cclib_decl void cce_descriptor_set_parent_to(cce_descriptor_errno_t) (cce_descri
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
+
+cclib_decl void cce_condition_init_errno (cce_condition_errno_t * C, int errnum)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+
+cclib_decl void cce_condition_init_errno_clear (cce_condition_errno_t * C)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 cclib_decl cce_condition_t const * cce_condition_new_errno (int code)
   CCLIB_FUNC_ATTRIBUTE_LEAF
