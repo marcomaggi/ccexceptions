@@ -70,7 +70,7 @@ struct cclib_exceptional_condition_object_type(my_error_2) {
   int *				data;
 };
 
-cclib_decl void cclib_exceptional_condition_descriptor_set_parent_to(my_error_2) (cce_descriptor_t * const D)
+cclib_decl void cclib_exceptional_condition_descriptor_set_parent_to(my_error_2) (cce_descriptor_t * D)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */

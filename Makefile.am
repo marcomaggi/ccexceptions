@@ -323,6 +323,7 @@ dist_examples_DATA	=				\
 	examples/plain-condition-object.c		\
 	examples/test-plain-condition-object.c		\
 							\
+	examples/cclib-condition-object.texi		\
 	examples/cclib-condition-object.h		\
 	examples/cclib-condition-object.c		\
 	examples/test-cclib-condition-object.c		\
@@ -474,6 +475,7 @@ $(builddir)/doc/cclibraries-examples.info:					\
 		$(top_srcdir)/examples/struct-by-ptr-with-descr.texi		\
 		$(top_srcdir)/examples/struct-by-val-no-descr.texi		\
 		$(top_srcdir)/examples/struct-by-val-with-descr.texi		\
+		$(top_srcdir)/examples/cclib-condition-object.texi		\
 		$(top_srcdir)/doc/macros.texi
 	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(top_srcdir)/examples -o $(@) $(<)
 

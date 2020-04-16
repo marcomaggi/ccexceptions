@@ -97,11 +97,12 @@ PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 @insertcopying
 
 @menu
-* overview::                  Overview of the package.
-* struct-by-ptr-no-descr::    Data structure type, passed by pointer, without descriptor.
-* struct-by-ptr-with-descr::  Data structure type, passed by pointer, with descriptor.
-* struct-by-val-no-descr::    Data structure type, passed by pointer, without descriptor.
-* struct-by-val-with-descr::  Data structure type, passed by pointer, with descriptor.
+* overview::                    Overview of the package.
+* struct-by-ptr-no-descr::      Data structure type, passed by pointer, without descriptor.
+* struct-by-ptr-with-descr::    Data structure type, passed by pointer, with descriptor.
+* struct-by-val-no-descr::      Data structure type, passed by pointer, without descriptor.
+* struct-by-val-with-descr::    Data structure type, passed by pointer, with descriptor.
+* cclib-condition-object::      Exceptional-condition object with CCLibraries @api{}.
 
 Indexes
 
@@ -126,6 +127,8 @@ This document provides template documentation for the examples distributed with 
 @include struct-by-ptr-with-descr.texi
 @include struct-by-val-no-descr.texi
 @include struct-by-val-with-descr.texi
+
+@include cclib-condition-object.texi
 
 @c page
 @node concept index
