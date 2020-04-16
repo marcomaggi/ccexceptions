@@ -1,18 +1,18 @@
 /*
   Part of: CCExceptions
   Contents: example of condition object type definition
-  Date: Dec  5, 2017
+  Date: Apr 16, 2020
 
   Abstract
 
 	This is the main program of an example of condition-object type definition.
 
 	The   other  files   define  a   new  condition-object   type  derived   from
-	"cce_condition_runtime_error_t" and this program  uses it.  The definition is
-	a "plain"  one: no  inline functions;  new condition  objects allocated  by a
-	constructor; no use of the CCLibraries preprocessor macros.
+	"cce_condition_runtime_error_t"  and   this  program  uses  it.    No  inline
+	functions;  new condition  objects allocated  by  a constructor;  use of  the
+	CCLibraries preprocessor macros.
 
-  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -43,7 +43,7 @@
 #include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "plain-condition-object.h"
+#include "cclib-condition-object.h"
 
 
 int
@@ -57,8 +57,8 @@ main (void)
     if (cce_location(L)) {
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
-      if (my_condition_is_error_1(cce_condition(L))) {
-	CCLIB_PC(my_condition_error_1_t, C, cce_condition(L));
+      if (cclib_exceptional_condition_object_is(my_error_2)(cce_condition(L))) {
+	CCLIB_PC(cclib_exceptional_condition_object_type(my_error_2), C, cce_condition(L));
 	fprintf(stderr, "%s: is error-1 condition, data=%d\n", __func__, *(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
@@ -88,7 +88,7 @@ main (void)
 
       cce_run_catch_handlers_final(L);
     } else {
-      cce_raise(L, my_condition_new_error_1(L, 123));
+      cce_raise(L, cclib_new(cclib_exceptional_condition_object_type(my_error_2))(L, 123));
       cce_run_body_handlers(L);
     }
   }

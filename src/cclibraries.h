@@ -571,6 +571,80 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional-condition objects.
+ ** ----------------------------------------------------------------- */
+
+#define cclib_exceptional_condition_descriptor_type_1(STEM)				\
+  STEM ## __exceptional_condition_descriptor_t
+#define cclib_exceptional_condition_descriptor_type_2(STEM, VAR)			\
+  STEM ## __exceptional_condition_descriptor_t__ ## VAR
+#define cclib_exceptional_condition_descriptor_type_3(STEM, VAR1, VAR2)			\
+  STEM ## __exceptional_condition_descriptor_t__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_descriptor_type_4(STEM, VAR1, VAR2, VAR3)		\
+  STEM ## __exceptional_condition_descriptor_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_descriptor_type(...)				\
+  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
+
+#define cclib_exceptional_condition_descriptor_1(STEM)					\
+  STEM ## __exceptional_condition_descriptor
+#define cclib_exceptional_condition_descriptor_2(STEM, VAR)				\
+  STEM ## __exceptional_condition_descriptor__ ## VAR
+#define cclib_exceptional_condition_descriptor_3(STEM, VAR1, VAR2)			\
+  STEM ## __exceptional_condition_descriptor__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_descriptor_4(STEM, VAR1, VAR2, VAR3)		\
+  STEM ## __exceptional_condition_descriptor__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_descriptor(...)					\
+  CCLIB_VFUNC(cclib_exceptional_condition_descriptor, __VA_ARGS__)
+
+#define cclib_exceptional_condition_descriptor_pointer(...)				\
+  (&(cclib_exceptional_condition_descriptor(__VA_ARGS__).descriptor))
+
+#define cclib_exceptional_condition_descriptor_set_parent_to_1(STEM)			\
+  STEM ## __exceptional_condition_descriptor_set_parent_to
+#define cclib_exceptional_condition_descriptor_set_parent_to_2(STEM, VAR)		\
+  STEM ## __exceptional_condition_descriptor_set_parent_to__ ## VAR
+#define cclib_exceptional_condition_descriptor_set_parent_to_3(STEM, VAR1, VAR2)	\
+  STEM ## __exceptional_condition_descriptor_set_parent_to__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_descriptor_set_parent_to_4(STEM, VAR1, VAR2, VAR3)	\
+  STEM ## __exceptional_condition_descriptor_set_parent_to__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_descriptor_set_parent_to(...)			\
+  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_set_parent_to, __VA_ARGS__)
+
+#define cclib_exceptional_condition_object_type_1(STEM)					\
+  STEM ## __exceptional_condition_object_t
+#define cclib_exceptional_condition_object_type_2(STEM, VAR)				\
+  STEM ## __exceptional_condition_object_t__ ## VAR
+#define cclib_exceptional_condition_object_type_3(STEM, VAR1, VAR2)			\
+  STEM ## __exceptional_condition_object_t__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_object_type_4(STEM, VAR1, VAR2, VAR3)		\
+  STEM ## __exceptional_condition_object_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_object_type(...)					\
+  CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
+
+#define cclib_exceptional_condition_object_1(STEM)					\
+  STEM ## __exceptional_condition_object
+#define cclib_exceptional_condition_object_2(STEM, VAR)					\
+  STEM ## __exceptional_condition_object__ ## VAR
+#define cclib_exceptional_condition_object_3(STEM, VAR1, VAR2)				\
+  STEM ## __exceptional_condition_object__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_object_4(STEM, VAR1, VAR2, VAR3)			\
+  STEM ## __exceptional_condition_object__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_object(...)						\
+  CCLIB_VFUNC(cclib_exceptional_condition_object, __VA_ARGS__)
+
+#define cclib_exceptional_condition_object_is_1(STEM)					\
+  STEM ## __exceptional_condition_object_is
+#define cclib_exceptional_condition_object_is_2(STEM, VAR)				\
+  STEM ## __exceptional_condition_object_is__ ## VAR
+#define cclib_exceptional_condition_object_is_3(STEM, VAR1, VAR2)			\
+  STEM ## __exceptional_condition_object_is__ ## VAR1 ## _ ## VAR2
+#define cclib_exceptional_condition_object_is_4(STEM, VAR1, VAR2, VAR3)			\
+  STEM ## __exceptional_condition_object_is__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
+#define cclib_exceptional_condition_object_is(...)					\
+  CCLIB_VFUNC(cclib_exceptional_condition_object_is, __VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 

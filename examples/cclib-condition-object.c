@@ -1,18 +1,18 @@
 /*
   Part of: CCExceptions
   Contents: example of condition object type definition
-  Date: Dec  5, 2017
+  Date: Apr 16, 2020
 
   Abstract
 
 	This is the body file of an example of condition object type definition.
 
 	This file contains  body definitions for a new condition  object type derived
-	from "cce_condition_runtime_error_t".   The definition  is a "plain"  one: no
-	inline functions; new condition objects allocated by a constructor; no use of
-	the CCLibraries preprocessor macros.
+	from  "cce_condition_runtime_error_t".  No  inline  functions; new  condition
+	objects  allocated by  a  constructor; use  of  the CCLibraries  preprocessor
+	macros.
 
-  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -41,7 +41,7 @@
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
-#include "plain-condition-object.h"
+#include "cclib-condition-object.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,23 +50,22 @@
  ** Condition type descriptor definition.
  ** ----------------------------------------------------------------- */
 
-static cce_condition_delete_fun_t		my_condition_delete_error_1;
-static cce_condition_final_fun_t		my_condition_final_error_1;
-static cce_condition_static_message_fun_t	my_condition_static_message_error_1;
+static cce_condition_final_fun_t		cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), final);
+static cce_condition_delete_fun_t		cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), delete);
+static cce_condition_static_message_fun_t	cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), static_message);
 
-static my_descriptor_error_1_t my_descriptor_error_1 = {
-  /* This  "parent" field  is  set below  by  the module  initialisation
-     function. */
+static cclib_exceptional_condition_descriptor_type(my_error_2) cclib_exceptional_condition_descriptor(my_error_2) = {
+  /* This "parent" field is set below by the module initialisation function. */
   .descriptor.parent		= NULL,
-  .descriptor.delete		= my_condition_delete_error_1,
-  .descriptor.final		= my_condition_final_error_1,
-  .descriptor.static_message	= my_condition_static_message_error_1
+  .descriptor.final		= cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), final),
+  .descriptor.delete		= cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), delete),
+  .descriptor.static_message	= cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), static_message)
 };
 
 void
-cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * const D)
+cclib_exceptional_condition_descriptor_set_parent_to(my_error_2) (cce_descriptor_t * const D)
 {
-  D->parent = cce_descriptor_pointer(my_descriptor_error_1);
+  D->parent = cclib_exceptional_condition_descriptor_pointer(my_error_2);
 }
 
 
@@ -75,31 +74,31 @@ cce_descriptor_set_parent_to(my_descriptor_error_1_t) (cce_descriptor_t * const 
  ** ----------------------------------------------------------------- */
 
 void
-my_condition_final_error_1 (cce_condition_t * _C)
+cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), final) (cce_condition_t * _C)
 /* Finalisation   functions    are   called    automatically   when    the   function
    "cce_condition_final()" is applied  to the argument C.  Here we  finalise only the
    fields of this type leaving untouched the fields of the parent type. */
 {
-  CCLIB_PC(my_condition_error_1_t, C, _C);
+  CCLIB_PC(cclib_exceptional_condition_object_type(my_error_2), C, _C);
   *(C->data) = 0;
   if (1) { fprintf(stderr, "%s: finalising %p\n", __func__, (void*)C); }
   free(C->data);
 }
 
 void
-my_condition_delete_error_1 (cce_condition_t * _C)
+cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), delete) (cce_condition_t * _C)
 /* The  delete  function  is  called  automatically  when  the  client  code  applies
    "cce_condition_delete()" to the argument C.   Here we release memory allocated for
    the condition object. */
 {
-  CCLIB_PC(my_condition_error_1_t, C, _C);
+  CCLIB_PC(cclib_exceptional_condition_object_type(my_error_2), C, _C);
 
   if (1) { fprintf(stderr, "%s: deleting %p\n", __func__, (void*)C); }
   free(C);
 }
 
 char const *
-my_condition_static_message_error_1 (cce_condition_t const * C CCLIB_UNUSED)
+cclib_method(cclib_exceptional_condition_descriptor_type(my_error_2), static_message) (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "Error-1 exceptional condition";
 }
@@ -110,7 +109,8 @@ my_condition_static_message_error_1 (cce_condition_t const * C CCLIB_UNUSED)
  ** ----------------------------------------------------------------- */
 
 void
-my_condition_init_error_1 (cce_destination_t L, my_condition_error_1_t * C, int the_data)
+cclib_init(cclib_exceptional_condition_object_type(my_error_2))
+  (cce_destination_t L, cclib_exceptional_condition_object_type(my_error_2) * C, int the_data)
 /* This initialisation function must be called both by:
  *
  * - The constructor function of this object type.
@@ -128,9 +128,9 @@ my_condition_init_error_1 (cce_destination_t L, my_condition_error_1_t * C, int 
 }
 
 cce_condition_t const *
-my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
+cclib_new(cclib_exceptional_condition_object_type(my_error_2)) (cce_destination_t upper_L, int the_data)
 /* This constructor function is the public  interface to the constructor of condition
- * objects of type "my_condition_error_1_t".
+ * objects of type "cclib_exceptional_condition_object_type(my_error_2)".
  *
  * Here we:
  *
@@ -147,10 +147,11 @@ my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_condition_error_1_t * C = cce_sys_malloc_guarded(L, C_H, sizeof(my_condition_error_1_t));
+    cclib_exceptional_condition_object_type(my_error_2) * C =
+      cce_sys_malloc_guarded(L, C_H, sizeof(cclib_exceptional_condition_object_type(my_error_2)));
 
-    cce_condition_init((cce_condition_t *) C, cce_descriptor_pointer(my_descriptor_error_1));
-    my_condition_init_error_1(L, C, the_data);
+    cce_condition_init((cce_condition_t *) C, cclib_exceptional_condition_descriptor_pointer(my_error_2));
+    cclib_init(cclib_exceptional_condition_object_type(my_error_2))(L, C, the_data);
 
     cce_run_body_handlers(L);
     if (1) { fprintf(stderr, "%s: constructed %p\n", __func__, (void*)C); }
@@ -164,9 +165,9 @@ my_condition_new_error_1 (cce_destination_t upper_L, int the_data)
  ** ----------------------------------------------------------------- */
 
 bool
-my_condition_is_error_1 (cce_condition_t const * C)
+cclib_exceptional_condition_object_is(my_error_2) (cce_condition_t const * C)
 {
-  return cce_condition_is(C, cce_descriptor_pointer(my_descriptor_error_1));
+  return cce_condition_is(C, cclib_exceptional_condition_descriptor_pointer(my_error_2));
 }
 
 
@@ -177,7 +178,7 @@ my_condition_is_error_1 (cce_condition_t const * C)
 void
 my_plain_init_module (void)
 {
-  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(cce_descriptor_pointer(my_descriptor_error_1));
+  cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(cclib_exceptional_condition_descriptor_pointer(my_error_2));
 }
 
 /* end of file */

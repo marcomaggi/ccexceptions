@@ -323,6 +323,10 @@ dist_examples_DATA	=				\
 	examples/plain-condition-object.c		\
 	examples/test-plain-condition-object.c		\
 							\
+	examples/cclib-condition-object.h		\
+	examples/cclib-condition-object.c		\
+	examples/test-cclib-condition-object.c		\
+							\
 	examples/struct-by-ptr-no-descr.texi		\
 	examples/struct-by-ptr-no-descr.h		\
 	examples/struct-by-ptr-no-descr.c		\
@@ -348,6 +352,7 @@ dist_examples_DATA	=				\
 
 noinst_PROGRAMS	=					\
 	examples/test-plain-condition-object		\
+	examples/test-cclib-condition-object		\
 	examples/test-struct-by-ptr-no-descr		\
 	examples/test-struct-by-ptr-with-descr		\
 	examples/test-struct-by-val-no-descr		\
@@ -361,6 +366,7 @@ ccexceptions_examples_ldadd		= -lm -L$(builddir) libccexceptions.la
 
 examples: $(noinst_PROGRAMS)
 	-./examples/test-plain-condition-object
+	-./examples/test-cclib-condition-object
 	-./examples/test-struct-by-ptr-no-descr
 	-./examples/test-struct-by-ptr-with-descr
 	-./examples/test-struct-by-val-no-descr
@@ -378,6 +384,18 @@ examples_test_plain_condition_object_CPPFLAGS	= $(ccexceptions_examples_cppflags
 examples_test_plain_condition_object_LDADD	= $(ccexceptions_examples_ldadd)
 
 $(examples_test_plain_condition_object_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_cclib_condition_object_SOURCES =		\
+	examples/cclib-condition-object.h		\
+	examples/cclib-condition-object.c		\
+	examples/test-cclib-condition-object.c
+
+examples_test_cclib_condition_object_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_cclib_condition_object_LDADD	= $(ccexceptions_examples_ldadd)
+
+$(examples_test_cclib_condition_object_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
