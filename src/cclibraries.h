@@ -622,17 +622,6 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_object_type(...)					\
   CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
 
-#define cclib_exceptional_condition_object_1(STEM)					\
-  STEM ## __exceptional_condition_object
-#define cclib_exceptional_condition_object_2(STEM, VAR)					\
-  STEM ## __exceptional_condition_object__ ## VAR
-#define cclib_exceptional_condition_object_3(STEM, VAR1, VAR2)				\
-  STEM ## __exceptional_condition_object__ ## VAR1 ## _ ## VAR2
-#define cclib_exceptional_condition_object_4(STEM, VAR1, VAR2, VAR3)			\
-  STEM ## __exceptional_condition_object__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_exceptional_condition_object(...)						\
-  CCLIB_VFUNC(cclib_exceptional_condition_object, __VA_ARGS__)
-
 #define cclib_exceptional_condition_object_is_1(STEM)					\
   STEM ## __exceptional_condition_object_is
 #define cclib_exceptional_condition_object_is_2(STEM, VAR)				\

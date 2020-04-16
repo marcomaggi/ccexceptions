@@ -2065,13 +2065,15 @@ on values of suitable types; we can apply this macro to pointers to all the type
 @end deftypefn
 
 
+@anchor{cce_descriptor_set_parent_to}
 @defmac cce_descriptor_set_parent_to (@var{TYPE})
 Expand into the name of a function that we can use to set the parent of a descriptor to the given
 @var{TYPE} descriptor.
 @end defmac
 
 
-@defmac cce_descriptor_pointer (@var{EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE})
+@anchor{cce_descriptor_pointer}
+@deftypefn {Preprocessor Macro} {cce_descriptor_t *} cce_descriptor_pointer (@var{EXCEPTIONAL_CONDITION_DESCRIPTOR_VARIABLE})
 Expand into:
 
 @example
@@ -2103,7 +2105,7 @@ to expand into:
 @example
 &((my_descriptor_descr).descriptor)
 @end example
-@end defmac
+@end deftypefn
 
 @c page
 @node conditions objects
@@ -3418,6 +3420,7 @@ names are prefixed with @code{cclib_} and suffixed with @code{_t}.
 * cclibraries variadic::        Variadic preprocessor macros.
 * cclibraries structs::         Defining data structure handling @api{}.
 * cclibraries exceptions::      Exception handling helpers.
+* cclibraries conditions::      Exceptional-condition objects.
 @end menu
 
 @c page
@@ -4439,6 +4442,116 @@ Given the name of a data structure type @var{STRUCT}, and an optional variant sp
 into the name of a function to be used to initialise an exception handler to finalise an instance of
 the structure type.  These functions should call @cfunc{cce_init_and_register_handler} to perform
 the operation.
+@end defmac
+
+@c page
+@node cclibraries conditions
+@appendixsec Exceptional--condition objects
+
+
+The exceptional--condition objects @api{} defined by @value{PACKAGE} requires data types and
+functions with specific roles, @ref{conditions, Exceptional condition descriptors}.  The header file
+@file{cclibraries.h} defines some preprocessor macros to tag the names of such definitions with
+their intended purpose.
+
+There is no better way to learn how to use this @api{} than to peruse the distributed and installed
+examples, they are the files with stem @code{condition-object}.
+
+All the macros are variadic and accept from zero up to three @var{VARIANT} arguments;
+@ref{cclibraries variadic, Variadic preprocessor macros}.  The @var{STEM} argument to a macro must
+uniquely identify an exceptional--condition object type; it should be composed by:
+
+@itemize
+@item
+A library or context prefix, like @code{cce_} for CCExceptions types.
+
+@item
+An exceptional--condition description, like @code{logic_error}.
+@end itemize
+
+
+@defmac cclib_exceptional_condition_descriptor_type (@var{STEM}, @var{VARIANT}, @dots{})
+Expand into the name of an exceptional--condition descriptor type.  Usage example:
+
+@example
+struct cclib_exceptional_condition_descriptor_type(my_error) @{
+  cce_descriptor_t      descriptor;
+@};
+@end example
+@end defmac
+
+
+@defmac cclib_exceptional_condition_descriptor (@var{STEM}, @var{VARIANT}, @dots{})
+Expand into the name of an exceptional--condition descriptor variable.  Usage example:
+
+@example
+static cclib_exceptional_condition_descriptor_type(my_error)
+    cclib_exceptional_condition_descriptor(my_error) = @{
+  .descriptor.parent            = ...,
+  .descriptor.final             = ...,
+  .descriptor.delete            = ...,
+  .descriptor.static_message    = ...
+@};
+@end example
+@end defmac
+
+
+@deftypefn {Preprocessor Macro} {cce_descriptor_t *} cclib_exceptional_condition_descriptor_pointer (@var{STEM}, @var{VARIANT}, @dots{})
+This macro is similar to @cfunc{cce_descriptor_pointer}, @ref{conditions descriptors,
+cce_descriptor_pointer}.  Expand into an expression evaluating to the pointer to an
+exceptional--condition descriptor variable.  The expression:
+
+@example
+cclib_exceptional_condition_descriptor_pointer(my_error)
+@end example
+
+@noindent
+expands into the address of the field @code{descriptor} in the data structure variable:
+
+@example
+cclib_exceptional_condition_descriptor(my_error)
+@end example
+@end deftypefn
+
+
+@defmac cclib_exceptional_condition_descriptor_set_parent_to (@var{STEM}, @var{VARIANT}, @dots{})
+This macro is similar to @cfunc{cce_descriptor_set_parent_to}, @ref{conditions descriptors,
+cce_descriptor_set_parent_to}.  Expand into the name of a function that set the parent of a
+descriptor.  Usage example:
+
+@example
+void
+cclib_exceptional_condition_descriptor_set_parent_to(my_error) (cce_descriptor_t * const D)
+@{
+  D->parent = cclib_exceptional_condition_descriptor_pointer(my_error);
+@}
+@end example
+@end defmac
+
+
+@defmac cclib_exceptional_condition_object_type (@var{STEM}, @var{VARIANT}, @dots{})
+Expand into the name of an exceptional--condition object type.
+@end defmac
+
+
+@defmac cclib_exceptional_condition_object_is (@var{STEM}, @var{VARIANT}, @dots{})
+Expand into the name of a predicate function which, applied to an argument of type
+@code{cce_condition_t const *}, returns @ctrue{} if the argument is a pointer to an
+exceptional--condition object of type:
+
+@example
+cclib_exceptional_condition_object_type (@var{STEM}, @var{VARIANT}, @dots{})
+@end example
+
+Usage example:
+
+@example
+bool
+cclib_exceptional_condition_object_is(my_error) (cce_condition_t const * C)
+@{
+  return cce_condition_is(C, cclib_exceptional_condition_descriptor_pointer(my_error));
+@}
+@end example
 @end defmac
 
 @c page
