@@ -77,7 +77,7 @@ cclib_decl void cclib_exceptional_condition_descriptor_set_parent_to(my_error_2)
 
 cclib_decl void cclib_init(cclib_exceptional_condition_object_type(my_error_2))
   (cce_destination_t L, cclib_exceptional_condition_object_type(my_error_2) * C, int the_data)
-  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 cclib_decl cce_condition_t const * cclib_new(cclib_exceptional_condition_object_type(my_error_2)) (cce_destination_t L, int the_data)
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)

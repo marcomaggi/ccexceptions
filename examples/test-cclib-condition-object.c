@@ -59,7 +59,7 @@ main (void)
 
       if (cclib_exceptional_condition_object_is(my_error_2)(cce_condition(L))) {
 	CCLIB_PC(cclib_exceptional_condition_object_type(my_error_2), C, cce_condition(L));
-	fprintf(stderr, "%s: is error-1 condition, data=%d\n", __func__, *(C->data));
+	fprintf(stderr, "%s: is error-2 condition, data=%d\n", __func__, *(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
