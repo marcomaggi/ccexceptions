@@ -5,9 +5,9 @@
 
   Abstract
 
-	This  header file  defines a  public API  adapting the  exceptional-conditino
+	This  header file  defines a  public API  adapting the  exceptional-condition
 	objects API to the one defined by the "cclibraries.h" file.  All the features
-	are exatly  the same;  the type  name are different;  the function  names are
+	are exactly  the same; the  type name are  different; the function  names are
 	different.
 
   Copyright (C) 2020 Marco Maggi <mrc.mgg@gmail.com>
@@ -53,6 +53,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_unknown) (cce_descripto
 {
   cce_descriptor_set_parent_to(cce_descriptor_unknown_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -102,6 +104,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_break) (cce_descriptor_
   cce_descriptor_set_parent_to(cce_descriptor_break_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -149,6 +153,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_error) (cce_descriptor_
 {
   cce_descriptor_set_parent_to(cce_descriptor_error_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -198,6 +204,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_runtime_error) (cce_des
   cce_descriptor_set_parent_to(cce_descriptor_runtime_error_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -246,6 +254,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_logic_error) (cce_descr
   cce_descriptor_set_parent_to(cce_descriptor_logic_error_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -293,6 +303,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_unreachable) (cce_descr
 {
   cce_descriptor_set_parent_to(cce_descriptor_unreachable_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
@@ -346,6 +358,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_unimplemented) (cce_des
   cce_descriptor_set_parent_to(cce_descriptor_unimplemented_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -393,6 +407,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_invalid_argument) (cce_
 {
   cce_descriptor_set_parent_to(cce_descriptor_invalid_argument_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
@@ -445,6 +461,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_math_error) (cce_descri
   cce_descriptor_set_parent_to(cce_descriptor_math_error_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -492,6 +510,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_math_nan) (cce_descript
 {
   cce_descriptor_set_parent_to(cce_descriptor_math_nan_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -541,6 +561,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_math_infinity) (cce_des
   cce_descriptor_set_parent_to(cce_descriptor_math_infinity_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -589,6 +611,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_math_overflow) (cce_des
   cce_descriptor_set_parent_to(cce_descriptor_math_overflow_t)(D);
 }
 
+/* ------------------------------------------------------------------ */
+
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
@@ -636,6 +660,8 @@ cclib_exceptional_condition_descriptor_set_parent_to(cce_math_underflow) (cce_de
 {
   cce_descriptor_set_parent_to(cce_descriptor_math_underflow_t)(D);
 }
+
+/* ------------------------------------------------------------------ */
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
