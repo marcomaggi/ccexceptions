@@ -2408,7 +2408,7 @@ Core values of the exceptional--condition object.
 
 
 @ExceptionalConditionIndexEntries{runtime error}
-n
+
 
 The @dfn{runtime error} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by a runtime error; these are mostly synchronisation errors like
