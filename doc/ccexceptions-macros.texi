@@ -8,7 +8,7 @@
 @c
 @c the LIPREFIX is "my" and the TYPESTEM is "error_1".
 
-@c Copyright (c) 2019 Marco Maggi <mrc.mgg@gmail.com>
+@c Copyright (c) 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 @c
 @c The author hereby  grant permission to use,  copy, modify, distribute, and  license this software
 @c and its documentation for  any purpose, provided that existing copyright  notices are retained in
@@ -59,6 +59,7 @@
 @c
 @macro CCEDescriptorTypedef{LIBPREFIX,TYPESTEM,PARENTTYPE}
 @deftp {Struct Typedef} @CCEDescriptorType{\LIBPREFIX\,\TYPESTEM\}
+@deftpx {Struct Typedef} {cclib_exceptional_condition_descriptor_type(\LIBPREFIX\_\TYPESTEM\)}
 Structure type representing the exceptional--condition object--type descriptor.  This descriptor has
 the descriptor @code{\PARENTTYPE\} as parent.  It has the following public fields:
 
@@ -80,6 +81,7 @@ Core values of the exceptional--condition object--type descriptor.
 @c
 @macro CCEConditionObjectNewNoArgsStatic{LIBPREFIX,TYPESTEM}
 @deftypefun {cce_condition_t const *} \LIBPREFIX\_condition_new_\TYPESTEM\ (void)
+@deftypefunx {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (void)
 Return a pointer to the predefined, statically allocated, structure representing the
 exceptional--condition object of type @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\}.
 @end deftypefun
@@ -91,6 +93,7 @@ exceptional--condition object of type @CCEConditionObjectTypeCode{\LIBPREFIX\,\T
 @c
 @macro CCEConditionObjectNewNoArgs{LIBPREFIX,TYPESTEM}
 @deftypefun {cce_condition_t const *} \LIBPREFIX\_condition_new_\TYPESTEM\ (void)
+@deftypefunx {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (void)
 Return a pointer to a newly built exceptional--condition object of type
 @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\}.
 @end deftypefun
@@ -102,6 +105,7 @@ Return a pointer to a newly built exceptional--condition object of type
 @c
 @macro CCEConditionObjectNew{LIBPREFIX,TYPESTEM,ARGS}
 @deftypefun {cce_condition_t const *} \LIBPREFIX\_condition_new_\TYPESTEM\ (cce_destination_t @var{L}, \ARGS\)
+@deftypefunx {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (cce_destination_t @var{L}, \ARGS\)
 Return a pointer to a newly built exceptional--condition object of type
 @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\}.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
@@ -115,6 +119,7 @@ performing a non--local exit to @var{L}.
 @c
 @macro CCEConditionObjectInitNoArgs{LIBPREFIX,TYPESTEM}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
+@deftypefunx void {cclib_init(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.
 @end deftypefun
@@ -126,6 +131,7 @@ the initialisation function of the derived type.
 @c
 @macro CCEConditionObjectInit{LIBPREFIX,TYPESTEM,ARGS}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
+@deftypefunx void {cclib_init(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (@CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.
 @end deftypefun
@@ -137,6 +143,7 @@ the initialisation function of the derived type.
 @c
 @macro CCEConditionObjectInitNoArgsFailing{LIBPREFIX,TYPESTEM}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
+@deftypefunx void {cclib_init(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C})
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
@@ -149,6 +156,7 @@ performing a non--local exit to @var{L}.
 @c
 @macro CCEConditionObjectInitFailing{LIBPREFIX,TYPESTEM,ARGS}
 @deftypefun void \LIBPREFIX\_condition_init_\TYPESTEM\ (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
+@deftypefunx void {cclib_init(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (cce_destination_t @var{L}, @CCEConditionObjectType{\LIBPREFIX\,\TYPESTEM\} * @var{C}, \ARGS\)
 Initialise an already allocated exceptional--condition object.  We should call this function from
 the initialisation function of the derived type.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
@@ -164,6 +172,7 @@ performing a non--local exit to @var{L}.
 @c
 @macro CCEConditionObjectPredicate{LIBPREFIX,TYPESTEM}
 @deftypefun bool \LIBPREFIX\_condition_is_\TYPESTEM\ (cce_condition_t const * @var{C})
+@deftypefunx bool {cclib_is(cclib_exceptional_condition_object_type(\LIBPREFIX\_\TYPESTEM\))} (cce_condition_t const * @var{C})
 Return @code{true} if the exceptional--condition object referenced by @var{C} is of type
 @CCEConditionObjectTypeCode{\LIBPREFIX\,\TYPESTEM\} or it is derived from it; otherwise return
 @code{false}.
@@ -180,6 +189,7 @@ Return @code{true} if the exceptional--condition object referenced by @var{C} is
 @c
 @macro CCEDescriptorSetParentTo{LIBPREFIX,TYPESTEM}
 @deftypefun void {cce_descriptor_set_parent_to(@CCEDescriptorType{\LIBPREFIX\,\TYPESTEM\})} (cce_descriptor_t * @var{D})
+@deftypefunx void {cclib_exceptional_condition_descriptor_set_parent_to(\LIBPREFIX\_\TYPESTEM\)} (cce_descriptor_t * @var{D})
 Mutate the exceptional--condition object--type descriptor referenced by @var{D} so that its parent
 is the descriptor of @CCEDescriptorTypeCode{\LIBPREFIX\,\TYPESTEM\}.  We should call this function
 in the initialisation module of the derived type.

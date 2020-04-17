@@ -398,6 +398,14 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_fun_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __fun__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
 #define cclib_fun(...)					CCLIB_VFUNC(cclib_fun, __VA_ARGS__)
 
+/* Given a struct type name STRUCT  and an optional variant specification VAR: expand
+   into a function name to be used for the type predicates. */
+#define cclib_is_1(STRUCT)				STRUCT ## __is
+#define cclib_is_2(STRUCT, VAR)				STRUCT ## __is__ ## VAR
+#define cclib_is_3(STRUCT, VAR1, VAR2)			STRUCT ## __is__ ## VAR1 ## _ ## VAR2
+#define cclib_is_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __is__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
+#define cclib_is(...)					CCLIB_VFUNC(cclib_is, __VA_ARGS__)
+
 
 /** --------------------------------------------------------------------
  ** Automatically generated names API: data structure with descriptor.

@@ -83,7 +83,7 @@ cclib_decl cce_condition_t const * cclib_new(cclib_exceptional_condition_object_
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
   CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-cclib_decl bool cclib_exceptional_condition_object_is(my_error_2) (cce_condition_t const * C)
+cclib_decl bool cclib_is(cclib_exceptional_condition_object_type(my_error_2)) (cce_condition_t const * C)
   CCLIB_FUNC_ATTRIBUTE_PURE
   CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 

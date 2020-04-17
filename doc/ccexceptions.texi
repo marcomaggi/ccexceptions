@@ -1729,6 +1729,26 @@ In the context of the @value{PACKAGE} framework, we represent exceptional condit
 hierarchy of data structures; this way it is possible to react to a raised exception by branching at
 runtime according to the type of raised structure.
 
+@value{PACKAGE} implements two equivalent @api{} to handle exceptional--condition objects:
+
+@enumerate
+@item
+A plain @api{} using common C language identifiers, like @cfunc{cce_condition_new_runtime_error}.
+
+@item
+The @code{cclib} @api{} using the automatic identifiers generation facilities of the header file
+@file{cclibraries.h}; the identifiers are built at preprocessing time from macros uses like:
+
+@example
+cclib_new(cclib_exceptional_condition_object_type(cce_runtime_error))
+@end example
+
+@ref{cclibraries conditions, Exceptional--condition objects}.
+@end enumerate
+
+@noindent
+we are free to use the two sets of identifiers interchangeably.
+
 @menu
 * conditions intro::            Introduction to exceptional-condition objects.
 * conditions descriptors::      Exceptional-condition object-type descriptors.
@@ -2209,6 +2229,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_descriptor_root_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_descriptor_type(cce_root)}
 Structure type representing the @emph{root} exceptional--condition object--type descriptor,
 the root of the descriptors hierarchy tree.  This descriptor has a single instance built into the
 library.  It has the following public fields:
@@ -2221,6 +2242,7 @@ Core values of the exceptional--condition object--type descriptor.
 
 
 @deftp {Struct Typedef} cce_condition_root_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_root)}
 Structure type representing the @emph{root} exceptional--condition object; this @code{struct}
 type must never be instantiated.  It has the following public fields:
 
@@ -2232,6 +2254,7 @@ Core values of the exceptional--condition object.
 
 
 @deftypefun bool cce_condition_is_root (cce_condition_t const * @var{C})
+@deftypefunx bool {cclib_is(cclib_exceptional_condition_object_type(cce_root))} (cce_condition_t const * @var{C})
 Return @ctrue{} if the object referenced by @var{C} is derived from the @emph{root} type; otherwise
 return @cfalse{}.  With a correctly built conditions hierarchy: this function always returns
 @ctrue{}.
@@ -3915,9 +3938,9 @@ All the macros are variadic and accept from zero up to three @var{VARIANT} argum
 @ref{cclibraries variadic, Variadic preprocessor macros}.
 
 
-@defmac cclib_init (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name and an optional variant specification: expand into the name of the
-@api{} function @cfunc{init}.
+@defmac cclib_init (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{init}.
 
 Functions with this name are constructors for @struct{} instances allocated on the stack or embedded
 into enclosing @struct{} instances.  They allocate all the asynchronous resources and initialise the
@@ -3925,8 +3948,9 @@ into enclosing @struct{} instances.  They allocate all the asynchronous resource
 @end defmac
 
 
-@defmac cclib_final (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name: expand into the name of the @api{} function @cfunc{final}.
+@defmac cclib_final (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{final}.
 
 Functions with this name are destructors for @struct{} instances allocated on the stack or embedded
 into enclosing @struct{} instances.  They release all the asynchronous resources associated to the
@@ -3934,25 +3958,25 @@ into enclosing @struct{} instances.  They release all the asynchronous resources
 @end defmac
 
 
-@defmac cclib_alloc (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name and an optional variant specification: expand into the name of the
-@api{} function @cfunc{alloc}.
+@defmac cclib_alloc (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{alloc}.
 
 Functions of this type are memory allocators for @struct{} instances allocated on the heap.
 @end defmac
 
 
-@defmac cclib_release (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name and an optional variant specification: expand into the name of the
-@api{} function @cfunc{release}.
+@defmac cclib_release (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{release}.
 
 Functions of this type are memory releasers for @struct{} instances allocated on the heap.
 @end defmac
 
 
-@defmac cclib_new (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name and an optional variant specification: expand into the name of the
-@api{} function @cfunc{new}.
+@defmac cclib_new (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{new}.
 
 Functions with this name are constructors for @struct{} instances allocated on the heap.  The memory
 allocation is performed by calling the @cfunc{alloc} function.  The initialisation of the fields is
@@ -3960,13 +3984,23 @@ performed by calling the @cfunc{init} function.
 @end defmac
 
 
-@defmac cclib_delete (@var{STRUCT_TYPE}, @var{VARIANT},  @dots{})
-Given a @struct{} type name and an optional variant specification: expand into the name of the
-@api{} function @cfunc{delete}.
+@defmac cclib_delete (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{delete}.
 
 Functions with this name are destructors for @struct{} instances allocated on the heap.  The
 finalisation of the fields is performed by calling the @cfunc{final} function.  The memory release
 is performed by calling the @cfunc{release} function.
+@end defmac
+
+
+@defmac cclib_is (@var{STRUCT}, @var{VARIANT},  @dots{})
+Given a data structure type name @var{STRUCT}, and an optional variant specification: expand into
+the name of the @api{} function @cfunc{is}.
+
+Functions with this name are predicates that return @ctrue{} if their argument is of the given type;
+otherwise they return @cfalse{}.  These functions can be implemented only when it is possible to
+determine the type of a data structure at run--time.
 @end defmac
 
 

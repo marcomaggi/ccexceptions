@@ -57,7 +57,7 @@ main (void)
     if (cce_location(L)) {
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
-      if (cclib_exceptional_condition_object_is(my_error_2)(cce_condition(L))) {
+      if (cclib_is(cclib_exceptional_condition_object_type(my_error_2))(cce_condition(L))) {
 	CCLIB_PC(cclib_exceptional_condition_object_type(my_error_2), C, cce_condition(L));
 	fprintf(stderr, "%s: is error-2 condition, data=%d\n", __func__, *(C->data));
       } else {

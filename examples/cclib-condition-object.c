@@ -165,7 +165,7 @@ cclib_new(cclib_exceptional_condition_object_type(my_error_2)) (cce_destination_
  ** ----------------------------------------------------------------- */
 
 bool
-cclib_exceptional_condition_object_is(my_error_2) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(my_error_2)) (cce_condition_t const * C)
 {
   return cce_condition_is(C, cclib_exceptional_condition_descriptor_pointer(my_error_2));
 }

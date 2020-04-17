@@ -31,6 +31,49 @@
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional condition objects: root exception.
+ ** ----------------------------------------------------------------- */
+
+CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_root));
+CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_root));
+
+struct cclib_exceptional_condition_descriptor_type(cce_root) {
+  cce_descriptor_root_t	descriptor;
+};
+
+struct cclib_exceptional_condition_object_type(cce_root) {
+  cce_condition_root_t	object;
+};
+
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+static inline void
+cclib_exceptional_condition_descriptor_set_parent_to(cce_root) (cce_descriptor_t * const D)
+{
+  cce_descriptor_set_parent_to(cce_descriptor_root_t)(D);
+}
+
+/* ------------------------------------------------------------------ */
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+static inline void
+cclib_init(cclib_exceptional_condition_object_type(cce_root)) (cclib_exceptional_condition_object_type(cce_root) * C)
+{
+  cce_condition_init_root(&(C->object));
+}
+
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+static inline bool
+cclib_is(cclib_exceptional_condition_object_type(cce_root)) (cce_condition_t const * C)
+{
+  return cce_condition_is_root(C);
+}
+
+
+/** --------------------------------------------------------------------
  ** Exceptional condition objects: unknown exception.
  ** ----------------------------------------------------------------- */
 
@@ -74,7 +117,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_unknown)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_unknown) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_unknown)) (cce_condition_t const * C)
 {
   return cce_condition_is_unknown(C);
 }
@@ -124,7 +167,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_break)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_break) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_break)) (cce_condition_t const * C)
 {
   return cce_condition_is_break(C);
 }
@@ -174,7 +217,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_error)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_error) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_error)) (cce_condition_t const * C)
 {
   return cce_condition_is_error(C);
 }
@@ -224,7 +267,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_runtime_error)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_runtime_error) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_runtime_error)) (cce_condition_t const * C)
 {
   return cce_condition_is_runtime_error(C);
 }
@@ -274,7 +317,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_logic_error)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_logic_error) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_logic_error)) (cce_condition_t const * C)
 {
   return cce_condition_is_logic_error(C);
 }
@@ -328,7 +371,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_unreachable))
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_unreachable) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_unreachable)) (cce_condition_t const * C)
 {
   return cce_condition_is_unreachable(C);
 }
@@ -378,7 +421,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_unimplemented)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_unimplemented) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_unimplemented)) (cce_condition_t const * C)
 {
   return cce_condition_is_unimplemented(C);
 }
@@ -431,7 +474,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_invalid_argument))
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_invalid_argument) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_invalid_argument)) (cce_condition_t const * C)
 {
   return cce_condition_is_invalid_argument(C);
 }
@@ -481,7 +524,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_math_error)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_math_error) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_math_error)) (cce_condition_t const * C)
 {
   return cce_condition_is_math_error(C);
 }
@@ -531,7 +574,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_math_nan)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_math_nan) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_math_nan)) (cce_condition_t const * C)
 {
   return cce_condition_is_math_nan(C);
 }
@@ -581,7 +624,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_math_infinity)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_math_infinity) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_math_infinity)) (cce_condition_t const * C)
 {
   return cce_condition_is_math_infinity(C);
 }
@@ -631,7 +674,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_math_overflow)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_math_overflow) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_math_overflow)) (cce_condition_t const * C)
 {
   return cce_condition_is_math_overflow(C);
 }
@@ -681,7 +724,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_math_underflow)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_math_underflow) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_math_underflow)) (cce_condition_t const * C)
 {
   return cce_condition_is_math_underflow(C);
 }
@@ -746,7 +789,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_errno, clear)) (void)
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_errno) (cce_condition_t const * C)
+cclib_is(cclib_exceptional_condition_object_type(cce_errno)) (cce_condition_t const * C)
 {
   return cce_condition_is_errno(C);
 }
