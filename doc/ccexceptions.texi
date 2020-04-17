@@ -2291,6 +2291,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} @CCEConditionObjectType{cce,unknown}
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_unknown)}
 Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
@@ -2332,6 +2333,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_break_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_break)}
 Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
@@ -2377,6 +2379,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_error_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_error)}
 Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
@@ -2405,7 +2408,7 @@ Core values of the exceptional--condition object.
 
 
 @ExceptionalConditionIndexEntries{runtime error}
-
+n
 
 The @dfn{runtime error} exceptional--condition object--type has the purpose of describing an
 exceptional condition caused by a runtime error; these are mostly synchronisation errors like
@@ -2422,6 +2425,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_runtime_error_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_runtime_error)}
 Structure type representing a @emph{runtime error} exceptional--condition object.  It has the
 following public fields:
 
@@ -2468,6 +2472,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_logic_error_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_logic_error)}
 Structure type representing a @emph{logic error} exceptional--condition object.  It has the
 following public fields:
 
@@ -2515,6 +2520,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_unimplemented_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_unimplemented)}
 Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
@@ -2569,6 +2575,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_invalid_argument_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_invalid_argument)}
 Structure type representing the exceptional--condition object.  It has the following public fields:
 
 @table @code
@@ -2631,6 +2638,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_unreachable_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_unreachable)}
 Structure type representing the @emph{unreachable code} exceptional--condition object.  It has the
 following public fields:
 
@@ -2704,6 +2712,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_errno_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_errno)}
 Structure type representing an @emph{errno} exceptional--condition object, signalled by a system
 function by setting @code{errno} to a non--zero value.  It has the following public fields:
 
@@ -2806,6 +2815,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_math_error_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_math_error)}
 Structure type representing a @emph{mathematical error} exceptional--condition object.  It has the
 following public fields:
 
@@ -2853,6 +2863,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_math_nan_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_math_nan)}
 Structure type representing a @emph{mathematical not--a--number} exceptional--condition object.  It
 has the following public fields:
 
@@ -2899,6 +2910,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_math_infinity_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_math_infinity)}
 Structure type representing a @emph{mathematical infinity} exceptional--condition object.  It has
 the following public fields:
 
@@ -2945,6 +2957,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_math_overflow_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_math_overflow)}
 Structure type representing a @emph{mathematical overflow} exceptional--condition object.  It has
 the following public fields:
 
@@ -2991,6 +3004,7 @@ All the following definitions are accessible from the header file @file{ccexcept
 
 
 @deftp {Struct Typedef} cce_condition_math_underflow_t
+@deftpx {Struct Typedef} {cclib_exceptional_condition_object_type(cce_math_underflow)}
 Structure type representing a @emph{mathematical underflow} exceptional--condition object.  It has
 the following public fields:
 
