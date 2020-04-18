@@ -106,7 +106,7 @@ check_PROGRAMS	= \
 	tests/destructors				\
 	tests/test-cclibraries				\
 	tests/sizeof					\
-	\
+							\
 	tests/test-condition-subtyping-root		\
 	tests/test-condition-subtyping-break		\
 	tests/test-condition-subtyping-unimplemented	\
@@ -120,7 +120,9 @@ check_PROGRAMS	= \
 	tests/test-condition-subtyping-math-infinity	\
 	tests/test-condition-subtyping-math-overflow	\
 	tests/test-condition-subtyping-math-underflow	\
-	tests/test-condition-subtyping-errno
+	tests/test-condition-subtyping-errno		\
+							\
+	tests/test-condition-subtyping-break-cclib
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -212,6 +214,13 @@ tests_test_condition_subtyping_break_SOURCES	=	\
 	tests/test-condition-subtyping-break.c		\
 	tests/condition-subtyping-break.c		\
 	tests/condition-subtyping-break.h
+
+tests_test_condition_subtyping_break_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_break_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_break_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-break-cclib.c		\
+	tests/condition-subtyping-break-cclib.c			\
+	tests/condition-subtyping-break--clib.h
 
 ## --------------------------------------------------------------------
 
