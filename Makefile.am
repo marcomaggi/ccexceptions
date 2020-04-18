@@ -107,19 +107,19 @@ check_PROGRAMS	= \
 	tests/test-cclibraries				\
 	tests/sizeof					\
 	\
-	tests/condition-subtyping-root			\
-	tests/condition-subtyping-break			\
-	tests/condition-subtyping-unimplemented		\
-	tests/condition-subtyping-error			\
-	tests/condition-subtyping-runtime-error		\
-	tests/condition-subtyping-logic-error		\
-	tests/condition-subtyping-invalid-arg		\
-	tests/condition-subtyping-unreachable		\
-	tests/condition-subtyping-math-error		\
-	tests/condition-subtyping-math-nan		\
-	tests/condition-subtyping-math-infinity		\
-	tests/condition-subtyping-math-overflow		\
-	tests/condition-subtyping-math-underflow
+	tests/test-condition-subtyping-root		\
+	tests/test-condition-subtyping-break		\
+	tests/test-condition-subtyping-unimplemented	\
+	tests/test-condition-subtyping-error		\
+	tests/test-condition-subtyping-runtime-error	\
+	tests/test-condition-subtyping-logic-error	\
+	tests/test-condition-subtyping-invalid-arg	\
+	tests/test-condition-subtyping-unreachable	\
+	tests/test-condition-subtyping-math-error	\
+	tests/test-condition-subtyping-math-nan		\
+	tests/test-condition-subtyping-math-infinity	\
+	tests/test-condition-subtyping-math-overflow	\
+	tests/test-condition-subtyping-math-underflow
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -196,120 +196,120 @@ tests_sizeof_LDADD				= $(ccexceptions_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_root_CPPFLAGS		= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_root_LDADD		= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_root_SOURCES		= \
-	tests/condition-subtyping-root.c	\
-	tests/condition-subtyping-root-body.c	\
-	tests/condition-subtyping-root-header.h
+tests_test_condition_subtyping_root_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_root_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_root_SOURCES	=	\
+	tests/test-condition-subtyping-root.c		\
+	tests/condition-subtyping-root.c		\
+	tests/condition-subtyping-root.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_break_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_break_LDADD		= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_break_SOURCES		= \
+tests_test_condition_subtyping_break_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_break_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_break_SOURCES	=	\
+	tests/test-condition-subtyping-break.c		\
 	tests/condition-subtyping-break.c		\
-	tests/condition-subtyping-break-body.c		\
-	tests/condition-subtyping-break-header.h
+	tests/condition-subtyping-break.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_unimplemented_CPPFLAGS= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_unimplemented_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_unimplemented_SOURCES	= \
-	tests/condition-subtyping-unimplemented.c	\
-	tests/condition-subtyping-unimplemented-body.c	\
-	tests/condition-subtyping-unimplemented-header.h
+tests_test_condition_subtyping_unimplemented_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_unimplemented_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_unimplemented_SOURCES	=	\
+	tests/test-condition-subtyping-unimplemented.c		\
+	tests/condition-subtyping-unimplemented.c		\
+	tests/condition-subtyping-unimplemented.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_error_LDADD		= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_error_SOURCES		= \
-	tests/condition-subtyping-error.c	\
-	tests/condition-subtyping-error-body.c	\
-	tests/condition-subtyping-error-header.h
+tests_test_condition_subtyping_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_error_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_error_SOURCES	=	\
+	tests/test-condition-subtyping-error.c		\
+	tests/condition-subtyping-error.c		\
+	tests/condition-subtyping-error.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_runtime_error_CPPFLAGS= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_runtime_error_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_runtime_error_SOURCES	= \
-	tests/condition-subtyping-runtime-error.c	\
-	tests/condition-subtyping-runtime-error-body.c	\
-	tests/condition-subtyping-runtime-error-header.h
+tests_test_condition_subtyping_runtime_error_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_runtime_error_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_runtime_error_SOURCES	=	\
+	tests/test-condition-subtyping-runtime-error.c		\
+	tests/condition-subtyping-runtime-error.c		\
+	tests/condition-subtyping-runtime-error.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_logic_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_logic_error_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_logic_error_SOURCES	= \
-	tests/condition-subtyping-logic-error.c		\
-	tests/condition-subtyping-logic-error-body.c	\
-	tests/condition-subtyping-logic-error-header.h
+tests_test_condition_subtyping_logic_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_logic_error_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_logic_error_SOURCES	=	\
+	tests/test-condition-subtyping-logic-error.c		\
+	tests/condition-subtyping-logic-error.c			\
+	tests/condition-subtyping-logic-error.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_invalid_arg_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_invalid_arg_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_invalid_arg_SOURCES	= \
-	tests/condition-subtyping-invalid-arg.c		\
-	tests/condition-subtyping-invalid-arg-body.c	\
-	tests/condition-subtyping-invalid-arg-header.h
+tests_test_condition_subtyping_invalid_arg_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_invalid_arg_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_invalid_arg_SOURCES	=	\
+	tests/test-condition-subtyping-invalid-arg.c		\
+	tests/condition-subtyping-invalid-arg.c			\
+	tests/condition-subtyping-invalid-arg.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_unreachable_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_unreachable_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_unreachable_SOURCES	= \
-	tests/condition-subtyping-unreachable.c		\
-	tests/condition-subtyping-unreachable-body.c	\
-	tests/condition-subtyping-unreachable-header.h
+tests_test_condition_subtyping_unreachable_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_unreachable_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_unreachable_SOURCES	=	\
+	tests/test-condition-subtyping-unreachable.c		\
+	tests/condition-subtyping-unreachable.c			\
+	tests/condition-subtyping-unreachable.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_math_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_math_error_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_math_error_SOURCES	= \
-	tests/condition-subtyping-math-error.c		\
-	tests/condition-subtyping-math-error-body.c	\
-	tests/condition-subtyping-math-error-header.h
+tests_test_condition_subtyping_math_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_error_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_error_SOURCES	=	\
+	tests/test-condition-subtyping-math-error.c		\
+	tests/condition-subtyping-math-error.c			\
+	tests/condition-subtyping-math-error.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_math_nan_CPPFLAGS	= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_math_nan_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_math_nan_SOURCES	= \
-	tests/condition-subtyping-math-nan.c		\
-	tests/condition-subtyping-math-nan-body.c	\
-	tests/condition-subtyping-math-nan-header.h
+tests_test_condition_subtyping_math_nan_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_nan_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_nan_SOURCES		=	\
+	tests/test-condition-subtyping-math-nan.c		\
+	tests/condition-subtyping-math-nan.c			\
+	tests/condition-subtyping-math-nan.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_math_infinity_CPPFLAGS= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_math_infinity_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_math_infinity_SOURCES	= \
+tests_test_condition_subtyping_math_infinity_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_infinity_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_infinity_SOURCES	=	\
+	tests/test-condition-subtyping-math-infinity.c		\
 	tests/condition-subtyping-math-infinity.c		\
-	tests/condition-subtyping-math-infinity-body.c	\
-	tests/condition-subtyping-math-infinity-header.h
+	tests/condition-subtyping-math-infinity.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_math_overflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_math_overflow_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_math_overflow_SOURCES	= \
+tests_test_condition_subtyping_math_overflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_overflow_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_overflow_SOURCES	=	\
+	tests/test-condition-subtyping-math-overflow.c		\
 	tests/condition-subtyping-math-overflow.c		\
-	tests/condition-subtyping-math-overflow-body.c	\
-	tests/condition-subtyping-math-overflow-header.h
+	tests/condition-subtyping-math-overflow.h
 
 ## --------------------------------------------------------------------
 
-tests_condition_subtyping_math_underflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
-tests_condition_subtyping_math_underflow_LDADD	= $(ccexceptions_tests_ldadd)
-tests_condition_subtyping_math_underflow_SOURCES	= \
+tests_test_condition_subtyping_math_underflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_underflow_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_underflow_SOURCES	=	\
+	tests/test-condition-subtyping-math-underflow.c		\
 	tests/condition-subtyping-math-underflow.c		\
-	tests/condition-subtyping-math-underflow-body.c	\
-	tests/condition-subtyping-math-underflow-header.h
+	tests/condition-subtyping-math-underflow.h
 
 ## --------------------------------------------------------------------
 
