@@ -119,7 +119,8 @@ check_PROGRAMS	= \
 	tests/test-condition-subtyping-math-nan		\
 	tests/test-condition-subtyping-math-infinity	\
 	tests/test-condition-subtyping-math-overflow	\
-	tests/test-condition-subtyping-math-underflow
+	tests/test-condition-subtyping-math-underflow	\
+	tests/test-condition-subtyping-errno
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -188,7 +189,7 @@ tests_destructors_LDADD				= $(ccexceptions_tests_ldadd)
 tests_system_memory_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_system_memory_LDADD			= $(ccexceptions_tests_ldadd)
 
-tests_test_cclibraries_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_test_cclibraries_CPPFLAGS			= $(ccexceptions_tests_cppflags)
 tests_test_cclibraries_LDADD			= $(ccexceptions_tests_ldadd)
 
 tests_sizeof_CPPFLAGS				= $(ccexceptions_tests_cppflags)
@@ -310,6 +311,15 @@ tests_test_condition_subtyping_math_underflow_SOURCES	=	\
 	tests/test-condition-subtyping-math-underflow.c		\
 	tests/condition-subtyping-math-underflow.c		\
 	tests/condition-subtyping-math-underflow.h
+
+## --------------------------------------------------------------------
+
+tests_test_condition_subtyping_errno_CPPFLAGS		= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_errno_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_errno_SOURCES		=	\
+	tests/test-condition-subtyping-errno.c			\
+	tests/condition-subtyping-errno.c			\
+	tests/condition-subtyping-errno.h
 
 ## --------------------------------------------------------------------
 

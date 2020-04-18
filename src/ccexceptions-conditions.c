@@ -1111,7 +1111,9 @@ cce_condition_init_errno (cce_condition_errno_t * C, int errnum)
 {
   CCLIB_PC(cce_condition_errno_t, K, cce_condition_new_errno(errnum));
 
-  *C = *K;
+  cce_condition_init_runtime_error(&(C->runtime_error));
+  C->errnum	= K->errnum;
+  C->message	= K->message;
 }
 
 void
@@ -1119,7 +1121,9 @@ cce_condition_init_errno_clear (cce_condition_errno_t * C)
 {
   CCLIB_PC(cce_condition_errno_t, K, cce_condition_new_errno_clear());
 
-  *C = *K;
+  cce_condition_init_runtime_error(&(C->runtime_error));
+  C->errnum	= K->errnum;
+  C->message	= K->message;
 }
 
 bool
