@@ -36,9 +36,13 @@ main (void)
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
       if (my_condition_is_errno_subtype(cce_condition(L))) {
-	CCLIB_PC(my_condition_errno_subtype_t, C, cce_condition(L));
+	CCLIB_PC(my_condition_errno_subtype_t const, C, cce_condition(L));
+	CCLIB_PC(cce_condition_t const, K, &(C->parent));
+
 	fprintf(stderr, "%s: is errno subtype, errno=%d, message=%s, data=%d\n", __func__,
-		C->parent.errnum, C->parent.message, *(C->data));
+		cce_condition_ref_errno_errnum(K),
+		cce_condition_ref_errno_message(K),
+		*(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
