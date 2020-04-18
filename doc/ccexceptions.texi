@@ -19,9 +19,9 @@
 To define a subtype of @objtype{cce_condition_\TYPESTEM\_t} we can copy the code in the files:
 
 @example
+test-condition-subtyping-\FILESTEM\.c
+condition-subtyping-\FILESTEM\.h
 condition-subtyping-\FILESTEM\.c
-condition-subtyping-\FILESTEM\-header.h
-condition-subtyping-\FILESTEM\-body.c
 @end example
 
 @noindent
