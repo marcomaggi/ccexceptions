@@ -781,7 +781,7 @@ cclib_new(cclib_exceptional_condition_object_type(cce_errno)) (int errnum)
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline cce_condition_t const *
-cclib_new(cclib_exceptional_condition_object_type(cce_errno, clear)) (void)
+cclib_new(cclib_exceptional_condition_object_type(cce_errno), clear) (void)
 {
   return cce_condition_new_errno_clear();
 }
@@ -797,7 +797,7 @@ cclib_is(cclib_exceptional_condition_object_type(cce_errno)) (cce_condition_t co
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline bool
-cclib_exceptional_condition_object_is(cce_errno, with_code) (cce_condition_t const * C, int errnum)
+cclib_is(cclib_exceptional_condition_object_type(cce_errno), with_code) (cce_condition_t const * C, int errnum)
 {
   return cce_condition_is_errno_with_code(C, errnum);
 }

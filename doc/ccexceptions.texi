@@ -2730,6 +2730,7 @@ A statically allocated @asciiz{} string describing the error.
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_errno (int @var{errnum})
+@deftypefunx {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_type(cce_errno))} (int @var{errnum})
 Given the @code{errno} code @var{errnum}, return a pointer to the exceptional--condition object
 associated to it.
 
@@ -2740,6 +2741,7 @@ return a pointer to an exceptional--condition object representing an invalid cod
 
 
 @deftypefun {cce_condition_t const *} cce_condition_new_errno_clear (void)
+@deftypefunx {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_type(cce_errno), clear)} (void)
 Consume the current value of @code{errno} and return the return value of
 @cfunc{cce_condition_new_errno} applied to it.  Before returning: @code{errno} is reset to zero.
 @end deftypefun
@@ -2749,6 +2751,7 @@ Consume the current value of @code{errno} and return the return value of
 
 
 @deftypefun bool cce_condition_is_errno_with_code (cce_condition_t const * @var{C}, int @var{errnum})
+@deftypefunx bool {cclib_is(cclib_exceptional_condition_object_type(cce_errno), with_code)} (cce_condition_t const * @var{C}, int @var{errnum})
 Return @code{true} if the exceptional--condition object referenced by @var{C} is of type
 @CCEConditionObjectTypeCode{cce,errno}, or it is derived from it, and its error code equals
 @var{errnum}; otherwise return @code{false}.
@@ -2776,6 +2779,7 @@ Return the value of the field @code{message} in the exceptional--condition objec
 
 
 @deftypefun void cce_condition_init_errno_clear (cce_condition_errno_t * @var{C})
+@deftypefunx void {cclib_init(cclib_exceptional_condition_object_type(cce_errno), clear)} (cce_condition_errno_t * @var{C})
 Like @cfunc{cce_condition_init_errno}, but consume the current value of @code{errno}.  Before
 returning: @code{errno} is reset to zero.
 @end deftypefun
