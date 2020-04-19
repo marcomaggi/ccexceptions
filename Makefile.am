@@ -220,11 +220,11 @@ tests_test_condition_subtyping_break_cclib_LDADD	= $(ccexceptions_tests_ldadd)
 tests_test_condition_subtyping_break_cclib_SOURCES	=	\
 	tests/test-condition-subtyping-break-cclib.c		\
 	tests/condition-subtyping-break-cclib.c			\
-	tests/condition-subtyping-break--clib.h
+	tests/condition-subtyping-break-cclib.h
 
 ## --------------------------------------------------------------------
 
-tests_test_condition_subtyping_unimplemented_CPPFLAGS= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_unimplemented_CPPFLAGS	= $(ccexceptions_tests_cppflags)
 tests_test_condition_subtyping_unimplemented_LDADD	= $(ccexceptions_tests_ldadd)
 tests_test_condition_subtyping_unimplemented_SOURCES	=	\
 	tests/test-condition-subtyping-unimplemented.c		\
