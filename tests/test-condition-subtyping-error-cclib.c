@@ -1,13 +1,13 @@
 /*
   Part of: CCExceptions
-  Contents: test for subtyping of errno conditions
+  Contents: test for subtyping of error conditions
   Date: Apr 18, 2020
 
   Abstract
 
-	Test file for subtyping of errno conditions.
+	Test file for subtyping of error conditions.
 
-  Copyright (C) 2020 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2017, 2018, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */
@@ -17,16 +17,16 @@
  ** Heaaders.
  ** ----------------------------------------------------------------- */
 
-#include "condition-subtyping-errno.h"
+#include <ccexceptions.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
+#include "condition-subtyping-error-cclib.h"
 
 
 int
 main (void)
 {
-  errno_subtyping_init_module();
+  error_cclib_subtyping_init_module();
 
   {
     cce_location_t	L[1];
@@ -34,27 +34,23 @@ main (void)
     if (cce_location(L)) {
       fprintf(stderr, "%s: static message: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
 
-      if (my_condition_is_errno_subtype(cce_condition(L))) {
-	CCLIB_PC(my_condition_errno_subtype_t const, C, cce_condition(L));
-	CCLIB_PC(cce_condition_t const, K, &(C->parent));
+      if (cclib_is(cclib_exceptional_condition_object_type(my_error_subtype))(cce_condition(L))) {
+	CCLIB_PC(cclib_exceptional_condition_object_type(my_error_subtype), C, cce_condition(L));
 
-	fprintf(stderr, "%s: is errno subtype, errno=%d, message=%s, data=%d\n", __func__,
-		cce_condition_ref_errno_errnum(K),
-		cce_condition_ref_errno_message(K),
-		*(C->data));
+	fprintf(stderr, "%s: is error subtype, data=%d\n", __func__, *(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
       }
 
-      if (cce_condition_is_errno(cce_condition(L))) {
-	fprintf(stderr, "%s: is errno condition\n", __func__);
+      if (cclib_is(cclib_exceptional_condition_object_type(cce_error))(cce_condition(L))) {
+	fprintf(stderr, "%s: is error condition\n", __func__);
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
       }
 
-      if (cce_condition_is_root(cce_condition(L))) {
+      if (cclib_is(cclib_exceptional_condition_object_type(cce_root))(cce_condition(L))) {
 	fprintf(stderr, "%s: is root condition\n", __func__);
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
@@ -63,7 +59,7 @@ main (void)
 
       cce_run_catch_handlers_final(L);
     } else {
-      cce_raise(L, my_condition_new_errno_subtype(L, ENOMEM, 123));
+      cce_raise(L, cclib_new(cclib_exceptional_condition_object_type(my_error_subtype))(L, 123));
       cce_run_body_handlers(L);
     }
   }

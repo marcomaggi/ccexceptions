@@ -88,41 +88,54 @@ library: libccexceptions.la
 #### tests
 
 check_PROGRAMS	= \
-	tests/version					\
-	tests/setjmp					\
-	tests/no-exceptions				\
-	tests/exception-no-handlers			\
-	tests/exception-with-clean-handler		\
-	tests/exception-with-error-handler		\
-	tests/exception-with-handlers			\
-	tests/handlers-routines				\
-	tests/handlers-as-handlers			\
-	tests/conditions-raising			\
-	tests/conditions-example			\
-	tests/conditions-tests				\
-	tests/tracing					\
-	tests/retry					\
-	tests/system-memory				\
-	tests/destructors				\
-	tests/test-cclibraries				\
-	tests/sizeof					\
-							\
-	tests/test-condition-subtyping-root		\
-	tests/test-condition-subtyping-break		\
-	tests/test-condition-subtyping-unimplemented	\
-	tests/test-condition-subtyping-error		\
-	tests/test-condition-subtyping-runtime-error	\
-	tests/test-condition-subtyping-logic-error	\
-	tests/test-condition-subtyping-invalid-arg	\
-	tests/test-condition-subtyping-unreachable	\
-	tests/test-condition-subtyping-math-error	\
-	tests/test-condition-subtyping-math-nan		\
-	tests/test-condition-subtyping-math-infinity	\
-	tests/test-condition-subtyping-math-overflow	\
-	tests/test-condition-subtyping-math-underflow	\
-	tests/test-condition-subtyping-errno		\
-							\
-	tests/test-condition-subtyping-break-cclib
+	tests/version						\
+	tests/setjmp						\
+	tests/no-exceptions					\
+	tests/exception-no-handlers				\
+	tests/exception-with-clean-handler			\
+	tests/exception-with-error-handler			\
+	tests/exception-with-handlers				\
+	tests/handlers-routines					\
+	tests/handlers-as-handlers				\
+	tests/conditions-raising				\
+	tests/conditions-example				\
+	tests/conditions-tests					\
+	tests/tracing						\
+	tests/retry						\
+	tests/system-memory					\
+	tests/destructors					\
+	tests/test-cclibraries					\
+	tests/sizeof						\
+								\
+	tests/test-condition-subtyping-root			\
+	tests/test-condition-subtyping-break			\
+	tests/test-condition-subtyping-unimplemented		\
+	tests/test-condition-subtyping-error			\
+	tests/test-condition-subtyping-runtime-error		\
+	tests/test-condition-subtyping-logic-error		\
+	tests/test-condition-subtyping-invalid-arg		\
+	tests/test-condition-subtyping-unreachable		\
+	tests/test-condition-subtyping-math-error		\
+	tests/test-condition-subtyping-math-nan			\
+	tests/test-condition-subtyping-math-infinity		\
+	tests/test-condition-subtyping-math-overflow		\
+	tests/test-condition-subtyping-math-underflow		\
+	tests/test-condition-subtyping-errno			\
+								\
+	tests/test-condition-subtyping-root-cclib		\
+	tests/test-condition-subtyping-break-cclib		\
+	tests/test-condition-subtyping-unimplemented-cclib	\
+	tests/test-condition-subtyping-error-cclib		\
+	tests/test-condition-subtyping-runtime-error-cclib	\
+	tests/test-condition-subtyping-logic-error-cclib	\
+	tests/test-condition-subtyping-invalid-arg-cclib	\
+	tests/test-condition-subtyping-unreachable-cclib	\
+	tests/test-condition-subtyping-math-error-cclib		\
+	tests/test-condition-subtyping-math-nan-cclib		\
+	tests/test-condition-subtyping-math-infinity-cclib	\
+	tests/test-condition-subtyping-math-overflow-cclib	\
+	tests/test-condition-subtyping-math-underflow-cclib	\
+	tests/test-condition-subtyping-errno-cclib
 
 if WANT_GCC
 check_PROGRAMS	+= \
@@ -206,6 +219,13 @@ tests_test_condition_subtyping_root_SOURCES	=	\
 	tests/condition-subtyping-root.c		\
 	tests/condition-subtyping-root.h
 
+tests_test_condition_subtyping_root_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_root_cclib_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_root_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-root-cclib.c		\
+	tests/condition-subtyping-root-cclib.c			\
+	tests/condition-subtyping-root-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_break_CPPFLAGS	= $(ccexceptions_tests_cppflags)
@@ -231,6 +251,13 @@ tests_test_condition_subtyping_unimplemented_SOURCES	=	\
 	tests/condition-subtyping-unimplemented.c		\
 	tests/condition-subtyping-unimplemented.h
 
+tests_test_condition_subtyping_unimplemented_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_unimplemented_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_unimplemented_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-unimplemented-cclib.c		\
+	tests/condition-subtyping-unimplemented-cclib.c			\
+	tests/condition-subtyping-unimplemented-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
@@ -239,6 +266,13 @@ tests_test_condition_subtyping_error_SOURCES	=	\
 	tests/test-condition-subtyping-error.c		\
 	tests/condition-subtyping-error.c		\
 	tests/condition-subtyping-error.h
+
+tests_test_condition_subtyping_error_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_error_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_error_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-error-cclib.c		\
+	tests/condition-subtyping-error-cclib.c			\
+	tests/condition-subtyping-error-cclib.h
 
 ## --------------------------------------------------------------------
 
@@ -249,6 +283,13 @@ tests_test_condition_subtyping_runtime_error_SOURCES	=	\
 	tests/condition-subtyping-runtime-error.c		\
 	tests/condition-subtyping-runtime-error.h
 
+tests_test_condition_subtyping_runtime_error_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_runtime_error_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_runtime_error_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-runtime-error-cclib.c		\
+	tests/condition-subtyping-runtime-error-cclib.c			\
+	tests/condition-subtyping-runtime-error-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_logic_error_CPPFLAGS	= $(ccexceptions_tests_cppflags)
@@ -257,6 +298,13 @@ tests_test_condition_subtyping_logic_error_SOURCES	=	\
 	tests/test-condition-subtyping-logic-error.c		\
 	tests/condition-subtyping-logic-error.c			\
 	tests/condition-subtyping-logic-error.h
+
+tests_test_condition_subtyping_logic_error_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_logic_error_cclib_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_logic_error_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-logic-error-cclib.c		\
+	tests/condition-subtyping-logic-error-cclib.c			\
+	tests/condition-subtyping-logic-error-cclib.h
 
 ## --------------------------------------------------------------------
 
@@ -267,6 +315,13 @@ tests_test_condition_subtyping_invalid_arg_SOURCES	=	\
 	tests/condition-subtyping-invalid-arg.c			\
 	tests/condition-subtyping-invalid-arg.h
 
+tests_test_condition_subtyping_invalid_arg_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_invalid_arg_cclib_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_invalid_arg_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-invalid-arg-cclib.c		\
+	tests/condition-subtyping-invalid-arg-cclib.c			\
+	tests/condition-subtyping-invalid-arg-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_unreachable_CPPFLAGS	= $(ccexceptions_tests_cppflags)
@@ -275,6 +330,13 @@ tests_test_condition_subtyping_unreachable_SOURCES	=	\
 	tests/test-condition-subtyping-unreachable.c		\
 	tests/condition-subtyping-unreachable.c			\
 	tests/condition-subtyping-unreachable.h
+
+tests_test_condition_subtyping_unreachable_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_unreachable_cclib_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_unreachable_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-unreachable-cclib.c		\
+	tests/condition-subtyping-unreachable-cclib.c			\
+	tests/condition-subtyping-unreachable-cclib.h
 
 ## --------------------------------------------------------------------
 
@@ -285,6 +347,13 @@ tests_test_condition_subtyping_math_error_SOURCES	=	\
 	tests/condition-subtyping-math-error.c			\
 	tests/condition-subtyping-math-error.h
 
+tests_test_condition_subtyping_math_error_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_error_cclib_LDADD		= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_error_cclib_SOURCES		=	\
+	tests/test-condition-subtyping-math-error-cclib.c		\
+	tests/condition-subtyping-math-error-cclib.c			\
+	tests/condition-subtyping-math-error-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_math_nan_CPPFLAGS	= $(ccexceptions_tests_cppflags)
@@ -293,6 +362,13 @@ tests_test_condition_subtyping_math_nan_SOURCES		=	\
 	tests/test-condition-subtyping-math-nan.c		\
 	tests/condition-subtyping-math-nan.c			\
 	tests/condition-subtyping-math-nan.h
+
+tests_test_condition_subtyping_math_nan_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_nan_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_nan_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-math-nan-cclib.c		\
+	tests/condition-subtyping-math-nan-cclib.c		\
+	tests/condition-subtyping-math-nan-cclib.h
 
 ## --------------------------------------------------------------------
 
@@ -303,6 +379,13 @@ tests_test_condition_subtyping_math_infinity_SOURCES	=	\
 	tests/condition-subtyping-math-infinity.c		\
 	tests/condition-subtyping-math-infinity.h
 
+tests_test_condition_subtyping_math_infinity_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_infinity_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_infinity_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-math-infinity-cclib.c		\
+	tests/condition-subtyping-math-infinity-cclib.c			\
+	tests/condition-subtyping-math-infinity-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_math_overflow_CPPFLAGS= $(ccexceptions_tests_cppflags)
@@ -311,6 +394,13 @@ tests_test_condition_subtyping_math_overflow_SOURCES	=	\
 	tests/test-condition-subtyping-math-overflow.c		\
 	tests/condition-subtyping-math-overflow.c		\
 	tests/condition-subtyping-math-overflow.h
+
+tests_test_condition_subtyping_math_overflow_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_overflow_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_overflow_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-math-overflow-cclib.c		\
+	tests/condition-subtyping-math-overflow-cclib.c			\
+	tests/condition-subtyping-math-overflow-cclib.h
 
 ## --------------------------------------------------------------------
 
@@ -321,6 +411,13 @@ tests_test_condition_subtyping_math_underflow_SOURCES	=	\
 	tests/condition-subtyping-math-underflow.c		\
 	tests/condition-subtyping-math-underflow.h
 
+tests_test_condition_subtyping_math_underflow_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_math_underflow_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_math_underflow_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-math-underflow-cclib.c		\
+	tests/condition-subtyping-math-underflow-cclib.c		\
+	tests/condition-subtyping-math-underflow-cclib.h
+
 ## --------------------------------------------------------------------
 
 tests_test_condition_subtyping_errno_CPPFLAGS		= $(ccexceptions_tests_cppflags)
@@ -329,6 +426,13 @@ tests_test_condition_subtyping_errno_SOURCES		=	\
 	tests/test-condition-subtyping-errno.c			\
 	tests/condition-subtyping-errno.c			\
 	tests/condition-subtyping-errno.h
+
+tests_test_condition_subtyping_errno_cclib_CPPFLAGS	= $(ccexceptions_tests_cppflags)
+tests_test_condition_subtyping_errno_cclib_LDADD	= $(ccexceptions_tests_ldadd)
+tests_test_condition_subtyping_errno_cclib_SOURCES	=	\
+	tests/test-condition-subtyping-errno-cclib.c		\
+	tests/condition-subtyping-errno-cclib.c			\
+	tests/condition-subtyping-errno-cclib.h
 
 ## --------------------------------------------------------------------
 

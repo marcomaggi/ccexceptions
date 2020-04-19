@@ -5,8 +5,55 @@
 #   include $(top_srcdir)/meta/automake/mmux-makefile-rules
 #
 
+# This  tags generation  regular  expression was  itself generated  by
+# evaluating the following in a GNU Emacs scratch buffer:
+#
+#   (regexp-opt
+#     '("cclib_init"
+#       "cclib_final"
+#       "cclib_alloc"
+#       "cclib_release"
+#       "cclib_new"
+#       "cclib_delete"
+#       "cclib_make"
+#       "cclib_unmake"
+#       "cclib_fun"
+#       "cclib_is"
+#       ;;
+#       "cclib_struct_descriptor"
+#       "cclib_methods_table"
+#       "cclib_method"
+#       "cclib_struct_descriptor_ref_methods_table_pointer"
+#       "cclib_struct_descriptor_set_methods_table_pointer"
+#       "cclib_method_pointer"
+#       "cclib_call"
+#       "cclib_vcall"
+#       "cclib_resource_pointer"
+#       ;;
+#       "cclib_trait_resource_pointer"
+#       ;;
+#       "cclib_exception_handler_function"
+#       "cclib_exception_handler_init_and_register"
+#       ;;
+#       "cclib_exceptional_condition_descriptor"
+#       "cclib_exceptional_condition_descriptor_pointer"
+#       "cclib_exceptional_condition_descriptor_set_parent_to"
+#       "cclib_exceptional_condition_object_is"
+#       ;;
+#       "cclib_struct_descriptor_type"
+#       "cclib_methods_table_type"
+#       "cclib_method_type"
+#       "cclib_exception_handler_type"
+#       "cclib_exceptional_condition_descriptor_type"
+#       "cclib_exceptional_condition_object_type")
+#     'symbols)
+#
+# and wrapping the resulting string into:
+#
+#   '{c}/.../'
+#
 AM_ETAGSFLAGS		= $(MMUX_DEPENDENCIES_INCLUDES) \
-	--regex='{c}/"\\_<\\(cclib_\\(?:alloc\\|call\\|delete\\|f\\(?:inal\\|un\\)\\|i\\(?:nit\\|s\\)\\|m\\(?:ake\\|ethod\\(?:_\\(?:pointer\\|type\\)\\|s_table\\(?:_type\\)?\\)?\\)\\|new\\|release\\|struct_descriptor\\(?:_\\(?:ref_methods_table_pointer\\|set_methods_table_pointer\\|type\\)\\)?\\|trait_resource_pointer\\|unmake\\|vcall\\)\\)\\_>"/'
+	--regex='{c}/"\\_<\\(cclib_\\(?:alloc\\|call\\|delete\\|exception\\(?:_handler_\\(?:function\\|init_and_register\\|type\\)\\|al_condition_\\(?:descriptor\\(?:_\\(?:pointer\\|set_parent_to\\|type\\)\\)?\\|object_\\(?:is\\|type\\)\\)\\)\\|f\\(?:inal\\|un\\)\\|i\\(?:nit\\|s\\)\\|m\\(?:ake\\|ethod\\(?:_\\(?:pointer\\|type\\)\\|s_table\\(?:_type\\)?\\)?\\)\\|new\\|re\\(?:lease\\|source_pointer\\)\\|struct_descriptor\\(?:_\\(?:ref_methods_table_pointer\\|set_methods_table_pointer\\|type\\)\\)?\\|trait_resource_pointer\\|unmake\\|vcall\\)\\)\\_>"/'
 
 
 #### testing under GDB

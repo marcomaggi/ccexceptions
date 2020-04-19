@@ -327,17 +327,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_logic_error)) (cce_conditio
  ** Exceptional condition objects: unreachable code exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_unreachable));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_unreachable));
-
-struct cclib_exceptional_condition_descriptor_type(cce_unreachable) {
-  cce_descriptor_unreachable_t		descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_unreachable) {
-  cce_condition_unreachable_t		object;
-};
-
+typedef cce_descriptor_unreachable_t	cclib_exceptional_condition_descriptor_type(cce_unreachable);
+typedef cce_condition_unreachable_t	cclib_exceptional_condition_object_type(cce_unreachable);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -356,7 +347,7 @@ cclib_init(cclib_exceptional_condition_object_type(cce_unreachable))
   (cclib_exceptional_condition_object_type(cce_unreachable) * C,
    char const * const filename, char const * const funcname, int const linenum)
 {
-  cce_condition_init_unreachable(&(C->object), filename, funcname, linenum);
+  cce_condition_init_unreachable(C, filename, funcname, linenum);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
