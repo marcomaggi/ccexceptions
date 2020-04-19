@@ -53,7 +53,7 @@
 #   '{c}/.../'
 #
 AM_ETAGSFLAGS		= $(MMUX_DEPENDENCIES_INCLUDES) \
-	--regex='{c}/"\\_<\\(cclib_\\(?:alloc\\|call\\|delete\\|exception\\(?:_handler_\\(?:function\\|init_and_register\\|type\\)\\|al_condition_\\(?:descriptor\\(?:_\\(?:pointer\\|set_parent_to\\|type\\)\\)?\\|object_\\(?:is\\|type\\)\\)\\)\\|f\\(?:inal\\|un\\)\\|i\\(?:nit\\|s\\)\\|m\\(?:ake\\|ethod\\(?:_\\(?:pointer\\|type\\)\\|s_table\\(?:_type\\)?\\)?\\)\\|new\\|re\\(?:lease\\|source_pointer\\)\\|struct_descriptor\\(?:_\\(?:ref_methods_table_pointer\\|set_methods_table_pointer\\|type\\)\\)?\\|trait_resource_pointer\\|unmake\\|vcall\\)\\)\\_>"/'
+	--regex='{c}/"\\_<\\(cclib_\\(?:alloc\\|call\\|delete\\|exception\\(?:_handler_\\(?:function\\|init_and_register\\|type\\)\\|al_condition_\\(?:descriptor\\(?:_\\(?:pointer\\|set_parent_to\\|type\\)\\)?\\|object_\\(?:is\\|type\\)\\)\\)\\|f\\(?:inal\\|un\\)\\|i\\(?:nit\\|s\\)\\|m\\(?:ake\\|ethod\\(?:_\\(?:pointer\\|type\\)\\|s_table\\(?:_type\\)?\\)?\\)\\|new\\|re\\(?:lease\\|source_pointer\\)\\|struct_descriptor\\(?:_\\(?:ref_methods_table_pointer\\|set_methods_table_pointer\\|type\\)\\)?\\|trait_resource_pointer\\|unmake\\|vcall\\)\\)\\_>([a-zA-Z0-9_]+)"/'
 
 
 #### testing under GDB
