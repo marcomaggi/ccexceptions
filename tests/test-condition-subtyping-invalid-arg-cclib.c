@@ -36,7 +36,8 @@ main (void)
       if (cclib_is(cclib_exceptional_condition_object_type(my_invalid_arg_subtype))(cce_condition(L))) {
 	CCLIB_PC(cclib_exceptional_condition_object_type(my_invalid_arg_subtype), C, cce_condition(L));
 
-	fprintf(stderr, "%s: is invalid_arg subtype, data=%d\n", __func__, *(C->data));
+	fprintf(stderr, "%s: is invalid argument subtype, funcname=%s, index=%u, data=%d\n",
+		__func__, C->parent.funcname, C->parent.index, *(C->data));
       } else {
 	fprintf(stderr, "%s: wrong condition-object type\n", __func__);
 	exit(EXIT_FAILURE);
