@@ -34,17 +34,8 @@
  ** Exceptional condition objects: root exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_root));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_root));
-
-struct cclib_exceptional_condition_descriptor_type(cce_root) {
-  cce_descriptor_root_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_root) {
-  cce_condition_root_t	object;
-};
-
+typedef cce_descriptor_root_t	cclib_exceptional_condition_descriptor_type(cce_root);
+typedef cce_condition_root_t	cclib_exceptional_condition_object_type(cce_root);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -61,7 +52,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_root)) (cclib_exceptional_condition_object_type(cce_root) * C)
 {
-  cce_condition_init_root(&(C->object));
+  cce_condition_init_root(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -77,17 +68,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_root)) (cce_condition_t con
  ** Exceptional condition objects: unknown exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_unknown));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_unknown));
-
-struct cclib_exceptional_condition_descriptor_type(cce_unknown) {
-  cce_descriptor_unknown_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_unknown) {
-  cce_condition_unknown_t	object;
-};
-
+typedef cce_descriptor_unknown_t	cclib_exceptional_condition_descriptor_type(cce_unknown);
+typedef cce_condition_unknown_t		cclib_exceptional_condition_object_type(cce_unknown);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -104,7 +86,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_unknown)) (cclib_exceptional_condition_object_type(cce_unknown) * C)
 {
-  cce_condition_init_unknown(&(C->object));
+  cce_condition_init_unknown(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -127,17 +109,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_unknown)) (cce_condition_t 
  ** Exceptional condition objects: break exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_break));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_break));
-
-struct cclib_exceptional_condition_descriptor_type(cce_break) {
-  cce_descriptor_break_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_break) {
-  cce_condition_break_t		object;
-};
-
+typedef cce_descriptor_break_t		cclib_exceptional_condition_descriptor_type(cce_break);
+typedef cce_condition_break_t		cclib_exceptional_condition_object_type(cce_break);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -154,7 +127,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_break)) (cclib_exceptional_condition_object_type(cce_break) * C)
 {
-  cce_condition_init_break(&(C->object));
+  cce_condition_init_break(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -177,17 +150,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_break)) (cce_condition_t co
  ** Exceptional condition objects: generic error exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_error));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_error));
-
-struct cclib_exceptional_condition_descriptor_type(cce_error) {
-  cce_descriptor_error_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_error) {
-  cce_condition_error_t		object;
-};
-
+typedef cce_descriptor_error_t		cclib_exceptional_condition_descriptor_type(cce_error);
+typedef cce_condition_error_t		cclib_exceptional_condition_object_type(cce_error);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -204,7 +168,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_error)) (cclib_exceptional_condition_object_type(cce_error) * C)
 {
-  cce_condition_init_error(&(C->object));
+  cce_condition_init_error(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -227,17 +191,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_error)) (cce_condition_t co
  ** Exceptional condition objects: runtime error exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_runtime_error));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_runtime_error));
-
-struct cclib_exceptional_condition_descriptor_type(cce_runtime_error) {
-  cce_descriptor_runtime_error_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_runtime_error) {
-  cce_condition_runtime_error_t		object;
-};
-
+typedef cce_descriptor_runtime_error_t		cclib_exceptional_condition_descriptor_type(cce_runtime_error);
+typedef cce_condition_runtime_error_t		cclib_exceptional_condition_object_type(cce_runtime_error);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -254,7 +209,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_runtime_error)) (cclib_exceptional_condition_object_type(cce_runtime_error) * C)
 {
-  cce_condition_init_runtime_error(&(C->object));
+  cce_condition_init_runtime_error(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -277,17 +232,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_runtime_error)) (cce_condit
  ** Exceptional condition objects: logic error exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_logic_error));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_logic_error));
-
-struct cclib_exceptional_condition_descriptor_type(cce_logic_error) {
-  cce_descriptor_logic_error_t		descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_logic_error) {
-  cce_condition_logic_error_t		object;
-};
-
+typedef cce_descriptor_logic_error_t	cclib_exceptional_condition_descriptor_type(cce_logic_error);
+typedef cce_condition_logic_error_t	cclib_exceptional_condition_object_type(cce_logic_error);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -304,7 +250,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_logic_error)) (cclib_exceptional_condition_object_type(cce_logic_error) * C)
 {
-  cce_condition_init_logic_error(&(C->object));
+  cce_condition_init_logic_error(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -372,17 +318,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_unreachable)) (cce_conditio
  ** Exceptional condition objects: unimplemented exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_unimplemented));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_unimplemented));
-
-struct cclib_exceptional_condition_descriptor_type(cce_unimplemented) {
-  cce_descriptor_unimplemented_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_unimplemented) {
-  cce_condition_unimplemented_t		object;
-};
-
+typedef cce_descriptor_unimplemented_t	cclib_exceptional_condition_descriptor_type(cce_unimplemented);
+typedef cce_condition_unimplemented_t	cclib_exceptional_condition_object_type(cce_unimplemented);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -399,7 +336,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_unimplemented)) (cclib_exceptional_condition_object_type(cce_unimplemented) * C)
 {
-  cce_condition_init_unimplemented(&(C->object));
+  cce_condition_init_unimplemented(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -422,17 +359,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_unimplemented)) (cce_condit
  ** Exceptional condition objects: invalid function argument.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_invalid_argument));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_invalid_argument));
-
-struct cclib_exceptional_condition_descriptor_type(cce_invalid_argument) {
-  cce_descriptor_invalid_argument_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_invalid_argument) {
-  cce_condition_invalid_argument_t	object;
-};
-
+typedef cce_descriptor_invalid_argument_t	cclib_exceptional_condition_descriptor_type(cce_invalid_argument);
+typedef cce_condition_invalid_argument_t	cclib_exceptional_condition_object_type(cce_invalid_argument);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -450,7 +378,7 @@ static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_invalid_argument))
   (cclib_exceptional_condition_object_type(cce_invalid_argument) * C, char const * const func, unsigned const index)
 {
-  cce_condition_init_invalid_argument(&(C->object), func, index);
+  cce_condition_init_invalid_argument(C, func, index);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -475,17 +403,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_invalid_argument)) (cce_con
  ** Exceptional condition objects: mathematical error exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_math_error));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_math_error));
-
-struct cclib_exceptional_condition_descriptor_type(cce_math_error) {
-  cce_descriptor_math_error_t		descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_math_error) {
-  cce_condition_math_error_t		object;
-};
-
+typedef cce_descriptor_math_error_t	cclib_exceptional_condition_descriptor_type(cce_math_error);
+typedef cce_condition_math_error_t	cclib_exceptional_condition_object_type(cce_math_error);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -502,7 +421,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_math_error)) (cclib_exceptional_condition_object_type(cce_math_error) * C)
 {
-  cce_condition_init_math_error(&(C->object));
+  cce_condition_init_math_error(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -525,17 +444,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_math_error)) (cce_condition
  ** Exceptional condition objects: mathematical not-a-number exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_math_nan));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_math_nan));
-
-struct cclib_exceptional_condition_descriptor_type(cce_math_nan) {
-  cce_descriptor_math_nan_t		descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_math_nan) {
-  cce_condition_math_nan_t		object;
-};
-
+typedef cce_descriptor_math_nan_t	cclib_exceptional_condition_descriptor_type(cce_math_nan);
+typedef cce_condition_math_nan_t	cclib_exceptional_condition_object_type(cce_math_nan);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -552,7 +462,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_math_nan)) (cclib_exceptional_condition_object_type(cce_math_nan) * C)
 {
-  cce_condition_init_math_nan(&(C->object));
+  cce_condition_init_math_nan(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -575,17 +485,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_math_nan)) (cce_condition_t
  ** Exceptional condition objects: mathematical infinity exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_math_infinity));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_math_infinity));
-
-struct cclib_exceptional_condition_descriptor_type(cce_math_infinity) {
-  cce_descriptor_math_infinity_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_math_infinity) {
-  cce_condition_math_infinity_t		object;
-};
-
+typedef cce_descriptor_math_infinity_t	cclib_exceptional_condition_descriptor_type(cce_math_infinity);
+typedef cce_condition_math_infinity_t	cclib_exceptional_condition_object_type(cce_math_infinity);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -602,7 +503,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_math_infinity)) (cclib_exceptional_condition_object_type(cce_math_infinity) * C)
 {
-  cce_condition_init_math_infinity(&(C->object));
+  cce_condition_init_math_infinity(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -625,17 +526,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_math_infinity)) (cce_condit
  ** Exceptional condition objects: mathematical overflow exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_math_overflow));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_math_overflow));
-
-struct cclib_exceptional_condition_descriptor_type(cce_math_overflow) {
-  cce_descriptor_math_overflow_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_math_overflow) {
-  cce_condition_math_overflow_t		object;
-};
-
+typedef cce_descriptor_math_overflow_t	cclib_exceptional_condition_descriptor_type(cce_math_overflow);
+typedef cce_condition_math_overflow_t	cclib_exceptional_condition_object_type(cce_math_overflow);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -652,7 +544,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_math_overflow)) (cclib_exceptional_condition_object_type(cce_math_overflow) * C)
 {
-  cce_condition_init_math_overflow(&(C->object));
+  cce_condition_init_math_overflow(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -675,17 +567,8 @@ cclib_is(cclib_exceptional_condition_object_type(cce_math_overflow)) (cce_condit
  ** Exceptional condition objects: mathematical underflow exception.
  ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_math_underflow));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_math_underflow));
-
-struct cclib_exceptional_condition_descriptor_type(cce_math_underflow) {
-  cce_descriptor_math_underflow_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_math_underflow) {
-  cce_condition_math_underflow_t	object;
-};
-
+typedef cce_descriptor_math_underflow_t	cclib_exceptional_condition_descriptor_type(cce_math_underflow);
+typedef cce_condition_math_underflow_t	cclib_exceptional_condition_object_type(cce_math_underflow);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -702,7 +585,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_math_underflow)) (cclib_exceptional_condition_object_type(cce_math_underflow) * C)
 {
-  cce_condition_init_math_underflow(&(C->object));
+  cce_condition_init_math_underflow(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -723,19 +606,10 @@ cclib_is(cclib_exceptional_condition_object_type(cce_math_underflow)) (cce_condi
 
 /** --------------------------------------------------------------------
  ** Exceptional condition objects: errno exception.
-n ** ----------------------------------------------------------------- */
+ ** ----------------------------------------------------------------- */
 
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_descriptor_type(cce_errno));
-CCLIB_STRUCT_TYPEDEF(cclib_exceptional_condition_object_type(cce_errno));
-
-struct cclib_exceptional_condition_descriptor_type(cce_errno) {
-  cce_descriptor_errno_t	descriptor;
-};
-
-struct cclib_exceptional_condition_object_type(cce_errno) {
-  cce_condition_errno_t		object;
-};
-
+typedef cce_descriptor_errno_t		cclib_exceptional_condition_descriptor_type(cce_errno);
+typedef cce_condition_errno_t		cclib_exceptional_condition_object_type(cce_errno);
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
@@ -752,7 +626,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_errno)) (cclib_exceptional_condition_object_type(cce_errno) * C, int errnum)
 {
-  cce_condition_init_errno(&(C->object), errnum);
+  cce_condition_init_errno(C, errnum);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
@@ -760,7 +634,7 @@ CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline void
 cclib_init(cclib_exceptional_condition_object_type(cce_errno, clear)) (cclib_exceptional_condition_object_type(cce_errno) * C)
 {
-  cce_condition_init_errno_clear(&(C->object));
+  cce_condition_init_errno_clear(C);
 }
 
 CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
