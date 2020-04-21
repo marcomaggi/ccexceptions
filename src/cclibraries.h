@@ -86,7 +86,10 @@ extern "C" {
 #  define CCLIB_FUNC_ATTRIBUTE_HOT	/* empty string */
 #endif
 
-#ifdef HAVE_FUNC_ATTRIBUTE_LEAF
+/* FIXME Clang does not recognise "leaf".  But the test performed by "configure" will
+   succeed nevertheless.   So we  do this.  I  am not happy.   (Marco Maggi;  Apr 21,
+   2020) */
+#if ((defined HAVE_FUNC_ATTRIBUTE_LEAF) && (! (defined __clang__)))
 #  define CCLIB_FUNC_ATTRIBUTE_LEAF		__attribute__((__leaf__))
 #else
 #  define CCLIB_FUNC_ATTRIBUTE_LEAF	/* empty string */
