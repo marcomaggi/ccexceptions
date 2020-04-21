@@ -52,8 +52,13 @@
 #
 #   '{c}/.../'
 #
-AM_ETAGSFLAGS		= $(MMUX_DEPENDENCIES_INCLUDES) \
+# I am totally NOT happy with this;  I want to develop further to have
+# more precise tags  handling, but I still have not  figure out how to
+# do it.  (Marco Maggi; Apr 21, 2020)
+AM_ETAGSFLAGS		= \
 	--regex='{c}/"\\_<\\(cclib_\\(?:alloc\\|call\\|delete\\|exception\\(?:_handler_\\(?:function\\|init_and_register\\|type\\)\\|al_condition_\\(?:descriptor\\(?:_\\(?:pointer\\|set_parent_to\\|type\\)\\)?\\|object_\\(?:is\\|type\\)\\)\\)\\|f\\(?:inal\\|un\\)\\|i\\(?:nit\\|s\\)\\|m\\(?:ake\\|ethod\\(?:_\\(?:pointer\\|type\\)\\|s_table\\(?:_type\\)?\\)?\\)\\|new\\|re\\(?:lease\\|source_pointer\\)\\|struct_descriptor\\(?:_\\(?:ref_methods_table_pointer\\|set_methods_table_pointer\\|type\\)\\)?\\|trait_resource_pointer\\|unmake\\|vcall\\)\\)\\_>([a-zA-Z0-9_]+)"/'
+	\
+	 $(MMUX_DEPENDENCIES_INCLUDES)
 
 
 #### testing under GDB
