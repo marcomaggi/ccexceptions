@@ -453,6 +453,11 @@ dist_examples_DATA	=				\
 	examples/cclib-condition-object.c		\
 	examples/test-cclib-condition-object.c		\
 							\
+	examples/cclib-condition-object-alias.texi	\
+	examples/cclib-condition-object-alias.h		\
+	examples/cclib-condition-object-alias.c		\
+	examples/test-cclib-condition-object-alias.c	\
+							\
 	examples/struct-by-ptr-no-descr.texi		\
 	examples/struct-by-ptr-no-descr.h		\
 	examples/struct-by-ptr-no-descr.c		\
@@ -479,6 +484,7 @@ dist_examples_DATA	=				\
 noinst_PROGRAMS	=					\
 	examples/test-plain-condition-object		\
 	examples/test-cclib-condition-object		\
+	examples/test-cclib-condition-object-alias	\
 	examples/test-struct-by-ptr-no-descr		\
 	examples/test-struct-by-ptr-with-descr		\
 	examples/test-struct-by-val-no-descr		\
@@ -522,6 +528,18 @@ examples_test_cclib_condition_object_CPPFLAGS	= $(ccexceptions_examples_cppflags
 examples_test_cclib_condition_object_LDADD	= $(ccexceptions_examples_ldadd)
 
 $(examples_test_cclib_condition_object_OBJECTS): libccexceptions.la
+
+## --------------------------------------------------------------------
+
+examples_test_cclib_condition_object_alias_SOURCES =	\
+	examples/cclib-condition-object-alias.h		\
+	examples/cclib-condition-object-alias.c		\
+	examples/test-cclib-condition-object-alias.c
+
+examples_test_cclib_condition_object_alias_CPPFLAGS	= $(ccexceptions_examples_cppflags)
+examples_test_cclib_condition_object_alias_LDADD	= $(ccexceptions_examples_ldadd)
+
+$(examples_test_cclib_condition_object_alias_OBJECTS): libccexceptions.la
 
 ## --------------------------------------------------------------------
 
@@ -601,6 +619,7 @@ $(builddir)/doc/cclibraries-examples.info:					\
 		$(top_srcdir)/examples/struct-by-val-no-descr.texi		\
 		$(top_srcdir)/examples/struct-by-val-with-descr.texi		\
 		$(top_srcdir)/examples/cclib-condition-object.texi		\
+		$(top_srcdir)/examples/cclib-condition-object-alias.texi	\
 		$(top_srcdir)/doc/macros.texi
 	$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(top_srcdir)/examples -o $(@) $(<)
 

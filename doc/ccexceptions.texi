@@ -4228,6 +4228,7 @@ struct my_complex_t @{
 
 
 @defmac cclib_struct_descriptor_type (@var{STRUCT})
+@defmacx cclib_struct_descriptor_t (@var{STRUCT})
 Given a data structure name @var{STRUCT}, which is meant to be a ``struct with descr'': expand into
 the type name of its descriptor field.  Usually we do not need to use this macro directly.
 @end defmac
@@ -4249,6 +4250,7 @@ struct my_complex_t @{
 
 
 @defmac cclib_methods_table_type (@var{STRUCT}, @var{VARIANT}, @dots{})
+@defmacx cclib_methods_table_t (@var{STRUCT}, @var{VARIANT}, @dots{})
 Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr'') and an
 optional variant specification: expand into the name of the methods table type.  For every ``struct
 with descr'' we can define a single table of methods.  Usage example:
@@ -4282,6 +4284,7 @@ static cclib_methods_table_type(my_complex_t) const
 
 
 @defmac cclib_method_type (@var{STRUCT}, @var{METHOD}, @var{VARIANT}, @dots{})
+@defmacx cclib_method_t (@var{STRUCT}, @var{METHOD}, @var{VARIANT}, @dots{})
 Given a data structure name @var{STRUCT} (which is meant to be a ``struct with descr''), a method
 name @var{METHOD}, and an optional variant specification: expand into the type name of that variant
 of the method function.  Usage example to define the type signature of a method's implementation
@@ -4484,6 +4487,7 @@ All the macros are variadic and accept from zero up to three @var{VARIANT} argum
 
 
 @defmac cclib_exception_handler_type (@var{STRUCT}, @var{VARIANT}, @dots{})
+@defmacx cclib_exception_handler_t (@var{STRUCT}, @var{VARIANT}, @dots{})
 Given the name of a data structure type @var{STRUCT}, and an optional variant specification: expand
 into the name of an exception--handler structure to be used to finalise instances of the structure
 type.  The data structure types should be wrappers for @objtype{cce_clean_handler_t} and
@@ -4533,6 +4537,7 @@ An exceptional--condition description, like @code{logic_error}.
 
 
 @defmac cclib_exceptional_condition_descriptor_type (@var{STEM}, @var{VARIANT}, @dots{})
+@defmacx cclib_exceptional_condition_descriptor_t (@var{STEM}, @var{VARIANT}, @dots{})
 Expand into the name of an exceptional--condition descriptor type.  Usage example:
 
 @example
@@ -4592,6 +4597,7 @@ cclib_exceptional_condition_descriptor_set_parent_to(my_error) (cce_descriptor_t
 
 
 @defmac cclib_exceptional_condition_object_type (@var{STEM}, @var{VARIANT}, @dots{})
+@defmacx cclib_exceptional_condition_object_t (@var{STEM}, @var{VARIANT}, @dots{})
 Expand into the name of an exceptional--condition object type.
 @end defmac
 

@@ -1,0 +1,81 @@
+@node cclib-condition-object-alias
+@chapter Exceptional--condition object with CCLibraries @api{}, short aliases
+
+
+@cindex Error 3, exceptional condition
+@cindex Exceptional conditions, error 3
+
+
+The @dfn{error 3} exceptional--condition object--type has the purpose of describing an exceptional
+condition caused by something.
+
+The object--type constructors are meant to build new objects at every invocation.  Subtyping from
+this object--type is fine.
+
+All the following definitions are accessible from the header file @file{cclib-condition-object.h}.
+
+
+@deftp {Struct Typedef} {cclib_exceptional_condition_descriptor_t(my_error_3)}
+Structure type representing the exceptional--condition object--type descriptor.  This descriptor has
+the descriptor @objtype{cce_descriptor_runtime_error_t} as parent.  It has the following public
+fields:
+
+@table @code
+@item cce_descriptor_t descriptor
+Core values of the exceptional--condition object--type descriptor.
+@end table
+@end deftp
+
+
+@deftp {Struct Typedef} {cclib_exceptional_condition_object_t(my_error_3)}
+Structure type representing an exceptional--condition object.  It has the following public fields:
+
+@table @code
+@item cce_condition_runtime_error_t runtime_error
+Core values of the exceptional--condition object.
+
+@item int * data
+Additional data.
+@end table
+@end deftp
+
+
+@deftypefun {cce_condition_t const *} {cclib_new(cclib_exceptional_condition_object_t(my_error_3))} (cce_destination_t @var{L}, int @var{the_data})
+Return a pointer to a newly built exceptional--condition object of type
+@objtype{cclib_exceptional_condition_object_t(my_error_3)}.  If an error occurs: an appropriate
+exceptional--condition is raised by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool {cclib_exceptional_condition_object_is(my_error_3)} (cce_condition_t const * @var{C})
+Return @ctrue{} if the exceptional--condition object referenced by @var{C} is of type
+@objtype{cclib_exceptional_condition_object_t(my_error_3)} or it is derived from it; otherwise
+return @cfalse{}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Facilities to derive an exceptional--condition object subtype
+
+When deriving a subtype from @objtype{cclib_exceptional_condition_object_t(my_error_3)} we need
+the following functions.
+
+
+@deftypefun void {cclib_exceptional_condition_descriptor_set_parent_to(my_error_3)} (cce_descriptor_t * @var{D})
+Mutate the exceptional--condition object--type descriptor referenced by @var{D} so that its parent
+is the descriptor of @objtype{cclib_exceptional_condition_descriptor_t(my_error_3)}.  We should
+call this function in the initialisation module of the derived type.
+@end deftypefun
+
+
+@deftypefun void {cclib_init(cclib_exceptional_condition_object_t(my_error_3))} (cce_destination_t @var{L}, cclib_exceptional_condition_object_t(my_error_3) * @var{C}, int @var{the_data})
+Initialise an already allocated exceptional--condition object.  If an error occurs: an appropriate
+exceptional--condition is raised by performing a non--local exit to @var{L}.  We should call this
+function from the initialisation function of the derived type.
+@end deftypefun
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

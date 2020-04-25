@@ -3,7 +3,7 @@
 Notes for revision 0.10.0-devel.4
 ---------------------------------
 
-* ...
+* Added "_t" aliases for "cclib_" macros composing a type name.
 
 
 Notes for revision 0.10.0-devel.3

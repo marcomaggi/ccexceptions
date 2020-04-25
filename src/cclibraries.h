@@ -417,6 +417,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 /* Given a data  structure name STRUCT, which  is meant to be a  "struct with descr":
    expand into the type name of its descriptor field. */
 #define cclib_struct_descriptor_type(STRUCT)			cclib_struct_descriptor_ ## STRUCT ## _descr_t
+#define cclib_struct_descriptor_t(STRUCT)			cclib_struct_descriptor_ ## STRUCT ## _descr_t
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the struct's methods table type. */
@@ -425,6 +426,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_methods_table_type_3(STRUCT, VAR1, VAR2)		STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2
 #define cclib_methods_table_type_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_methods_table_type(...)				CCLIB_VFUNC(cclib_methods_table_type, __VA_ARGS__)
+#define cclib_methods_table_t(...)				CCLIB_VFUNC(cclib_methods_table_type, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the struct's methods table. */
@@ -442,6 +444,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_method_type_4(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
 #define cclib_method_type_5(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
 #define cclib_method_type(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
+#define cclib_method_t(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
 
 /* Given  a struct  type  name STRUCT,  a  method name  METHOD,  an optional  variant
    specification VAR: expand into the name of the method for that type. */
@@ -560,6 +563,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exception_handler_type_4(STRUCT, VAR1, VAR2, VAR3)	\
   STRUCT ## __exception_handler_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exception_handler_type(...)	CCLIB_VFUNC(cclib_exception_handler_type, __VA_ARGS__)
+#define cclib_exception_handler_t(...)		CCLIB_VFUNC(cclib_exception_handler_type, __VA_ARGS__)
 
 #define cclib_exception_handler_function_1(STRUCT)			\
     STRUCT ## __exception_handler
@@ -596,6 +600,8 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
   STEM ## __exceptional_condition_descriptor_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_descriptor_type(...)				\
   CCLIB_VFUNC(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
+#define cclib_exceptional_condition_descriptor_t(...)					\
+  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
 
 #define cclib_exceptional_condition_descriptor_1(STEM)					\
   STEM ## __exceptional_condition_descriptor
@@ -631,6 +637,8 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_object_type_4(STEM, VAR1, VAR2, VAR3)		\
   STEM ## __exceptional_condition_object_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_object_type(...)					\
+  CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
+#define cclib_exceptional_condition_object_t(...)					\
   CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
 
 #define cclib_exceptional_condition_object_is_1(STEM)					\
