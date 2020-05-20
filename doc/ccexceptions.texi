@@ -3817,11 +3817,11 @@ accessed Apr 1, 2020):
 
 @center @url{https://stackoverflow.com/a/26408195}
 
-The machinery is composed of a number of preprocessor macros, of which only @cfunc{CCLIB_VFUNC} is
+The machinery is composed of a number of preprocessor macros, of which only @cfunc{CCLIB_VNAME} is
 public.
 
 
-@deffn {Preprocessor Macro} CCLIB_VFUNC (@var{FUNC}, @var{ARG}, ...)
+@deffn {Preprocessor Macro} CCLIB_VNAME (@var{FUNC}, @var{ARG}, ...)
 Expand into the name of a C language function or preprocessor macro; the name has @var{FUNC} as
 prefix and @code{_0}, @code{_1}, @code{_2}, @dots{} as suffix, depending on how many arguments are
 in the macro use after the mandatory @var{FUNC}.  We can use up to 63 arguments, generating names
@@ -3842,7 +3842,7 @@ We can use the machinery in multiple ways.
 With the single macro definition:
 
 @example
-#define my_one(...)     CCLIB_VFUNC(my_one,__VA_ARGS__)
+#define my_one(...)     CCLIB_VNAME(my_one,__VA_ARGS__)
 @end example
 
 @noindent
@@ -3887,7 +3887,7 @@ With the following macro definitions:
 @example
 #define my_two_1(A1)            my_two_ ## A1
 #define my_two_2(A1,A2)         my_two_ ## A1 ## _ ## A2
-#define my_two(...)             CCLIB_VFUNC(my_two,__VA_ARGS__)
+#define my_two(...)             CCLIB_VNAME(my_two,__VA_ARGS__)
 @end example
 
 @noindent

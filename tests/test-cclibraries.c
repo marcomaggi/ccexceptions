@@ -46,16 +46,16 @@ test_variadic_macros_counting_arguments (void)
     cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
-    if (1 != CCLIB_VFUNC_PRIVATE_COUNT_ARGS()) {
+    if (1 != CCLIB_VNAME_PRIVATE_COUNT_ARGS()) {
       cce_raise(L, cce_condition_new_logic_error());
     }
-    if (1 != CCLIB_VFUNC_PRIVATE_COUNT_ARGS(alpha)) {
+    if (1 != CCLIB_VNAME_PRIVATE_COUNT_ARGS(alpha)) {
       cce_raise(L, cce_condition_new_logic_error());
     }
-    if (2 != CCLIB_VFUNC_PRIVATE_COUNT_ARGS(alpha,beta)) {
+    if (2 != CCLIB_VNAME_PRIVATE_COUNT_ARGS(alpha,beta)) {
       cce_raise(L, cce_condition_new_logic_error());
     }
-    if (3 != CCLIB_VFUNC_PRIVATE_COUNT_ARGS(alpha,beta,delta)) {
+    if (3 != CCLIB_VNAME_PRIVATE_COUNT_ARGS(alpha,beta,delta)) {
       cce_raise(L, cce_condition_new_logic_error());
     }
     cce_run_body_handlers(L);
@@ -67,7 +67,7 @@ test_variadic_macros_counting_arguments (void)
  ** Variadic macros: variadic functions.
  ** ----------------------------------------------------------------- */
 
-#define my_one(...)	CCLIB_VFUNC(my_one,__VA_ARGS__)
+#define my_one(...)	CCLIB_VNAME(my_one,__VA_ARGS__)
 
 static int
 my_one_1 (int arg)
@@ -123,7 +123,7 @@ test_variadic_macros_variadic_functions (void)
   A41 ## A42 ## A43 ## A44 ## A45 ## A46 ## A47 ## A48 ## A49 ## A50 ##	\
   A51 ## A52 ## A53 ## A54 ## A55 ## A56 ## A57 ## A58 ## A59 ## A60 ##	\
   A61 ## A62 ## A63
-#define my_two(...)		CCLIB_VFUNC(my_two,__VA_ARGS__)
+#define my_two(...)		CCLIB_VNAME(my_two,__VA_ARGS__)
 
 int
 my_two(alpha) (int arg)

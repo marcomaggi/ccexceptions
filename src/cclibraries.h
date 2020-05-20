@@ -219,7 +219,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  *   <https://gustedt.wordpress.com/2010/06/03/default-arguments-for-c99/>
  *
  * NOTE I know that the project P99 by implements an extensino to this mechanism that
- * allows  using zero  optional  arguments in  the call  to  "CCLIB_VFUNC()"; but  it
+ * allows  using zero  optional  arguments in  the call  to  "CCLIB_VNAME()"; but  it
  * involves defining even more complex preprocessor macors, so I do not implement it.
  * Anyway, here is the project's link (URL last accessed Apr 1, 2020):
  *
@@ -230,33 +230,33 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 
 /* The macro use:
  *
- *   CCLIB_VFUNC_PRIVATE_COUNT_ARGS(__VA_ARGS__)
+ *   CCLIB_VNAME_PRIVATE_COUNT_ARGS(__VA_ARGS__)
  *
  * expands into the number of arguments in __VA_ARGS__.
  */
-#define CCLIB_VFUNC_PRIVATE_COUNT_ARGS(...)	\
-  CCLIB_VFUNC_PRIVATE_COUNT_ARGS_I(__VA_ARGS__,CCLIB_VFUNC_PRIVATE_REVERSED_SEQUENCE)
+#define CCLIB_VNAME_PRIVATE_COUNT_ARGS(...)	\
+  CCLIB_VNAME_PRIVATE_COUNT_ARGS_I(__VA_ARGS__,CCLIB_VNAME_PRIVATE_REVERSED_SEQUENCE)
 
 /* This   is   a  worker   macro   that   just   merges   the  arguments   given   to
- * "CCLIB_VFUNC_PRIVATE_COUNT_ARGS(...)" into a single "__VA_ARGS__".
+ * "CCLIB_VNAME_PRIVATE_COUNT_ARGS(...)" into a single "__VA_ARGS__".
  *
- *   CCLIB_VFUNC_PRIVATE_COUNT_ARGS(alpha,beta,delta)
- *   ==> CCLIB_VFUNC_PRIVATE_COUNT_ARGS_I(alpha,beta,delta,CCLIB_VFUNC_PRIVATE_REVERSED_SEQUENCE())
- *   ==> CCLIB_VFUNC_PRIVATE_ARG_N(alpha,beta,delta,63,62,...,1,0)
+ *   CCLIB_VNAME_PRIVATE_COUNT_ARGS(alpha,beta,delta)
+ *   ==> CCLIB_VNAME_PRIVATE_COUNT_ARGS_I(alpha,beta,delta,CCLIB_VNAME_PRIVATE_REVERSED_SEQUENCE())
+ *   ==> CCLIB_VNAME_PRIVATE_ARG_N(alpha,beta,delta,63,62,...,1,0)
  */
-#define CCLIB_VFUNC_PRIVATE_COUNT_ARGS_I(...)	CCLIB_VFUNC_PRIVATE_ARG_N(__VA_ARGS__)
+#define CCLIB_VNAME_PRIVATE_COUNT_ARGS_I(...)	CCLIB_VNAME_PRIVATE_ARG_N(__VA_ARGS__)
 
 /* This macro  accepts at least  64 arguments: from ARG_01  to ARG_63, plus  at least
  * one.   The  result of  the  expansion  equals the  number  of  arguments given  to
- * "CCLIB_VFUNC_PRIVATE_COUNT_ARGS()".
+ * "CCLIB_VNAME_PRIVATE_COUNT_ARGS()".
  *
- *   CCLIB_VFUNC_PRIVATE_COUNT_ARGS(alpha,beta,delta)
- *   ==> CCLIB_VFUNC_PRIVATE_ARG_N(alpha,beta,delta,63,62,---,1,0)
+ *   CCLIB_VNAME_PRIVATE_COUNT_ARGS(alpha,beta,delta)
+ *   ==> CCLIB_VNAME_PRIVATE_ARG_N(alpha,beta,delta,63,62,---,1,0)
  *   ==> 3
  *
  * In the macro use:
  *
- *   CCLIB_VFUNC_PRIVATE_ARG_N(alpha,beta,delta,63,62,---,1,0)
+ *   CCLIB_VNAME_PRIVATE_ARG_N(alpha,beta,delta,63,62,---,1,0)
  *
  * the arguments are bound as follows:
  *
@@ -270,7 +270,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  *   N      = 3
  *   __VA_ARGS__ = 2,1,0
  */
-#define CCLIB_VFUNC_PRIVATE_ARG_N(ARG_01, ARG_02, ARG_03, ARG_04, ARG_05, ARG_06, ARG_07, ARG_08, ARG_09, ARG_10,	\
+#define CCLIB_VNAME_PRIVATE_ARG_N(ARG_01, ARG_02, ARG_03, ARG_04, ARG_05, ARG_06, ARG_07, ARG_08, ARG_09, ARG_10,	\
 				  ARG_11, ARG_12, ARG_13, ARG_14, ARG_15, ARG_16, ARG_17, ARG_18, ARG_19, ARG_20,	\
 				  ARG_21, ARG_22, ARG_23, ARG_24, ARG_25, ARG_26, ARG_27, ARG_28, ARG_29, ARG_30,	\
 				  ARG_31, ARG_32, ARG_33, ARG_34, ARG_35, ARG_36, ARG_37, ARG_38, ARG_39, ARG_40,	\
@@ -282,7 +282,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
  *
  *   63,62,...,1,0
  */
-#define CCLIB_VFUNC_PRIVATE_REVERSED_SEQUENCE		    \
+#define CCLIB_VNAME_PRIVATE_REVERSED_SEQUENCE		    \
   63,62,61,60,						    \
     59,58,57,56,55,54,53,52,51,50,			    \
     49,48,47,46,45,44,43,42,41,40,			    \
@@ -293,32 +293,32 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 
 /* This macro builds the output name.
  *
- *   CCLIB_VFUNC_PRIVATE_COMPOSE_NAME(my_new, 2)
+ *   CCLIB_VNAME_PRIVATE_COMPOSE_NAME(my_new, 2)
  *   ==> my_new_2
  */
-#define CCLIB_VFUNC_PRIVATE_COMPOSE_NAME(NAME, N)	NAME ## _ ## N
+#define CCLIB_VNAME_PRIVATE_COMPOSE_NAME(NAME, N)	NAME ## _ ## N
 
 /* This is an intermediate step that makes sure that:
  *
- *   CCLIB_VFUNC_PRIVATE_COUNT_ARGS(__VA_ARGS__)
+ *   CCLIB_VNAME_PRIVATE_COUNT_ARGS(__VA_ARGS__)
  *
- * in the expansion of "CCLIB_VFUNC()"  is itself expanded before the stringification
+ * in the expansion of "CCLIB_VNAME()"  is itself expanded before the stringification
  * performed by "##".
  */
-#define CCLIB_VFUNC_PRIVATE__VFUNC(NAME, N)	CCLIB_VFUNC_PRIVATE_COMPOSE_NAME(NAME, N)
+#define CCLIB_VNAME_PRIVATE__VNAME(NAME, N)	CCLIB_VNAME_PRIVATE_COMPOSE_NAME(NAME, N)
 
 /* The macro uses:
  *
- *    CCLIB_VFUNC(cce_new, alpha)
- *    CCLIB_VFUNC(cce_new, alpha, beta)
+ *    CCLIB_VNAME(cce_new, alpha)
+ *    CCLIB_VNAME(cce_new, alpha, beta)
  *
  * respectively expand into:
  *
  *    cce_new_1(alpha)
  *    cce_new_2(alpha, beta)
  */
-#define CCLIB_VFUNC(FUNC, ...)		\
-  CCLIB_VFUNC_PRIVATE__VFUNC(FUNC, CCLIB_VFUNC_PRIVATE_COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__)
+#define CCLIB_VNAME(FUNC, ...)		\
+  CCLIB_VNAME_PRIVATE__VNAME(FUNC, CCLIB_VNAME_PRIVATE_COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -335,7 +335,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_make_2(STRUCT, VAR)			STRUCT ## __make__ ## VAR
 #define cclib_make_3(STRUCT, VAR1, VAR2)		STRUCT ## __make__ ## VAR1 ## _ ## VAR2
 #define cclib_make_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __make__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_make(...)					CCLIB_VFUNC(cclib_make, __VA_ARGS__)
+#define cclib_make(...)					CCLIB_VNAME(cclib_make, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "unmake()". */
@@ -343,7 +343,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_unmake_2(STRUCT, VAR)			STRUCT ## __unmake__ ## VAR
 #define cclib_unmake_3(STRUCT, VAR1, VAR2)		STRUCT ## __unmake__ ## VAR1 ## _ ## VAR2
 #define cclib_unmake_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __unmake__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_unmake(...)				CCLIB_VFUNC(cclib_unmake, __VA_ARGS__)
+#define cclib_unmake(...)				CCLIB_VNAME(cclib_unmake, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "new()". */
@@ -351,7 +351,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_new_2(STRUCT, VAR)			STRUCT ## __new__ ## VAR
 #define cclib_new_3(STRUCT, VAR1, VAR2)			STRUCT ## __new__ ## VAR1 ## _ ## VAR2
 #define cclib_new_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __new__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_new(...)					CCLIB_VFUNC(cclib_new, __VA_ARGS__)
+#define cclib_new(...)					CCLIB_VNAME(cclib_new, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "delete()". */
@@ -359,7 +359,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_delete_2(STRUCT, VAR)			STRUCT ## __delete__ ## VAR
 #define cclib_delete_3(STRUCT, VAR1, VAR2)		STRUCT ## __delete__ ## VAR1 ## _ ## VAR2
 #define cclib_delete_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __delete__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_delete(...)				CCLIB_VFUNC(cclib_delete, __VA_ARGS__)
+#define cclib_delete(...)				CCLIB_VNAME(cclib_delete, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "init()". */
@@ -367,7 +367,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_init_2(STRUCT, VAR)			STRUCT ## __init__ ## VAR
 #define cclib_init_3(STRUCT, VAR1, VAR2)		STRUCT ## __init__ ## VAR1 ## _ ## VAR2
 #define cclib_init_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __init__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_init(...)					CCLIB_VFUNC(cclib_init, __VA_ARGS__)
+#define cclib_init(...)					CCLIB_VNAME(cclib_init, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "final()". */
@@ -375,7 +375,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_final_2(STRUCT, VAR)			STRUCT ## __final__ ## VAR
 #define cclib_final_3(STRUCT, VAR1, VAR2)		STRUCT ## __final__ ## VAR1 ## _ ## VAR2
 #define cclib_final_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __final__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_final(...)				CCLIB_VFUNC(cclib_final, __VA_ARGS__)
+#define cclib_final(...)				CCLIB_VNAME(cclib_final, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "alloc()". */
@@ -383,7 +383,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_alloc_2(STRUCT, VAR)			STRUCT ## __alloc__ ## VAR
 #define cclib_alloc_3(STRUCT, VAR1, VAR2)		STRUCT ## __alloc__ ## VAR1 ## _ ## VAR2
 #define cclib_alloc_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __alloc__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_alloc(...)				CCLIB_VFUNC(cclib_alloc, __VA_ARGS__)
+#define cclib_alloc(...)				CCLIB_VNAME(cclib_alloc, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the API function "release()". */
@@ -391,7 +391,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_release_2(STRUCT, VAR)			STRUCT ## __release__ ## VAR
 #define cclib_release_3(STRUCT, VAR1, VAR2)		STRUCT ## __release__ ## VAR1 ## _ ## VAR2
 #define cclib_release_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __release__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_release(...)				CCLIB_VFUNC(cclib_release, __VA_ARGS__)
+#define cclib_release(...)				CCLIB_VNAME(cclib_release, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into a function name. */
@@ -399,7 +399,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_fun_2(STRUCT, VAR)			STRUCT ## __fun__ ## VAR
 #define cclib_fun_3(STRUCT, VAR1, VAR2)			STRUCT ## __fun__ ## VAR1 ## _ ## VAR2
 #define cclib_fun_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __fun__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_fun(...)					CCLIB_VFUNC(cclib_fun, __VA_ARGS__)
+#define cclib_fun(...)					CCLIB_VNAME(cclib_fun, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into a function name to be used for the type predicates. */
@@ -407,7 +407,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_is_2(STRUCT, VAR)				STRUCT ## __is__ ## VAR
 #define cclib_is_3(STRUCT, VAR1, VAR2)			STRUCT ## __is__ ## VAR1 ## _ ## VAR2
 #define cclib_is_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __is__ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_is(...)					CCLIB_VFUNC(cclib_is, __VA_ARGS__)
+#define cclib_is(...)					CCLIB_VNAME(cclib_is, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -425,8 +425,8 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_methods_table_type_2(STRUCT, VAR)			STRUCT ## __methods_table_t__ ## VAR
 #define cclib_methods_table_type_3(STRUCT, VAR1, VAR2)		STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2
 #define cclib_methods_table_type_4(STRUCT, VAR1, VAR2, VAR3)	STRUCT ## __methods_table_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_methods_table_type(...)				CCLIB_VFUNC(cclib_methods_table_type, __VA_ARGS__)
-#define cclib_methods_table_t(...)				CCLIB_VFUNC(cclib_methods_table_type, __VA_ARGS__)
+#define cclib_methods_table_type(...)				CCLIB_VNAME(cclib_methods_table_type, __VA_ARGS__)
+#define cclib_methods_table_t(...)				CCLIB_VNAME(cclib_methods_table_type, __VA_ARGS__)
 
 /* Given a struct type name STRUCT  and an optional variant specification VAR: expand
    into the name of the struct's methods table. */
@@ -434,7 +434,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_methods_table_2(STRUCT, VAR)			STRUCT ## __methods_table__ ## VAR
 #define cclib_methods_table_3(STRUCT, VAR1, VAR2)		STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2
 #define cclib_methods_table_4(STRUCT, VAR1, VAR2, VAR3)		STRUCT ## __methods_table__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_methods_table(...)				CCLIB_VFUNC(cclib_methods_table, __VA_ARGS__)
+#define cclib_methods_table(...)				CCLIB_VNAME(cclib_methods_table, __VA_ARGS__)
 
 /* Given the  struct type name  STRUCT, the method  name METHOD, an  optional variant
    specification  VAR: expand  into  the type  name  of that  variant  of the  method
@@ -443,8 +443,8 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_method_type_3(STRUCT, METHOD, VAR)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR
 #define cclib_method_type_4(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
 #define cclib_method_type_5(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method_t__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_method_type(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
-#define cclib_method_t(...)					CCLIB_VFUNC(cclib_method_type, __VA_ARGS__)
+#define cclib_method_type(...)					CCLIB_VNAME(cclib_method_type, __VA_ARGS__)
+#define cclib_method_t(...)					CCLIB_VNAME(cclib_method_type, __VA_ARGS__)
 
 /* Given  a struct  type  name STRUCT,  a  method name  METHOD,  an optional  variant
    specification VAR: expand into the name of the method for that type. */
@@ -452,7 +452,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_method_3(STRUCT, METHOD, VAR)			STRUCT ## __method__ ## METHOD ## __ ## VAR
 #define cclib_method_4(STRUCT, METHOD, VAR1, VAR2)		STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2
 #define cclib_method_5(STRUCT, METHOD, VAR1, VAR2, VAR3)	STRUCT ## __method__ ## METHOD ## __ ## VAR1 ## _ ## VAR2 ## _ ## VAR3
-#define cclib_method(...)					CCLIB_VFUNC(cclib_method, __VA_ARGS__)
+#define cclib_method(...)					CCLIB_VNAME(cclib_method, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -562,8 +562,8 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
   STRUCT ## __exception_handler_t__ ## VAR1 ## _ ## VAR2
 #define cclib_exception_handler_type_4(STRUCT, VAR1, VAR2, VAR3)	\
   STRUCT ## __exception_handler_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_exception_handler_type(...)	CCLIB_VFUNC(cclib_exception_handler_type, __VA_ARGS__)
-#define cclib_exception_handler_t(...)		CCLIB_VFUNC(cclib_exception_handler_type, __VA_ARGS__)
+#define cclib_exception_handler_type(...)	CCLIB_VNAME(cclib_exception_handler_type, __VA_ARGS__)
+#define cclib_exception_handler_t(...)		CCLIB_VNAME(cclib_exception_handler_type, __VA_ARGS__)
 
 #define cclib_exception_handler_function_1(STRUCT)			\
     STRUCT ## __exception_handler
@@ -573,7 +573,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
     STRUCT ## __exception_handler__ ## VAR1 ## _ ## VAR2
 #define cclib_exception_handler_function_4(STRUCT, VAR1, VAR2, VAR3)	\
   STRUCT ## __exception_handler__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_exception_handler_function(...)	CCLIB_VFUNC(cclib_exception_handler_function, __VA_ARGS__)
+#define cclib_exception_handler_function(...)	CCLIB_VNAME(cclib_exception_handler_function, __VA_ARGS__)
 
 #define cclib_exception_handler_init_and_register_1(STRUCT)			\
     STRUCT ## __init_and_register_exception_handler
@@ -583,7 +583,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
     STRUCT ## __init_and_register_exception_handler__ ## VAR1 ## _ ## VAR2
 #define cclib_exception_handler_init_and_register_4(STRUCT, VAR1, VAR2, VAR3)	\
   STRUCT ## __init_and_register_exception_handler__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
-#define cclib_exception_handler_init_and_register(...)	CCLIB_VFUNC(cclib_exception_handler_init_and_register, __VA_ARGS__)
+#define cclib_exception_handler_init_and_register(...)	CCLIB_VNAME(cclib_exception_handler_init_and_register, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -599,9 +599,9 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_descriptor_type_4(STEM, VAR1, VAR2, VAR3)		\
   STEM ## __exceptional_condition_descriptor_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_descriptor_type(...)				\
-  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
 #define cclib_exceptional_condition_descriptor_t(...)					\
-  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_descriptor_type, __VA_ARGS__)
 
 #define cclib_exceptional_condition_descriptor_1(STEM)					\
   STEM ## __exceptional_condition_descriptor
@@ -612,7 +612,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_descriptor_4(STEM, VAR1, VAR2, VAR3)		\
   STEM ## __exceptional_condition_descriptor__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_descriptor(...)					\
-  CCLIB_VFUNC(cclib_exceptional_condition_descriptor, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_descriptor, __VA_ARGS__)
 
 #define cclib_exceptional_condition_descriptor_pointer(...)				\
   (&(cclib_exceptional_condition_descriptor(__VA_ARGS__).descriptor))
@@ -626,7 +626,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_descriptor_set_parent_to_4(STEM, VAR1, VAR2, VAR3)	\
   STEM ## __exceptional_condition_descriptor_set_parent_to__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_descriptor_set_parent_to(...)			\
-  CCLIB_VFUNC(cclib_exceptional_condition_descriptor_set_parent_to, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_descriptor_set_parent_to, __VA_ARGS__)
 
 #define cclib_exceptional_condition_object_type_1(STEM)					\
   STEM ## __exceptional_condition_object_t
@@ -637,9 +637,9 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_object_type_4(STEM, VAR1, VAR2, VAR3)		\
   STEM ## __exceptional_condition_object_t__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_object_type(...)					\
-  CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_object_type, __VA_ARGS__)
 #define cclib_exceptional_condition_object_t(...)					\
-  CCLIB_VFUNC(cclib_exceptional_condition_object_type, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_object_type, __VA_ARGS__)
 
 #define cclib_exceptional_condition_object_is_1(STEM)					\
   STEM ## __exceptional_condition_object_is
@@ -650,7 +650,7 @@ typedef cclib_resource_data_t *		cclib_resource_pointer_t;
 #define cclib_exceptional_condition_object_is_4(STEM, VAR1, VAR2, VAR3)			\
   STEM ## __exceptional_condition_object_is__ ## VAR1 ## _ ## VAR2 ## __ ## VAR3
 #define cclib_exceptional_condition_object_is(...)					\
-  CCLIB_VFUNC(cclib_exceptional_condition_object_is, __VA_ARGS__)
+  CCLIB_VNAME(cclib_exceptional_condition_object_is, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------

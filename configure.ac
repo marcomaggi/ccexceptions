@@ -2,7 +2,7 @@
 #
 
 AC_PREREQ([2.69])
-MMUX_PKG_VERSIONS([0],[10],[0],[devel.5])
+MMUX_PKG_VERSIONS([0],[10],[0],[devel.6])
 AC_INIT([CCExceptions],[MMUX_PACKAGE_VERSION],
   [mrc.mgg@gmail.com],
   [ccexceptions],[http://github.com/marcomaggi/ccexceptions/])

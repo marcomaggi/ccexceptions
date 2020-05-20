@@ -220,7 +220,7 @@ cclib_decl void cce_init_error_handler_4 (cce_error_handler_t * H, cce_error_han
 	   cce_error_handler_t	*:	cce_init_error_handler_4)	\
   (HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR)
 
-#define cce_init_handler(...)	CCLIB_VFUNC(cce_init_handler,__VA_ARGS__)
+#define cce_init_handler(...)	CCLIB_VNAME(cce_init_handler,__VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
@@ -300,7 +300,7 @@ cclib_decl void cce_init_and_register_error_handler_5 (cce_destination_t L,
 	   cce_error_handler_t *: cce_init_and_register_error_handler_5) \
   (LOCATION, HANDLER_STRUCT,HANDLER_FUNCTION,RESOURCE_POINTER,RESOURCE_DESTRUCTOR)
 
-#define cce_init_and_register_handler(...)	CCLIB_VFUNC(cce_init_and_register_handler,__VA_ARGS__)
+#define cce_init_and_register_handler(...)	CCLIB_VNAME(cce_init_and_register_handler,__VA_ARGS__)
 
 
 /** --------------------------------------------------------------------

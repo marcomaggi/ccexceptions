@@ -1,9 +1,15 @@
 -*- coding: utf-8-unix -*-
 
-Notes for revision 0.10.0-devel.5
+
+		       News file for CCExceptions
+		       ==========================
+
+
+Notes for revision 0.10.0-devel.6
 ---------------------------------
 
-* ...
+* Renamed  "VFUNC"  to  "VNAME"  in   the  variadic  macros  defined  by
+  "cclibraries.h".
 
 
 Notes for revision 0.10.0-devel.4
